@@ -1,0 +1,13 @@
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: "equestria"
+spec:
+  exitNode: true
+  hostname: "equestria"
+  subnetRouter:
+    advertiseRoutes:
+      - "10.10.0.0/16"
+      - "10.206.0.0/16"
+      - "10.196.0.0/16"
