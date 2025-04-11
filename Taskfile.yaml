@@ -21,7 +21,6 @@ env:
 includes:
   bootstrap: .taskfiles/bootstrap
   talos: .taskfiles/talos
-  template: .taskfiles/template
 
 tasks:
 
@@ -33,3 +32,18 @@ tasks:
     preconditions:
       - test -f {{.KUBECONFIG}}
       - which flux
+
+  validate-kubernetes-config:
+    internal: true
+    cmd: bash {{.TEMPLATE_RESOURCES_DIR}}/kubeconform.sh {{.KUBERNETES_DIR}}
+    preconditions:
+      - test -f {{.TEMPLATE_RESOURCES_DIR}}/kubeconform.sh
+      - which kubeconform
+
+  validate-talos-config:
+    internal: true
+    dir: '{{.TALOS_DIR}}'
+    cmd: talhelper validate talconfig {{.TALOS_DIR}}/talconfig.yaml
+    preconditions:
+      - test -f {{.TALOS_DIR}}/talconfig.yaml
+      - which talhelper
