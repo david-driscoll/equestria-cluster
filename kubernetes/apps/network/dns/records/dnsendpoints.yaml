@@ -6,7 +6,7 @@ metadata:
   namespace: kube-system
 spec:
   endpoints:
-    - dnsName: "${EXTERNAL_DOMAIN}"
+    - dnsName: "${EXTERNAL_CNAME}"
       recordType: CNAME
       targets: ["${TUNNEL_DOMAIN}"]
       providerSpecific:
@@ -19,6 +19,6 @@ metadata:
   name: internal-dns
 spec:
   endpoints:
-    - dnsName: "${INTERNAL_DOMAIN}"
+    - dnsName: "${INTERNAL_CNAME}"
       recordType: A
       targets: ["${INTERNAL_IP}"]
