@@ -16,7 +16,7 @@ spec:
       namespace: democratic-csi
     - name: onepassword-connect
       namespace: kube-system
-  path: ./kubernetes/apps/eris/shared/volumes
+  path: ./kubernetes/apps/equestria/shared/volumes
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -73,7 +73,7 @@ spec:
   dependsOn:
     - name: onepassword-connect
       namespace: kube-system
-  path: ./kubernetes/apps/eris/shared/secrets
+  path: ./kubernetes/apps/equestria/shared/secrets
   postBuild:
     substituteFrom:
       - name: cluster-secrets
