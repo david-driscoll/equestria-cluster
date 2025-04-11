@@ -62,7 +62,7 @@ spec:
               TZ: America/New_York
               PUID: 568
               PGID: 568
-              PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${DEFAULT_DOMAIN}:443,https://{{ .Release.Name }}.${TAILSCALE_DOMAIN}:443,http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:32400
+              PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${ROOT_DOMAIN}:443,https://{{ .Release.Name }}.${TAILSCALE_DOMAIN}:443,http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:32400
               PLEX_NO_AUTH_NETWORKS: 172.16.0.0/12,10.10.0.0/16,10.69.0.0/16,10.96.0.0/16,192.168.0.0/16,100.64.0.0/10
               PLEX_PURGE_CODECS: "true"
               # PLEX_PREFERENCE_FriendlyName: "Eris Plex"
@@ -134,7 +134,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: "{{ .Release.Name }}.${DEFAULT_DOMAIN}"
+          - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
             paths:
               - path: /
                 service:
