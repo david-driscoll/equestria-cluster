@@ -16,7 +16,6 @@ spec:
   postBuild:
     substituteFrom:
       - name: cluster-secrets
-        namespace: flux-system
         kind: Secret
   prune: true
   sourceRef:
@@ -57,7 +56,6 @@ spec:
   postBuild:
     substituteFrom:
       - name: cluster-secrets
-        namespace: flux-system
         kind: Secret
   prune: true
   sourceRef:
@@ -94,7 +92,6 @@ spec:
   postBuild:
     substituteFrom:
       - name: cluster-secrets
-        namespace: flux-system
         kind: Secret
   prune: true
   sourceRef:
