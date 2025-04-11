@@ -44,7 +44,7 @@ nodes:
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
-    controlPlane: true
+    controlPlane: false
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "00:a0:98:7f:53:18"
@@ -55,8 +55,6 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-        vip:
-          ip: "10.10.206.201"
   - hostname: "marble-pie"
     ipAddress: "10.10.206.12"
     installDisk: "/dev/sda"
@@ -82,7 +80,7 @@ nodes:
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
-    controlPlane: true
+    controlPlane: false
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "a8:a1:59:00:b7:17"
@@ -93,8 +91,6 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-        vip:
-          ip: "10.10.206.201"
   - hostname: "pharynx"
     ipAddress: "10.10.206.14"
     installDisk: "/dev/sda"
@@ -120,7 +116,7 @@ nodes:
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
-    controlPlane: true
+    controlPlane: false
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:b5:69:5c"
@@ -131,8 +127,6 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-        vip:
-          ip: "10.10.206.201"
 
 # Global patches
 patches:
