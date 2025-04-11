@@ -56,11 +56,6 @@ spec:
             provider: sops
             secretRef:
               name: sops-age
-          postBuild:
-            substituteFrom:
-              - name: cluster-secrets
-                namespace: flux-system
-                kind: Secret
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
