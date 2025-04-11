@@ -6,5 +6,4 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: privileged
 resources:
-  - ./namespace.yaml
   - ./truenas/ks.yaml
