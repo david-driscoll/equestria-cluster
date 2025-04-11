@@ -16,6 +16,7 @@ spec:
   postBuild:
     substituteFrom:
       - name: cluster-secrets
+        namespace: flux-system
         kind: Secret
   prune: true
   sourceRef:
@@ -52,11 +53,11 @@ spec:
       namespace: kube-system
     - name: truenas-secrets
       namespace: democratic-csi
-
   path: ./kubernetes/apps/democratic-csi/truenas/stash
   postBuild:
     substituteFrom:
       - name: cluster-secrets
+        namespace: flux-system
         kind: Secret
   prune: true
   sourceRef:
@@ -93,6 +94,7 @@ spec:
   postBuild:
     substituteFrom:
       - name: cluster-secrets
+        namespace: flux-system
         kind: Secret
   prune: true
   sourceRef:
