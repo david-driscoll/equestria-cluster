@@ -18,3 +18,13 @@ spec:
                 name: webhook-receiver
                 port:
                   number: 80
+    - host: "flux-webhook.${CLUSTER_DOMAIN}"
+      http:
+        paths:
+          - path: /hook/
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-receiver
+                port:
+                  number: 80
