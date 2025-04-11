@@ -24,8 +24,14 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
     controlPlane: true
+    schematic: &controlplane_schematic
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/qemu-guest-agent
+            # - siderolabs/tailscale
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:4c:62:fc"
@@ -43,8 +49,15 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
     controlPlane: false
+    schematic: &amdgpu_schematic
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/qemu-guest-agent
+            - siderolabs/amdgpu
+            # - siderolabs/tailscale
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "00:a0:98:7f:53:18"
@@ -60,8 +73,8 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
     controlPlane: true
+    schematic: *controlplane_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:34:9e:5e"
@@ -79,8 +92,14 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
     controlPlane: false
+    schematic: &worker_schematic
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/qemu-guest-agent
+            # - siderolabs/tailscale
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "a8:a1:59:00:b7:17"
@@ -96,8 +115,8 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
     controlPlane: true
+    schematic: *controlplane_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:11:7d:6a"
@@ -115,8 +134,8 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/892b9731dc945ff679f4a695aa2e8ae93d6f2c2a8764ae66fbbaaa5b35230669
     controlPlane: false
+    schematic: *amdgpu_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:b5:69:5c"
