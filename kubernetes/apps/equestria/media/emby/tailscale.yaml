@@ -1,0 +1,15 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: emby-tailscale
+spec:
+  defaultBackend:
+    service:
+      name: emby
+      port:
+        number: 8096
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - emby

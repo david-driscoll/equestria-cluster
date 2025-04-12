@@ -7,6 +7,6 @@ components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
-  - ./echo/ks.yaml
   - ./shared/ks.yaml
-  - ./plex/ks.yaml
+  - ./media/ks.yaml
+  - ./homepage/ks.yaml

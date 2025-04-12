@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bazarr-apikey
+type: Opaque
+stringData:
+  apikey: ENC[AES256_GCM,data:5uCbK4Mag2ywgzwete0v+5MFkQPux8aggLDkDAsYjpQ=,iv:jtbsxT8iWpqBv38Qvp5CqZ+5a6w6LXHM0PRoV/RvI5E=,tag:ReBBBE6KthY6iAA1hZjbnA==,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBMZUx4eEhRZ292dFcvQUJy
+        RFduSThydVd3WE93c1duSzNTMitzMTZyb0NrClZKS1JscTIvV0xjcXFreUNROUdy
+        K1NtaEt0ck1PbXJnalJCaDlyWG9kRmMKLS0tIHFkQlMxdjg1NWJDZGtwalExbTdI
+        ZVhiMHBDSUdVSU1RMUYvakMyUG1OSFEKd9eT3JoRtDmZAy1Kz5noGdnKkrfOE5K1
+        HhYeHv07wDGCe4TFXBsj/JSo1wAz/j/Qk5++Zx1M7ft6OghTEUTLug==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-04-11T23:57:15Z"
+  mac: ENC[AES256_GCM,data:X5cgwfdbEI9u2JP0bY0J1h3xhrnEJG55rliKy6XdqWr8ZmC6npZu1cNHbAl5+tFb3PgtK55uEdwBvMY75jHOh26x/Rg3HY6g1Njkru/Dw4Rw6tJieUNAhWZfetUUkoZcVoc+AltkR6TiO7OLj4GGPBOGy5u6rTVDKim29NTwa6M=,iv:HP9AOqlIP0SvqhLyi5sc43rpkYE2RHu9iUw2Ochhn/E=,tag:Yulvz0IRCc+9IfHXMp37zQ==,type:str]
+  pgp: []
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.9.3

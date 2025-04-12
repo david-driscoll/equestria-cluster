@@ -1,0 +1,56 @@
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: jellyfin-restart
+  namespace: eris
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: jellyfin-restart
+  namespace: eris
+rules:
+  - apiGroups: ["apps", "extensions"]
+    resources: ["deployments"]
+    resourceNames: ["jellyfin"]
+    verbs: ["get", "patch", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jellyfin-restart
+  namespace: eris
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: jellyfin-restart
+subjects:
+  - kind: ServiceAccount
+    name: jellyfin-restart
+    namespace: eris
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jellyfin-restart
+  namespace: eris
+spec:
+  concurrencyPolicy: Forbid
+  schedule: '0 8 * * *'
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        spec:
+          serviceAccountName: jellyfin-restart
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl
+              command:
+                - 'kubectl'
+                - 'rollout'
+                - 'restart'
+                - 'deployment/jellyfin'

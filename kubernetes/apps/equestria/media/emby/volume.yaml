@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: emby-config
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: truenas-iscsi-stash
+  volumeMode: Filesystem
+  csi:
+    driver: org.democratic-csi.iscsi.stash
+    readOnly: false
+    volumeHandle: emby
+    volumeAttributes:
+      portal: "${SPIKE_IP}"
+      iqn: iqn.2005-10.org.freenas.ctl:emby
+      lun: "0"
+      node_attach_driver: iscsi
+      provisioner_driver: freenas-api-iscsi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: emby-config
+spec:
+  storageClassName: truenas-iscsi-stash
+  volumeName: emby-config
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
