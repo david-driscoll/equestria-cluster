@@ -131,7 +131,7 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:7878"
-          gethomepage.dev/widget.key: "${radarr-apikey}"
+          gethomepage.dev/widget.key: "${radarr_apikey}"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media Management
           gethomepage.dev/icon: radarr.svg
