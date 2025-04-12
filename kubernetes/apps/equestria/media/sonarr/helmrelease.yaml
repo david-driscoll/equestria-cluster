@@ -53,8 +53,8 @@ spec:
               SONARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: sonarr-apikey
-                    key: apikey
+                    name: media-management-credentials
+                    key: sonarr-apikey
               SONARR__LOG__DBENABLED: "False"
               SONARR__LOG__LEVEL: info
               SONARR__PORT: &port 8989
