@@ -83,26 +83,26 @@ spec:
           secretKeyRef:
             name: home-assistant-credentials
             key: apikey
-      HOMEPAGE_VAR_CLOUDFLARE_ACCOUNTID:
-        valueFrom:
-          secretKeyRef:
-            name: cloudflare-chrysalis-tunnel
-            key: accountId
-      HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_APIKEY:
-        valueFrom:
-          secretKeyRef:
-            name: cloudflare-tunnel-token
-            key: credential
-      HOMEPAGE_VAR_CLOUDFLARE_ERIS_TUNNEL_ID:
-        valueFrom:
-          secretKeyRef:
-            name: cloudflare-eris-tunnel
-            key: username
-      HOMEPAGE_VAR_CLOUDFLARE_CHRYSALIS_TUNNEL_ID:
-        valueFrom:
-          secretKeyRef:
-            name: cloudflare-chrysalis-tunnel
-            key: username
+      # HOMEPAGE_VAR_CLOUDFLARE_ACCOUNTID:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: cloudflare-chrysalis-tunnel
+      #       key: accountId
+      # HOMEPAGE_VAR_CLOUDFLARE_TUNNEL_APIKEY:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: cloudflare-tunnel-token
+      #       key: credential
+      # HOMEPAGE_VAR_CLOUDFLARE_ERIS_TUNNEL_ID:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: cloudflare-eris-tunnel
+      #       key: username
+      # HOMEPAGE_VAR_CLOUDFLARE_CHRYSALIS_TUNNEL_ID:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: cloudflare-chrysalis-tunnel
+      #       key: username
       # HOMEPAGE_VAR_TAILSCALE_ACCESS_TOKEN:
       #   valueFrom:
       #     secretKeyRef:

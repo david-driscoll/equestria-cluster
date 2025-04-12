@@ -80,10 +80,10 @@ spec:
               #   secretKeyRef:
               #     name: plex-token
               #     key: email
-              PLEX_CLAIM_TOKEN:
-                secretKeyRef:
-                  name: plex-token
-                  key: claim
+              # PLEX_CLAIM_TOKEN:
+              #   secretKeyRef:
+              #     name: media-management-credentials
+              #     key: claim
             probes:
               liveness: &probes
                 enabled: true
