@@ -114,7 +114,7 @@ spec:
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.type: jellyfin
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8096"
-          gethomepage.dev/widget.key: "${token}"
+          gethomepage.dev/widget.key: "${jellyfin-token}"
           gethomepage.dev/widget.enableBlocks: "true"
           gethomepage.dev/widget.enableNowPlaying: "true"
           gethomepage.dev/widget.enableUser: "true"
