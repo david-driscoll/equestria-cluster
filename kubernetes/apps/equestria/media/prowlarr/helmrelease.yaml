@@ -131,7 +131,7 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:9696"
-          gethomepage.dev/widget.key: "${apikey}"
+          gethomepage.dev/widget.key: "${prowlarr_apikey}"
           gethomepage.dev/widget.type: "prowlarr"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media Management

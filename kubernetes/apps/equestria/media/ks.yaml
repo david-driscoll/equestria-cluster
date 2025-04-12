@@ -18,7 +18,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: bazarr-token
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -54,7 +54,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: emby-token
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -90,7 +90,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: jellyfin-token
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -126,7 +126,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: jellyseerr-apikey
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -162,7 +162,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: nzbget-config
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -198,7 +198,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: plex-token
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -234,7 +234,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: prowlarr-apikey
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -270,7 +270,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: radarr-apikey
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -306,7 +306,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: sonarr-apikey
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
@@ -342,7 +342,7 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: tautulli-token
+      - name: media-management-credentials
         kind: Secret
   prune: true
   sourceRef:
