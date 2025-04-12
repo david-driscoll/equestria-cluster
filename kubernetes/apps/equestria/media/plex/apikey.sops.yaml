@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: plex-token
+type: Opaque
+stringData:
+  token: ENC[AES256_GCM,data:nLroaqyzM/+MVLVZ2nMjtNuYcVM=,iv:8W27i22NZMiqQMfsWUFWO9FOpNGglhd83kZON8tZCSk=,tag:pclMzxmS2I9rIH1kY3PPzQ==,type:str]
+  username: ENC[AES256_GCM,data:eI3Nzl0iRJ7APam/KpM=,iv:vgbhlzCOs+sFE1xghfKQZCEL7OhHXuw/f5sjRTJ6NuE=,tag:W2o00vAjc/Eq85uoU2Cldw==,type:str]
+  email: ENC[AES256_GCM,data:/w5/y0XoIrAjMXkXBY/uOrJnpzeVy/2u,iv:tZPjPHz/3NjaZKxLbANXH3YkldR/GUPzgsqgewKuG84=,tag:3rAGxLyAydjprl0FeUUY/A==,type:str]
+  claim: ENC[AES256_GCM,data:rnuBa98QZ3jWfQlOuKlelr+5/Ehm+iyZnro=,iv:l4wqzZAjuOd6qwCvgJG8E3qrDxgO2GFdGdv3vZtVcWU=,tag:bFAaBVh5erNiTaefZ6I2sw==,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBQK0wwSnQxOVRBU1hsRnA4
+        a3pKakhVZGhMWDQrbVVzbC9xMDZCZkhPNkhFCm1jZlVnK0FSMVEvbWZoQmk1Q0h0
+        NCtPUnRXQUZYNURjWVhjUzZYSFFyd3cKLS0tIHR4QU5nZDAxZ0xpNGptdVdOdmJz
+        Z3YvaE1RRUZaM1dsTE52cGNWV2o1bncKoEtiLH9Mdd00pjqaMKmc+mB3OOuUKhyE
+        C14ZgIWzuv+9mPESG+XFiVJy7K9MasvmDcIhay9E+SCJ5hH+JOUmnQ==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-04-11T00:35:53Z"
+  mac: ENC[AES256_GCM,data:rGWWnsjk+Ur6MPEhwRDzoZgldbNNjWsm2fohuoEcJasI8PkRKO7EUv4jEzu3aV2SSR0f/W795Erw2QEdnlMy7a54Sgp9gK35cd8PKeLkneAGcGOiizZTpqjGtvd9yYIO8IfpiMsoG0J5XN0ttfN+eAcZEZd2RiNmgGX47wtmslg=,iv:fThNBsR9U6+iYmkZCFQJbtcrsYAUVhrvOSoDVXjuCKw=,tag:Nsv31eRKAms3nXanbtDJbA==,type:str]
+  pgp: []
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.9.3

@@ -1,0 +1,15 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyseerr-tailscale
+spec:
+  defaultBackend:
+    service:
+      name: jellyseerr
+      port:
+        number: 5055
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - jellyseerr

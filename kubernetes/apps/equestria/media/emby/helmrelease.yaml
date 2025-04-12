@@ -1,0 +1,165 @@
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app emby
+spec:
+  timeout: 5m
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: truenas-iscsi-stash
+      namespace: democratic-csi
+    - name: truenas-stash
+      namespace: democratic-csi
+    - name: truenas-stash
+      namespace: democratic-csi
+  values:
+    controllers:
+      emby:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          emby:
+            image:
+              repository: emby/embyserver
+              tag: 4.9.0.42
+            env:
+              EMBY_CACHE_DIR: /cache
+              EMBY_CONFIG_DIR: /config/config
+              EMBY_DATA_DIR: /config
+              EMBY_FFMPEG: /usr/lib/emby-ffmpeg/ffmpeg
+              EMBY_LOG_DIR: /logs
+              EMBY_WEB_DIR: /usr/share/emby/web
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              # EMBY_FFmpeg__probesize: 50000000
+              # EMBY_FFmpeg__analyzeduration: 50000000
+              PUID: 568
+              PGID: 568
+              TZ: America/New_York
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8096
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: false
+            #   capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 500Mi
+              limits:
+                # nvidia.com/gpu: 1
+                memory: 4Gi
+                cpu: 4000m
+
+    # tolerations:
+    #   - key: nvidia.com/gpu
+    #     operator: Exists
+    #     effect: NoSchedule
+    # defaultPodOptions:
+    #   securityContext:
+    #     runAsNonRoot: true
+    #     runAsUser: 568
+    #     runAsGroup: 568
+    #     fsGroup: 568
+    #     fsGroupChangePolicy: OnRootMismatch
+    #     supplementalGroups: [44, 109, 10000]
+    #     seccompProfile: { type: RuntimeDefault }
+      # nodeSelector:
+      #   intel.feature.node.kubernetes.io/gpu: "true"
+
+    service:
+      app:
+        controller: emby
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+    ingress:
+      app:
+        className: internal
+        hosts:
+          - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        annotations:
+          reloader.stakater.com/auto: "true"
+          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+          gethomepage.dev/widget.type: emby
+          gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8096"
+          gethomepage.dev/widget.enableBlocks: "true"
+          gethomepage.dev/widget.enableNowPlaying: "true"
+          gethomepage.dev/widget.enableUser: "true"
+          gethomepage.dev/widget.showEpisodeNumber: "true"
+          gethomepage.dev/widget.expandOneStreamToTwoRows: "true"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Media
+          gethomepage.dev/icon: emby.svg
+          gethomepage.dev/name: Emby
+          gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
+          gethomepage.dev/app: "{{ .Release.Name }}"
+    persistence:
+      config:
+        existingClaim: emby-config
+        globalMounts:
+          - path: /config
+
+      transcode:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /transcode
+
+      cache:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /cache
+
+      logs:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /logs
+
+      media-movies:
+        existingClaim: media-movies
+        globalMounts:
+          - path: /media/movies
+
+      media-tv:
+        existingClaim: media-tv
+        globalMounts:
+          - path: /media/tv
+  valuesFrom:
+    - kind: Secret
+      name: emby-token
+      targetPath: ingress.app.annotations.gethomepage\.dev\/widget\.key
+      valuesKey: token
