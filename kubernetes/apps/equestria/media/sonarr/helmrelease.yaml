@@ -134,6 +134,7 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8989"
+          gethomepage.dev/widget.key: "${apikey}"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media Management
           gethomepage.dev/icon: sonarr.svg
@@ -141,9 +142,3 @@ spec:
           gethomepage.dev/widget.type: sonarr
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "{{ .Release.Name }}"
-
-  valuesFrom:
-    - kind: Secret
-      name: sonarr-apikey
-      targetPath: ingress.app.annotations.gethomepage\.dev\/widget\.key
-      valuesKey: apikey

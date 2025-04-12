@@ -98,11 +98,12 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8181"
+          gethomepage.dev/widget.key: "${token}"
+          gethomepage.dev/widget.type: tautulli
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media Management
           gethomepage.dev/icon: tautulli.svg
           gethomepage.dev/name: Tautulli
-          gethomepage.dev/widget.type: tautulli
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "{{ .Release.Name }}"
     persistence:
@@ -118,8 +119,3 @@ spec:
           - path: /config/logs
       tmp:
         type: emptyDir
-  valuesFrom:
-    - kind: Secret
-      name: tautulli-token
-      targetPath: ingress.app.annotations.gethomepage\.dev\/widget\.key
-      valuesKey: token

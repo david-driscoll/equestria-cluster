@@ -7,4 +7,3 @@ resources:
   - ./volume.yaml
   - ./tailscale.yaml
   # - ./restart.yaml
-
