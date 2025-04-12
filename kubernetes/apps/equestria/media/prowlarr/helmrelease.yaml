@@ -53,8 +53,8 @@ spec:
               PROWLARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: prowlarr-apikey
-                    key: apikey
+                    name: media-management-credentials
+                    key: prowlarr_apikey
               PROWLARR__LOG__DBENABLED: "False"
               PROWLARR__LOG__LEVEL: info
               PROWLARR__PORT: &port 9696
