@@ -17,7 +17,7 @@ tasks:
   apply:
     desc: Reapply the config
     dir: '{{.TALOS_DIR}}'
-    cmd: talhelper gencommand apply --extra-flags '--mode={{.MODE}}' | bash
+    cmd: talhelper gencommand apply --extra-flags '--mode={{.MODE}}'
     vars:
       MODE: '{{.MODE | default "auto"}}'
     deps:
