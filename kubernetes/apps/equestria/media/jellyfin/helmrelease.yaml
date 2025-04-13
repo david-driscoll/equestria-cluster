@@ -36,7 +36,7 @@ spec:
           jellyfin:
             image:
               repository: jellyfin/jellyfin
-              tag: 10.10.6
+              tag: 10.10.7
             env:
               JELLYFIN_CACHE_DIR: /cache
               JELLYFIN_CONFIG_DIR: /config/config
