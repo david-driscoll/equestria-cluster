@@ -175,7 +175,7 @@ spec:
         type: emptyDir
       transcode:
         type: emptyDir
-      cache-other:
+      cache:
         type: persistentVolumeClaim
         storageClass: truenas-stash
         accessMode: ReadWriteOnce
