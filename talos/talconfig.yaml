@@ -27,6 +27,8 @@ nodes:
     controlPlane: true
     schematic: &controlplane_schematic
       customization:
+        extraKernelArgs:
+          - iommu.passthrough=1
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
@@ -52,6 +54,8 @@ nodes:
     controlPlane: false
     schematic: &amdgpu_schematic
       customization:
+        extraKernelArgs:
+          - iommu.passthrough=1
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
@@ -93,12 +97,18 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: false
-    schematic: &worker_schematic
+    nodeLabels:
+      nvidia.com/gpu.present: "true"
+    schematic: &nvidia_schematic
       customization:
+        extraKernelArgs:
+          - iommu.passthrough=1
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
             - siderolabs/qemu-guest-agent
+            # - siderolabs/nvidia-container-toolkit-production
+            # - siderolabs/nvidia-open-gpu-kernel-modules-production
             # - siderolabs/tailscale
     networkInterfaces:
       - deviceSelector:
