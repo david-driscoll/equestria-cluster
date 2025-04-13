@@ -59,7 +59,7 @@ spec:
           plex:
             image:
               repository: ghcr.io/home-operations/plex
-              tag: 1.41.5
+              tag: 1.41.6
             env:
               TZ: America/New_York
               PUID: 568
