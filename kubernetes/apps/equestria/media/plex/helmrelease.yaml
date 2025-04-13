@@ -175,19 +175,15 @@ spec:
         type: emptyDir
       transcode:
         type: emptyDir
-      cache-iscsi:
+      cache2:
         type: persistentVolumeClaim
-        storageClass: truenas-iscsi-stash
+        storageClass: truenas-stash
         accessMode: ReadWriteOnce
-        size: 200Gi
-        advancedMounts:
+        size: 100Gi
+        globalMounts:
           - path: /config/Library/Application Support/Plex Media Server/Cache
             subPath: cache
-          - path: /config/Library/Application Support/Plex Media Server/Media
-            subPath: media
-          - path: /config/Library/Application Support/Plex Media Server/Metadata
-            subPath: metadata
       # current-config:
       #   existingClaim: plex-config
       #   globalMounts:
-
+      #     - path: /database
