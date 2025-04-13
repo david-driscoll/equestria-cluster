@@ -1,18 +1,4 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/ocirepository-source-v1beta2.json
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: OCIRepository
-metadata:
-  name: homepage
-spec:
-  interval: 1h
-  layerSelector:
-    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
-    operation: copy
-  ref:
-    tag: 10.1.1
-  url: oci://tccr.io/truecharts/homepage
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -23,28 +9,91 @@ spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: homepage
+    name: app-template
   install:
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
     remediation:
-      strategy: rollback
       retries: 3
+  uninstall:
+    keepHistory: false
   dependsOn:
     - name: onepassword-connect
       namespace: kube-system
   valuesFrom:
     - kind: ConfigMap
       name: dashboard-config-values
+
   values:
-    image:
-      repository: ghcr.io/gethomepage/homepage
-      tag: v1.1.1
     fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gethomepage/homepage
+              tag: v1.1.1
+              pullPolicy: Always
+            # -- environment variables.
+            # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
+            env:
+              PUID: 568
+              PGID: 568
+              UMASK: 002
+              TZ: America/New_York
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 80
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+              # startup:
+              #   enabled: true
+              #   spec:
+              #     failureThreshold: 50
+              #     periodSeconds: 10
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 200m
+                memory: 2Gi
+
+    defaultPodOptions:
+      securityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    # -- Configures service settings for the chart.
+    service:
+      app:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
     env:
       LOG_LEVEL: debug
       HOMEPAGE_ALLOWED_HOSTS: '{{ .Release.Name }}.${ROOT_DOMAIN},homepage.${ROOT_DOMAIN},{{ .Release.Name }}.${TAILSCALE_DOMAIN},homepage.${TAILSCALE_DOMAIN}'
@@ -119,8 +168,8 @@ spec:
       create: true
     # Enable the ingress to expose Homepage to the network.
     ingress:
-      main:
-        enabled: true
+      app:
+        nameOverride: *app
         className: internal
         annotations:
           reloader.stakater.com/auto: "true"
@@ -129,15 +178,12 @@ spec:
           - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: 80
           - host: "homepage.${ROOT_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
                 service:
-                  identifier: main
+                  identifier: app
                   port: 80
-
