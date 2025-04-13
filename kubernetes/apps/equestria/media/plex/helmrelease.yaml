@@ -183,10 +183,10 @@ spec:
         globalMounts:
           - path: /config/Library/Application Support/Plex Media Server/Cache
             subPath: cache
-          - path: /config/Library/Application Support/Plex Media Server/Media
-            subPath: media
-          - path: /config/Library/Application Support/Plex Media Server/Metadata
-            subPath: metadata
+          # - path: /config/Library/Application Support/Plex Media Server/Media
+          #   subPath: media
+          # - path: /config/Library/Application Support/Plex Media Server/Metadata
+          #   subPath: metadata
       # current-config:
       #   existingClaim: plex-config
       #   globalMounts:
