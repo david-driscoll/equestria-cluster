@@ -1,0 +1,15 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: channels-tailscale
+spec:
+  defaultBackend:
+    service:
+      name: channels
+      port:
+        number: 8089
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - channels

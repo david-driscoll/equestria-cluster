@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: ersatztv-token
+type: Opaque
+stringData:
+    token: ""
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA1dWFvOU05UXdIVUtLNmND
+            Q0dLbWtkK2htWXExQTByRWQ5dGJTUlkwTlIwCnhLSGV0WlFTMUU4ckt3N1JacDlK
+            OVduZDZMWHdhRkFXZlhPeXRvSHNLUEEKLS0tIGgzZThGN2RuZW92UDlaUzR4WE8v
+            QWlnenZVNURNZVQycjBKempyTUVHZU0KsGRGwzUDy23m26NKr73K7WW9up7LSO2/
+            eAuFIGIZ5NzBB9buap8HvG1zxeaazo8AIebm/NvI2MEkIgRmeOTWmg==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1n4ln8xtt98hwatem5ftzp3zmm3htjusgkyh4a2aaxuzcedg4cvkqe32sy2
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAzT0dxbU1RaDNLUmRxTkQv
+            cnBzaXRKMHhUdlkzd1IxR3liaXFuNHRydW40CnhyNW0yZFkwNVRINmY3dTJYUStN
+            N2QzT1hTeU5rc3VDSFRTS2g5UUU2RlkKLS0tIC9Yc1lnZkZ4K1dJSmdLUUNSZkU5
+            d01OMVRFMWRPcjB4czlMVUVxd1BvOHMKJAj6QADxgHRAvpU+WNR5By17X/cCfzAP
+            YrhhB/5x9WTlJdWI4DzXYLBTuN/QowtKaAlIkbDaKi61qEFStCYVvQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-01-03T00:44:09Z"
+    mac: ENC[AES256_GCM,data:gSVX4HAjxkNVWtOYfpUPR7djzuUqdTzjSMInUn1xI/oQ7v6ShNAI2//3fWcMrPgnzPtkxX/Ziu6/E4SbvIWdVjJj41HIu0qIo+O3bGz3mKMfAY19OR2i6Us4iV1Gux22R/9V6HPi/HVks5ke74aYiYy4QWmxp3mXpYaV4k1WGig=,iv:2/sdkR+yIcDvfnqhkhPf3IWOSuiq+RrigIca7zxijzc=,tag:2HJRHkXoav2YovjmMi8+Bg==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.9.1

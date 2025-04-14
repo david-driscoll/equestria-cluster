@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: fhdhr-config
+type: Opaque
+stringData:
+    config.ini: ENC[AES256_GCM,data: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,iv:OYVU1R5sTYs0l73xp2XjW+ZD5LagmLQuAh8lcJ+F7yU=,tag:H1pd/H6FYKOHC7vCuIaW+w==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUYk9Qck1KSUtVM21qQ2Nj
+            cmNjVDJGd1lDSHQ0U1lhZ2VZZ1dzdmhkbzB3CkhqdUFMVVAwMVVnWVF6Z2tUeUgy
+            Y2c0YmxiR3FXUkxZbGhvQldOazRrU1kKLS0tIG1lbXBDR0dycitjaTRIS3hkOUhm
+            WEM4NVc3S2VxMFo0SFpZTGphcGlPaUUKyYR8/C2N1zaOxuN5D+key/HtzwQvs/bN
+            WlBtpcuU3vOqtD9f46S8NNyOGItgwjRH6lCrISZ0/LdF53moXA+hIg==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1n4ln8xtt98hwatem5ftzp3zmm3htjusgkyh4a2aaxuzcedg4cvkqe32sy2
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA3Z3c2bVZuRzhMLzZMcmk3
+            VytxZEx6TU9IYUhwYUIwMW9uOHYzZkxIeWdjCmxXaUJXS0lGWTJxSmI3Z2o1Mkth
+            ZzFueFBDVzlZK3BqdXJkRHBOczFsM1UKLS0tIGJZZkIyZHd5dU1oR0duYzkvZExW
+            aW1NZVdDUWhWQWRTV09uZVU2Q2RXRlkKvFz929mdPJ1QcyjUAyj11L1ANM0dQM8v
+            UvQWUDuyql6MSt8oRJNcAvSRp901E+Y5TDWw0hlTXr7jy0yGdq6eyQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-03-25T00:53:47Z"
+    mac: ENC[AES256_GCM,data:75FQxN2WSPcwCglBbdE96I7tXPn/UXWU8YIbtO6N8IOvScENn++QQX8uorZq5qx9nx7feRUMEu7FA2X1xMQP450Kx1XEGhKAiL7hXKEWDqOegkMa3cXdnxxR2EYIHW25Q01ABBfo1wbFRNS5k5spEMOjsABnochAukn3EYoS0qk=,iv:LjsMiYo75z0EUBkNtW8OXPt2TJr/Xb6NbAHH07yAsaA=,tag:QuPlt2+70+BWcuRG6S2rvA==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.9.3
