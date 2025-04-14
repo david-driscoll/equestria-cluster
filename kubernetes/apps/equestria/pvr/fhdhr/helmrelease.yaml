@@ -1,0 +1,182 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app fhdhr
+spec:
+  timeout: 5m
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: truenas-iscsi-stash
+      namespace: democratic-csi
+    - name: truenas-stash
+      namespace: democratic-csi
+  values:
+    controllers:
+      fhdhr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          restore:
+            securityContext:
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: false
+              runAsUser: 0
+              runAsGroup: 0
+              fsGroup: 0
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              capabilities: { drop: ["ALL"] }
+            image:
+              repository: alpine/git
+              tag: 2.47.2
+              pullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+            args: |-
+                mkdir -p /app/config
+                mkdir -p /app/plugins
+                cp /config/config.ini /app/config/config.ini
+
+                clone_plugin() {
+                    git clone $1 /app/plugins/$2
+                    git config --global --add safe.directory /app/plugins/$2
+                    cd /app/plugins/$2
+                    git pull
+                }
+
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_hdhr.git /app/plugins/fHDHR_plugin_interface_hdhr
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_rmg.git /app/plugins/fHDHR_plugin_interface_rmg
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_cluster.git /app/plugins/fHDHR_plugin_interface_cluster
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_devtools.git /app/plugins/fHDHR_plugin_web_devtools
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_logos.git /app/plugins/fHDHR_plugin_web_logos
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_watch.git /app/plugins/fHDHR_plugin_web_watch
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_epg_tvtv.git /app/plugins/fHDHR_plugin_epg_tvtv
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_epg_zap2it.git /app/plugins/fHDHR_plugin_epg_zap2it
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_IPTVorg.git /app/plugins/fHDHR_plugin_origin_IPTVorg
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_NextPVR.git /app/plugins/fHDHR_plugin_origin_NextPVR
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_plutotv.git /app/plugins/fHDHR_plugin_origin_plutotv
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_STIRR.git /app/plugins/fHDHR_plugin_origin_STIRR
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_ToonamiAftermath.git /app/plugins/fHDHR_plugin_origin_ToonamiAftermath
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_tvheadend.git /app/plugins/fHDHR_plugin_origin_tvheadend
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_USTVGO.git /app/plugins/fHDHR_plugin_origin_USTVGO
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_XUMO.git /app/plugins/fHDHR_plugin_origin_XUMO
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_stream_ffmpeg.git /app/plugins/fHDHR_plugin_stream_ffmpeg
+                clone_plugin https://github.com/fHDHR/fHDHR_plugin_stream_vlc.git /app/plugins/fHDHR_plugin_stream_vlc
+
+                echo "Done.";
+        containers:
+          fhdhr:
+            image:
+              repository: fhdhr/fhdhr
+              tag: latest
+            env:
+              TZ: America/New_York
+              PUID: 568
+              PGID: 568
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 5004
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              # capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                # amd.com/gpu: 1
+                memory: 2Gi
+                cpu: 2000m
+
+    tolerations:
+      # - key: amd.com/gpu
+      #   operator: Exists
+      #   effect: NoSchedule
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        supplementalGroups: [44, 109, 303, 568, 10000]
+        seccompProfile: { type: RuntimeDefault }
+      # nodeSelector:
+      #   intel.feature.node.kubernetes.io/gpu: "true"
+
+    service:
+      app:
+        controller: fhdhr
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    ingress:
+      app:
+        className: internal
+        hosts:
+          - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        annotations:
+          reloader.stakater.com/auto: "true"
+          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+          gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:5004"
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Media
+          gethomepage.dev/icon: fhdhr.svg
+          gethomepage.dev/name: Fhdhr
+          gethomepage.dev/widget.type: fhdhr
+          gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
+          gethomepage.dev/app: "{{ .Release.Name }}"
+    persistence:
+      config:
+        type: persistentVolumeClaim
+        storageClass: truenas-stash
+        accessMode: ReadWriteOnce
+        size: 10Gi
+        globalMounts:
+          - path: /app/config/
+            subPath: config
+          - path: /app/plugins/
+            subPath: plugins
+      config-ini:
+        type: secret
+        name: fhdhr-config
+        globalMounts:
+          - path: /config/
+      temp:
+        type: emptyDir
+        globalMounts:
+          - path: /app/data/cache
+      tmp:
+        type: emptyDir
+# confgure the app using hard coded values
+# and setup plugin cloning using the git repos

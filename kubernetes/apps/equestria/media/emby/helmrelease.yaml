@@ -24,8 +24,6 @@ spec:
       namespace: democratic-csi
     - name: truenas-stash
       namespace: democratic-csi
-    - name: truenas-stash
-      namespace: democratic-csi
   values:
     controllers:
       emby:

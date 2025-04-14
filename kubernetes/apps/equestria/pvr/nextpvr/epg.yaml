@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app epg
+spec:
+  timeout: 5m
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      app:
+        type: cronjob
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+        cronjob:
+          backoffLimit: 6
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 2
+          # every hour
+          schedule: "0 * * * *"
+          startingDeadlineSeconds: 30
+          successfulJobsHistory: 1
+          suspend: false
+        containers:
+          app:
+            image:
+              repository: node
+              tag: lts-alpine@sha256:9bef0ef1e268f60627da9ba7d7605e8831d5b56ad07487d24d1aa386336d1944
+              pullPolicy: IfNotPresent
+            env: {}
+            command:
+              - "/bin/sh"
+              - "-c"
+            args: |-
+                chown -R 568:568 /config
+                chmod -R 777 /config
+                git clone --depth 1 -b master https://github.com/iptv-org/epg.git /tmp/epg
+                cd /tmp/epg
+                npm install
+                npm run grab --- --channels=sites/i.mjh.nz/i.mjh.nz_pluto.channels.xml --output=/guides/epg/pluto.xml
+                npm run grab --- --channels=sites/i.mjh.nz/i.mjh.nz_plex.channels.xml --output=/guides/epg/plex.xml
+                npm run grab --- --channels=sites/i.mjh.nz/i.mjh.nz_roku.channels.xml --output=/guides/epg/roku.xml
+                npm run grab --- --channels=sites/i.mjh.nz/i.mjh.nz_samsung.channels.xml --output=/guides/epg/samsung.xml
+                # npm run grab --- --site=pluto.tv --output=/guides/epg/pluto.xml
+                # npm run grab --- --site=plex.tv --output=/guides/epg/plex.xml
+                npm run grab --- --site=ionplustv.com --output=/guides/epg/tubi.xml
+                # npm run grab --- --site=directv.com --output=/guides/epg/directv.xml
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 500m
+                memory: 500Mi
+    persistence:
+      config:
+        type: emptyDir
+      tmp:
+        type: emptyDir
+      guides:
+        existingClaim: media-dvr
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        supplementalGroups: [44, 109, 303, 568, 10000]
+        seccompProfile: { type: RuntimeDefault }

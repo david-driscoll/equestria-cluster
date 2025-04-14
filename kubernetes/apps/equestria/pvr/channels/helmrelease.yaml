@@ -1,10 +1,12 @@
 
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# http://channels.eris.svc.cluster.local:8089/devices/ANY/channels.m3u?format=ts&codec=copy
+# http://channels.eris.svc.cluster.local:8089/devices/ANY/guide/xmltv?duration=1209600
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app sonarr
+  name: &app channels
 spec:
   timeout: 5m
   interval: 30m
@@ -32,11 +34,32 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
+        initContainers:
+          restore:
+            securityContext:
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: true
+              runAsUser: 0
+              runAsGroup: 0
+              fsGroup: 0
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              capabilities: { drop: ["ALL"] }
+            image:
+              repository: busybox
+              tag: 1.37.0
+              pullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+            args: |-
+                chown -R 568:568 /channels-dvr
+                chmod -R 777 /channels-dvr
+                echo "Done.";
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/sonarr
-              tag: 4.0.14
+              repository: fancybits/channels-dvr
+              tag: latest
               pullPolicy: Always
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
@@ -44,18 +67,6 @@ spec:
               PUID: 568
               PGID: 568
               UMASK: 002
-              SONARR__APP__INSTANCENAME: Sonarr
-              SONARR__APP__THEME: dark
-              SONARR__AUTH__METHOD: External
-              SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
-              SONARR__AUTH__APIKEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: media-management-credentials
-                    key: sonarr_apikey
-              SONARR__LOG__DBENABLED: "False"
-              SONARR__LOG__LEVEL: info
-              SONARR__PORT: &port 8989
               TZ: America/New_York
             probes:
               liveness: &probes
@@ -63,33 +74,32 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /ping
-                    port: *port
+                    path: /
+                    port: &port 8089
                   initialDelaySeconds: 10
                   periodSeconds: 60
                   timeoutSeconds: 10
                   failureThreshold: 5
               readiness: *probes
             securityContext:
-              runAsNonRoot: true
-              runAsUser: 568
-              runAsGroup: 568
-              fsGroup: 568
-              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
-                memory: 100Mi
+                memory: 1Gi
               limits:
-                cpu: 2000m
-                memory: 3Gi
+                # nvidia.com/gpu: 1
+                memory: 4Gi
+                cpu: 4000m
 
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: OnRootMismatch
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        supplementalGroups: [44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
@@ -104,13 +114,17 @@ spec:
 
     persistence:
       config:
-        existingClaim: sonarr-config
+        existingClaim: channels-config
         globalMounts:
-          - path: /config
-      media-downloads:
-        existingClaim: media-downloads
+          - path: /channels-dvr
+      media-dvr:
+        existingClaim: media-dvr
         globalMounts:
-          - path: /media/downloads
+          - path: /media/dvr
+      media-movies:
+        existingClaim: media-movies
+        globalMounts:
+          - path: /media/movies
       media-tv:
         existingClaim: media-tv
         globalMounts:
@@ -131,12 +145,11 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
-          gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8989"
-          # gethomepage.dev/widget.key: "${sonarr_apikey}"
+          gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8089"
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media Management
-          gethomepage.dev/icon: sonarr.svg
-          gethomepage.dev/name: Sonarr
-          gethomepage.dev/widget.type: sonarr
+          gethomepage.dev/group: Media
+          gethomepage.dev/icon: channels.svg
+          gethomepage.dev/name: Channels
+          # gethomepage.dev/widget.type: channels
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "{{ .Release.Name }}"
