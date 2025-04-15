@@ -138,9 +138,3 @@ spec:
         existingClaim: threadfin-config
         globalMounts:
           - path: /home/threadfin/conf/
-
-  # valuesFrom:
-  #   - kind: Secret
-  #     name: threadfin-token
-  #     targetPath: ingress.app.annotations.gethomepage\.dev\/widget\.key
-  #     valuesKey: token

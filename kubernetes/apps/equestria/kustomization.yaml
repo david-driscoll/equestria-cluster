@@ -9,4 +9,4 @@ components:
 resources:
   - ./shared/ks.yaml
   - ./media/ks.yaml
-  - ./homepage/ks.yaml
+  - ./pvr/ks.yaml
