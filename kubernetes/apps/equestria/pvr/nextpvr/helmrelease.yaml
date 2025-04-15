@@ -122,6 +122,7 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8866"
+          # gethomepage.dev/widget.key: "${nextpvr_token}"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media
           gethomepage.dev/icon: nextpvr.svg
@@ -136,8 +137,3 @@ spec:
         existingClaim: media-dvr
       buffer:
         type: emptyDir
-  valuesFrom:
-    - kind: Secret
-      name: nextpvr-token
-      targetPath: ingress.app.annotations.gethomepage\.dev\/widget\.key
-      valuesKey: token
