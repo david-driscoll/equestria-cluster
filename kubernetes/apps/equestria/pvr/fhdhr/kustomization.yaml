@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - ./config.sops.yaml
   - ./helmrelease.yaml
-  - ./tailscale.yaml

@@ -112,8 +112,7 @@ spec:
           - path: /media/tv
 
     ingress:
-      app:
-        nameOverride: *app
+      internal:
         className: internal
         hosts:
           - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
@@ -134,4 +133,13 @@ spec:
           gethomepage.dev/widget.type: "bazarr"
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "{{ .Release.Name }}"
+      tailscale:
+        className: tailscale
+        hosts:
+          - host: "{{ .Release.Name }}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
 

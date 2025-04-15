@@ -109,7 +109,7 @@ spec:
             port: &port 8866
 
     ingress:
-      app:
+      internal:
         className: internal
         hosts:
           - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
@@ -130,6 +130,15 @@ spec:
           gethomepage.dev/widget.type: nextpvr
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "{{ .Release.Name }}"
+      tailscale:
+        className: tailscale
+        hosts:
+          - host: "{{ .Release.Name }}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
     persistence:
       config:
         existingClaim: nextpvr-config

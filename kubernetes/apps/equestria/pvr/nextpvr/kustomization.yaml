@@ -5,5 +5,4 @@ resources:
   - ./apikey.sops.yaml
   - ./helmrelease.yaml
   - ./volume.yaml
-  - ./tailscale.yaml
   # - ./epg.yaml

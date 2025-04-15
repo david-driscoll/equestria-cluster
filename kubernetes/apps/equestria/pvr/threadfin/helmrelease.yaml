@@ -111,7 +111,7 @@ spec:
           http:
             port: *port
     ingress:
-      app:
+      internal:
         className: internal
         hosts:
           - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
@@ -131,6 +131,16 @@ spec:
           gethomepage.dev/name: Threadfin
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "{{ .Release.Name }}"
+      tailscale:
+        className: tailscale
+        hosts:
+          - host: "{{ .Release.Name }}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+
 
 
     persistence:
