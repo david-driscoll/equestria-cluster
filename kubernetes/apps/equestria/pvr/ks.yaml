@@ -56,35 +56,35 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app nextpvr
-  namespace: &namespace equestria
-spec:
-  targetNamespace: *namespace
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: shared-volumes
-      namespace: *namespace
-  path: ./kubernetes/apps/equestria/pvr/nextpvr
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: &namespace equestria
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app nextpvr
+#   namespace: &namespace equestria
+# spec:
+#   targetNamespace: *namespace
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   dependsOn:
+#     - name: shared-volumes
+#       namespace: *namespace
+#   path: ./kubernetes/apps/equestria/pvr/nextpvr
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#     namespace: &namespace equestria
+#   healthChecks:
+#     - apiVersion: helm.toolkit.fluxcd.io/v2
+#       kind: HelmRelease
+#       name: *app
+#       namespace: *namespace
+#   wait: true
+#   interval: 30m
+#   retryInterval: 1m
+#   timeout: 5m
 
 # ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
