@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: onepassword-connect
-      namespace: kube-system
+      namespace: flux-system
     - name: cloudflare-dns
       namespace: *namespace
   path: ./kubernetes/apps/network/cloudflare-tunnel/app
