@@ -13,6 +13,8 @@ spec:
   dependsOn:
     - name: onepassword-connect
       namespace: kube-system
+    - name: sgc-repository
+      namespace: flux-system
   path: ./kubernetes/apps/democratic-csi/truenas/secrets
   prune: true
   sourceRef:
@@ -38,8 +40,10 @@ spec:
   dependsOn:
     - name: onepassword-connect
       namespace: kube-system
+    - name: sgc-repository
+      namespace: flux-system
     - name: truenas-secrets
-      namespace: democratic-csi
+      namespace: *namespace
   path: ./kubernetes/apps/democratic-csi/truenas/stash
   prune: true
   sourceRef:
@@ -71,8 +75,10 @@ spec:
   dependsOn:
     - name: onepassword-connect
       namespace: kube-system
+    - name: sgc-repository
+      namespace: flux-system
     - name: truenas-secrets
-      namespace: democratic-csi
+      namespace: *namespace
   path: ./kubernetes/apps/democratic-csi/truenas/iscsi-stash
   prune: true
   sourceRef:
