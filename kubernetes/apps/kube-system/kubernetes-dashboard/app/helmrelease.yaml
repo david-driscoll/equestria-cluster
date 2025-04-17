@@ -42,7 +42,7 @@ spec:
           - "kubeui.${CLUSTER_DOMAIN}"
     settings:
      global:
-        clusterName: "equestria"
+        clusterName: "${CLUSTER_CNAME}"
 # ---
 # apiVersion: networking.k8s.io/v1
 # kind: Ingress
