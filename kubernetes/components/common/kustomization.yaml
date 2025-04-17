@@ -5,5 +5,5 @@ kind: Component
 resources:
   - ./cluster-secrets.sops.yaml
   - ./namespace.yaml
-  - ./sops-age.yaml
   - ./democratic-csi.yaml
+  - ./sops-age.sops.yaml
