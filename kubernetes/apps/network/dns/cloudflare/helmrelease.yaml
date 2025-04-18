@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -46,8 +46,8 @@ spec:
       - "crd"
       - "ingress"
       - "service"
-    txtPrefix: "equestria."
-    txtOwnerId: "equestria"
+    txtPrefix: "${CLUSTER_CNAME}."
+    txtOwnerId: "${CLUSTER_CNAME}"
     domainFilters: ["${ROOT_DOMAIN}"]
     serviceMonitor:
       enabled: true

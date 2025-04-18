@@ -2,12 +2,12 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: "equestria"
+  name: "${CLUSTER_CNAME}"
 spec:
   exitNode: true
-  hostname: "equestria"
+  hostname: "${CLUSTER_CNAME}"
   subnetRouter:
     advertiseRoutes:
-      - "10.10.0.0/16"
-      - "10.206.0.0/16"
-      - "10.196.0.0/16"
+      - "${INTERNAL_NETWORK}"
+      - "${CLUSTER_NETWORK}"
+      - "${SERVICE_NETWORK}"
