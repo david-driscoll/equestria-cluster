@@ -55,7 +55,7 @@ spec:
           threadfin:
             image:
               repository: fyb3roptik/threadfin
-              tag: 1.2.31
+              tag: 1.2.32
             env:
               THREADFIN_PORT: &port 34400
               PUID: 568
