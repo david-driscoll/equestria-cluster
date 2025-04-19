@@ -8,5 +8,6 @@ components:
   - ../../components/repos/app-template
 resources:
   - ./shared/ks.yaml
+  - ./books/ks.yaml
   - ./media/ks.yaml
   - ./pvr/ks.yaml

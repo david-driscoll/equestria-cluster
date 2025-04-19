@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: readarr-apikey
+type: Opaque
+stringData:
+  apikey: ENC[AES256_GCM,data:30OKFrUkXjd50tITnIJ+0dI3YQevAV31qRrUJY6qM8E=,iv:sR86FJ3W9HuUKRD3Llk8OymZdB+6ZCEtv+g1Efoe2Ls=,tag:KyT6F6r6lNFeaZ4mNkbRfA==,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBiWWovZ3hYT1VaRi80R0JP
+        REMvVE9FempkOThYL0RQNDNIWGR0a2dBcDNrCmlTOEZCRnJkZnJUYmMwWEdDc00x
+        WjJZUUpqbDlwNFFobGRXRkxUQ2loZVkKLS0tICttWmZ3ZGd1WTdOL0t0dkVhQXBh
+        Y3c2WU41cTYzSko5WGFTNXFJdUdWR3MK25/LzUYGmDIxZJ942/tcP4Ywi5145xPd
+        Pgudjfoe0drB8mEfKY+77u+oRvHEHyRXaOesVGuonfD79zR2pGOPpg==
+        -----END AGE ENCRYPTED FILE-----
+    - recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0SE9CeDRESUtqQVhQSWFM
+        NHd5ZE1VbU9wck5vMVVsUWlHdEwzQ2RWa1VRCkRPaFY1NUsrb2JPaXpTaS9CMGw0
+        bHlBZUp2TCsxVVdPdmVPOVhtdGc3alEKLS0tIG9aTGFhV2R4TXg2UEpqdE1mMjhT
+        Vlh6dkNGUXpOOEd3OU41VWxlQm5kODQKtNxRN5CMFz9VOew4Kqw2hLglRkVZrD2c
+        dbgzM8OScWuWZi03gGN4GECJ1An/VCfxT6lSuivp0bUNDeQrGXXi8Q==
+        -----END AGE ENCRYPTED FILE-----
+    - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUak1haWRPeEV1Sy9DNk9C
+        aEtaTExUTjVDL3ZZTVRYMVR0ZXI2RytydDBRCm9rTGZSSTM4S083M3BRbFlNQVFR
+        bndDcnFITktPNVppNTFkSnVVb0xzcmsKLS0tIE82aUNMZHNPYUFMZ0tIZi8xeDdN
+        aXFTSE56c1YyUUIyeDFXaGM2Q2VBdlkKhRF99GE8+oQulo0nGi0Jpqs2JCZqETtl
+        I24jcyL5JUT5IhJ/JOgyNRPIcmK38hN5tYDupv/iBWETaOj5uFP6FQ==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-04-19T00:04:27Z"
+  mac: ENC[AES256_GCM,data:EvZ3OoMDmsTHi/1LRz95vtYP9/qbDA/kIOC0rvQgweMImvUe1MBacg8BdZnWfLb2AboE6nDg3B9eneDKKNffqodMjWHtCfiXYa0e2GxXMLNvargv2sEzIsc5U285Snp4K/xda7pL55M5wFWuqT/CE414pmqxdNipaf6xhHo4YUI=,iv:0nnRWvpqnMs5kdX+FmdRyQa394D3hg7HiiwV1WxXuVg=,tag:GnITI1VwpvEY3s1rqQq98w==,type:str]
+  pgp: []
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.9.3
