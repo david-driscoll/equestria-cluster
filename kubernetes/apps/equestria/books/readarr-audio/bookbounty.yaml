@@ -1,0 +1,138 @@
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app bookbounty-audio
+spec:
+  timeout: 5m
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: truenas-iscsi-stash
+      namespace: democratic-csi
+    - name: truenas-stash
+      namespace: democratic-csi
+  values:
+    fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        initContainers:
+          restore:
+            securityContext:
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: true
+              runAsUser: 0
+              runAsGroup: 0
+              fsGroup: 0
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              capabilities: { drop: ["ALL"] }
+            image:
+              repository: busybox
+              tag: 1.37.0
+              pullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+            args: |-
+                chown -R 568:568 /bookbounty/config
+                chmod -R 777 /bookbounty/config
+                echo "Done.";
+        containers:
+          app:
+            image:
+              repository: thewicklowwolf/bookbounty
+              tag: latest
+            # -- environment variables.
+            # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
+            env:
+              PUID: 568
+              PGID: 568
+              UMASK: 002
+              TZ: America/New_York
+              # search_type: non-fiction
+              libgen_address: http://libgen.is
+              selected_path_type: 'file'
+              library_scan_on_completion: 'true'
+              sync_schedule: "12"
+              readarr_address: "http://readarr-audio.${INTERNAL_CLUSTER_SERVICE}:8787"
+              readarr_api_key:
+                valueFrom:
+                  secretKeyRef:
+                    name: readarr-apikey
+                    key: apikey
+            resources:
+              requests:
+                cpu: 100m
+                memory: 100Mi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+
+    defaultPodOptions:
+      securityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    # -- Configures service settings for the chart.
+    service:
+      app:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: &port 5000
+
+
+    persistence:
+      config:
+        type: persistentVolumeClaim
+        storageClass: truenas-stash
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        globalMounts:
+          - path: /bookbounty/config
+      media-downloads:
+        existingClaim: media-downloads
+        globalMounts:
+          - path: /bookbounty/downloads
+            subPath: bookbounty-audio
+
+    rawResources:
+
+    ingress:
+      app:
+        className: internal
+        hosts:
+          - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
+        annotations:
+          reloader.stakater.com/auto: "true"
+          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+          # gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:5000"
+          # gethomepage.dev/widget.type: bookbounty
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Request
+          gethomepage.dev/icon: bookstack.svg
+          gethomepage.dev/name: "BookBounty (Audio)"
+          gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
+          gethomepage.dev/app: "{{ .Release.Name }}"
