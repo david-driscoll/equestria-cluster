@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: traefik
-      version: 35.0.0
+      version: 35.0.1
       sourceRef:
         kind: HelmRepository
         name: traefik
@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: traefik
-      tag: v3.3.5
+      tag: v3.3.6
     fullnameOverride: traefik-external
     deployment:
       replicas: 1
