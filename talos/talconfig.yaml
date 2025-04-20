@@ -27,8 +27,6 @@ nodes:
     controlPlane: true
     schematic: &controlplane_schematic
       customization:
-        extraKernelArgs:
-          - iommu.passthrough=1
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
@@ -54,8 +52,6 @@ nodes:
     controlPlane: false
     schematic: &amdgpu_schematic
       customization:
-        extraKernelArgs:
-          - iommu.passthrough=1
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
@@ -101,8 +97,6 @@ nodes:
       nvidia.com/gpu.present: "true"
     schematic: &nvidia_schematic
       customization:
-        extraKernelArgs:
-          - iommu.passthrough=1
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
@@ -170,4 +164,5 @@ controlPlane:
   patches:
     - "@./patches/controller/admission-controller-patch.yaml"
     - "@./patches/controller/cluster.yaml"
+    - "@./patches/controller/machine-rbac.yaml"
 
