@@ -27,18 +27,19 @@ spec:
       tag: v3.3.6
     fullnameOverride: traefik-external
     deployment:
-      replicas: 1
+      kind: DaemonSet
     service:
       annotations:
         reloader.stakater.com/auto: "true"
+        external-dns.alpha.kubernetes.io/target: "${EXTERNAL_DOMAIN}"
         io.cilium/lb-ipam-ips: "${EXTERNAL_IP}"
       externalIPs:
         - "${EXTERNAL_IP}"
     additionalArguments:
       - '--providers.file.filename=/config/store.yaml'
     volumes:
-      - name: le-production-tls
       # - name: le-staging-tls
+      - name: le-production-tls
         mountPath: '/certs'
         type: secret
       - name: cluster-tls
@@ -62,13 +63,31 @@ spec:
         cpu: 50m
         memory: 100Mi
       limits:
-        cpu: 1000m
-        memory: 1Gi
+        cpu: 150m
+        memory: 200Mi
+    autoscaling:
+      enabled: true
+      maxReplicas: 2
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 80
     providers:
       kubernetesCRD:
         ingressClass: "external"
+        enabled: true
+        allowCrossNamespace: true
+        allowExternalNameServices: true
       kubernetesIngress:
         ingressClass: "external"
+        enabled: true
+        allowExternalNameServices: true
+      kubernetesGateway:
+        enabled: true
+        experimentalChannel: true
     logs:
       access:
         enabled: true
@@ -77,3 +96,21 @@ spec:
     ingressRoute:
       dashboard:
         enabled: true
+        matchRule: Host(`external.${CLUSTER_DOMAIN}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "${EXTERNAL_DOMAIN}"
+    experimental:
+      fastProxy:
+        enabled: true
+      kubernetesGateway:
+        enabled: true
+    web:
+      forwardedHeaders:
+        insecure: true
+      proxyProtocol:
+        insecure: true
+    websecure:
+      forwardedHeaders:
+        insecure: true
+      proxyProtocol:
+        insecure: true
