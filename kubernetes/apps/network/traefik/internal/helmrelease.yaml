@@ -27,7 +27,9 @@ spec:
       tag: v3.3.6
     fullnameOverride: traefik-internal
     deployment:
-      replicas: 1
+      kind: DaemonSet
+
+
     service:
       annotations:
         reloader.stakater.com/auto: "true"
@@ -65,15 +67,28 @@ spec:
         cpu: 50m
         memory: 100Mi
       limits:
-        cpu: 1000m
-        memory: 1Gi
+        cpu: 150m
+        memory: 200Mi
+    autoscaling:
+      enabled: true
+      maxReplicas: 2
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 80
     providers:
       kubernetesCRD:
-        enabled: true
         ingressClass: "internal"
+        enabled: true
+        allowCrossNamespace: true
+        allowExternalNameServices: true
       kubernetesIngress:
-        enabled: true
         ingressClass: "internal"
+        enabled: true
+        allowExternalNameServices: true
       kubernetesGateway:
         enabled: true
         experimentalChannel: true
@@ -85,15 +100,21 @@ spec:
     ingressRoute:
       dashboard:
         enabled: true
-      healthcheck:
+        matchRule: Host(`internal.${CLUSTER_DOMAIN}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+    experimental:
+      fastProxy:
         enabled: true
-    ports:
-      rtsp:
-        port: 554
-        protocol: TCP
-      webrtc-tcp:
-        port: 8555
-        protocol: TCP
-      webrtc-udp:
-        port: 8555
-        protocol: UDP
+      kubernetesGateway:
+        enabled: true
+    web:
+      forwardedHeaders:
+        insecure: true
+      proxyProtocol:
+        insecure: true
+    websecure:
+      forwardedHeaders:
+        insecure: true
+      proxyProtocol:
+        insecure: true
