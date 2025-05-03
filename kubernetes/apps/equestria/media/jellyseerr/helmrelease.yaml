@@ -38,7 +38,7 @@ spec:
               repository: fallenbagel/jellyseerr
               tag: 2.5.2
             env:
-              TZ: America/New_York
+              TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
                 enabled: true

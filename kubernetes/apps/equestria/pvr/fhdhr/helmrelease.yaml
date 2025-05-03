@@ -84,7 +84,7 @@ spec:
               repository: fhdhr/fhdhr
               tag: latest
             env:
-              TZ: America/New_York
+              TZ: "${TIMEZONE}"
               PUID: 568
               PGID: 568
             probes:

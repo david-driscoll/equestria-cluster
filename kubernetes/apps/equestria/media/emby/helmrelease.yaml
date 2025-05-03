@@ -46,7 +46,7 @@ spec:
               # EMBY_FFmpeg__analyzeduration: 50000000
               PUID: 568
               PGID: 568
-              TZ: America/New_York
+              TZ: "${TIMEZONE}"
             probes:
               liveness: &probes
                 enabled: true

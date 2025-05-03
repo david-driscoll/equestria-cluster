@@ -57,7 +57,7 @@ spec:
               repository: nextpvr/nextpvr_amd64
               tag: stable
             env:
-              TZ: America/New_York
+              TZ: "${TIMEZONE}"
               PUID: 568
               PGID: 568
             # probes:

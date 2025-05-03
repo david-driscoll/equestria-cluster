@@ -59,7 +59,7 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.41.6
             env:
-              TZ: America/New_York
+              TZ: "${TIMEZONE}"
               PUID: 568
               PGID: 568
               PLEX_ADVERTISE_URL: https://{{ .Release.Name }}.${ROOT_DOMAIN}:443,https://{{ .Release.Name }}.${TAILSCALE_DOMAIN}:443,http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:32400
