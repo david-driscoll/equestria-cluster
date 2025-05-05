@@ -15,3 +15,5 @@ resources:
   - ./features/ks.yaml
   - ./spegel/ks.yaml
   - ./reflector/ks.yaml
+  - ./snapshot-controller/ks.yaml
+  - ./external-secrets/ks.yaml
