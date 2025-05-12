@@ -1,0 +1,79 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app littles-tech-runners
+  namespace: flux-system
+spec:
+  targetNamespace: &target-namespace github-actions
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: gha-arc-controller
+  path: ./kubernetes/apps/github-actions/runners/littles-tech
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *target-namespace
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app littles-tech-release-runners
+  namespace: flux-system
+spec:
+  targetNamespace: &target-namespace github-actions
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: gha-arc-controller
+  path: ./kubernetes/apps/github-actions/runners/littles-tech-release
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *target-namespace
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app david-driscoll-runners
+#   namespace: flux-system
+# spec:
+#   targetNamespace: &target-namespace github-actions
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   dependsOn:
+#     - name: gha-arc-controller
+#   path: ./kubernetes/apps/github-actions/runners/david-driscoll
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: homelab-cluster
+#   wait: true
+#   interval: 30m
+#   retryInterval: 1m
+#   timeout: 5m
