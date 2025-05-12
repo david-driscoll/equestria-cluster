@@ -1,0 +1,36 @@
+
+kind: HelmRelease
+metadata:
+  name: patch
+spec:
+  valuesFrom:
+
+    - kind: Secret
+      name: david-driscoll-github-app
+      targetPath: githubConfigUrl
+      valuesKey: githubConfigUrl
+
+    - kind: Secret
+      name: david-driscoll-github-app
+      targetPath: githubConfigSecret.github_app_id
+      valuesKey: github_app_id
+
+    - kind: Secret
+      name: david-driscoll-github-app
+      targetPath: githubConfigSecret.github_app_installation_id
+      valuesKey: github_app_installation_id
+
+    - kind: Secret
+      name: david-driscoll-github-app
+      targetPath: githubConfigSecret.github_app_private_key
+      valuesKey: github_app_private_key
+
+    - kind: Secret
+      name: david-driscoll-github-app
+      targetPath: controllerServiceAccount.name
+      valuesKey: controllerServiceAccountName
+
+    - kind: Secret
+      name: david-driscoll-github-app
+      targetPath: controllerServiceAccount.namespace
+      valuesKey: controllerServiceAccountNamespace
