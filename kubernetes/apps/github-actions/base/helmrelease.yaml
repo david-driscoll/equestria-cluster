@@ -37,7 +37,7 @@ spec:
       spec:
         containers:
           - name: runner
-            image: daviddriscoll/github-arc-runner-az-dotnet:latest@sha256:7fd428ced7bed02183bf1886e53619c0de3197f6f7023e785440034d4bed3469
+            image: daviddriscoll/github-arc-runner-az-dotnet:latest@sha256:d0684342baf39fce0a7288341f29e8ccd4b1e6a65ef3bb06175a44ea189121fa
             imagePullPolicy: Always
             env:
               # - name: ACTIONS_RUNNER_CONTAINER_HOOKS
