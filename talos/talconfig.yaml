@@ -25,7 +25,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: true
-    schematic: &controlplane_schematic
+    imageSchematic: &controlplane_schematic
       customization:
         systemExtensions:
           officialExtensions:
@@ -50,7 +50,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: false
-    schematic: &amdgpu_schematic
+    imageSchematic: &amdgpu_schematic
       customization:
         systemExtensions:
           officialExtensions:
@@ -74,7 +74,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: true
-    schematic: *controlplane_schematic
+    imageSchematic: *controlplane_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:34:9e:5e"
@@ -95,7 +95,7 @@ nodes:
     controlPlane: false
     nodeLabels:
       nvidia.com/gpu.present: "true"
-    schematic: &nvidia_schematic
+    imageSchematic: &nvidia_schematic
       customization:
         systemExtensions:
           officialExtensions:
@@ -120,7 +120,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: true
-    schematic: *controlplane_schematic
+    imageSchematic: *controlplane_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:11:7d:6a"
@@ -139,7 +139,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: false
-    schematic: *controlplane_schematic
+    imageSchematic: *controlplane_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:b5:69:5c"
