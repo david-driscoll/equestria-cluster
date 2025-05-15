@@ -9,5 +9,5 @@ components:
 resources:
   - ./shared/ks.yaml
   - ./books/ks.yaml
-  # - ./media/ks.yaml
+  - ./media/ks.yaml
   - ./pvr/ks.yaml
