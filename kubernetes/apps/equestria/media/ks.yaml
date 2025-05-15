@@ -23,6 +23,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -52,6 +57,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -81,6 +91,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -110,6 +125,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -139,6 +159,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -168,6 +193,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -197,6 +227,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -226,6 +261,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -255,6 +295,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -284,6 +329,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: *app
+      namespace: *namespace
   wait: true
   interval: 30m
   retryInterval: 1m
