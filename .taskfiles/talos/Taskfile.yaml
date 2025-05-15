@@ -32,10 +32,15 @@ tasks:
     dir: '{{.TALOS_DIR}}'
     cmd: |
       talosctl upgrade -n 10.10.206.10 --wait
-      talosctl upgrade -n 10.10.206.11 --wait
+      sleep 10
       talosctl upgrade -n 10.10.206.12 --wait
-      talosctl upgrade -n 10.10.206.13 --wait
+      sleep 10
       talosctl upgrade -n 10.10.206.14 --wait
+      sleep 10
+      talosctl upgrade -n 10.10.206.11 --wait
+      sleep 10
+      talosctl upgrade -n 10.10.206.13 --wait
+      sleep 10
       talosctl upgrade -n 10.10.206.15 --wait
     vars:
       MODE: '{{.MODE | default "auto"}}'
