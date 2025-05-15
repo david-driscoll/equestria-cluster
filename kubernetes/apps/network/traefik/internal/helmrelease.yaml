@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -9,7 +10,7 @@ spec:
   chart:
     spec:
       chart: traefik
-      version: 35.1.0
+      version: 35.2.0
       sourceRef:
         kind: HelmRepository
         name: traefik
@@ -24,7 +25,7 @@ spec:
   values:
     image:
       repository: traefik
-      tag: v3.3.6
+      tag: v3.4.0@sha256:4cf907247939b5d20bf4eff73abd21cb413c339600dde76dbc94a874b2578a27
     fullnameOverride: traefik-internal
     deployment:
       kind: DaemonSet

@@ -139,7 +139,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: false
-    schematic: *amdgpu_schematic
+    schematic: *controlplane_schematic
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:b5:69:5c"
