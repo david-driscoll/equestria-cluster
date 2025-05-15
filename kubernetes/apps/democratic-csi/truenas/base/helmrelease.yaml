@@ -121,6 +121,8 @@ spec:
         mountOptions:
           - noatime
           - nfsvers=4
+          # - nfsvers=3
+          # - nolock
         secrets:
           provisioner-secret:
           controller-publish-secret:
@@ -176,10 +178,10 @@ spec:
         extraEnv:
           - name: ISCSIADM_HOST_STRATEGY
             value: nsenter
-          - name: ISCSIADM_HOST_PATH
-            value: /usr/local/sbin/iscsiadm
-        iscsiDirHostPath: /usr/local/etc/iscsi
-        # iscsiDirHostPath: /var/local/etc/iscsi
+          # - name: ISCSIADM_HOST_PATH
+          #   value: /usr/local/sbin/iscsiadm
+        iscsiDirHostPath: /var/iscsi
+        # iscsiDirHostPath: /var/iscsi
         iscsiDirHostPathType: ""
         resources:
           requests:
