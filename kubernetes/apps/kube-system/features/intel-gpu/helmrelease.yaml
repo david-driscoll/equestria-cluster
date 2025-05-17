@@ -35,4 +35,5 @@ spec:
   values:
     name: intel-gpu-plugin
     nodeFeatureRule: true
-    sharedDevNum: 2 # the higher the number, the less resource slices each client gets, consider setting this to 1
+    sharedDevNum: 2 # the higher the number, the less resource slices each client gets, consider setting this t
+
