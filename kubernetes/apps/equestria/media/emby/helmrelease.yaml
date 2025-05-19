@@ -129,7 +129,7 @@ spec:
           reloader.stakater.com/auto: "true"
         defaultBackend:
           service:
-            name: "{{ .Release.Name }}"
+            name: *app
             port:
               number: *port
           tls:
