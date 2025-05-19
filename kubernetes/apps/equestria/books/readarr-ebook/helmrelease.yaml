@@ -136,7 +136,6 @@ spec:
         globalMounts:
           - path: /media/ebooks
 
-    rawResources:
 
     ingress:
       app:
@@ -145,6 +144,7 @@ spec:
           - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
             paths:
               - path: /
+                pathType: Prefix
                 service:
                   identifier: app
                   port: *port
