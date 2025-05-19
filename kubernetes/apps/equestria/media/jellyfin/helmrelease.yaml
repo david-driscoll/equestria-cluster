@@ -160,3 +160,8 @@ spec:
         existingClaim: media-tv
         globalMounts:
           - path: /media/tv
+
+      media-dvr:
+        existingClaim: media-dvr
+        globalMounts:
+          - path: /media/dvr
