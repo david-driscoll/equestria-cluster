@@ -120,6 +120,6 @@ spec:
             name: *app
             port:
               number: *port
-          tls:
+          hosts:
             - hosts:
                 - *app

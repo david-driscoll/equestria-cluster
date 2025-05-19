@@ -166,9 +166,10 @@ spec:
             name: *app
             port:
               number: *port
-          tls:
-            - hosts:
-                - *app
+        hosts:
+          - host: *app
+            paths:
+              - /
 
     persistence:
       config:
