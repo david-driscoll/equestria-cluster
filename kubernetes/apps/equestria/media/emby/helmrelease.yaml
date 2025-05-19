@@ -86,8 +86,8 @@ spec:
     #     fsGroupChangePolicy: OnRootMismatch
     #     supplementalGroups: [44, 109, 10000]
     #     seccompProfile: { type: RuntimeDefault }
-      # nodeSelector:
-      #   intel.feature.node.kubernetes.io/gpu: "true"
+    # nodeSelector:
+    #   intel.feature.node.kubernetes.io/gpu: "true"
 
     service:
       app:
@@ -134,8 +134,8 @@ spec:
             port:
               number: *port
           tls:
-              - hosts:
-                  - "{{ .Release.Name }}"
+            - hosts:
+                - *app
 
     persistence:
       config:

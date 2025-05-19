@@ -144,6 +144,5 @@ spec:
             port:
               number: *port
           tls:
-              - hosts:
-                  - "{{ .Release.Name }}"
-
+            - hosts:
+                - *app

@@ -47,37 +47,37 @@ spec:
               - "/bin/sh"
               - "-c"
             args: |-
-                mkdir -p /app/config
-                mkdir -p /app/plugins
-                cp /config/config.ini /app/config/config.ini
+              mkdir -p /app/config
+              mkdir -p /app/plugins
+              cp /config/config.ini /app/config/config.ini
 
-                clone_plugin() {
-                    git clone $1 /app/plugins/$2
-                    git config --global --add safe.directory /app/plugins/$2
-                    cd /app/plugins/$2
-                    git pull
-                }
+              clone_plugin() {
+                  git clone $1 /app/plugins/$2
+                  git config --global --add safe.directory /app/plugins/$2
+                  cd /app/plugins/$2
+                  git pull
+              }
 
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_hdhr.git /app/plugins/fHDHR_plugin_interface_hdhr
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_rmg.git /app/plugins/fHDHR_plugin_interface_rmg
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_cluster.git /app/plugins/fHDHR_plugin_interface_cluster
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_devtools.git /app/plugins/fHDHR_plugin_web_devtools
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_logos.git /app/plugins/fHDHR_plugin_web_logos
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_watch.git /app/plugins/fHDHR_plugin_web_watch
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_epg_tvtv.git /app/plugins/fHDHR_plugin_epg_tvtv
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_epg_zap2it.git /app/plugins/fHDHR_plugin_epg_zap2it
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_IPTVorg.git /app/plugins/fHDHR_plugin_origin_IPTVorg
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_NextPVR.git /app/plugins/fHDHR_plugin_origin_NextPVR
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_plutotv.git /app/plugins/fHDHR_plugin_origin_plutotv
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_STIRR.git /app/plugins/fHDHR_plugin_origin_STIRR
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_ToonamiAftermath.git /app/plugins/fHDHR_plugin_origin_ToonamiAftermath
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_tvheadend.git /app/plugins/fHDHR_plugin_origin_tvheadend
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_USTVGO.git /app/plugins/fHDHR_plugin_origin_USTVGO
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_XUMO.git /app/plugins/fHDHR_plugin_origin_XUMO
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_stream_ffmpeg.git /app/plugins/fHDHR_plugin_stream_ffmpeg
-                clone_plugin https://github.com/fHDHR/fHDHR_plugin_stream_vlc.git /app/plugins/fHDHR_plugin_stream_vlc
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_hdhr.git /app/plugins/fHDHR_plugin_interface_hdhr
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_rmg.git /app/plugins/fHDHR_plugin_interface_rmg
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_interface_cluster.git /app/plugins/fHDHR_plugin_interface_cluster
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_devtools.git /app/plugins/fHDHR_plugin_web_devtools
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_logos.git /app/plugins/fHDHR_plugin_web_logos
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_web_watch.git /app/plugins/fHDHR_plugin_web_watch
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_epg_tvtv.git /app/plugins/fHDHR_plugin_epg_tvtv
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_epg_zap2it.git /app/plugins/fHDHR_plugin_epg_zap2it
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_IPTVorg.git /app/plugins/fHDHR_plugin_origin_IPTVorg
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_NextPVR.git /app/plugins/fHDHR_plugin_origin_NextPVR
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_plutotv.git /app/plugins/fHDHR_plugin_origin_plutotv
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_STIRR.git /app/plugins/fHDHR_plugin_origin_STIRR
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_ToonamiAftermath.git /app/plugins/fHDHR_plugin_origin_ToonamiAftermath
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_tvheadend.git /app/plugins/fHDHR_plugin_origin_tvheadend
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_USTVGO.git /app/plugins/fHDHR_plugin_origin_USTVGO
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_origin_XUMO.git /app/plugins/fHDHR_plugin_origin_XUMO
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_stream_ffmpeg.git /app/plugins/fHDHR_plugin_stream_ffmpeg
+              clone_plugin https://github.com/fHDHR/fHDHR_plugin_stream_vlc.git /app/plugins/fHDHR_plugin_stream_vlc
 
-                echo "Done.";
+              echo "Done.";
         containers:
           fhdhr:
             image:
@@ -167,8 +167,8 @@ spec:
             port:
               number: *port
           tls:
-              - hosts:
-                  - "{{ .Release.Name }}"
+            - hosts:
+                - *app
 
     persistence:
       config:
