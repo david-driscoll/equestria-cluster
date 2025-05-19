@@ -142,7 +142,7 @@ spec:
               number: *port
           tls:
               - hosts:
-                  - "{{ .Release.Name }}.${TAILSCALE_DOMAIN}"
+                  - "{{ .Release.Name }}"
     persistence:
       config:
         existingClaim: nextpvr-config

@@ -135,7 +135,6 @@ spec:
         className: tailscale
         annotations:
           reloader.stakater.com/auto: "true"
-          tailscale.com/hostname: *app
         defaultBackend:
           service:
             name: *app
@@ -143,7 +142,7 @@ spec:
               number: *port
           tls:
               - hosts:
-                  - "{{ .Release.Name }}.${TAILSCALE_DOMAIN}"
+                  - "{{ .Release.Name }}"
 
 
 
