@@ -130,8 +130,6 @@ spec:
         globalMounts:
           - path: /media/tv
 
-    rawResources:
-
     ingress:
       internal:
         className: internal
@@ -157,10 +155,11 @@ spec:
         className: tailscale
         annotations:
           reloader.stakater.com/auto: "true"
-        hosts:
-          - host: "{{ .Release.Name }}.${TAILSCALE_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: *port
+        defaultBackend:
+          service:
+            name: "{{ .Release.Name }}"
+            port:
+              number: *port
+          tls:
+              - hosts:
+                  - "{{ .Release.Name }}.${TAILSCALE_DOMAIN}"
