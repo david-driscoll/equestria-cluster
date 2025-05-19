@@ -29,6 +29,9 @@ spec:
   timeout: 5m
   components:
     - ../../../../components/tailscale
+  postBuild:
+    substitute:
+      APP: *app
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -60,6 +63,9 @@ spec:
   timeout: 5m
   components:
     - ../../../../components/tailscale
+  postBuild:
+    substitute:
+      APP: *app
 # ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
@@ -91,6 +97,9 @@ spec:
 #   timeout: 5m
 #   components:
 #     - ../../../../components/tailscale
+#   postBuild:
+#     substitute:
+#       APP: *app
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -123,6 +132,9 @@ spec:
   timeout: 5m
   components:
     - ../../../../components/tailscale
+  postBuild:
+    substitute:
+      APP: *app
 
 # ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -155,3 +167,6 @@ spec:
 #   timeout: 5m
 #   components:
 #     - ../../../../components/tailscale
+#   postBuild:
+#     substitute:
+#       APP: *app
