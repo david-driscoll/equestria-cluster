@@ -29,7 +29,7 @@ spec:
   retryInterval: 1m
   timeout: 5m
   components:
-    - ../../../../components
+    - ../../../../components/tailscale
   postBuild:
     substitute:
       APP: *app
