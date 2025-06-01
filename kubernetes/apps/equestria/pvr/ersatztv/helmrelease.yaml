@@ -41,7 +41,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
-              tag: 1.37.0
+              tag: 1.37.0@sha256:f85340bf132ae937d2c2a763b8335c9bab35d6e8293f70f606b9c6178d84f42b
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -54,7 +54,7 @@ spec:
           ersatztv:
             image:
               repository: jasongdove/ersatztv
-              tag: latest
+              tag: latest@sha256:a3d5c42dcc4272e190db4e286e8da9e9670687fe3a75ca79fcc4867a640170f8
             env:
               PUID: 568
               PGID: 568

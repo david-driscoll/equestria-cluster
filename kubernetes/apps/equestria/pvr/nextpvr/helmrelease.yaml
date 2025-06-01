@@ -41,7 +41,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
-              tag: 1.37.0
+              tag: 1.37.0@sha256:f85340bf132ae937d2c2a763b8335c9bab35d6e8293f70f606b9c6178d84f42b
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -54,7 +54,7 @@ spec:
           nextpvr:
             image:
               repository: nextpvr/nextpvr_amd64
-              tag: stable
+              tag: stable@sha256:382b9e330133cfafb0b550146555ca966bb5077ae7d76649de1f97e59a373b17
             env:
               TZ: America/New_York
               PUID: 568
