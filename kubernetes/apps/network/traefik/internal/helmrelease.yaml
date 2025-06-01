@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: traefik-internal
+  name: &app traefik-internal
   namespace: network
 spec:
   interval: 30m
@@ -28,9 +28,8 @@ spec:
       tag: v3.4.1@sha256:cd40ab7bc1f047731d5b22595203812343efcb6538014c4e93221cfc3a77217a
     fullnameOverride: traefik-internal
     deployment:
-      kind: DaemonSet
-
-
+      kind: Deployment
+      replicas: 3
     service:
       annotations:
         reloader.stakater.com/auto: "true"
@@ -44,6 +43,7 @@ spec:
       - '--providers.file.filename=/config/store.yaml'
       - '--serversTransport.insecureSkipVerify=true'
       - --certificatesresolvers.tailscale.tailscale=true
+      - --entryPoints.postgres.address=:5432/tcp
     volumes:
       # - name: le-staging-tls
       - name: le-production-tls
@@ -55,6 +55,16 @@ spec:
       - name: traefik-tls-settings
         mountPath: '/config'
         type: configMap
+    ports:
+      traefik:
+        expose:
+          default: true
+      postgres:
+        expose:
+          default: true
+        port: 5432
+        exposedPort: 5432
+        protocol: TCP
     ingressClass:
       enabled: true
       isDefaultClass: false
@@ -72,16 +82,6 @@ spec:
       limits:
         cpu: 150m
         memory: 200Mi
-    autoscaling:
-      enabled: true
-      maxReplicas: 2
-      metrics:
-      - type: Resource
-        resource:
-          name: cpu
-          target:
-            type: Utilization
-            averageUtilization: 80
     providers:
       kubernetesCRD:
         ingressClass: "internal"
@@ -97,15 +97,29 @@ spec:
         experimentalChannel: true
     logs:
       access:
-        enabled: false
-    api:
-      dashboard: true
+        enabled: true
+        addInternals: true
+      general:
+        # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+        format: common
+        # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
+        level: "INFO"
     ingressRoute:
       dashboard:
         enabled: true
-        matchRule: Host(`internal.${CLUSTER_DOMAIN}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
         annotations:
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+          external-dns.alpha.kubernetes.io/hostname: internal.${CLUSTER_DOMAIN}
+        matchRule: Host(`internal.${CLUSTER_DOMAIN}`)
+        services:
+          - name: api@internal
+            kind: TraefikService
+        entryPoints:
+        - "traefik"
+        - "websecure"
+        middlewares: []
+        tls:
+          secretName: "le-production-tls"
     experimental:
       fastProxy:
         enabled: true
