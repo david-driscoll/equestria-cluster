@@ -45,7 +45,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
-              tag: 1.37.0
+              tag: 1.37.0@sha256:f85340bf132ae937d2c2a763b8335c9bab35d6e8293f70f606b9c6178d84f42b
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -58,7 +58,7 @@ spec:
           app:
             image:
               repository: fancybits/channels-dvr
-              tag: latest
+              tag: latest@sha256:284fed6f4ee5150d41d9a7f247a63e190f6f1c3a4e4bc740f029df6d36955d29
               pullPolicy: Always
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.

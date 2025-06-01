@@ -41,7 +41,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
-              tag: 1.37.0
+              tag: 1.37.0@sha256:f85340bf132ae937d2c2a763b8335c9bab35d6e8293f70f606b9c6178d84f42b
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -54,7 +54,7 @@ spec:
           threadfin:
             image:
               repository: fyb3roptik/threadfin
-              tag: 1.2.32
+              tag: 1.2.32@sha256:11e02ff07d7a874133d9c79200d7c6f2ae44d98e2e8736a6f63056387a651b86
             env:
               THREADFIN_PORT: &port 34400
               PUID: 568

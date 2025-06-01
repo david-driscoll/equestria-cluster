@@ -44,7 +44,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
-              tag: 1.37.0
+              tag: 1.37.0@sha256:f85340bf132ae937d2c2a763b8335c9bab35d6e8293f70f606b9c6178d84f42b
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -57,7 +57,7 @@ spec:
           app:
             image:
               repository: thewicklowwolf/bookbounty
-              tag: latest
+              tag: latest@sha256:dc3e5c6a7dc85963b2bc2f60203a0c212e7065829d9f6b0e83a1d88deec212b6
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
