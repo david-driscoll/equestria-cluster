@@ -129,14 +129,13 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
           tailscale.com/hostname: *app
-        defaultBackend:
-          service:
-            name: *app
-            port:
-              number: *port
-          tls:
-            - hosts:
-                - *app
+        hosts:
+          - host: "{{ .Release.Name }}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: *port
 
     persistence:
       config:
