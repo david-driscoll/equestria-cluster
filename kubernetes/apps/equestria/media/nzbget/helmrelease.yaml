@@ -35,7 +35,7 @@ spec:
           app:
             image:
               repository: nzbgetcom/nzbget
-              tag: v25.0@sha256:4ec56692ef7a46aac11210f91095765497e1e4e6ec7d4dc6c9619389fa251e63
+              tag: v24.8@sha256:c21a1dc5592aa20b3467b97e728bf16fa1a79f1081041ec1774e9b282fae3fb8
               pullPolicy: Always
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
