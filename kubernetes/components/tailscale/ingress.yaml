@@ -5,6 +5,7 @@ metadata:
   name: ${APP}-tailscale
   annotations:
     tailscale.com/experimental-forward-cluster-traffic-via-ingress: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: network-tailscale-user@kubernetescrd
 spec:
   defaultBackend:
     service:
