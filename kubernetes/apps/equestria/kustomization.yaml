@@ -11,3 +11,4 @@ resources:
   - ./books/ks.yaml
   - ./media/ks.yaml
   - ./pvr/ks.yaml
+  - ./idp/ks.yaml
