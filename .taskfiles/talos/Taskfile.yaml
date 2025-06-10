@@ -70,9 +70,25 @@ tasks:
       MODE: '{{.MODE | default "auto"}}'
     requires:
       vars: [IP]
+    deps:
+      - generate-config
     preconditions:
       - talosctl --nodes {{.IP}} get machineconfig
       - talosctl config info
+      - test -f {{.TALOSCONFIG}}
+      - which talhelper talosctl yq
+
+  add-node:
+    desc: Add a new node to the cluster [IP=required]
+    dir: '{{.TALOS_DIR}}'
+    cmd: talhelper gencommand apply --node {{.IP}} --extra-flags '--insecure --mode={{.MODE}}' | bash
+    vars:
+      MODE: '{{.MODE | default "auto"}}'
+    requires:
+      vars: [IP]
+    deps:
+      - generate-config
+    preconditions:
       - test -f {{.TALOSCONFIG}}
       - which talhelper talosctl yq
 

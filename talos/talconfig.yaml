@@ -150,6 +150,77 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
+  - hostname: "fluttershy"
+    ipAddress: "10.10.206.16"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    controlPlane: true
+    nodeAnnotations: &intel_un1290_annotations
+      node.longhorn.io/default-disks-config: |
+        {
+          "disks": [
+            {
+              "path": "/var/mnt/longhorn",
+              "allowScheduling": true,
+              "tags":["nvme", "ssd"]
+            }
+          ]
+        }
+    schematic: &intel_un1290_schematic
+      customization:
+        extraKernelArgs:
+          - i915.enable_guc=3
+          - intel_iommu=on
+          - iommu=pt
+          - sysctl.kernel.kexec_load_disabled=1
+          # - apparmor=0                          # Less security, faster puter
+          # - init_on_alloc=0                     # Less security, faster puter
+          # - init_on_free=0                      # Less security, faster puter
+          # - mitigations=off                     # Less security, faster puter
+          # - security=none                       # Less security, faster puter
+          # - talos.auditd.disabled=1             # Less security, faster puter
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915
+            - siderolabs/intel-ucode
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+    patches: &intel_un1290_patches
+      - "@./patches/un1290/machine-disks.yaml"
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "58:47:ca:7a:09:3d"
+        dhcp: false
+        addresses:
+          - "10.10.206.16/16"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.10.0.1"
+        mtu: 1500
+        vip:
+          ip: "10.10.206.201"
+  - hostname: "kerfuffle"
+    ipAddress: "10.10.206.17"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    controlPlane: true
+    nodeAnnotations: *intel_un1290_annotations
+    schematic: *intel_un1290_schematic
+    patches: *intel_un1290_patches
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "58:47:ca:7a:07:b4"
+        dhcp: false
+        addresses:
+          - "10.10.206.17/16"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.10.0.1"
+        mtu: 1500
+        vip:
+          ip: "10.10.206.201"
 
 # Global patches
 patches:
@@ -158,6 +229,7 @@ patches:
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
+  - "@./patches/global/cluster-admissionregistration.yaml"
 
 # Controller patches
 controlPlane:
