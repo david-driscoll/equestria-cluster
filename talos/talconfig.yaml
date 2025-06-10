@@ -114,13 +114,42 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-  - hostname: "pharynx"
+  - hostname: "hard-hat"
     ipAddress: "10.10.206.14"
-    installDisk: "/dev/sda"
+    installDisk: "/dev/nvme0n1"
     machineSpec:
       secureboot: false
     controlPlane: true
-    schematic: *controlplane_schematic
+    nodeAnnotations: &amd_minifm_annotations
+      node.longhorn.io/default-disks-config: |
+        {
+          "disks": [
+            {
+              "path": "/var/mnt/longhorn",
+              "allowScheduling": true,
+              "tags":["nvme", "ssd"]
+            }
+          ]
+        }
+    schematic: &amd_minifm_schematic
+      customization:
+        extraKernelArgs:
+          - sysctl.kernel.kexec_load_disabled=1
+          # - apparmor=0                          # Less security, faster puter
+          # - init_on_alloc=0                     # Less security, faster puter
+          # - init_on_free=0                      # Less security, faster puter
+          # - mitigations=off                     # Less security, faster puter
+          # - security=none                       # Less security, faster puter
+          # - talos.auditd.disabled=1             # Less security, faster puter
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/amdgpu
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+    patches: &amd_minifm_patches
+      - "@./patches/minifm/machine-disks.yaml"
+
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "bc:24:11:11:7d:6a"
@@ -133,23 +162,8 @@ nodes:
         mtu: 1500
         vip:
           ip: "10.10.206.201"
-  - hostname: "ember"
-    ipAddress: "10.10.206.15"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    controlPlane: false
-    schematic: *amdgpu_schematic
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:b5:69:5c"
-        dhcp: false
-        addresses:
-          - "10.10.206.15/16"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.10.0.1"
-        mtu: 1500
+  # - hostname: "unused"
+  #   ipAddress: "10.10.206.15"
   - hostname: "fluttershy"
     ipAddress: "10.10.206.16"
     installDisk: "/dev/sda"
