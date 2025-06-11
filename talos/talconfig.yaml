@@ -68,16 +68,46 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-  - hostname: "marble-pie"
+  - hostname: "pinkie-pie"
     ipAddress: "10.10.206.12"
-    installDisk: "/dev/sda"
+    installDiskSelector:
+
+      model: "WDC  WDS100T2B0B"
     machineSpec:
       secureboot: false
-    controlPlane: true
-    schematic: *controlplane_schematic
+    controlPlane: false
+    userVolumes:
+      - name: longhorn
+        filesystem:
+          type: xfs
+        provisioning:
+          diskSelector:
+            match: disk.model == "Micron 2300 NVMe 1024GB"
+          grow: true
+          maxSize: 1TB
+    nodeAnnotations:
+      node.longhorn.io/default-disks-config: |
+        {
+          "disks": [
+            {
+              "path": "/var/mnt/u-longhorn",
+              "allowScheduling": true,
+              "tags":["nvme", "ssd"]
+            }
+          ]
+        }
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/nonfree-kmod-nvidia-production
+            - siderolabs/nvidia-container-toolkit-production
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+            # - siderolabs/tailscale
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:34:9e:5e"
+          hardwareAddr: "a8:a1:59:00:b7:17"
         dhcp: false
         addresses:
           - "10.10.206.12/16"
@@ -85,47 +115,30 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-        vip:
-          ip: "10.10.206.201"
-  - hostname: "limestone-pie"
-    ipAddress: "10.10.206.13"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    controlPlane: false
-    nodeLabels:
-      nvidia.com/gpu.present: "true"
-    schematic: &nvidia_schematic
-      customization:
-        systemExtensions:
-          officialExtensions:
-            - siderolabs/iscsi-tools
-            - siderolabs/qemu-guest-agent
-            # - siderolabs/nvidia-container-toolkit-production
-            # - siderolabs/nvidia-open-gpu-kernel-modules-production
-            # - siderolabs/tailscale
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "a8:a1:59:00:b7:17"
-        dhcp: false
-        addresses:
-          - "10.10.206.13/16"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.10.0.1"
-        mtu: 1500
+  # - hostname: "unused"
+  #   ipAddress: "10.10.206.13"
   - hostname: "hard-hat"
     ipAddress: "10.10.206.14"
-    installDisk: "/dev/nvme0n1"
+    installDiskSelector:
+      model: "KINGSTON SNV3S1000G"
     machineSpec:
       secureboot: false
     controlPlane: true
+    userVolumes:
+      - name: longhorn
+        filesystem:
+          type: xfs
+        provisioning:
+          diskSelector:
+            match: disk.model == "Samsung SSD 990 EVO Plus 1TB"
+          grow: true
+          maxSize: 1TB
     nodeAnnotations: &amd_minifm_annotations
       node.longhorn.io/default-disks-config: |
         {
           "disks": [
             {
-              "path": "/var/mnt/longhorn",
+              "path": "/var/mnt/u-longhorn",
               "allowScheduling": true,
               "tags":["nvme", "ssd"]
             }
@@ -133,22 +146,12 @@ nodes:
         }
     schematic: &amd_minifm_schematic
       customization:
-        extraKernelArgs:
-          - sysctl.kernel.kexec_load_disabled=1
-          # - apparmor=0                          # Less security, faster puter
-          # - init_on_alloc=0                     # Less security, faster puter
-          # - init_on_free=0                      # Less security, faster puter
-          # - mitigations=off                     # Less security, faster puter
-          # - security=none                       # Less security, faster puter
-          # - talos.auditd.disabled=1             # Less security, faster puter
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/amdgpu
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
-    patches: &amd_minifm_patches
-      - "@./patches/minifm/machine-disks.yaml"
 
     networkInterfaces:
       - deviceSelector:
@@ -183,17 +186,6 @@ nodes:
         }
     schematic: &intel_un1290_schematic
       customization:
-        extraKernelArgs:
-          - i915.enable_guc=3
-          - intel_iommu=on
-          - iommu=pt
-          - sysctl.kernel.kexec_load_disabled=1
-          # - apparmor=0                          # Less security, faster puter
-          # - init_on_alloc=0                     # Less security, faster puter
-          # - init_on_free=0                      # Less security, faster puter
-          # - mitigations=off                     # Less security, faster puter
-          # - security=none                       # Less security, faster puter
-          # - talos.auditd.disabled=1             # Less security, faster puter
         systemExtensions:
           officialExtensions:
             - siderolabs/i915
