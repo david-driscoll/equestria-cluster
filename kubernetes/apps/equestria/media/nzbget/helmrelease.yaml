@@ -114,6 +114,7 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:6789"
+          traefik.ingress.kubernetes.io/router.middlewares: network-authenticated-user@kubernetescrd
           # gethomepage.dev/widget.key: "${nzbget_restricted_password}"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media Management

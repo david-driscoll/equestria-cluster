@@ -48,15 +48,17 @@ spec:
       # Ensure that Weave GitOps Deployment and CRDs have the label 'app.kubernetes.io/part-of=weave-gitops'. See https://docs.gitops.weaveworks.org/docs/open-source/getting-started/install-OSS for more info.
       - name: WEAVE_GITOPS_FEATURE_GITOPS_RUNTIME
         value: "true"
+    additionalArgs:
+      - --insecure-no-authentication-user=gitops-test-user
     adminUser:
       create: true
-      username: admin
     ingress:
       enabled: true
       className: internal
       annotations:
         reloader.stakater.com/auto: "true"
         external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+        traefik.ingress.kubernetes.io/router.middlewares: network-authenticated-user@kubernetescrd
       hosts:
         - host: "gitops.${CLUSTER_DOMAIN}"
           paths:
