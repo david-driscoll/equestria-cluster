@@ -43,8 +43,8 @@ spec:
           startingDeadlineSeconds: 30
           successfulJobsHistory: 3
           suspend: false
-        containers: &job
-          job:
+        containers:
+          job: &job
             image:
               repository: ghcr.io/david-driscoll/tivi-sync
               tag: 1.0.33
@@ -73,7 +73,8 @@ spec:
         type: job
         annotations:
           reloader.stakater.com/auto: "true"
-        containers: *job
+        containers:
+          job: *job
         job:
           backoffLimit: 6
           suspend: false
