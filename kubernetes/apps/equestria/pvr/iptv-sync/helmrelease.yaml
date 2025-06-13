@@ -13,10 +13,12 @@ spec:
   install:
     remediation:
       retries: 3
+  
   upgrade:
     cleanupOnFail: true
     remediation:
       retries: 3
+    force: true
   uninstall:
     keepHistory: false
   values:
