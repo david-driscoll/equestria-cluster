@@ -73,7 +73,7 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          job:
+          main:
             <<: *job
         job:
           backoffLimit: 6
