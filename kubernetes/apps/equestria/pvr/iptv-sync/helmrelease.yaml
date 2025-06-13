@@ -44,7 +44,7 @@ spec:
           successfulJobsHistory: 3
           suspend: false
         containers: &job
-          *app :
+          job:
             image:
               repository: ghcr.io/david-driscoll/tivi-sync
               tag: 1.0.33
