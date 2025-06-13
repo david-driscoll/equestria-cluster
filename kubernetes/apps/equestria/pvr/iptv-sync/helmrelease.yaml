@@ -38,7 +38,6 @@ spec:
           backoffLimit: 6
           concurrencyPolicy: Forbid
           failedJobsHistory: 2
-          #
           schedule: "0 */2 * * *"
           startingDeadlineSeconds: 30
           successfulJobsHistory: 3
@@ -74,7 +73,11 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          job: *job
+          job:
+            <<: *job
         job:
           backoffLimit: 6
-          suspend: false
+          activeDeadlineSeconds: 3600
+          ttlSecondsAfterFinished: 3600
+          parallelism: 1
+          completions: 1
