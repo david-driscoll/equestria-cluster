@@ -46,7 +46,7 @@ spec:
           job: &job
             image:
               repository: ghcr.io/david-driscoll/tivi-sync
-              tag: 1.0.33
+              tag: 1.0.33@sha256:8588c962a67643e527bf0aec4fe772ee31ca88c44f59b87510fcd1d04ddf0752
               pullPolicy: Always
             envFrom:
               - secretRef:
