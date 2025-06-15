@@ -13,7 +13,6 @@ spec:
   install:
     remediation:
       retries: 3
-  
   upgrade:
     cleanupOnFail: true
     remediation:
@@ -58,8 +57,6 @@ spec:
               - secretRef:
                   name: minio-access-key
             env:
-              TIVI__CACHEDIRECTORY: /cache/
-              TIVI__RESULTSDIRECTORY: /config/
               PROXY_HOSTNAME: iptv.${ROOT_DOMAIN}
             resources:
               requests:
