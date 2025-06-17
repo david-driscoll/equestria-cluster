@@ -5,8 +5,8 @@ kind: HelmRelease
 metadata:
   name: &app iptv-sync
 spec:
-  timeout: 5m
-  interval: 30m
+  timeout: 30m
+  interval: 2h
   chartRef:
     kind: OCIRepository
     name: app-template
