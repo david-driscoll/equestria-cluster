@@ -100,8 +100,9 @@ nodes:
       customization:
         systemExtensions:
           officialExtensions:
-            - siderolabs/nonfree-kmod-nvidia-production
+            # - siderolabs/nonfree-kmod-nvidia-production
             - siderolabs/nvidia-container-toolkit-production
+            - siderolabs/nvidia-open-gpu-kernel-modules-production
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
             # - siderolabs/tailscale
