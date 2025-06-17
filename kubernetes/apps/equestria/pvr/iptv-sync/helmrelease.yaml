@@ -70,16 +70,16 @@ spec:
                 cpu: 8
                 # these files are large, we GC immediately.
                 memory: 8Gi
-      job:
-        type: job
-        annotations:
-          reloader.stakater.com/auto: "true"
-        containers:
-          main:
-            <<: *job
-        job:
-          backoffLimit: 6
-          activeDeadlineSeconds: 3600
-          ttlSecondsAfterFinished: 3600
-          parallelism: 1
-          completions: 1
+      # job:
+      #   type: job
+      #   annotations:
+      #     reloader.stakater.com/auto: "true"
+      #   containers:
+      #     main:
+      #       <<: *job
+      #   job:
+      #     backoffLimit: 6
+      #     activeDeadlineSeconds: 3600
+      #     ttlSecondsAfterFinished: 3600
+      #     parallelism: 1
+      #     completions: 1
