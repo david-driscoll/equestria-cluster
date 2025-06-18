@@ -41,6 +41,7 @@ spec:
               runAsUser: 0
               runAsGroup: 0
               fsGroup: 0
+              fsGroupChangePolicy: "OnRootMismatch"
               supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               capabilities: { drop: ["ALL"] }
             image:
@@ -98,6 +99,7 @@ spec:
         runAsUser: 568
         runAsGroup: 568
         fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
         supplementalGroups: [44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 
