@@ -13,6 +13,7 @@ spec:
   path: ./kubernetes/apps/network/traefik/shared
   dependsOn:
     - name: certificates
+      namespace: *namespace
   prune: true
   sourceRef:
     kind: GitRepository
@@ -32,30 +33,6 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app traefik-middleware
-  namespace: &namespace network
-spec:
-  targetNamespace: *namespace
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/network/traefik/middleware
-  dependsOn:
-    - name: certificates
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
   name: &app traefik-internal
   namespace: &namespace network
 spec:
@@ -64,8 +41,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: certificates
     - name: traefik-shared
+      namespace: *namespace
   path: ./kubernetes/apps/network/traefik/internal
   prune: true
   sourceRef:
@@ -95,8 +72,8 @@ spec:
       app.kubernetes.io/name: *app
   path: ./kubernetes/apps/network/traefik/external
   dependsOn:
-    - name: certificates
     - name: traefik-shared
+      namespace: *namespace
   prune: true
   sourceRef:
     kind: GitRepository

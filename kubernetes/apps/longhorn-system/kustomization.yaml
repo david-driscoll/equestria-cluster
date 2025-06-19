@@ -2,12 +2,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: database
+namespace: longhorn-system
 components:
   - ../../components/common
-  - ../../components/repos/app-template
 resources:
-  - ./cloudnative-pg/ks.yaml
-  - ./mysql-operator/ks.yaml
-  - ./dragonfly/ks.yaml
-  - ./minio/ks.yaml
+  - ./longhorn/ks.yaml
+
