@@ -24,13 +24,34 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    controlPlane: true
-    schematic: &controlplane_schematic
+    controlPlane: false
+    userVolumes:
+      - name: longhorn
+        filesystem:
+          type: xfs
+        provisioning:
+          diskSelector:
+            match: disk.dev_path == "/dev/sdb"
+          grow: true
+          maxSize: 1TB
+    nodeAnnotations:
+      node.longhorn.io/default-disks-config: |
+        {
+          "disks": [
+            {
+              "path": "/var/mnt/u-longhorn",
+              "allowScheduling": true,
+              "tags":["nvme", "ssd"]
+            }
+          ]
+        }
+    schematic:
       customization:
         systemExtensions:
           officialExtensions:
             - siderolabs/iscsi-tools
             - siderolabs/qemu-guest-agent
+            - siderolabs/amdgpu
             # - siderolabs/tailscale
     networkInterfaces:
       - deviceSelector:
@@ -42,32 +63,8 @@ nodes:
           - network: "0.0.0.0/0"
             gateway: "10.10.0.1"
         mtu: 1500
-        vip:
-          ip: "10.10.206.201"
-  - hostname: "flurry-heart"
-    ipAddress: "10.10.206.11"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    controlPlane: false
-    schematic: &amdgpu_schematic
-      customization:
-        systemExtensions:
-          officialExtensions:
-            - siderolabs/iscsi-tools
-            - siderolabs/qemu-guest-agent
-            - siderolabs/amdgpu
-            # - siderolabs/tailscale
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "00:a0:98:7f:53:18"
-        dhcp: false
-        addresses:
-          - "10.10.206.11/16"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.10.0.1"
-        mtu: 1500
+  # - hostname: "unused"
+  #   ipAddress: "10.10.206.11"
   - hostname: "pinkie-pie"
     ipAddress: "10.10.206.12"
     installDiskSelector:
