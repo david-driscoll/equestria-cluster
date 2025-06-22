@@ -42,7 +42,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: alpine/git
-              tag: v2.49.0@sha256:ec66a89e1ad387a8a0544ddf8e9d34aa5aaffa97c6dc04e67fe75ecd10897e98
+              tag: v2.49.0@sha256:7190016167df254fe27e7c019025dbf8a82f8270284823167e50a55f371bd5c3
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
