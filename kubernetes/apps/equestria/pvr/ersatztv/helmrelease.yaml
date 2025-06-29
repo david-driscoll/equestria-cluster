@@ -55,7 +55,7 @@ spec:
           ersatztv:
             image:
               repository: jasongdove/ersatztv
-              tag: latest@sha256:a3d5c42dcc4272e190db4e286e8da9e9670687fe3a75ca79fcc4867a640170f8
+              tag: latest@sha256:b8abbf6a1919e7e40fda02ba467b2084ba8b144d1feb0587f667167ef35aa41f
             env:
               PUID: 568
               PGID: 568
