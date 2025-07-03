@@ -7,8 +7,8 @@ service:
 serviceMonitor:
   enabled: true
 spegel:
+  debugWebEnabled: true
   appendMirrors: true
   logLevel: "DEBUG"
-  debugWebEnabled: true
   containerdSock: /run/containerd/containerd.sock
   containerdRegistryConfigPath: /etc/cri/conf.d/hosts
