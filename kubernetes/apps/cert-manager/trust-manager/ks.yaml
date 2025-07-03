@@ -38,6 +38,8 @@ spec:
   dependsOn:
     - name: trust-manager
       namespace: *namespace
+    - name: certificates
+      namespace: network
   path: ./kubernetes/apps/cert-manager/trust-manager/bundles
   prune: true
   sourceRef:
