@@ -128,15 +128,15 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.*`)
+    - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.+`)
       kind: Rule
-      priority: 100
+      priority: -1
       services:
         - name: ${APP}
           port: http
           passHostHeader: true
       middlewares:
-        - name: internal-network
+        - name: internal-network  
           namespace: network
     - match: Host(`${APP}.${ROOT_DOMAIN}`)
       kind: Rule
