@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/traefik/traefik-helm-chart/refs/heads/master/traefik/values.schema.json
 image:
   repository: traefik
-  tag: v3.4.1@sha256:cd40ab7bc1f047731d5b22595203812343efcb6538014c4e93221cfc3a77217a
+  tag: v3.4.3@sha256:f3de2b96ec6b1cc987619c4d1d65d7e8140862eb0bbfc5f0e2e563691e8787d8
 fullnameOverride: traefik-internal
 
 deployment:
@@ -15,6 +15,7 @@ service:
     io.cilium/lb-ipam-ips: "${INTERNAL_IP}"
     tailscale.com/expose: "true"
     tailscale.com/hostname: "${INTERNAL_CNAME}"
+    tailscale.com/tailnet-ip: "${INTERNAL_TAILSCALE_VIP}"
   externalIPs:
     - "${INTERNAL_IP}"
 additionalArguments:
@@ -88,6 +89,7 @@ ingressRoute:
     annotations:
       external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
       external-dns.alpha.kubernetes.io/hostname: internal.${CLUSTER_DOMAIN}
+      traefik.ingress.kubernetes.io/router.middlewares: network-authenticated-user@kubernetescrd
     matchRule: Host(`internal.${CLUSTER_DOMAIN}`)
     services:
       - name: api@internal
