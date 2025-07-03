@@ -113,9 +113,9 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`${APP}.${ROOT_DOMAIN}/jsonrpc`) || Host(`${APP}.${ROOT_DOMAIN}/xmlrpc`)
+    - match: Host(`${APP}.${ROOT_DOMAIN}`) && (PathPrefix(`/jsonrpc`) || PathPrefix(`/xmlrpc`))
       kind: Rule
-      priority: -1
+      priority: 100
       services:
         - name: ${APP}
           port: http

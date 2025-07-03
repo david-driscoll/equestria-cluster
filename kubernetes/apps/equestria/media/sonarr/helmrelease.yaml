@@ -130,7 +130,7 @@ spec:
   routes:
     - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.*`)
       kind: Rule
-      priority: -1
+      priority: 100
       services:
         - name: ${APP}
           port: http
