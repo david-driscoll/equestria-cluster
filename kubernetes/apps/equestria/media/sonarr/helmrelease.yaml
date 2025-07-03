@@ -137,7 +137,7 @@ spec:
       middlewares:
         - name: internal-network
           namespace: network
-    - match: Host(`iptv.${ROOT_DOMAIN}`) && !HeaderRegexp(`X-Api-Key`, `.*`)
+    - match: Host(`${APP}.${ROOT_DOMAIN}`) && !HeaderRegexp(`X-Api-Key`, `.*`)
       services:
         - name: ${APP}
           port: http
