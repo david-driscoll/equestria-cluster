@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ./barman.yaml
+  - ./cluster.yaml
+  - ./prometheusrule.yaml
+  - ./scheduledbackup.yaml
+  - ./postgres-user.yaml
+components:
+  - ../minio-access-key
+  - ../password-generator
