@@ -115,7 +115,7 @@ spec:
   routes:
     - match: Host(`${APP}.${ROOT_DOMAIN}`) && (PathPrefix(`/jsonrpc`) || PathPrefix(`/xmlrpc`))
       kind: Rule
-      priority: 100
+      priority: -1
       services:
         - name: ${APP}
           port: http
