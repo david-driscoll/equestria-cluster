@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - ./apikey.sops.yaml
   - ./helmrelease.yaml
-  - ./tailscale.yaml
   - ./volume.yaml
