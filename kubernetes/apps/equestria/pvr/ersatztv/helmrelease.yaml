@@ -115,7 +115,7 @@ spec:
       internal:
         className: internal
         hosts:
-          - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
+          - host: "${APP}.${ROOT_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -126,13 +126,13 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.type: url
-          gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:8409"
+          gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:8409"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media Management
           gethomepage.dev/icon: ersatztv.svg
           gethomepage.dev/name: ErsatzTV
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
-          gethomepage.dev/app: "{{ .Release.Name }}"
+          gethomepage.dev/app: "${APP}"
 
 
     persistence:

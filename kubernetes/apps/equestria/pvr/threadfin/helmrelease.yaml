@@ -113,7 +113,7 @@ spec:
       internal:
         className: internal
         hosts:
-          - host: "{{ .Release.Name }}.${ROOT_DOMAIN}"
+          - host: "${APP}.${ROOT_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -124,13 +124,13 @@ spec:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           # gethomepage.dev/widget.type: threadfin
-          # gethomepage.dev/widget.url: "http://{{ .Release.Name }}.${INTERNAL_CLUSTER_SERVICE}:34400"
+          # gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:34400"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media
           gethomepage.dev/icon: threadfin.svg
           gethomepage.dev/name: Threadfin
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
-          gethomepage.dev/app: "{{ .Release.Name }}"
+          gethomepage.dev/app: "${APP}"
       tailscale:
         className: tailscale
         annotations:
