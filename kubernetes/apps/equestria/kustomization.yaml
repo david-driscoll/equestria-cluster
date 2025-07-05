@@ -7,8 +7,8 @@ components:
   - ../../components/common
   - ../../components/repos/app-template4
 resources:
-  - ./shared/ks.yaml
-  - ./books/ks.yaml
-  - ./media/ks.yaml
-  - ./pvr/ks.yaml
+  # - ./shared/ks.yaml
+  # - ./books/ks.yaml
+  # - ./media/ks.yaml
+  # - ./pvr/ks.yaml
   - ./idp/ks.yaml
