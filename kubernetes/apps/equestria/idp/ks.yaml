@@ -9,9 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: shared-volumes
-      namespace: *namespace
+  dependsOn: []
   path: ./kubernetes/apps/equestria/idp/authentik-remote-cluster
   prune: true
   sourceRef:
