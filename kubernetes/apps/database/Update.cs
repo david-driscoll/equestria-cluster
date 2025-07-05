@@ -175,7 +175,7 @@ var minioConfig = new MinioConfig(
     Users: users.ToImmutable()
 );
 minioConfig.Dump();
-var key = "minio-users-" + string.Join("", SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(minioConfig))).Select(z => z.ToString("x2"))).Substring(0, 12);
+var key = "minio-users";
 
 foreach (var user in minioConfig.Users)
 {
@@ -246,7 +246,7 @@ File.WriteAllText(kustomizationPath, customizationTemplate);
 File.WriteAllText(minioUsersRelease,
 """
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 """ + "\n" +
 serializer.Serialize(minioUserReleaseMapping).Replace("*app:", "*app :"));
 File.WriteAllText(minioKsYaml,
