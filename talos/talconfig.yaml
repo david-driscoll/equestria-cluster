@@ -65,54 +65,54 @@ nodes:
         mtu: 1500
   # - hostname: "unused"
   #   ipAddress: "10.10.206.11"
-  - hostname: "pinkie-pie"
-    ipAddress: "10.10.206.12"
-    installDiskSelector:
+  # - hostname: "pinkie-pie"
+  #   ipAddress: "10.10.206.12"
+  #   installDiskSelector:
 
-      model: "WDC  WDS100T2B0B"
-    machineSpec:
-      secureboot: false
-    controlPlane: false
-    userVolumes:
-      - name: longhorn
-        filesystem:
-          type: xfs
-        provisioning:
-          diskSelector:
-            match: disk.model == "Micron 2300 NVMe 1024GB"
-          grow: true
-          maxSize: 1TB
-    nodeAnnotations:
-      node.longhorn.io/default-disks-config: |
-        {
-          "disks": [
-            {
-              "path": "/var/mnt/u-longhorn",
-              "allowScheduling": true,
-              "tags":["nvme", "ssd"]
-            }
-          ]
-        }
-    schematic:
-      customization:
-        systemExtensions:
-          officialExtensions:
-            # - siderolabs/nonfree-kmod-nvidia-production
-            - siderolabs/nvidia-container-toolkit-production
-            - siderolabs/nvidia-open-gpu-kernel-modules-production
-            - siderolabs/iscsi-tools
-            - siderolabs/util-linux-tools
-            # - siderolabs/tailscale
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "a8:a1:59:00:b7:17"
-        dhcp: false
-        addresses:
-          - "10.10.206.12/16"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.10.0.1"
-        mtu: 1500
+  #     model: "WDC  WDS100T2B0B"
+  #   machineSpec:
+  #     secureboot: false
+  #   controlPlane: false
+  #   userVolumes:
+  #     - name: longhorn
+  #       filesystem:
+  #         type: xfs
+  #       provisioning:
+  #         diskSelector:
+  #           match: disk.model == "Micron 2300 NVMe 1024GB"
+  #         grow: true
+  #         maxSize: 1TB
+  #   nodeAnnotations:
+  #     node.longhorn.io/default-disks-config: |
+  #       {
+  #         "disks": [
+  #           {
+  #             "path": "/var/mnt/u-longhorn",
+  #             "allowScheduling": true,
+  #             "tags":["nvme", "ssd"]
+  #           }
+  #         ]
+  #       }
+  #   schematic:
+  #     customization:
+  #       systemExtensions:
+  #         officialExtensions:
+  #           # - siderolabs/nonfree-kmod-nvidia-production
+  #           - siderolabs/nvidia-container-toolkit-production
+  #           - siderolabs/nvidia-open-gpu-kernel-modules-production
+  #           - siderolabs/iscsi-tools
+  #           - siderolabs/util-linux-tools
+  #           # - siderolabs/tailscale
+  #   networkInterfaces:
+  #     - deviceSelector:
+  #         hardwareAddr: "a8:a1:59:00:b7:17"
+  #       dhcp: false
+  #       addresses:
+  #         - "10.10.206.12/16"
+  #       routes:
+  #         - network: "0.0.0.0/0"
+  #           gateway: "10.10.0.1"
+  #       mtu: 1500
   # - hostname: "unused"
   #   ipAddress: "10.10.206.13"
   - hostname: "hard-hat"
