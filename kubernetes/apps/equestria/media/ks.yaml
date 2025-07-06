@@ -334,9 +334,11 @@ spec:
   timeout: 5m
   components:
     - ../../../../components/tailscale
+    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SOURCEPVC: sonarr-config
     substituteFrom:
       - name: sonarr-apikey
         kind: Secret
