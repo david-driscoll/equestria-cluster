@@ -27,14 +27,6 @@ spec:
       *app :
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-config:
-            image:
-              repository: docker.io/mikefarah/yq
-              tag: 4.45.4@sha256:7cf28e5d67782f4b274a93a7bc54a840b553447a0807efd843d069f46bff718c
-            command: ["/bin/sh", "-c"]
-            args:
-              - yq -o json /config/config.yaml > /app/config/config.json
         containers:
           *app :
             image:
@@ -45,8 +37,11 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               BACKREST_DATA: /app/data
-              BACKREST_CONFIG: /app/config/config.json
+              BACKREST_CONFIG: /app/config.json
               XDG_CACHE_HOME: /app/cache
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
             resources:
               requests:
                 cpu: 50m
@@ -83,7 +78,7 @@ spec:
       internal:
         className: internal
         hosts:
-          - host: "${APP}.${CLUSTER_DOMAIN}"
+          - host: "backrest.${CLUSTER_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -98,25 +93,10 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /app/cache
-      config:
-        type: emptyDir
-        globalMounts:
-          - path: /app/config
       processlogs:
         type: emptyDir
-        advancedMounts:
-          backrest:
-            app:
-              - path: /app/data/processlogs
-      init-config:
-        type: secret
-        name: ${APP}-secret
-        advancedMounts:
-          backrest:
-            init-config:
-              - path: /config/config.yaml
-                subPath: config.yaml
-                readOnly: true
+        globalMounts:
+          - path: /app/data/processlogs
       volsync-share:
         type: nfs
         server: ${SPIKE_IP}
