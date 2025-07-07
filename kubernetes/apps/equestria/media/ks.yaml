@@ -15,19 +15,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/bazarr
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync/iscsi
@@ -52,19 +48,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/emby
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
   postBuild:
@@ -90,19 +82,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/jellyfin
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
   postBuild:
@@ -128,19 +116,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/jellyseerr
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync/iscsi
@@ -165,19 +149,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/nzbget
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync/iscsi
@@ -202,19 +182,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/prowlarr
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync/iscsi
@@ -239,19 +215,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/radarr
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync/iscsi
@@ -276,6 +248,11 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/sonarr
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -285,10 +262,6 @@ spec:
       kind: HelmRelease
       name: *app
       namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
@@ -312,19 +285,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/plex
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
   postBuild:
@@ -350,19 +319,15 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/equestria/media/tautulli
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/volsync
     - ../../../../components/tailscale

@@ -14,19 +14,15 @@
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/ersatztv
 #   prune: true
+#   wait: true
+#   force: true
+#   interval: 1h
+#   retryInterval: 2m
+#   timeout: 5m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
 #     namespace: flux-system
-#   healthChecks:
-#     - apiVersion: helm.toolkit.fluxcd.io/v2
-#       kind: HelmRelease
-#       name: *app
-#       namespace: *namespace
-#   wait: true
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m
 #   components:
 #     - ../../../../components/tailscale
 #   postBuild:
@@ -48,19 +44,15 @@
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/fhdhr
 #   prune: true
+#   wait: true
+#   force: true
+#   interval: 1h
+#   retryInterval: 2m
+#   timeout: 5m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
 #     namespace: flux-system
-#   healthChecks:
-#     - apiVersion: helm.toolkit.fluxcd.io/v2
-#       kind: HelmRelease
-#       name: *app
-#       namespace: *namespace
-#   wait: true
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m
 #   components:
 #     - ../../../../components/tailscale
 #   postBuild:
@@ -117,19 +109,15 @@
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/threadfin
 #   prune: true
+#   wait: true
+#   force: true
+#   interval: 1h
+#   retryInterval: 2m
+#   timeout: 5m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
 #     namespace: flux-system
-#   healthChecks:
-#     - apiVersion: helm.toolkit.fluxcd.io/v2
-#       kind: HelmRelease
-#       name: *app
-#       namespace: *namespace
-#   wait: true
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m
 #   components:
 #     - ../../../../components/tailscale
 #   postBuild:
@@ -152,19 +140,15 @@
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/channels
 #   prune: true
+#   wait: true
+#   force: true
+#   interval: 1h
+#   retryInterval: 2m
+#   timeout: 5m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
 #     namespace: flux-system
-#   healthChecks:
-#     - apiVersion: helm.toolkit.fluxcd.io/v2
-#       kind: HelmRelease
-#       name: *app
-#       namespace: *namespace
-#   wait: true
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m
 #   components:
 #     - ../../../../components/tailscale
 #   postBuild:
@@ -183,18 +167,18 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn: []
   path: ./kubernetes/apps/equestria/pvr/iptv-sync
   prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  dependsOn: []
-  force: true
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   components:
     - ../../../../components/tailscale
   postBuild:
