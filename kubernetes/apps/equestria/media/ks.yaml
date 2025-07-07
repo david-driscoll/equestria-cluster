@@ -264,7 +264,7 @@ spec:
       namespace: *namespace
   components:
     - ../../../../components/tailscale
-    - ../../../../components/volsync
+    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
