@@ -45,5 +45,3 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  uninstall:
-    keepHistory: false
