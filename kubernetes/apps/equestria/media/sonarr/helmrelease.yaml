@@ -112,7 +112,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: ${APP}
+        existingClaim: sonarr-config
         globalMounts:
           - path: /config
       media-downloads:
