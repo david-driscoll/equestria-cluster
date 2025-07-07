@@ -117,10 +117,10 @@ var minioKsYaml = "kubernetes/apps/database/minio-users/ks.yaml";
 var minioKsYamlMapping = ReadStream(minioKsYaml)!.Single();
 var name = minioUserReleaseMapping.Query("/metadata/name").OfType<YamlScalarNode>().Single().Value;
 var controllers = minioUserReleaseMapping.Query($"/spec/values/controllers").OfType<YamlMappingNode>().Single();
-var cronController = controllers.Query($"/cron-minio-users").OfType<YamlMappingNode>().Single();
+var cronController = controllers.Query($"/cron").OfType<YamlMappingNode>().Single();
 var controller = controllers.Children.Values.Except([cronController]).OfType<YamlMappingNode>().Single(); ;
 var containers = controller.Query($"/containers").OfType<YamlMappingNode>().Single();
-var minioUsersStep = containers.Query($"/minio-users").OfType<YamlMappingNode>().Single();
+var minioUsersStep = containers.Query($"/job").OfType<YamlMappingNode>().Single();
 
 var envReference = minioUsersStep.Query("/env").OfType<YamlMappingNode>().Single();
 
