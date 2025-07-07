@@ -30,14 +30,14 @@ spec:
     keepHistory: false
   values:
     controllers:
-      minio-users-1422a2ec500c:
+      minio-users:
         type: job
         job:
           backoffLimit: 100
           suspend: false
           ttlSecondsAfterFinished: 600
         containers: &job
-          minio-users-1422a2ec500c:
+          minio-users:
             image:
               repository: minio/mc
               tag: RELEASE.2025-05-21T01-59-54Z.hotfix.e98f1ead@sha256:cf700affaa5cddcea9371fd4c961521fff2baff4b90333c4bda2df61bf5e6692
@@ -100,7 +100,7 @@ spec:
               requests:
                 cpu: 10m
                 memory: 32Mi
-      cron-minio-users-1422a2ec500c:
+      cron-minio-users:
         cronjob:
           backoffLimit: 6
           concurrencyPolicy: Forbid
