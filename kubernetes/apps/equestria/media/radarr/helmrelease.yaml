@@ -112,7 +112,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: radarr-config
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       media-downloads:

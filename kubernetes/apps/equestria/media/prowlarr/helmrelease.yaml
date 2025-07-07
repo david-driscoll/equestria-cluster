@@ -112,7 +112,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: prowlarr-config
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       media-downloads:
