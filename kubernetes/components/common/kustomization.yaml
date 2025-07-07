@@ -19,11 +19,25 @@ patches:
       group: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
     patch: |-
-      apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
         name: not-used
       spec:
+        maxHistory: 3
+        interval: 15m
+        timeout: 5m
+        install:
+          createNamespace: true
+          replace: true
+          remediation:
+            retries: -1
+        upgrade:
+          crds: CreateReplace
+          cleanupOnFail: true
+          remediation:
+            retries: -1
+            strategy: rollback
         decryption:
           provider: sops
           secretRef:
