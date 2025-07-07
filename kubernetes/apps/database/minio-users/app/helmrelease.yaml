@@ -48,15 +48,9 @@ spec:
             - >-
               mc alias set "$MC_ALIAS" "$MINIO_ENDPOINT" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
 
-              mc mb -p "$MC_ALIAS/backrest"
-
               mc admin user add "$MC_ALIAS" "$MINIO_USER_CLUSTER_USER" "$MINIO_PASSWORD_CLUSTER_USER"
 
               mc admin policy attach "$MC_ALIAS" --user "$MINIO_USER_CLUSTER_USER" consoleAdmin
-
-              mc admin user add "$MC_ALIAS" "$MINIO_USER_BACKREST" "$MINIO_PASSWORD_BACKREST"
-
-              mc admin policy attach "$MC_ALIAS" --user "$MINIO_USER_BACKREST" readwrite
             env:
               MC_ALIAS: ${CLUSTER_CNAME}
               MINIO_ENDPOINT: https://s3.${CLUSTER_DOMAIN}
@@ -85,16 +79,6 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: cluster-user
-                    key: password
-              MINIO_USER_BACKREST:
-                valueFrom:
-                  secretKeyRef:
-                    name: backrest-${CLUSTER_CNAME}-minio-access-key
-                    key: username
-              MINIO_PASSWORD_BACKREST:
-                valueFrom:
-                  secretKeyRef:
-                    name: backrest-${CLUSTER_CNAME}-minio-access-key
                     key: password
             resources:
               requests:
