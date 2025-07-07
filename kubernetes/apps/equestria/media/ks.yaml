@@ -26,10 +26,11 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/tailscale
-    - ../../../../components/volsync
+    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SOURCEPVC: bazarr-config
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -188,10 +189,11 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/tailscale
-    - ../../../../components/volsync
+    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SOURCEPVC: prowlarr-config
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -220,10 +222,11 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/tailscale
-    - ../../../../components/volsync
+    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SOURCEPVC: radarr-config
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -252,10 +255,11 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/tailscale
-    - ../../../../components/volsync
+    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SOURCEPVC: sonarr-config
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
