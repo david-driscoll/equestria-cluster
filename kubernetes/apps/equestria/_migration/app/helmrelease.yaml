@@ -52,7 +52,7 @@ spec:
               PGID: 568
               UMASK: 002
               TZ: ${TIMEZONE}
-              RESTIC_REPOSITORY: '/volsync/jellyseerr'
+              RESTIC_REPOSITORY: '/volsync/${APP}'
               RESTIC_PASSWORD:
                 valueFrom:
                   secretKeyRef:
@@ -83,7 +83,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: jellyseerr-config
+        existingClaim: ${CLAIM}
       cache:
         type: emptyDir
         globalMounts:

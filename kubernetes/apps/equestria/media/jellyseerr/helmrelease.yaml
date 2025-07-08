@@ -92,8 +92,8 @@ spec:
             port: *port
 
     persistence:
-      other-config:
-        existingClaim: jellyseerr-config
+      config:
+        existingClaim: ${APP}
         globalMounts:
           - path: /app/config
 
@@ -108,16 +108,3 @@ spec:
                 service:
                   identifier: app
                   port: *port
-        annotations:
-          reloader.stakater.com/auto: "true"
-          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
-          gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:5055"
-          # gethomepage.dev/widget.key: "${jellyseerr_apikey}"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Request
-          gethomepage.dev/icon: jellyseerr.svg
-          gethomepage.dev/name: Jellyseerr
-          gethomepage.dev/widget.type: "jellyseerr"
-          gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
-          gethomepage.dev/app: "${APP}"
-
