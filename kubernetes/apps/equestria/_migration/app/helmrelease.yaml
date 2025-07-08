@@ -43,8 +43,8 @@ spec:
         containers:
           app:
             image:
-              repository: ubuntu
-              tag: rolling
+              repository: ghcr.io/restic/restic
+              tag: master
               pullPolicy: Always
             command: ["/bin/sh", "-c", "sleep infinity"]
             env:
@@ -52,6 +52,11 @@ spec:
               PGID: 568
               UMASK: 002
               TZ: ${TIMEZONE}
+              RESTIC_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: migration-secret
+                    key: credential
             securityContext:
               runAsNonRoot: true
               runAsUser: 568
@@ -78,6 +83,8 @@ spec:
     persistence:
       config:
         existingClaim: bazarr-config
-        globalMounts:
-          - path: /config
+      volsync:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/backup/volsync
     values: {}
