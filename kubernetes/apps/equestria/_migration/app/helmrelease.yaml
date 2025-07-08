@@ -52,7 +52,7 @@ spec:
               PGID: 568
               UMASK: 002
               TZ: ${TIMEZONE}
-              RESTIC_REPOSITORY: '/volsync/plex-${CLUSTER_CNAME}'
+              RESTIC_REPOSITORY: '/volsync/plex'
               RESTIC_PASSWORD:
                 valueFrom:
                   secretKeyRef:
