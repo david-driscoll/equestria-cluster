@@ -32,14 +32,15 @@ nodes:
         provisioning:
           diskSelector:
             match: disk.dev_path == "/dev/sdb"
-          grow: true
+          grow: false
+          minSize: 1TB
           maxSize: 1TB
     nodeAnnotations:
       node.longhorn.io/default-disks-config: |
         {
           "disks": [
             {
-              "path": "/var/mnt/u-longhorn",
+              "path": "/var/mnt/longhorn",
               "allowScheduling": true,
               "tags":["nvme", "ssd"]
             }
@@ -80,14 +81,15 @@ nodes:
   #       provisioning:
   #         diskSelector:
   #           match: disk.model == "Micron 2300 NVMe 1024GB"
-  #         grow: true
-  #         maxSize: 1TB
+          # grow: false
+          # minSize: 1TB
+          # maxSize: 1TB
   #   nodeAnnotations:
   #     node.longhorn.io/default-disks-config: |
   #       {
   #         "disks": [
   #           {
-  #             "path": "/var/mnt/u-longhorn",
+  #             "path": "/var/mnt/longhorn",
   #             "allowScheduling": true,
   #             "tags":["nvme", "ssd"]
   #           }
@@ -129,14 +131,15 @@ nodes:
         provisioning:
           diskSelector:
             match: disk.model == "Samsung SSD 990 EVO Plus 1TB"
-          grow: true
+          grow: false
+          minSize: 1TB
           maxSize: 1TB
     nodeAnnotations: &amd_minifm_annotations
       node.longhorn.io/default-disks-config: |
         {
           "disks": [
             {
-              "path": "/var/mnt/u-longhorn",
+              "path": "/var/mnt/longhorn",
               "allowScheduling": true,
               "tags":["nvme", "ssd"]
             }
@@ -171,6 +174,16 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: true
+    userVolumes: &intel_un1290_user_volumes
+      - name: longhorn
+        filesystem:
+          type: xfs
+        provisioning:
+          diskSelector:
+            match: disk.dev_path == "/dev/sdb"
+          grow: false
+          minSize: 1TB
+          maxSize: 1TB
     nodeAnnotations: &intel_un1290_annotations
       node.longhorn.io/default-disks-config: |
         {
@@ -210,6 +223,7 @@ nodes:
     machineSpec:
       secureboot: false
     controlPlane: true
+    userVolumes: *intel_un1290_user_volumes
     nodeAnnotations: *intel_un1290_annotations
     schematic: *intel_un1290_schematic
     patches: *intel_un1290_patches
