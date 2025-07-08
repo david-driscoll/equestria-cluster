@@ -35,35 +35,46 @@ spec:
       namespace: democratic-csi
   values:
     controllers:
-      plex:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          restore:
+          restic:
+            image:
+              repository: ghcr.io/restic/restic
+              tag: master
+              pullPolicy: Always
+            command: ["/bin/sh", "-c", "restic backup /config/"]
+            env:
+              PUID: 568
+              PGID: 568
+              UMASK: 002
+              TZ: ${TIMEZONE}
+              RESTIC_REPOSITORY: '/volsync/emby'
+              RESTIC_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-volsync-secret"
+                    key: credential
             securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: true
-              runAsUser: 0
-              runAsGroup: 0
-              fsGroup: 0
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
               fsGroupChangePolicy: "OnRootMismatch"
               supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
-            image:
-              repository: busybox
-              tag: 1.37.0@sha256:f85340bf132ae937d2c2a763b8335c9bab35d6e8293f70f606b9c6178d84f42b
-              pullPolicy: IfNotPresent
-            command:
-              - "/bin/sh"
-              - "-c"
-            # chown -R 568:568 /config
-            # chmod -R 777 /config
-            args: |-
-              chown -R 568:568 /config
-              chmod -R 777 /config
-              echo "Done.";
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 500m
+                memory: 2Gi
         containers:
-          plex:
+          *app :
             image:
               repository: ghcr.io/home-operations/plex
               tag: 1.41.8@sha256:40e620ffcdc65331a0c2a7ed9a95700da7d527244f33c21bd35fc30aa25f19ea
@@ -211,3 +222,12 @@ spec:
       #   existingClaim: plex-config
       #   globalMounts:
       #     - path: /database
+
+      volsync:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/backup/volsync
+        advancedMounts:
+          *app :
+            restic:
+              - path: /volsync

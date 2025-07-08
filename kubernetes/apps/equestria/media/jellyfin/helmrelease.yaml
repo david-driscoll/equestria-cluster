@@ -35,9 +35,44 @@ spec:
       namespace: democratic-csi
   values:
     controllers:
-      jellyfin:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          restic:
+            image:
+              repository: ghcr.io/restic/restic
+              tag: master
+              pullPolicy: Always
+            command: ["/bin/sh", "-c", "restic backup /config/"]
+            env:
+              PUID: 568
+              PGID: 568
+              UMASK: 002
+              TZ: ${TIMEZONE}
+              RESTIC_REPOSITORY: '/volsync/jellyfin'
+              RESTIC_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-volsync-secret"
+                    key: credential
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 500m
+                memory: 2Gi
         containers:
           jellyfin:
             image:
@@ -174,3 +209,12 @@ spec:
         existingClaim: media-dvr
         globalMounts:
           - path: /media/dvr
+
+      volsync:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/backup/volsync
+        advancedMounts:
+          *app :
+            restic:
+              - path: /volsync
