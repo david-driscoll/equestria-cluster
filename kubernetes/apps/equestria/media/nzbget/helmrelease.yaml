@@ -36,12 +36,12 @@ spec:
   values:
     fullnameOverride: *app
     controllers:
-      app:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
         containers:
-          app:
+          *app :
             image:
               repository: ghcr.io/home-operations/nzbget
               tag: 25.2.0@sha256:1eea992c839f16cb23e7635b407a576eec928db1f2989f3aca801289ba782f59
@@ -51,32 +51,35 @@ spec:
             env:
               PUID: 568
               PGID: 568
+              UMASK: 002
               TZ: America/New_York
             securityContext:
-              allowPrivilegeEscalation: true
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 100m
-                memory: 500Mi
+                cpu: 50m
+                memory: 100Mi
               limits:
                 cpu: 2000m
-                memory: 6Gi
+                memory: 4Gi
 
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
     service:
       app:
-        controller: app
+        controller: *app
         type: ClusterIP
         ports:
           http:
