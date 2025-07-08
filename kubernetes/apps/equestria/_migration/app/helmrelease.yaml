@@ -52,6 +52,7 @@ spec:
               PGID: 568
               UMASK: 002
               TZ: ${TIMEZONE}
+              RESTIC_REPOSITORY: '/volsync/bazarr'
               RESTIC_PASSWORD:
                 valueFrom:
                   secretKeyRef:
