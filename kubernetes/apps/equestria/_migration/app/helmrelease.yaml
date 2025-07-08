@@ -52,7 +52,7 @@ spec:
               PGID: 568
               UMASK: 002
               TZ: ${TIMEZONE}
-              RESTIC_REPOSITORY: '/volsync/${APP}'
+              RESTIC_REPOSITORY: '/volsync/jellyfin'
               RESTIC_PASSWORD:
                 valueFrom:
                   secretKeyRef:
@@ -83,7 +83,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: ${CLAIM}
+        existingClaim: jellyfin-config
       cache:
         type: emptyDir
         globalMounts:
