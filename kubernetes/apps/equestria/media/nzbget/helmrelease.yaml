@@ -143,5 +143,5 @@ spec:
           port: http
           passHostHeader: true
       middlewares:
-        - name: authenticated-user
+        - name: internal-network # authenticated-user
           namespace: network
