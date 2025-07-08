@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app sonarr
+  name: &app sabnzbd
 spec:
   chartRef:
     kind: OCIRepository
@@ -43,40 +43,33 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/sonarr
-              tag: 4.0.15@sha256:ca6c735014bdfb04ce043bf1323a068ab1d1228eea5bab8305ca0722df7baf78
+              repository: ghcr.io/home-operations/sabnzbd
+              tag: 4.5.1@sha256:804650bc034ff4af18159615853d43a0cb7e5a24cb2484b5b46e77486eca91f3
               pullPolicy: Always
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
-              PUID: 568
-              PGID: 568
-              UMASK: 002
-              SONARR__APP__INSTANCENAME: Sonarr
-              SONARR__APP__THEME: dark
-              SONARR__AUTH__METHOD: External
-              SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
-              SONARR__AUTH__APIKEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: media-management-credentials
-                    key: sonarr_apikey
-              SONARR__LOG__DBENABLED: "False"
-              SONARR__LOG__LEVEL: info
-              SONARR__PORT: &port 8989
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
+              SABNZBD__PORT: &port 8080
+              SABNZBD__HOST_WHITELIST_ENTRIES: >-
+                ${APP},
+                ${APP}.${CLUSTER_CNAME},
+                ${APP}.${CLUSTER_CNAME}.svc,
+                ${APP}.${CLUSTER_CNAME}.svc.cluster,
+                ${APP}.${CLUSTER_CNAME}.svc.cluster.local,
+                ${APP}.${ROOT_DOMAIN}
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /ping
+                    path: /api?mode=version
                     port: *port
-                  initialDelaySeconds: 10
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
               readiness: *probes
             securityContext:
               runAsNonRoot: true
@@ -113,16 +106,14 @@ spec:
     persistence:
       config:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /config
+      incomplete:
+        type: emptyDir
+      tmp:
+        type: emptyDir
       media-downloads:
         existingClaim: media-downloads
         globalMounts:
           - path: /media/downloads
-      media-tv:
-        existingClaim: media-tv
-        globalMounts:
-          - path: /media/tv
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1
