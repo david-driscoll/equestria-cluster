@@ -107,7 +107,11 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /config
+          - path: /config/
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /config/cache/
       media-downloads:
         existingClaim: media-downloads
         globalMounts:
