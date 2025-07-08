@@ -184,7 +184,6 @@ spec:
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "${APP}"
 
-
     persistence:
       config:
         existingClaim: plex-config
