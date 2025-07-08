@@ -1,0 +1,83 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app migration
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 1h
+  timeout: 5m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: -1
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: truenas-iscsi-stash
+      namespace: democratic-csi
+    - name: truenas-stash
+      namespace: democratic-csi
+  values:
+    fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ubuntu
+              tag: rolling
+              pullPolicy: Always
+            command: ["/bin/sh", "-c", "sleep infinity"]
+            env:
+              PUID: 568
+              PGID: 568
+              UMASK: 002
+              TZ: ${TIMEZONE}
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 500m
+                memory: 2Gi
+
+    defaultPodOptions:
+      securityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    persistence:
+      config:
+        existingClaim: bazarr-config
+        globalMounts:
+          - path: /config
+    values: {}
