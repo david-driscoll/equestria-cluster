@@ -158,7 +158,6 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/tailscale
-    - ../../../../components/volsync/iscsi
   postBuild:
     substitute:
       APP: *app
