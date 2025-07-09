@@ -162,6 +162,7 @@ spec:
       transcode:
         type: emptyDir
       cache:
+        forceRename: ${APP}-cache
         type: persistentVolumeClaim
         storageClass: openebs-hostpath
         accessMode: ReadWriteOnce
