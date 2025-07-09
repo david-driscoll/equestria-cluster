@@ -56,8 +56,8 @@ spec:
               RESTIC_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: migration-secret
-                    key: credential
+                    name: migration-volsync-secret
+                    key: password
             securityContext:
               runAsNonRoot: true
               runAsUser: 568
