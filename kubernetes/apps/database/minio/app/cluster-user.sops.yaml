@@ -4,7 +4,7 @@ kind: Secret
 metadata:
     name: cluster-user-password
 stringData:
-    password: ENC[AES256_GCM,data:qOY3KaVzWAr/eAluHS4nQSQa9xgRMcqBAsq7KG2fFCuk7Oz6,iv:quBivWhbWnPLUl970sDn7eoTxVuE3CJkG6WXnPrzuUY=,tag:fCiMjfGy5RCqUxdSrx2LnA==,type:str]
+    password: ENC[AES256_GCM,data:2joJuy0/JRcbKusH3CLNy6I++vcZqnB7eFGwru/LOp/JGod8,iv:8LROQC+NBZidIgEwrmKXIp+ELIxdEGUqrxzryUMYA4M=,tag:43dhlX+BDChMIADn/t7Tiw==,type:str]
 sops:
     age:
         - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
@@ -34,8 +34,8 @@ sops:
             NDVPT3R1eFY1T0RyWC9vVlNYQWZQWmsKsxNttWC2m69hbRvbI2BRQy9dwhrcSxmW
             G4ciDB4B9Qy/KQ/9k+2BiZRsu5vQV7n+y0jAFrCxamGx9jjIjFXUqQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-07-08T20:43:38Z"
-    mac: ENC[AES256_GCM,data:bcDuQJNMEk9EnM6GpM0lK6dHXTk6Xme8Q+6TGSOAZ+IqJSxb6zJTGT6YEXOd9cqS4I7We85NcxDpIR8kJr8r2HZl7pdiujSqqZziP0uhK5n48p5gNYCwr3nkgEX/0oEZJVBGArMhkqY9K5NRVrm95Wj2UONlGm/LXczUa9L4AGI=,iv:U+XLoPC9L+MnHiZOTEi0oyUx9Io3Un07HYwQS5Vf9YE=,tag:M12FkHG7QUH1IHWe4HV8SA==,type:str]
+    lastmodified: "2025-07-09T01:31:04Z"
+    mac: ENC[AES256_GCM,data:iXukT2GIgeDtTB9mXqa23cvjA3ALcwRZ/Vv3/PClPDsQkcgpRhFHCN9jMPUg2722AJfzLlBiFgWraIN4F4ZBlz7YnQ4p4RwfO1OCBTO/fh50x7HxDRy8iX595f6LRSUWfcs5W2+cUaLVJsRdyi15OyGsnWVLTLu9JsIp3OBap98=,iv:oHgKb7ihT3QnOx98f/e4FwnDByCWYwA/V7LG/nM4dJw=,tag:MryQMzEFf7DosxWR6uQs0Q==,type:str]
     encrypted_regex: ^(data|stringData)$
     mac_only_encrypted: true
     version: 3.10.2
