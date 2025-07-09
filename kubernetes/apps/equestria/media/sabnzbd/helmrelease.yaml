@@ -128,7 +128,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.*`)
+    - match: Host(`${APP}.${ROOT_DOMAIN}`) && QueryRegexp(`apikey`, `^.*$`)
       kind: Rule
       priority: -1
       services:
