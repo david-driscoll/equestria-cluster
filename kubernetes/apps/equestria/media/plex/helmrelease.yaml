@@ -145,18 +145,6 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config/Library/Application Support/Plex Media Server
-      logs:
-        type: emptyDir
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Logs
-      cache:
-        type: persistentVolumeClaim
-        storageClass: truenas-stash
-        accessMode: ReadWriteOnce
-        size: 100Gi
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Cache
-            subPath: cache
       media-movies:
         existingClaim: media-movies
         globalMounts:
@@ -173,3 +161,13 @@ spec:
         type: emptyDir
       transcode:
         type: emptyDir
+      cache:
+        type: persistentVolumeClaim
+        storageClass: openebs-hostpath
+        accessMode: ReadWriteOnce
+        size: 128Gi
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server/Cache
+            subPath: cache
+          - path: /config/Library/Application Support/Plex Media Server/Logs
+            subPath: logs

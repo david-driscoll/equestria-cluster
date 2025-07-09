@@ -129,5 +129,5 @@ spec:
           port: http
           passHostHeader: true
       middlewares:
-        - name: authenticated-user
+        - name: internal-network # authenticated-user waiting for support
           namespace: network
