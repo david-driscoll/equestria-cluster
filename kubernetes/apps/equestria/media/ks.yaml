@@ -124,7 +124,6 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/ingress/internal
   postBuild:
     substitute:
       APP: *app
@@ -189,7 +188,6 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/ingress/internal
   postBuild:
     substitute:
       APP: *app
