@@ -44,7 +44,7 @@ spec:
           app:
             image:
               repository: ghcr.io/restic/restic
-              tag: master
+              tag: master@sha256:d84e4a3c739f8a740e7ffc5732f656605b3631286333927d2a5cf68673f6f162
               pullPolicy: Always
             command: ["/bin/sh", "-c", "sleep infinity"]
             env:
