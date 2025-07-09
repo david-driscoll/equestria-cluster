@@ -52,7 +52,7 @@ spec:
               PGID: 568
               UMASK: 002
               TZ: ${TIMEZONE}
-              RESTIC_REPOSITORY: '/volsync/plex'
+              # RESTIC_REPOSITORY: '/volsync/plex'
               RESTIC_PASSWORD:
                 valueFrom:
                   secretKeyRef:
@@ -82,8 +82,8 @@ spec:
         seccompProfile: { type: RuntimeDefault }
 
     persistence:
-      config:
-        existingClaim: plex-config
+      # config:
+      #   existingClaim: plex-config
       cache:
         type: emptyDir
         globalMounts:
