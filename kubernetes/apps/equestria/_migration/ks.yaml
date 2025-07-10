@@ -25,4 +25,5 @@ spec:
   postBuild:
     substitute:
       APP: "jellyfin"
+      NAMESPACE: *namespace
       CLAIM: "jellyfin-config"
