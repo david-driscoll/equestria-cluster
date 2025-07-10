@@ -49,6 +49,8 @@ spec:
               - "-c"
             args: |-
                 cp /volsync/temp/Preferences2.xml /config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
+                cp /volsync/temp/Plug-in\ Support/Databases/com.plexapp.plugins.library.db /config/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db
+                cp /volsync/temp/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db /config/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db
                 echo "Done.";
         containers:
           *app :
