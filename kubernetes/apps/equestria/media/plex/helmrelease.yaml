@@ -48,7 +48,7 @@ spec:
               - "/bin/sh"
               - "-c"
             args: |-
-                cp /config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml /volsync/temp/Preferences.xml
+                cp /volsync/temp/Preferences2.xml /config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
                 echo "Done.";
         containers:
           *app :
