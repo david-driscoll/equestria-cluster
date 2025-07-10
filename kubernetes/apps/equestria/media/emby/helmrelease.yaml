@@ -151,14 +151,6 @@ spec:
         existingClaim: emby-config
         globalMounts:
           - path: /config
-      volsync:
-        type: nfs
-        server: ${SPIKE_IP}
-        path: /mnt/stash/backup/volsync
-        advancedMounts:
-          *app :
-            restic:
-              - path: /volsync
 
 
       transcode:

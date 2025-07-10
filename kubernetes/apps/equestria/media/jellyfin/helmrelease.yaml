@@ -175,11 +175,3 @@ spec:
         globalMounts:
           - path: /media/dvr
 
-      volsync:
-        type: nfs
-        server: ${SPIKE_IP}
-        path: /mnt/stash/backup/volsync
-        advancedMounts:
-          *app :
-            restic:
-              - path: /volsync
