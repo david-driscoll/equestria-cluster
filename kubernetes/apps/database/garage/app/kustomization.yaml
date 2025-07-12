@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./externalsecret.yaml
+  - ./garage.yaml
+  - ./garage-ui.yaml
+  - ./garage-users.yaml
+  - ./users
+  - ./replicas/data
+  - ./replicas/meta
+configMapGenerator:
+- name: ${APP}-values
+  files:
+  - values.yaml=./resources/values.yaml
+  options:
+    disableNameSuffixHash: true
+- name: ${APP}-scripts
+  files:
+    - init-users.sh=./resources/init-users.sh
+generatorOptions:
+  disableNameSuffixHash: true

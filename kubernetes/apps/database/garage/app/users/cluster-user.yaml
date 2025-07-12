@@ -3,7 +3,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: cluster-user
+  name: garage-cluster-user
 spec:
   refreshPolicy: Periodic
   refreshInterval: "5m"
@@ -11,7 +11,7 @@ spec:
     kind: ClusterSecretStore
     name: database
   target:
-    name: cluster-user
+    name: garage-cluster-user
     creationPolicy: Owner
     deletionPolicy: Delete
     template:
@@ -32,15 +32,15 @@ spec:
         #   [default]
         #   region=home
         S3_PROVIDER: Minio
-        S3_ENDPOINT: https://s3.${CLUSTER_DOMAIN}
+        S3_ENDPOINT: https://s3.${APP}.${CLUSTER_DOMAIN}
         AWS_ACCESS_KEY_ID: "${CLUSTER_CNAME}"
         AWS_SECRET_ACCESS_KEY: "{{ .password }}"
-        url: https://${CLUSTER_CNAME}:{{ .password }}@s3.${CLUSTER_DOMAIN}
+        url: https://${CLUSTER_CNAME}:{{ .password }}@s3.${APP}.${CLUSTER_DOMAIN}
         username: "${CLUSTER_CNAME}"
         credential: "{{ .password }}"
         password: "{{ .password }}"
-        endpoint: "https://s3.${CLUSTER_DOMAIN}"
+        endpoint: "https://s3.${APP}.${CLUSTER_DOMAIN}"
         region: "homelab"
   dataFrom:
     - extract:
-        key: "cluster-user-password"
+        key: "garage-cluster-password"
