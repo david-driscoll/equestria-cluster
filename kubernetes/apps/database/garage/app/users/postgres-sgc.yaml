@@ -3,7 +3,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: cluster-user
+  name: postgres-sgc-garage-access-key
 spec:
   refreshPolicy: Periodic
   refreshInterval: "5m"
@@ -11,7 +11,7 @@ spec:
     kind: ClusterSecretStore
     name: database
   target:
-    name: cluster-user
+    name: postgres-sgc-garage-access-key
     creationPolicy: Owner
     deletionPolicy: Delete
     template:
@@ -22,25 +22,25 @@ spec:
           reloader.stakater.com/auto: "true"
           reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       data:
-        # CONSOLE_ACCESS_KEY: "${CLUSTER_CNAME}"
+        # CONSOLE_ACCESS_KEY: "postgres-sgc"
         # CONSOLE_SECRET_KEY: "{{ .password }}"
         # credentials: |
         #   [default]
-        #   aws_access_key_id = ${CLUSTER_CNAME}
+        #   aws_access_key_id = postgres-sgc
         #   aws_secret_access_key = {{ .password }}
         # config: |
         #   [default]
         #   region=home
         S3_PROVIDER: Minio
-        S3_ENDPOINT: https://s3.${CLUSTER_DOMAIN}
-        AWS_ACCESS_KEY_ID: "${CLUSTER_CNAME}"
+        S3_ENDPOINT: https://s3.${APP}.${CLUSTER_DOMAIN}
+        AWS_ACCESS_KEY_ID: "postgres-sgc"
         AWS_SECRET_ACCESS_KEY: "{{ .password }}"
-        url: https://${CLUSTER_CNAME}:{{ .password }}@s3.${CLUSTER_DOMAIN}
-        username: "${CLUSTER_CNAME}"
+        url: https://postgres-sgc:{{ .password }}@s3.${APP}.${CLUSTER_DOMAIN}
+        username: "postgres-sgc"
         credential: "{{ .password }}"
         password: "{{ .password }}"
-        endpoint: "https://s3.${CLUSTER_DOMAIN}"
+        endpoint: "https://s3.${APP}.${CLUSTER_DOMAIN}"
         region: "homelab"
   dataFrom:
     - extract:
-        key: "cluster-user-password"
+        key: "postgres-sgc-garage-password"
