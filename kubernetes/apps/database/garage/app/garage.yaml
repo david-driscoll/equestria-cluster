@@ -1,0 +1,330 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app garage
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 15m
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: -1
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      securityContext: &podSecurityContext
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+    controllers:
+      *app :
+        enabled: true
+        type: deployment
+        serviceAccount:
+          name: *app
+        labels:
+          kustomize.toolkit.fluxcd.io/force: enabled
+        pod:
+          securityContext: *podSecurityContext
+        containers:
+          *app :
+            image:
+              repository: dxflrs/garage
+              tag: v2.0.0@sha256:15b40e0dddd2e611aa746ff6f7c3bfe9f22735e4a2cc29e0abd89c268e9b79d9
+              pullPolicy: IfNotPresent
+            env:
+              TZ: ${TIMEZONE}
+              RPC_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-config
+                    key: rpcSecret
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                cpu: 800m
+                memory: 4Gi
+            probes:
+              liveness: &probe
+                enabled: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 3903
+                    initialDelaySeconds: 5
+                    periodSeconds: 30
+              readiness: *probe
+            securityContext:
+              <<: *podSecurityContext
+              capabilities:
+                drop:
+                - ALL
+      garage-webui:
+        enabled: true
+        labels:
+          kustomize.toolkit.fluxcd.io/force: enabled
+        serviceAccount:
+          name: *app
+        pod:
+          securityContext: *podSecurityContext
+        forceRename: garage-webui
+        containers:
+          garage-webui:
+            image:
+              repository: khairul169/garage-webui
+              tag: latest@sha256:c931455c25bfbededa450cd7ec6f389ce52ad1bc861f8d0b93d00ced78e438dd
+              pullPolicy: IfNotPresent
+            env:
+              TZ: ${TIMEZONE}
+              API_BASE_URL: "http://garage.database.svc.cluster.local:3903"
+              API_ADMIN_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-config
+                    key: API_ADMIN_KEY
+              S3_ENDPOINT_URL: "http://garage.database.svc.cluster.local:3900"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                memory: 500Mi
+            securityContext:
+              <<: *podSecurityContext
+              capabilities:
+                drop:
+                - ALL
+      job:
+        labels:
+          kustomize.toolkit.fluxcd.io/force: enabled
+        serviceAccount:
+          name: *app
+        type: job
+        job:
+          backoffLimit: 100
+          suspend: false
+          ttlSecondsAfterFinished: 600
+        initContainers: &init
+          init:
+            image:
+              repository: alpine/k8s
+              tag: 1.33.2@sha256:329cf13af9ee678e3afd71b6af44447029f119f713bec278db2fb53571e857f5
+              pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: false
+            command:
+            - /bin/sh
+            - -c
+            - /scripts/bootstrap-garage.sh
+            env:
+              TZ: "${TIMEZONE}"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+        containers: &job
+          job:
+            image:
+              repository: alpine/k8s
+              tag: 1.33.2@sha256:329cf13af9ee678e3afd71b6af44447029f119f713bec278db2fb53571e857f5
+              pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: false
+            command:
+            - /bin/sh
+            - -c
+            - /scripts/init-users.sh
+            env:
+              PUID: 568
+              PGID: 568
+              UMASK: 002
+              TZ: "${TIMEZONE}"
+              GARAGE_USER_CLUSTER_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: garage-cluster-user
+                    key: id
+              GARAGE_PASSWORD_CLUSTER_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: garage-cluster-user
+                    key: password
+              GARAGE_USER_BACKREST:
+                valueFrom:
+                  secretKeyRef:
+                    name: backrest-garage-access-key
+                    key: id
+              GARAGE_PASSWORD_BACKREST:
+                valueFrom:
+                  secretKeyRef:
+                    name: backrest-garage-access-key
+                    key: password
+              GARAGE_USER_MYSQL:
+                valueFrom:
+                  secretKeyRef:
+                    name: mysql-garage-access-key
+                    key: id
+              GARAGE_PASSWORD_MYSQL:
+                valueFrom:
+                  secretKeyRef:
+                    name: mysql-garage-access-key
+                    key: password
+              GARAGE_USER_POSTGRES:
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-garage-access-key
+                    key: id
+              GARAGE_PASSWORD_POSTGRES:
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-garage-access-key
+                    key: password
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+      cron:
+        labels:
+          kustomize.toolkit.fluxcd.io/force: enabled
+        serviceAccount:
+          name: *app
+        cronjob:
+          backoffLimit: 6
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 2
+          schedule: "*/10 * * * *"
+          startingDeadlineSeconds: 30
+          successfulJobsHistory: 3
+          suspend: false
+        type: cronjob
+        initContainers: *init
+        containers: *job
+    service:
+      *app :
+        controller: *app
+        type: ClusterIP
+        ports:
+          s3-api:
+            port: 3900
+          rpc:
+            port: 3901
+          web-api:
+            port: 3902
+          admin:
+            port: 3903
+      garage-webui:
+        forceRename: garage-webui
+        controller: garage-webui
+        type: ClusterIP
+        ports:
+          http:
+            port: 3909
+    persistence:
+      data:
+        existingClaim: *app
+        advancedMounts:
+          *app :
+            *app :
+            - path: /var/lib/garage/data
+              subPath: data
+            - path: /var/lib/garage/meta
+              subPath: meta
+      config:
+        enabled: true
+        type: secret
+        name: ${APP}-config
+        globalMounts:
+        - path: /etc/garage.toml
+          subPath: garage.toml
+      scripts:
+        enabled: true
+        type: configMap
+        name: ${APP}-scripts
+        defaultMode: 493
+        globalMounts:
+        - path: /scripts/bootstrap-garage.sh
+          subPath: bootstrap-garage.sh
+        - path: /scripts/init-users.sh
+          subPath: init-users.sh
+    serviceAccount:
+      *app : {}
+    rbac:
+      roles:
+        *app :
+          type: ClusterRole
+          rules:
+          - apiGroups: ["apiextensions.k8s.io"]
+            resources: ["customresourcedefinitions"]
+            verbs: ["get", "list", "watch", "create", "patch"]
+          - apiGroups: ["deuxfleurs.fr"]
+            resources: ["garagenodes"]
+            verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+        garage-secret-creator:
+          type: Role
+          forceRename: garage-secret-creator
+          rules:
+          - apiGroups: [""]
+            resources: ["pods"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: [""]
+            resources: ["secrets"]
+            verbs: ["get", "create", "update", "patch"]
+          - apiGroups: [""]
+            resources: ["configmaps"]
+            verbs: ["get", "create", "update", "patch"]
+          - apiGroups: [""]
+            resources: ["pods/exec"]
+            verbs: ["create", "get"]
+          - apiGroups: [""]
+            resources: ["pods"]
+            verbs: ["get", "list"]
+      bindings:
+        *app :
+          type: ClusterRoleBinding
+          subjects:
+          - kind: ServiceAccount
+            name: *app
+            namespace: ${NAMESPACE}
+          roleRef:
+            kind: ClusterRole
+            name: *app
+        garage-secret-creator:
+          type: RoleBinding
+          forceRename: garage-secret-creator
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: Role
+            name: garage-secret-creator
+          subjects:
+          - kind: ServiceAccount
+            name: *app
+            namespace: ${NAMESPACE}
+    servicemonitor:
+      enabled: true
+      endpoints:
+      - port: admin
+        interval: 30s
