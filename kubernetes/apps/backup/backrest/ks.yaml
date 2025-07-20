@@ -29,9 +29,9 @@ spec:
   components:
     - ../../../../components/volsync
     - ../../../../components/tailscale
-    - ../../../../components/minio-access-key
+    - ../../../../components/garage-access-key
     - ../../../../components/ingress/authenticated
   postBuild:
     substitute:
-      APP: backrest-${CLUSTER_CNAME}
+      APP: *app
       NAMESPACE: *namespace

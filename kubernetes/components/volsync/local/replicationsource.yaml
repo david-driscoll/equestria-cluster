@@ -4,6 +4,8 @@ apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
   name: "${APP}"
+  labels:
+    kustomize.toolkit.fluxcd.io/force: enabled
 spec:
   sourcePVC: "${APP}"
   trigger:
@@ -22,6 +24,13 @@ spec:
       runAsUser: ${VOLSYNC_PUID:=568}
       runAsGroup: ${VOLSYNC_PGID:=568}
       fsGroup: ${VOLSYNC_PGID:=568}
+    moverResources:
+      requests:
+        cpu: "50m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "4Gi"
     retain:
       hourly: 24
       daily: 7
