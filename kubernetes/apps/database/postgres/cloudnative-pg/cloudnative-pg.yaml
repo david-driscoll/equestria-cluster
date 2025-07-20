@@ -1,28 +1,26 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1.json
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: mysql-charts
+  name: cloudnative-pg
 spec:
-  interval: 45m
-  url: https://mysql.github.io/mysql-operator/
-  timeout: 3m
+  interval: 2h
+  url: https://cloudnative-pg.github.io/charts
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: mysql-operator
+  name: cloudnative-pg
 spec:
   chart:
     spec:
-      # renovate: registryUrl=https://mysql.github.io/mysql-operator/ chart=mysql-operator
-      chart: mysql-operator
-      version: "2.2.4"
+      chart: cloudnative-pg
+      version: 0.24.0
       sourceRef:
         kind: HelmRepository
-        name: mysql-charts
+        name: cloudnative-pg
   maxHistory: 3
   interval: 1h
   timeout: 5m
@@ -44,6 +42,5 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    envs:
-      imagesPullPolicy: IfNotPresent
-      k8sClusterDomain: cluster.local
+    crds:
+      create: true
