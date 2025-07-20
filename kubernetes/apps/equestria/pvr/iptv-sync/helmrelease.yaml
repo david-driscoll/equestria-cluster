@@ -64,7 +64,7 @@ spec:
               - secretRef:
                   name: iptv-proxy-secret
               - secretRef:
-                  name: minio-access-key
+                  name: garage-access-key
             env:
               PROXY_HOSTNAME: iptv.${ROOT_DOMAIN}
             resources:

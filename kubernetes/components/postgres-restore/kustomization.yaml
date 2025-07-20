@@ -9,5 +9,5 @@ resources:
   - ../postgres/prometheusrule.yaml
   - ../postgres/scheduledbackup.yaml
 components:
-  - ../minio-access-key
+  - ../garage-access-key
   - ../password-generator

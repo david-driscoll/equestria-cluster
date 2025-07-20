@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
   - cluster-user.yaml
   - cluster-user.sops.yaml
+  - backrest.yaml
+  - backrest.sops.yaml
   - mysql.yaml
   - mysql.sops.yaml
   - postgres.yaml

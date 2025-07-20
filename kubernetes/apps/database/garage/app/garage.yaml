@@ -173,6 +173,16 @@ spec:
                   secretKeyRef:
                     name: garage-cluster-user
                     key: password
+              GARAGE_USER_BACKREST:
+                valueFrom:
+                  secretKeyRef:
+                    name: backrest-garage-access-key
+                    key: id
+              GARAGE_PASSWORD_BACKREST:
+                valueFrom:
+                  secretKeyRef:
+                    name: backrest-garage-access-key
+                    key: password
               GARAGE_USER_MYSQL:
                 valueFrom:
                   secretKeyRef:

@@ -7,6 +7,10 @@ GARAGE_CMD="kubectl exec -n $NAMESPACE $POD -- ./garage"
 
 $GARAGE_CMD key import -n cluster-user --yes "$GARAGE_USER_CLUSTER_USER" "$GARAGE_PASSWORD_CLUSTER_USER" || true
 $GARAGE_CMD key allow --create-bucket cluster-user
+$GARAGE_CMD key import -n backrest --yes "$GARAGE_USER_BACKREST" "$GARAGE_PASSWORD_BACKREST" || true
+$GARAGE_CMD bucket create backrest || true
+$GARAGE_CMD bucket allow --read --write --owner backrest --key backrest
+$GARAGE_CMD bucket allow --read --write backrest --key cluster-user
 $GARAGE_CMD key import -n mysql --yes "$GARAGE_USER_MYSQL" "$GARAGE_PASSWORD_MYSQL" || true
 $GARAGE_CMD bucket create mysql || true
 $GARAGE_CMD bucket allow --read --write --owner mysql --key mysql
