@@ -1,25 +1,25 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/volsync.backube/replicationsource_v1alpha1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/volsync.backube/replicationdestination_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
+kind: ReplicationDestination
 metadata:
-  name: "${APP}"
+  name: "${APP}-backblaze-dst"
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
 spec:
-  sourcePVC: "${APP}"
   trigger:
-    schedule: "0 * * * *"
+    manual: restore-once
   restic:
-    copyMethod: "${VOLSYNC_COPYMETHOD:=Snapshot}"
-    pruneIntervalDays: 14
-    repository: "${APP}-volsync-secret"
+    repository: "${APP}-backblaze-volsync-secret"
+    copyMethod: Snapshot
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:=longhorn-snapclass}"
-    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:=2Gi}"
     cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:=openebs-hostpath}"
     cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"]
+    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:=8Gi}"
     storageClassName: "${VOLSYNC_STORAGECLASS:=longhorn-snapshot}"
     accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
+    capacity: "${VOLSYNC_CAPACITY:=5Gi}"
     moverSecurityContext:
       runAsUser: ${VOLSYNC_PUID:=568}
       runAsGroup: ${VOLSYNC_PGID:=568}
@@ -31,6 +31,3 @@ spec:
       limits:
         cpu: "500m"
         memory: "4Gi"
-    retain:
-      hourly: 24
-      daily: 7
