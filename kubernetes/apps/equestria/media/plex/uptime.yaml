@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=../../../observability/crds/kuma/kuma.schema.json
+apiVersion: autokuma.bigboot.dev/v1
+kind: KumaEntity
+metadata:
+  name: ${APP}
+spec:
+  config:
+    active: true
+    name: Plex (Equestria)
+    type: http
+    url: https://${APP}.${CLUSTER_DOMAIN} # /connections?X-Plex-Token=${SECRET_TOKEN}
+    method: GET
+    accepted_statuscodes: ["401"]
+    interval: 300
+    retry_interval: 60
+    max_retries: 3
+    parent_name: "apps"
