@@ -17,7 +17,7 @@ spec:
     - name: longhorn
       namespace: longhorn-system
   prune: true
-  wait: false
+  wait: true
   force: true
   interval: 1h
   retryInterval: 2m
@@ -33,3 +33,4 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: ${GARAGE_VOLUME_CAPACITY}Gi
+      VOLSYNC_ACCESSMODES: ReadWriteMany
