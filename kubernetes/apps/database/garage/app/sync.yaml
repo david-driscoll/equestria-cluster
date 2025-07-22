@@ -94,16 +94,6 @@ spec:
                   secretKeyRef:
                     name: garage-cluster-user
                     key: password
-              GARAGE_USER_AUTHENTIK:
-                valueFrom:
-                  secretKeyRef:
-                    name: authentik-garage-access-key
-                    key: id
-              GARAGE_PASSWORD_AUTHENTIK:
-                valueFrom:
-                  secretKeyRef:
-                    name: authentik-garage-access-key
-                    key: password
               GARAGE_USER_BACKREST:
                 valueFrom:
                   secretKeyRef:
@@ -133,16 +123,6 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: postgres-garage-access-key
-                    key: password
-              GARAGE_USER_TIVI_SYNC:
-                valueFrom:
-                  secretKeyRef:
-                    name: tivi-sync-garage-access-key
-                    key: id
-              GARAGE_PASSWORD_TIVI_SYNC:
-                valueFrom:
-                  secretKeyRef:
-                    name: tivi-sync-garage-access-key
                     key: password
             resources:
               requests:
