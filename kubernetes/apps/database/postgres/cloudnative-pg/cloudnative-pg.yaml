@@ -12,7 +12,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cloudnative-pg
+  name: postgres-operator
 spec:
   chart:
     spec:
@@ -43,4 +43,8 @@ spec:
     keepHistory: false
   values:
     crds:
+      create: true
+    monitoring:
+      podMonitorEnabled: true
+    grafanaDashboard:
       create: true
