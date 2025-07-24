@@ -14,10 +14,10 @@ spec:
       key: ca-certificates.crt
     s3Credentials:
       accessKeyId:
-        name: ${APP}-backblaze-access-key
+        name: backblaze-db-access-key
         key: username
       secretAccessKey:
-        name: ${APP}-backblaze-access-key
+        name: backblaze-db-access-key
         key: credential
     wal:
       compression: gzip
