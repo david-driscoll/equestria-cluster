@@ -22,7 +22,7 @@ spec:
         s3:
           bucketName: ${APP}
           prefix: mysql/dump/
-          config: backblaze-db-access-key
+          config: b${APP}-backblaze-access-key
           profile: default
           endpoint: https://${BACKBLAZE_DOMAIN}/${APP}/
   backupProfiles:
@@ -32,7 +32,7 @@ spec:
           s3:
             bucketName: ${APP}
             prefix: mysql/dump/
-            config: backblaze-db-access-key
+            config: ${APP}-backblaze-access-key
             profile: default
             endpoint: https://${BACKBLAZE_DOMAIN}/${APP}/
     - name: snapshot
@@ -41,7 +41,7 @@ spec:
           s3:
             bucketName: ${APP}
             prefix: mysql/snapshot/
-            config: backblaze-db-access-key
+            config: ${APP}-backblaze-access-key
             profile: default
             endpoint: https://${BACKBLAZE_DOMAIN}/${APP}/
   backupSchedules:

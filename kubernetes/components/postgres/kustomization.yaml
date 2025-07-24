@@ -8,5 +8,6 @@ resources:
   - ./prometheusrule.yaml
   - ./scheduledbackup.yaml
   - ./postgres-user.yaml
+  - ./backblaze.yaml
 components:
   - ../s3-access-key

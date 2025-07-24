@@ -5,5 +5,6 @@ kind: Component
 resources:
   - ./cluster.yaml
   - ./externalsecret.yaml
+  - ./backblaze.yaml
 components:
   - ../s3-access-key
