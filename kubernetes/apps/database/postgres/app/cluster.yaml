@@ -50,7 +50,7 @@ spec:
       createdb: true
       createrole: true
       passwordSecret:
-        name: vikunja-s3-password
+        name: vikunja-postgres
     - connectionLimit: -1
       ensure: present
       inherit: true
@@ -59,7 +59,7 @@ spec:
       createdb: true
       createrole: true
       passwordSecret:
-        name: peppermint-s3-password
+        name: peppermint-postgres
   bootstrap:
     initdb:
       database: ${CLUSTER_CNAME}
