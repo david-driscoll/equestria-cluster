@@ -7,5 +7,9 @@ resources:
   - backrest.sops.yaml
   - mysql.yaml
   - mysql.sops.yaml
+  - peppermint.yaml
+  - peppermint.sops.yaml
   - postgres.yaml
   - postgres.sops.yaml
+  - vikunja.yaml
+  - vikunja.sops.yaml

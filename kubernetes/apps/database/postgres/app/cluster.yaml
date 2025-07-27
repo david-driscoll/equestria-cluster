@@ -42,6 +42,24 @@ spec:
       createrole: true
       passwordSecret:
         name: postgres-user
+    - connectionLimit: -1
+      ensure: present
+      inherit: true
+      name: vikunja
+      login: true
+      createdb: true
+      createrole: true
+      passwordSecret:
+        name: vikunja-s3-password
+    - connectionLimit: -1
+      ensure: present
+      inherit: true
+      name: peppermint
+      login: true
+      createdb: true
+      createrole: true
+      passwordSecret:
+        name: peppermint-s3-password
   bootstrap:
     initdb:
       database: ${CLUSTER_CNAME}

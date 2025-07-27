@@ -12,4 +12,5 @@ resources:
   - ./media/ks.yaml
   - ./pvr/ks.yaml
   - ./idp/ks.yaml
+  - ./home/ks.yaml
   - ./_migration/ks.yaml

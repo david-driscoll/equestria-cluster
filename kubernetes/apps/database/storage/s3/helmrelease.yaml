@@ -89,6 +89,16 @@ spec:
                   secretKeyRef:
                     name: mysql-s3-access-key
                     key: password
+              R3_USER_PEPPERMINT:
+                valueFrom:
+                  secretKeyRef:
+                    name: peppermint-s3-access-key
+                    key: id
+              R3_PASSWORD_PEPPERMINT:
+                valueFrom:
+                  secretKeyRef:
+                    name: peppermint-s3-access-key
+                    key: password
               R3_USER_POSTGRES:
                 valueFrom:
                   secretKeyRef:
@@ -98,6 +108,16 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: postgres-s3-access-key
+                    key: password
+              R3_USER_VIKUNJA:
+                valueFrom:
+                  secretKeyRef:
+                    name: vikunja-s3-access-key
+                    key: id
+              R3_PASSWORD_VIKUNJA:
+                valueFrom:
+                  secretKeyRef:
+                    name: vikunja-s3-access-key
                     key: password
             resources:
               requests:

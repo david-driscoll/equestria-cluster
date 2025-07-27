@@ -2,5 +2,7 @@
 
 rclone mkdir /data/backrest
 rclone mkdir /data/mysql
+rclone mkdir /data/peppermint
 rclone mkdir /data/postgres
-rclone serve s3 --cache-dir /cache --vfs-cache-mode writes --addr :8080 --auth-key $R3_USER_CLUSTER_USER,$R3_PASSWORD_CLUSTER_USER --auth-key $R3_USER_BACKREST,$R3_PASSWORD_BACKREST --auth-key $R3_USER_MYSQL,$R3_PASSWORD_MYSQL --auth-key $R3_USER_POSTGRES,$R3_PASSWORD_POSTGRES /data
+rclone mkdir /data/vikunja
+rclone serve s3 --cache-dir /cache --vfs-cache-mode writes --addr :8080 --auth-key $R3_USER_CLUSTER_USER,$R3_PASSWORD_CLUSTER_USER --auth-key $R3_USER_BACKREST,$R3_PASSWORD_BACKREST --auth-key $R3_USER_MYSQL,$R3_PASSWORD_MYSQL --auth-key $R3_USER_PEPPERMINT,$R3_PASSWORD_PEPPERMINT --auth-key $R3_USER_POSTGRES,$R3_PASSWORD_POSTGRES --auth-key $R3_USER_VIKUNJA,$R3_PASSWORD_VIKUNJA /data
