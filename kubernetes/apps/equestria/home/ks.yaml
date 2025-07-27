@@ -21,7 +21,7 @@ spec:
   dependsOn:
     - name: volsync
       namespace: volsync-system
-    - name: postgres-operator
+    - name: postgres
       namespace: database
   sourceRef:
     kind: GitRepository
@@ -60,7 +60,7 @@ spec:
   dependsOn:
     - name: volsync
       namespace: volsync-system
-    - name: postgres-operator
+    - name: postgres
       namespace: database
   sourceRef:
     kind: GitRepository
