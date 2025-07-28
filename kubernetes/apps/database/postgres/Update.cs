@@ -196,6 +196,7 @@ try
     YamlMappingNode? sopsDoc = null;
     if (File.Exists(sopsFileName))
     {
+      continue;
       sopsDoc = ReadStream(sopsFileName).Single();
     }
     File.WriteAllText(sopsFileName, $"""
