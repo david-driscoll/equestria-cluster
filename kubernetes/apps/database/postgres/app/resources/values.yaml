@@ -8,7 +8,7 @@ version:
 mode: standalone
 recovery:
   method: object_store
-  clusterName: ""
+  clusterName: "${CLUSTER_CNAME}"
   database: ${CLUSTER_CNAME}
   owner: ${CLUSTER_CNAME}
   endpointURL: https://{{ .backblaze_hostname }}/
