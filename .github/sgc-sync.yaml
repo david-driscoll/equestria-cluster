@@ -26,11 +26,11 @@ david-driscoll/stargate-command-cluster:
     deleteOrphaned: true
     exclude: |
       storage/config.yaml
-      storage/s3/generated/
+      storage/s3/generated/*.yaml
       storage/s3/helmrelease.yaml
-      storage/s3/resources/
+      storage/s3/resources/*.yaml
       postgres/app/cluster.yaml
-      postgres/app/users/
+      postgres/app/users/*.yaml
   - source: kubernetes/apps/kube-system/
     dest: kubernetes/apps/kube-system/
     deleteOrphaned: true
