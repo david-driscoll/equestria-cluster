@@ -124,14 +124,14 @@ var serializer = new SerializerBuilder().Build();
 #endregion
 
 #region Update postgres cluster yaml with roles
-var postgresClusterPath = "kubernetes/apps/database/postgres/app/cluster.yaml";
+var postgresClusterPath = "kubernetes/apps/database/postgres/app/resources/values.yaml";
 var postgresClusterDoc = ReadStream(postgresClusterPath).SingleOrDefault();
 if (postgresClusterDoc == null)
 {
   AnsiConsole.MarkupLine($"[red]Failed to read Postgres cluster file: {postgresClusterPath}.[/]");
   return;
 }
-var clusterRoles = postgresClusterDoc.Query("/spec/managed/roles").OfType<YamlSequenceNode>().Single();
+var clusterRoles = postgresClusterDoc.Query("/cluster/roles").OfType<YamlSequenceNode>().Single();
 var defaultRole = clusterRoles.First();
 clusterRoles.Children.Clear();
 clusterRoles.Children.Add(defaultRole);
