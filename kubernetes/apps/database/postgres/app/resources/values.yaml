@@ -9,10 +9,7 @@ mode: standalone
 recovery:
   method: object_store
   clusterName: "${CLUSTER_CNAME}"
-  database: ${CLUSTER_CNAME}
-  owner: ${CLUSTER_CNAME}
   endpointURL: https://{{ .backblaze_hostname }}/
-  destinationPath: s3://{{ .backblaze_bucket }}/
   provider: s3
   s3:
     region: "${CLUSTER_CNAME}"
@@ -20,6 +17,30 @@ recovery:
     path: "/"
     accessKey: "{{ .backblaze_username }}"
     secretKey: "{{ .backblaze_credential }}"
+backups:
+  enabled: true
+  endpointURL: https://{{ .backblaze_hostname }}/
+  provider: s3
+  s3:
+    region: "${CLUSTER_CNAME}"
+    bucket: "{{ .backblaze_bucket }}"
+    path: "/"
+    accessKey: "{{ .backblaze_username }}"
+    secretKey: "{{ .backblaze_credential }}"
+  wal:
+    compression: gzip
+    encryption: ''
+    maxParallel: 4
+  data:
+    compression: gzip
+    encryption: ''
+    jobs: 2
+  scheduledBackups:
+  - name: daily-backup
+    schedule: "${POSTGRES_BACKUP_SCHEDULE:=0 0 16 * * *}"
+    backupOwnerReference: self
+    method: barmanObjectStore
+  retentionPolicy: "30d"
 cluster:
   instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4
@@ -91,31 +112,6 @@ cluster:
   serviceAccountTemplate: {}
   additionalLabels: {}
   annotations: {}
-backups:
-  enabled: true
-  endpointURL: https://{{ .backblaze_hostname }}/
-  destinationPath: s3://{{ .backblaze_bucket }}/
-  provider: s3
-  s3:
-    region: "${CLUSTER_CNAME}"
-    bucket: "{{ .backblaze_bucket }}"
-    path: "/"
-    accessKey: "{{ .backblaze_username }}"
-    secretKey: "{{ .backblaze_credential }}"
-  wal:
-    compression: gzip
-    encryption: ''
-    maxParallel: 4
-  data:
-    compression: gzip
-    encryption: ''
-    jobs: 2
-  scheduledBackups:
-  - name: daily-backup
-    schedule: "${POSTGRES_BACKUP_SCHEDULE:=0 0 4,16 * * *}"
-    backupOwnerReference: self
-    method: barmanObjectStore
-  retentionPolicy: "30d"
 imageCatalog:
   create: true
   images: []

@@ -34,5 +34,5 @@ spec:
   uninstall:
     keepHistory: false
   valuesFrom:
-    - kind: ConfigMap
+    - kind: Secret
       name: ${APP}-values
