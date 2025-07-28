@@ -47,7 +47,7 @@ spec:
   cluster:
     name: postgres
   name: peppermint
-  owner: ${CLUSTER_CNAME}
+  owner: peppermint
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain

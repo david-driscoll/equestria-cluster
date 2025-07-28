@@ -47,7 +47,7 @@ spec:
   cluster:
     name: postgres
   name: vikunja
-  owner: ${CLUSTER_CNAME}
+  owner: vikunja
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain
