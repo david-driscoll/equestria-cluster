@@ -35,4 +35,4 @@ spec:
     keepHistory: false
   valuesFrom:
     - kind: ConfigMap
-      name: homarr-values
+      name: ${APP}-values
