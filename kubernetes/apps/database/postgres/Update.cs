@@ -150,7 +150,7 @@ foreach (var database in databases)
 
 File.WriteAllText(postgresClusterPath, $"""
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/postgresql.cnpg.io/cluster_v1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/refs/heads/main/charts/cluster/values.schema.json
 {serializer.Serialize(postgresClusterDoc)}
 """);
 

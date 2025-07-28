@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/postgresql.cnpg.io/cluster_v1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/refs/heads/main/charts/cluster/values.schema.json
 type: postgresql
 version:
   postgresql: "17.4"
@@ -31,7 +31,6 @@ cluster:
     limits:
       cpu: 1200m
       memory: 4Gi
-  priorityClassName: ""
   logLevel: "info"
   affinity:
     podAntiAffinity:
