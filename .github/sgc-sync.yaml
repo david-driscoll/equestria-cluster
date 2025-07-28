@@ -1,0 +1,96 @@
+david-driscoll/stargate-command-cluster:
+  - source: .vscode/
+    dest: .vscode/
+    deleteOrphaned: true
+    exclude: |
+      settings.json
+  - source: kubernetes/flux/
+    dest: kubernetes/flux/
+    deleteOrphaned: true
+  - source: kubernetes/apps/backup/
+    dest: kubernetes/apps/backup/
+    deleteOrphaned: true
+    exclude: |
+      backrest/app/resources/
+  - source: kubernetes/apps/cert-manager/
+    dest: kubernetes/apps/cert-manager/
+    deleteOrphaned: true
+  - source: kubernetes/apps/democratic-csi/
+    dest: kubernetes/apps/democratic-csi/
+    deleteOrphaned: true
+  - source: kubernetes/apps/network/
+    dest: kubernetes/apps/network/
+    deleteOrphaned: true
+  - source: kubernetes/apps/database/
+    dest: kubernetes/apps/database/
+    deleteOrphaned: true
+    exclude: |
+      storage/config.yaml
+      storage/s3/generated/
+      storage/s3/helmrelease.yaml
+      storage/s3/resources/
+      postgres/app/cluster.yaml
+      postgres/app/users/
+  - source: kubernetes/apps/kube-system/
+    dest: kubernetes/apps/kube-system/
+    deleteOrphaned: true
+  - source: kubernetes/apps/flux-system/weave/
+    dest: kubernetes/apps/flux-system/weave/
+    deleteOrphaned: true
+  - source: kubernetes/apps/flux-system/capacitor/
+    dest: kubernetes/apps/flux-system/capacitor/
+    deleteOrphaned: true
+  - source: kubernetes/apps/longhorn-system/
+    dest: kubernetes/apps/longhorn-system/
+    deleteOrphaned: true
+  - source: kubernetes/apps/system-upgrade/
+    dest: kubernetes/apps/system-upgrade/
+    deleteOrphaned: true
+  - source: kubernetes/apps/volsync-system/
+    dest: kubernetes/apps/volsync-system/
+    deleteOrphaned: true
+  - source: kubernetes/components/
+    dest: kubernetes/components/
+    exclude: |
+      common/cluster-secrets.sops.yaml
+      common/sops-age.sops.yaml
+    deleteOrphaned: true
+  - source: kubernetes/apps/openebs-system/
+    dest: kubernetes/apps/openebs-system/
+    deleteOrphaned: true
+  - source: kubernetes/apps/observability/
+    dest: kubernetes/apps/observability/
+    exclude: |
+      autokuma/
+      uptime-kuma/
+      kustomization.yaml
+  - source: talos/talenv.yaml
+    dest: talos/talenv.yaml
+  - source: talos/patches/global/machine-kubelet.yaml
+    dest: talos/patches/global/machine-kubelet.yaml
+  - source: talos/patches/global/machine-files.yaml
+    dest: talos/patches/global/machine-files.yaml
+  - source: talos/patches/global/cluster-admissionregistration.yaml
+    dest: talos/patches/global/cluster-admissionregistration.yaml
+  - source: talos/patches/global/machine-time.yaml
+    dest: talos/patches/global/machine-time.yaml
+  - source: talos/patches/controller/cluster.yaml
+    dest: talos/patches/controller/cluster.yaml
+  - source: talos/patches/controller/machine-rbac.yaml
+    dest: talos/patches/controller/machine-rbac.yaml
+  - source: .github/renovate.json5
+    dest: .github/renovate.json5
+  - source: .github/workflows/flux-local.yaml
+    dest: .github/workflows/flux-local.yaml
+  - source: .mise.toml
+    dest: .mise.toml
+  - source: versions.env
+    dest: versions.env
+  - source: bootstrap/
+    dest: bootstrap/
+  - source: .mise/
+    dest: .mise/
+  - source: .husky/
+    dest: .husky/
+  - source: .config/
+    dest: .config/
