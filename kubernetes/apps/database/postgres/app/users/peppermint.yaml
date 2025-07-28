@@ -25,12 +25,12 @@ spec:
       data:
         username: "peppermint"
         password: "{{ .password }}"
-        host: "postgres-rw.${NAMESPACE}.svc.cluster.local"
+        host: "postgres-rw.database.svc.cluster.local"
         port: "5432"
-        database: "peppermint"
-        pgpass: "postgres-rw.${NAMESPACE}.svc.cluster.local:5432:peppermint:peppermint:{{ .password }}"
-        jdbc-uri: "jdbc:postgresql://postgres-rw.${NAMESPACE}.svc.cluster.local:5432/peppermint?password={{ .password }}&user=peppermint"
-        uri: "postgresql://peppermint:{{ .password }}@postgres-rw.${NAMESPACE}.svc.cluster.local:5432/peppermint"
+        database: "postgres"
+        pgpass: "postgres-rw.database.svc.cluster.local:5432:postgres:peppermint:{{ .password }}"
+        jdbc-uri: "jdbc:postgresql://postgres-rw.database.svc.cluster.local:5432/postgres?password={{ .password }}&user=peppermint"
+        uri: "postgresql://peppermint:{{ .password }}@postgres-rw.database.svc.cluster.local:5432/postgres"
   dataFrom:
     - extract:
         key: "peppermint-postgres-password"
