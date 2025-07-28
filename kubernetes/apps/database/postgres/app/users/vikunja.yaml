@@ -51,3 +51,10 @@ spec:
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain
+  schemas:
+    - ensure: present
+      name: public
+      owner: vikunja
+    - ensure: present
+      name: vikunja
+      owner: vikunja
