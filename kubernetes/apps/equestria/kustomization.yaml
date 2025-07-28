@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: equestria
 components:
   - ../../components/common
-  - ../../components/repos/app-template4
+  - ../../components/repos/app-template
 resources:
   - ./shared/ks.yaml
   - ./books/ks.yaml
