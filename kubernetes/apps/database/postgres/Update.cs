@@ -200,6 +200,8 @@ kind: Kustomization
 resources:
   - postgres-user.yaml
   - postgres-user.sops.yaml
+  - postgres-superuser.yaml
+  - postgres-superuser.sops.yaml
 {string.Join(Environment.NewLine, databases.Order().SelectMany(database => new[] { $"  - {database}.yaml", $"  - {database}.sops.yaml" }))}
 """;
 

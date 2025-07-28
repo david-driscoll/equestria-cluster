@@ -52,26 +52,23 @@ cluster:
     operator: Exists
     effect: NoSchedule
   enableSuperuserAccess: true
-  superuserSecret: "postgres-user"
+  superuserSecret: "postgres-superuser"
   roles:
-  - name: pg_monitor
+  - name: ${CLUSTER_CNAME}
     ensure: present
-    comment: "PostgreSQL monitoring role"
-    login: false
+    login: true
     superuser: false
     passwordSecret:
-      name: postgres-monitor
+      name: postgres-user
   - name: vikunja
     ensure: present
-    comment: "PostgreSQL monitoring role"
-    login: false
+    login: true
     superuser: false
     passwordSecret:
       name: vikunja-postgres
   - name: peppermint
     ensure: present
-    comment: "PostgreSQL monitoring role"
-    login: false
+    login: true
     superuser: false
     passwordSecret:
       name: peppermint-postgres

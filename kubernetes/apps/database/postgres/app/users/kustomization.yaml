@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
   - postgres-user.yaml
   - postgres-user.sops.yaml
+  - postgres-superuser.yaml
+  - postgres-superuser.sops.yaml
   - peppermint.yaml
   - peppermint.sops.yaml
   - vikunja.yaml

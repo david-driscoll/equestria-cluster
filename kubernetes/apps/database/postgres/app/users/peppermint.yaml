@@ -23,14 +23,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
       data:
-        username: "${APP}"
+        username: "peppermint"
         password: "{{ .password }}"
-        host: "${APP}-rw.${NAMESPACE}.svc.cluster.local"
+        host: "postgres-rw.${NAMESPACE}.svc.cluster.local"
         port: "5432"
-        database: "${APP}"
-        pgpass: "postgres-rw.${NAMESPACE}.svc.cluster.local:5432:${APP}:${APP}:{{ .password }}"
-        jdbc-uri: "jdbc:postgresql://postgres-rw.${NAMESPACE}.svc.cluster.local:5432/${APP}?password={{ .password }}&user=${APP}"
-        uri: "postgresql://${APP}:{{ .password }}@postgres-rw.${NAMESPACE}.svc.cluster.local:5432/${APP}"
+        database: "peppermint"
+        pgpass: "postgres-rw.${NAMESPACE}.svc.cluster.local:5432:peppermint:peppermint:{{ .password }}"
+        jdbc-uri: "jdbc:postgresql://postgres-rw.${NAMESPACE}.svc.cluster.local:5432/peppermint?password={{ .password }}&user=peppermint"
+        uri: "postgresql://peppermint:{{ .password }}@postgres-rw.${NAMESPACE}.svc.cluster.local:5432/peppermint"
   dataFrom:
     - extract:
         key: "peppermint-postgres-password"
