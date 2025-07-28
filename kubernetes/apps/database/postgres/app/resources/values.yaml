@@ -1,5 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/refs/heads/main/charts/cluster/values.schema.json
+nameOverride: "postgres"
+fullnameOverride: "postgres"
 type: postgresql
 version:
   postgresql: "17.4"
