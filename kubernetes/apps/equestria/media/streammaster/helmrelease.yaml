@@ -52,7 +52,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: streammaster-user
-                    key: host
+                    key: hostname
               PGPORT:
                 valueFrom:
                   secretKeyRef:
