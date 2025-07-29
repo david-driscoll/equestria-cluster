@@ -2,44 +2,44 @@
 apiVersion: v1
 kind: Secret
 metadata:
-    name: vikunja-postgres-password
+  name: vikunja-postgres-password
 stringData:
-    username: ENC[AES256_GCM,data:Ra/5i7q/kA==,iv:T00TWJ8nsy4j/xxGqY82p0pyETXafeKNuc1LPWYI6bk=,tag:t7OJorq7YZCuieHDwPNglQ==,type:str]
-    database: ENC[AES256_GCM,data:qyNqIDtlXA==,iv:mSYPFwA9GcCCqqTtrfKJtf6+I5ePCxFMK88nvWseRRE=,tag:Mp5PAGm+1J8L8SDjkrurIg==,type:str]
-    port: ENC[AES256_GCM,data:O1PMWw==,iv:9qVcLpHqyTcAk1XW9Eed0br6v5hJseLQMX6okHqdt4o=,tag:7NnAw7BG3avxalbpf7OQhQ==,type:str]
-    hostname: ENC[AES256_GCM,data:Eox4oK0/rMD3Lzg4M6UUd50Pc93ByztnwfFXOD+YrbsgJGyc6yA=,iv:/QebP+JgT+jZ9ma7czeZMLR5J2blUcXoVsJUDnP/I4M=,tag:GCkilDzp1S0WCin1nqeRgw==,type:str]
-    password: ENC[AES256_GCM,data:ddaXfDvToWB5+BNCHfkV6AMXy1m8WlOL2FdGi+t7Q16K5aoNdihvKRTVE11vpT0OdWGgnLW/c5j6VmhRjYVl7bj7g059Fulex33QGkPqJ/6v85gUzaPetVQPrlItWwkSFhDzI0+L9r7Ljz69EKstNSih0VMcjWh3Z28p4KfyYjQ22A+mGNZUx57fELhaK912W3OZnJpIhizwi/lnD5yJCcHo52aLcd1gNDy2Sme37VOdfMRzjPzaelGlivhkfVBd7c6ev83p4YRfCLDuz0DHco4O9Df7u3bf5kfS4BhQlvoThU8E/G0GI5klgkiGCCXY2wjymQr3/BRpHK8Fk1xYLYUBEm1fQULhowC9gMLRetsXkgYwLDvYKTvzFWskWFchuRidg28W46dH/Hzr0svYEJVWnoUT2/U=,iv:pGK37ESPSUYH5E6yCt+UtXCAtLKLtLuTPl9Npr4juBU=,tag:j26Yott21lQE0RLT9rqfAA==,type:str]
+  username: ENC[AES256_GCM,data:tcxuUKznXA==,iv:GW+NOvJb8dDrAGr3HrSq+TeX4LLrpD3KnO0QSJ3Z4FE=,tag:RCnevMgn1rzrAdYqbUxfKA==,type:str]
+  database: ENC[AES256_GCM,data:kjI/4uwtqQ==,iv:hE2Aeq92/1Sn6MRX1KxORDBx+qDx3pr0SO+s7laGtPI=,tag:DO4TFa5VSC0HcgRZdLGmMw==,type:str]
+  port: ENC[AES256_GCM,data:qbRS4A==,iv:r+GSrVRVFx0usFk/3Ckj5ry1Wv+jcqSMRe/GXt2eb+c=,tag:1pLQeuj3ZisGC1NCyhXfEA==,type:str]
+  hostname: ENC[AES256_GCM,data:Ydq/3kai1u1H0ufkpEBT1KQWFIqz6wvWapzeX7YiLLfRsn0IOwA=,iv:BlDh1IGE4D5sPY0ISMmFT2koTwQKi4zBNTit1weOnKg=,tag:UqhxaFnqXMxU9hnmQr9xog==,type:str]
+  password: ENC[AES256_GCM,data:+ZfUC0zAxgcHj+6XK9Ql4y1PDilZGXFY7603XheS62c=,iv:icfL0uR9rZd4BnolIMz1G+MaLDgH6Oj/mFqZjFSK8zE=,tag:VVQBqdv6zsGmFoX3bsXv7A==,type:str]
 sops:
-    age:
-        - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA3NnNXeDR0WXM4Y1MvWlVL
-            M0o5a0ZmM05BVnRqMDNEb05aRVVJYnJ3V1M4Cnp6K3RjcVJtcUNBYWpHcXRJZWlW
-            YS9rMEpIb0RhekVvVVJxaUkxUkxqVmsKLS0tIHNvV0tPZ0JqQk5BUW1FbG1NcjZH
-            YXprT3oyUzNObFU1c2ozRWlieThWaW8K8hFrVKqnCi76ikpwIX7JtnjU/Ur1rGzl
-            n+5tqzSjbgonTV82u1TC2X1tjPga/drirqbdXUnFStSaykqEk9nDyw==
-            -----END AGE ENCRYPTED FILE-----
-        - recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBVZEt2aHgrTks5eDNKY2RF
-            VUlUSFFmOHRSRW1DRUp2a2lFN1hzbVJDUUNzClJmU2hMQWdmSVFvblhnY0M1dE1G
-            VHZqVW1CelFHVmJGMURVNTViakEzWDAKLS0tIFlhaTJBUm1VVlh1ZEplemRmMSs3
-            RnEya05nS2pVamhUTGJsUTVFZ1RvNzQK57gqoMohAmvP4oSMF4kfGkV5sMDyQkXO
-            vmOJ3MdsBz3ol4eS7snxJppQeDv2bqqjUbygRNeVlJTZAnvRSWJ8Mg==
-            -----END AGE ENCRYPTED FILE-----
-        - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBtTlVZazN5T1QreXFVWWxC
-            a3pPQUc3VTFyVmxJMTVEOUxXclF3WC9tN0hBCnRYSmIwaktCTUMzNk9LNGJKNlpl
-            NEVac0wvNEdCK0M0NytyVFZJZ3ZZaEEKLS0tIHd2R21zbHptS0NjT1FQL1A4dGpR
-            eE16dlA5YzBBUmdhU2d2U3d3anZqZ0EKgZZX7IKu/MW2S7GLO1fLFwqBYCOl3yA6
-            wyLos6LKTvYagcEdthyqoprsXeShfoKv0GaTZ3PJcKZzrhV9AHeVNg==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-07-29T00:16:23Z"
-    mac: ENC[AES256_GCM,data:+UdfO97SpRkLq6ZfjoQKHT8bvg26BYlHWNtfGh02Z8nCxYW9AoXE878tbYDQeNKfaLKrPpTKKyzlyk8aApOtlnoUxhYMFa2Q8GNfugjlrBOA8yvoWSITJbAP8ofwEK7RIefW7tbFDrp47t6vSxDLmErOUNCoNQziCK13RElrzBs=,iv:dC3a5f0L1tUWttrLDB+WKIJ+OhTgwfDoxOVcWOIgnPw=,tag:YK6y38G/BqQT6vc4LMrgug==,type:str]
-    encrypted_regex: ^(data|stringData)$
-    mac_only_encrypted: true
-    version: 3.10.2
+  age:
+    - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAxdXpkNjVSTkkxMkJvb2x0
+        LzAyNExwSjRDOGFoOUtBeGVSSExRZ0I2N2pRClV5dmZycXlPeWtqRHBGRjhicktH
+        YlRHeGRPc1NWSEMzVWh5MFhmVXpHVm8KLS0tIDhKTmN3NHE1dUdWL0l3QVBwYTdB
+        VTdPMDduYnAzdlZGOWpwRWRIRnQ4NlUK4LqmM4d604qvP50+fILeOxA7omnks8yP
+        2QGh1i5oZXpoP3AiHRx/phTS52AaxKtXL7fX+ovFgxtXtKTn8auwYw==
+        -----END AGE ENCRYPTED FILE-----
+    - recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBEQVZ3aTNFS2dHYkNmdk8r
+        L1pNeGFxWXFkdzJHQnhUV3U0bVZxaWxQbW1jCkNEbXNBZW5qdU9lV1RYU1E0a2gz
+        U3k2TU5aUzZ0SEdjLzdkMGpqc1VJamsKLS0tIGxiTVVYMWY5M3l5QXZ1M2kxMk0v
+        UFQ1T1NaL2s2ZnBVZFI4Z3R4VEJMSncKQKK5B0YiH52WoWGZL/YcxczbR4cErloV
+        dbPJ41mDp/L5HwnhsIn+aOpbv0Znv0+FeWTCvX+idIHHbD+BTKO5bQ==
+        -----END AGE ENCRYPTED FILE-----
+    - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZY2FCZ1VyUDFweWJHREtq
+        aWRZMkJ5T3RvdENlVVZNZGVxcWlyOUdTOUNvCmlZdC9zNFE4and2SFJFVmxZYzlu
+        QXpWelI1S055Zmc4cGRSb0JtYllnZFEKLS0tIFFUeEd6M05PRmJYMnZGS0ZDdENE
+        QlZxZVgwbkxYd29tcDNWSTZsaUJGTlUKGQ/Pv+df8CNF15nvjZMyACb20HmxWlTg
+        qj3dASE7eOHYSvRm7VAP5QN19QlaGAP3oX5uySYaSsOTkYV8xCnivQ==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-07-29T00:57:23Z"
+  mac: ENC[AES256_GCM,data:tRSEn8C5ZIemdwpyE4MnQnG5+DKU49Up5tDrIwhhJYKMSBm+yeA8rCwLsHm+cTwXq15XDSefgx7tzOnZneeJ6Eo3yGiCMltaEYbANoQp4IsatwdG5HJK68mpKGTGaOnkwtT1hhlHxBy39xAluNLbuV9jkqlGyeFN+FBfLniOCWQ=,iv:brQJMrI5ioYgYG2zfIalqu9wMJgk7s/+EwMSASY3144=,tag:b/+ijGSGNi8+EaMQmx9t0A==,type:str]
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.10.2

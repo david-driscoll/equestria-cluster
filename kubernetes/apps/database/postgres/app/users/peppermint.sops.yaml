@@ -2,44 +2,44 @@
 apiVersion: v1
 kind: Secret
 metadata:
-    name: peppermint-postgres-password
+  name: peppermint-postgres-password
 stringData:
-    username: ENC[AES256_GCM,data:hIBDoYX4Agl2vw==,iv:Lr4FeKfWnVVZttAgCLVRlQ00CWVHAe29ZoNTBhMWr14=,tag:4my23d0u2CRrK4kbPl7SJA==,type:str]
-    database: ENC[AES256_GCM,data:baKdciKTkrqsCg==,iv:+VGGyhbDW0vXzkMZlGAhp5BzbUx7Hyjuq4N3s5kw86s=,tag:JTD9XD0kWEV57JcRaqkLWA==,type:str]
-    port: ENC[AES256_GCM,data:e8oVWg==,iv:8ftrjeBm7/eGP3nEuBQNc319ipWAoRxsuVIg5vEC7/8=,tag:benDVCIOAXZvuGFWOW7Mxw==,type:str]
-    hostname: ENC[AES256_GCM,data:US6ptiL2kehaYFezh+d+85zYsUDLOpvRUVjrxX8VZM6bbhwiU4U=,iv:B+v4nqLSJSsadjGAon5OjygpAjB5Y7c05ON82yK++Og=,tag:hXT8OpK8z7pb400jQkqMww==,type:str]
-    password: ENC[AES256_GCM,data:7TNPS+1Kn3HKuFi6+sYuSe9SEsx0ORr16GTtds90lOo/T/IhrWB8e8G21nB7UuRXzs+wH5ZsoLXQSB9ulpfavq9rtFkHIkmEYZ6QoH4fs/NrI/DwcX55ViJWvJiSLXtZP+CEbLgBzCYhIO0ocE1scmGJQQ9Hj8TLinwyCWtv31w86y/Cmf4nt2HitLhhDogsBu44hojGXJhGJ4K+r8FlCLnrWHYjkcNOCvxhJhQTp2IabOMSfWAXah6GfH6K9bv+UV4ldEv7yxcxRjX0SUt10QY0vvtnubajeCeqVxJufkv0Nxwi70Pu05e+6gO4O0mGVgSD7e/wlohTl0tThALnz6Z8rrpAHncDVVfCCu2PDlIkH7ZHi7imAX/8lrGBEeyLLzOsVQo8UKv6z+FflQsFtGo6/xDFyeU=,iv:XOnNsRlCAP4r7U1H/t7x7bqakiR34sp0NpzKcj60Yfk=,tag:mfpnKIoDSAiPDIqv1pbf5w==,type:str]
+  username: ENC[AES256_GCM,data:rDIHe770D7ktKw==,iv:+o1X8hxxojUKTX5rSsb9b2BfB0Q3QkDazccSiOAlavE=,tag:DrOwMC49hOwWqUBYMNVmFw==,type:str]
+  database: ENC[AES256_GCM,data:tG9ElwDPjS3mSg==,iv:HlQIK05P8qSFyvfQeIP+TJK1SPl/8ac88YtYIvZ1b3Y=,tag:AkjK033/LWU+mi0UrbpK5w==,type:str]
+  port: ENC[AES256_GCM,data:9qQWrQ==,iv:v1OTMSCULDpyvqUO3+C7sdJZkcMjlv1c3NSp5rDujAU=,tag:VFLdT5mNm4fM9LhPn9Hfdw==,type:str]
+  hostname: ENC[AES256_GCM,data:Au7r6jjQbHNmeuTQSwvjvme2EFNVrwDu2XFjcIZDEtEChVwsMJo=,iv:63jpsFWkJehQR8gt98FFsVu5I+4YHrxRmZyBSz5Iq04=,tag:DwNJygvyf6mfL0m1TbAwbQ==,type:str]
+  password: ENC[AES256_GCM,data:EuUGiu5XFMrqTm4m2FL9bj3VvdJBqppXH9gw3vqUXvw=,iv:lJDu27WcUCu/YFyY8kAcPF7unNwYRgFElqCZJ6d+3yY=,tag:A7ragSbfPqgXmWdf1c6WpQ==,type:str]
 sops:
-    age:
-        - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA1UXNIcmpzdDBqeHNHZ0lB
-            MFlsRDJrdVVEcVRlcjFuaDJkRVIzanl0WDBjCkRMdVIvMjJ2R1lqSVpzb29scVZi
-            Mko3Y253bmt5dXFzb2oxTmZ5cnBZK00KLS0tIEZiaXY0NWs5c01BQ1pRcFVwN1pm
-            a213aGw5TWpXY01TMUF0OUxpUG1XNW8KnUWJMPYISN+iVYIPhTt2M7FeHOvoLnmm
-            jngQVmbprPzepEpo9+pi0ox7LLp4hl3arcK4rBoZSL/bxMNk8GLKPA==
-            -----END AGE ENCRYPTED FILE-----
-        - recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBCMXVLS3VjSzdJMHBLRXZz
-            em1QWHF6R3EzU2J1NUVLaUZCUi9IclMrTVEwClBVeTlQNldjYTZycGQ2ZWgweHJk
-            L1BvUk15S09OZWxzRXFyM0lNTVVIaEkKLS0tIDlvYnVWdFFKb3phbXRQTW5kb21N
-            WWNZYW81Tm40cmYxVHRpamZnVXYyV1EK6pAtNdM8gH5OIfFmVj6KeCMKUMsMd1cc
-            SYODyet+rDoeDampBjYubarprIOJqCPMQKwe+KaPY5bpM4QcbaDwEQ==
-            -----END AGE ENCRYPTED FILE-----
-        - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBVRHNqUG1pNVlZdGJtL21y
-            QVRrU0I1eGVldGpzL0hyeVQzOVFhcjFvbEUwCkpqU21YYXJIQ3h6VFY2UjE1U214
-            a2JWblJ6RVRDZjc5TFZicEVJa3hmTzQKLS0tIExLZU9EL2QrcFg5U05RbUxuTERo
-            eHEreHFLYkdxYXZoZmpNR00zN3ZhT2cKeU2DNSsNaZ5PCIWa/N73D9LlETvqKrNU
-            ti88TRefDyTHj/DMKKNf9gxGJ8la/FhpjNP1/tts55Lm8Yp0XpniZg==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-07-29T00:15:14Z"
-    mac: ENC[AES256_GCM,data:5ysL1xQ7KPmQXcrwmKsvgWBg+MRiKK8dwzmWgW+d5N+AUHCPD7YqmGqLiFld0czbpdPFqoob7IDpdx8jA7J3mYEzoatUAaHVEXKj9g8LSYhWKRNj3VQpN4PQDIh6anKtXOMF9OICd6GW5ZMtjDSxnDtfa07rry5pb9rgqX2Tn2o=,iv:D6/P1Xt+hVrGeqj9UVjiVVJdhjBT68nuF029RjEB/yY=,tag:PCEJmfrhQlJ4SLcjTwkuTw==,type:str]
-    encrypted_regex: ^(data|stringData)$
-    mac_only_encrypted: true
-    version: 3.10.2
+  age:
+    - recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAyaGxpeks3eVV1U2xRM3du
+        My9GeWYxWWRycWVXU2s5NGxMcmozb2N6c2tZCkh1RzRvUlNFZmdnSWU1cmlzQlc1
+        alNNVXFZRzc3Y3RFai9VcWlXWXQybkEKLS0tIFRvTUJnQWgxeFBkV2VkN0pKUXlM
+        YjkybW43dVRqdzNsWm5ITTF4cHVWWFkKQXo6j8d5sqOUkM7htAJvFc29lrt++EUI
+        zWUfpQvb5//TV3lSNTtlGMtrUFF7trw9zZXz6QFZNJxzKLX/ROxo5w==
+        -----END AGE ENCRYPTED FILE-----
+    - recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBya1Awb3dLU0FYTTJrdGFY
+        dUd1RFJrNUxxUkV5cjk2YUFUQnlXQjExekFzCklpUllxVjhZcWJUS3h2blh0SThh
+        cmNZOUFDenRyN3p3bFR2Wms3Zk9OKzAKLS0tIDhuNkR4YjBhNnlwVFdVZUlReHR4
+        Mnh5UHVrV2FNWDNMbnhiU1hCbEttaHMKSieTn5629UKFvp5Q8xhZSRk1v6f5S02p
+        Nk0jBrPsOVtIVeL7v+fMNgr9rrxT7ltPr7DCqfphtLfTYh3GFLy49g==
+        -----END AGE ENCRYPTED FILE-----
+    - recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBncWhDV2JUU0s5SnVYa0Nl
+        VDJvVTArRXQ2TEZVT3hZUzFZYlYrTk9teTM4CllGLzFqMWVZeTVXaCszZlFlNzVV
+        ZEZZSlZ6eHlWdXdOdTdhVHpzK2F3UFUKLS0tIEFIdERJbGZhc0V0aTVqc050REVj
+        T2taSWxGOElhenhNU1ZrNHNnNlZ0Y1UKDYkDDT9mX93SzHJRZc9FZqAk8pVSMLLX
+        w8OGH0Y8vFtrQw0fbl2T0DgbEcz3YK3N08B+phvA5eN2g0Ulr46R/w==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-07-29T00:57:23Z"
+  mac: ENC[AES256_GCM,data:Tuo6FD5aZhx6BaFRCAxks+RMOP09m3gyPNgNp2TIP3dm2ZMZU9ELkuoA/QazKXninTVG71Zgcem0CcShdtPaA/62sGV2tDwrF5P8cEOIK0UhdkZv5g0N6Ki49s7qdVruGW9KRPdq3vhrRE9u4YlFuY89U105C+45FrbhaqZ5hxg=,iv:+M5jtU0OJALG02bwIG7e25T0d0olPcLR94PdYVgmO6U=,tag:IM3MpzEo+/VFwtPf8HUMGg==,type:str]
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.10.2
