@@ -52,21 +52,21 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: &app peppermint
+  name: &app ${POSTGRES_NAME:=peppermint}
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
   cluster:
     name: postgres
-  name: peppermint
-  owner: peppermint
+  name: ${POSTGRES_NAME:=peppermint}
+  owner: ${POSTGRES_NAME:=peppermint}
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
     - ensure: present
       name: public
-      owner: peppermint
+      owner: ${POSTGRES_NAME:=peppermint}
     - ensure: present
-      name: peppermint
-      owner: peppermint
+      name: ${POSTGRES_NAME:=peppermint}
+      owner: ${POSTGRES_NAME:=peppermint}
