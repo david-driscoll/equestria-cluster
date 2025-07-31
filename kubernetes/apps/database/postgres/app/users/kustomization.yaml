@@ -7,7 +7,7 @@ resources:
   - postgres-superuser.sops.yaml
   - peppermint.yaml
   - peppermint.sops.yaml
-  - pulumi.yaml
-  - pulumi.sops.yaml
+  - pulumi-operator.yaml
+  - pulumi-operator.sops.yaml
   - vikunja.yaml
   - vikunja.sops.yaml
