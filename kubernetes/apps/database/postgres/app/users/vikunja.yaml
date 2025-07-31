@@ -52,21 +52,21 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: &app ${POSTGRES_NAME:=vikunja}
+  name: &app vikunja
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
   cluster:
     name: postgres
-  name: ${POSTGRES_NAME:=vikunja}
-  owner: ${POSTGRES_NAME:=vikunja}
+  name: vikunja
+  owner: vikunja
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
     - ensure: present
       name: public
-      owner: ${POSTGRES_NAME:=vikunja}
+      owner: vikunja
     - ensure: present
-      name: ${POSTGRES_NAME:=vikunja}
-      owner: ${POSTGRES_NAME:=vikunja}
+      name: vikunja
+      owner: vikunja

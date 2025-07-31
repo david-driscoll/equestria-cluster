@@ -3,7 +3,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: &name pulumi-postgres
+  name: &name pulumi-operator-postgres
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -45,28 +45,28 @@ spec:
               templateAs: Values
   dataFrom:
     - extract:
-        key: "pulumi-postgres-password"
+        key: "pulumi-operator-postgres-password"
 
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/postgresql.cnpg.io/database_v1.json
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: &app ${POSTGRES_NAME:=pulumi-operator}
+  name: &app pulumi-operator
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
   cluster:
     name: postgres
-  name: ${POSTGRES_NAME:=pulumi-operator}
-  owner: ${POSTGRES_NAME:=pulumi-operator}
+  name: pulumi-operator
+  owner: pulumi-operator
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
     - ensure: present
       name: public
-      owner: ${POSTGRES_NAME:=pulumi-operator}
+      owner: pulumi-operator
     - ensure: present
-      name: ${POSTGRES_NAME:=pulumi-operator}
-      owner: ${POSTGRES_NAME:=pulumi-operator}
+      name: pulumi-operator
+      owner: pulumi-operator
