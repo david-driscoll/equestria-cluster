@@ -148,10 +148,9 @@ spec:
 
     persistence:
       config:
-        existingClaim: emby-config
+        existingClaim: *app
         globalMounts:
           - path: /config
-
 
       transcode:
         enabled: true

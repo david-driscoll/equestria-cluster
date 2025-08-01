@@ -29,7 +29,7 @@ database:
   # Database password
   password: "{{ .postgres_password }}"
   # Database host
-  host: "{{ .postgres_host }}"
+  host: "{{ .postgres_hostname }}"
   # Database to use
   database: "{{ .postgres_database }}"
 
