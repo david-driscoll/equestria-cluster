@@ -65,39 +65,39 @@ spec:
 #     substitute:
 #       APP: *app
       # NAMESPACE: *namespace
-# ---
-# # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: &app jellyfin
-#   namespace: &namespace equestria
-# spec:
-#   targetNamespace: *namespace
-#   commonMetadata:
-#     labels:
-#       app.kubernetes.io/name: *app
-#   dependsOn:
-#     - name: shared-volumes
-#       namespace: *namespace
-#   path: ./kubernetes/apps/equestria/media/jellyfin
-#   prune: true
-#   wait: true
-#   force: true
-#   interval: 1h
-#   retryInterval: 2m
-#   timeout: 15m
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-system
-#     namespace: flux-system
-#   components:
-#     - ../../../../components/tailscale
-#     - ../../../../components/volsync
-#   postBuild:
-#     substitute:
-#       APP: *app
-#       NAMESPACE: *namespace
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app jellyfin
+  namespace: &namespace equestria
+spec:
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: shared-volumes
+      namespace: *namespace
+  path: ./kubernetes/apps/equestria/media/jellyfin
+  prune: true
+  wait: true
+  force: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 15m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  components:
+    - ../../../../components/tailscale
+    - ../../../../components/volsync
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -329,7 +329,8 @@ spec:
     substitute:
       APP: plex
       NAMESPACE: *namespace
-      VOLSYNC_CAPACITY: 80Gi
+      VOLSYNC_CAPACITY: 60Gi
+      # VOLSYNC_STORAGECLASS: openebs-hostpath
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
