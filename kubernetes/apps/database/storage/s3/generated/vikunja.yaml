@@ -9,7 +9,7 @@ spec:
   refreshInterval: 10m
   secretStoreRef:
     kind: ClusterSecretStore
-    name: database
+    name: backup
   target:
     name: vikunja-s3-access-key
     creationPolicy: Owner
