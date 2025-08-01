@@ -67,7 +67,7 @@ spec:
           app:
             image:
               repository: thewicklowwolf/bookbounty
-              tag: latest@sha256:4bcb8af1af513446edaa86697e4178e5df37aa8d1d49b40948bc1cec3b5c96c0
+              tag: latest@sha256:f1b6b96704b6c9c7d929e17974849c46b8d774994ff0bba4cf16f2d7c7bef704
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
