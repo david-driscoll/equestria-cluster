@@ -9,7 +9,7 @@ spec:
   refreshInterval: 10m
   secretStoreRef:
     kind: ClusterSecretStore
-    name: backup
+    name: database
   target:
     name: peppermint-s3-access-key
     creationPolicy: Owner
