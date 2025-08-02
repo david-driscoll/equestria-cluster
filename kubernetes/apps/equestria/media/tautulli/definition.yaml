@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/equestria-cluster/refs/heads/main/kubernetes/apps/observability/crds/application/application.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Tautulli (Equestria)
+  category: Media Management
+  uptime:
+    http:
+      url: https://${APP}.${CLUSTER_DOMAIN}/status
+      method: GET
+      accepted_statuscodes: ["200"]
+      parent_name: "apps"
