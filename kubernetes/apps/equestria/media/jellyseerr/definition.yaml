@@ -5,15 +5,15 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Radarr
+  name: Jellyseerr
   category: Media Management
-  description: Radarr is a movie collection manager
+  description: Jellyseerr is a request management system
   authentik:
     proxy:
       type: proxy
       provider: "forward-auth"
       external_url: https://${APP}.${ROOT_DOMAIN}
-      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg
+      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg
       skip_path_regex: "^/api([/?].*)?$"
   uptime:
     http:

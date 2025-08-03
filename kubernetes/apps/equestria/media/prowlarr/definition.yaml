@@ -5,9 +5,9 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Radarr
+  name: Prowlarr
   category: Media Management
-  description: Radarr is a movie collection manager
+  description: Prowlarr is an indexer manager
   authentik:
     proxy:
       type: proxy
