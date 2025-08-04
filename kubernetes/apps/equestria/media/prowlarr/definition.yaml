@@ -8,12 +8,12 @@ spec:
   name: Prowlarr
   category: Media Management
   description: Prowlarr is an indexer manager
+  url: https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg
   authentik:
     proxy:
-      type: proxy
       provider: "forward-auth"
       externalHost: https://${APP}.${ROOT_DOMAIN}
-      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg
       skipPathRegex: "^/api([/?].*)?$"
   uptime:
     http:
