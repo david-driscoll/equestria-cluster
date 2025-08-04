@@ -12,7 +12,7 @@ spec:
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bazarr.svg
   authentik:
     proxy:
-      mode: "forward-auth"
+      mode: "forward_single"
       skipPathRegex: "^/api([/?].*)?$"
       externalHost: "https://${APP}.${ROOT_DOMAIN}"
   uptime:
