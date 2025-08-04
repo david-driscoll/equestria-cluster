@@ -13,8 +13,8 @@ spec:
   authentik:
     proxy:
       provider: "forward-auth"
-      skip_path_regex: "^/api([/?].*)?$"
-      external_host: "https://${APP}.${ROOT_DOMAIN}"
+      skipPathRegex: "^/api([/?].*)?$"
+      externalHost: "https://${APP}.${ROOT_DOMAIN}"
   uptime:
     http:
       url: https://${APP}.${ROOT_DOMAIN}/ping

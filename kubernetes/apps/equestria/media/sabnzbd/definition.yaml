@@ -12,9 +12,9 @@ spec:
     proxy:
       type: proxy
       provider: "forward-auth"
-      external_url: https://${APP}.${ROOT_DOMAIN}
+      externalHost: https://${APP}.${ROOT_DOMAIN}
       icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sabnzbd.svg
-      skip_path_regex: "^/api([/?].*)?$"
+      skipPathRegex: "^/api([/?].*)?$"
   uptime:
     http:
       url: https://${APP}.${ROOT_DOMAIN}/api?mode=version
