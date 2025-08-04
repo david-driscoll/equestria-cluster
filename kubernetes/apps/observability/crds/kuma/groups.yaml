@@ -3,7 +3,7 @@
 apiVersion: autokuma.bigboot.dev/v1
 kind: KumaEntity
 metadata:
-  name: ${CLUSTER_CNAME}-apps
+  name: cluster-apps
 spec:
   config:
     name: ${CLUSTER_TITLE}
@@ -15,7 +15,7 @@ spec:
 apiVersion: autokuma.bigboot.dev/v1
 kind: KumaEntity
 metadata:
-  name: ${CLUSTER_CNAME}-system
+  name: cluster-system
 spec:
   config:
     name: ${CLUSTER_TITLE}
