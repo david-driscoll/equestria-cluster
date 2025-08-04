@@ -10,11 +10,6 @@ spec:
   description: Jellyseerr is a request management system
   url: https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg
-  authentik:
-    proxy:
-      mode: "forward-auth"
-      externalHost: https://${APP}.${ROOT_DOMAIN}
-      skipPathRegex: "^/api([/?].*)?$"
   uptime:
     http:
       url: https://${APP}.${ROOT_DOMAIN}/ping
