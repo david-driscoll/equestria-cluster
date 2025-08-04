@@ -8,13 +8,13 @@ spec:
   name: Bazarr
   category: Media Management
   description: Bazarr is a subtitle manager
+  url: https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bazarr.svg
   authentik:
     proxy:
-      type: proxy
       provider: "forward-auth"
-      external_url: https://${APP}.${ROOT_DOMAIN}
-      icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bazarr.svg
       skip_path_regex: "^/api([/?].*)?$"
+      external_host: "https://${APP}.${ROOT_DOMAIN}"
   uptime:
     http:
       url: https://${APP}.${ROOT_DOMAIN}/ping
