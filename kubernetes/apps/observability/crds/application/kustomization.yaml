@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./crds.yaml
   - ./service-account.yaml
-  # - ./push-secret.yaml
+  - ./push-secret.yaml
