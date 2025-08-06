@@ -39,18 +39,16 @@ var factory = LoggerFactory.Create(configure =>
            }
        );
 
-var clusterConfig = await ReadStream("kubernetes/components/common/cluster-secrets.sops.yaml").OfType<YamlMappingNode>().SingleAsync();
-var clusterCname = clusterConfig.Query("/stringData/CLUSTER_CNAME").OfType<YamlScalarNode>().Single();
-var tailscaleNameserverIp = clusterConfig.Query("/stringData/TAILSCALE_NAMESERVER_IP").OfType<YamlScalarNode>().Single();
-var config = KubernetesClientConfiguration.BuildConfigFromConfigFile("./kubeconfig", currentContext: $"admin@{clusterCname.Value}");
-var localCluster = new Kubernetes(config);
+var localCluster = new Kubernetes(KubernetesClientConfiguration.BuildConfigFromConfigFile("./kubeconfig"));
 var pods = await localCluster.ListPodForAllNamespacesAsync(labelSelector: "app=nameserver");
-var pod = pods.Items.Single(item => item.Status.PodIP != null);
+var pod = pods.Items.First();
 
+var clusterConfig = await ReadStream("kubernetes/components/common/cluster-secrets.sops.yaml").OfType<YamlMappingNode>().SingleAsync();
+var clusterCname = clusterConfig.Query("/stringData/TAILSCALE_NAMESERVER_IP").OfType<YamlScalarNode>().Single();
 
-if (tailscaleNameserverIp.Value != pod.Status.PodIP)
+if (clusterCname.Value != pod.Status.PodIP)
 {
-  tailscaleNameserverIp.Value = pod.Status.PodIP;
+  clusterCname.Value = pod.Status.PodIP;
   await WriteFile("kubernetes/components/common/cluster-secrets.sops.yaml", serializer.Serialize(clusterConfig));
   AnsiConsole.WriteLine("Updated TAILSCALE_NAMESERVER_IP to {0}", pod.Status.PodIP);
 }
