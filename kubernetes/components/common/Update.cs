@@ -44,7 +44,7 @@ var pods = await localCluster.ListPodForAllNamespacesAsync(labelSelector: "app=n
 var pod = pods.Items.First();
 
 var clusterConfig = await ReadStream("kubernetes/components/common/cluster-secrets.sops.yaml").OfType<YamlMappingNode>().SingleAsync();
-var clusterCname = clusterConfig.Query("/stringData/TAILSCALE_NAMESERVER_IP").OfType<YamlScalarNode>().Single();
+var clusterCname = clusterConfig.Query("/stringData/TAILSCALE_NAMESERVER_IP").OfType<YamlScalarNode>().SingleOrDefault();
 
 if (clusterCname.Value != pod.Status.PodIP)
 {
