@@ -1,12 +1,11 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/tailscale.com/connector_v1alpha1.json
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
   name: "${CLUSTER_CNAME}"
 spec:
   exitNode: true
-  hostname: "${CLUSTER_CNAME}"
+  hostname: "${CLUSTER_CNAME}-connector"
   subnetRouter:
     advertiseRoutes:
       - "${INTERNAL_NETWORK}"
