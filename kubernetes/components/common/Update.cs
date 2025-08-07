@@ -43,7 +43,7 @@ try
 {
   var localCluster = new Kubernetes(KubernetesClientConfiguration.BuildConfigFromConfigFile("./kubeconfig"));
 
-  var result = await localCluster.CustomObjects.GetClusterCustomObjectAsync<TailscaleDns>("tailscale.com", "v1alpha1", "dnsconfigs", "ts-dns");
+  var result = await localCluster.CustomObjects.GetClusterCustomObjectAsync<TailscaleDns>("tailscale.com", "v1alpha1", "dnsconfigs", "tailscale-nameserver");
 
   var clusterConfig = await ReadStream("kubernetes/components/common/cluster-secrets.sops.yaml").OfType<YamlMappingNode>().SingleAsync();
   var clusterCname = clusterConfig.Query("/stringData/TAILSCALE_NAMESERVER_IP").OfType<YamlScalarNode>().Single();
