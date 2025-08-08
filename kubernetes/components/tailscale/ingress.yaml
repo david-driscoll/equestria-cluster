@@ -8,12 +8,10 @@ metadata:
     reloader.stakater.com/auto: "true"
     external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
     kubernetes.io/ingress.class: internal
-    # tailscale.com/experimental-forward-cluster-traffic-via-ingress: "true"
+    tailscale.com/experimental-forward-cluster-traffic-via-ingress: "true"
     tailscale.com/expose: "true"
     tailscale.com/hostname: "${TAILSCALE_HOST:=${APP}}"
     tailscale.com/tailnet-ip: "${TAILSCALE_IP}"
-    # tailscale.com/proxy-group: ingress-proxies
-    # tailscale.com/tags: "tag:internal-apps"
 spec:
   entryPoints:
   - websecure
@@ -37,12 +35,13 @@ spec:
 #     tailscale.com/experimental-forward-cluster-traffic-via-ingress: "true"
 #     traefik.ingress.kubernetes.io/router.middlewares: network-tailscale-network@kubernetescrd
 #     tailscale.com/tailnet-ip: "${TAILSCALE_IP}"
-#     tailscale.com/proxy-group: ingress-proxies
-#     tailscale.com/tags: "tag:internal-apps"
+#     # tailscale.com/proxy-group: ingress-proxies
+#     # tailscale.com/tags: "tag:internal-apps"
 # spec:
+#   ingressClassName: internal
 #   tls:
 #   - hosts:
-#     - ${TAILSCALE_HOST:=${APP}}
+#     - ${TAILSCALE_HOST:=${APP}}.${TAILSCALE_DOMAIN}
 #   rules:
 #   - http:
 #       paths:
@@ -53,4 +52,3 @@ spec:
 #               name: ${TAILSCALE_PORT:=http}
 #         pathType: Prefix
 #         path: /
-#   ingressClassName: internal
