@@ -5,7 +5,7 @@ kind: HelmRepository
 metadata:
   name: emberstack-charts
 spec:
-  interval: 30m
+  interval: 1h
   url: https://emberstack.github.io/helm-charts
   timeout: 3m
 ---
