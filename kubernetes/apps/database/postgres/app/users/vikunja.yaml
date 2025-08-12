@@ -87,7 +87,7 @@ spec:
 apiVersion: external-secrets.io/v1alpha1
 kind: PushSecret
 metadata:
-  name: vikunja-postgres-user-push-secret
+  name: vikunja-postgres-push-secret
 spec:
   deletionPolicy: None
   refreshInterval: 10m
@@ -96,12 +96,12 @@ spec:
       name: onepassword-connect
   selector:
     secret:
-      name: vikunja-postgres-user
+      name: vikunja-postgres
   data:
     - match:
         secretKey: username
         remoteRef:
-          remoteKey: &key ${CLUSTER_CNAME}-vikunja-postgres-user
+          remoteKey: &key ${CLUSTER_CNAME}-vikunja-postgres
           property: username
       metadata:
         apiVersion: kubernetes.external-secrets.io/v1alpha1
