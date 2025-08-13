@@ -147,8 +147,8 @@ auth:
     providers:
       authentik:
         name: "Authentik"
-        authurl: "${OIDC_ISSUER}/application/o/vikunja/"
-        logouturl: "${OIDC_ISSUER}/application/o/vikunja/end-session/"
+        authurl: "https://${OIDC_ISSUER}/application/o/vikunja/"
+        logouturl: "https://${OIDC_ISSUER}/application/o/vikunja/end-session/"
         clientid: "{{ .oidc_username }}"
         clientsecret: "{{ .oidc_credential }}"
         scope: "openid email profile vikunja_scope"
