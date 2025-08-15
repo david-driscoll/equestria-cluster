@@ -5,8 +5,9 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Tautulli (Equestria)
+  name: Watchstate
   category: Media Management
+  description: Watchstate syncs your current watched state between plex, emby and jellyfin.
   uptime:
     http:
       url: https://${APP}.${CLUSTER_DOMAIN}/status
