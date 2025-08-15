@@ -13,7 +13,6 @@ spec:
   authentik:
     proxy:
       mode: "forward_single"
-      skipPathRegex: "^/api([/?].*)?$"
       externalHost: "https://${APP}.${ROOT_DOMAIN}"
   uptime:
     http:
