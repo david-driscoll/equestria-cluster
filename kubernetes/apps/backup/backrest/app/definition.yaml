@@ -5,16 +5,15 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Weave GitOps
+  name: Backrest
   category: ${CLUSTER_TITLE}
-  description: Access to the Weave dashboard
-  url: &url https://gitops.${CLUSTER_DOMAIN}
-  # TODO: Change me someday
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gitea.svg
-  # authentik:
-  #   proxy:
-  #     mode: "forward_single"
-  #     externalHost: *url
+  description: Access to the Backrest tool
+  url: &url https://${APP}.${CLUSTER_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/backrest.svg
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
   uptime:
     http:
       url: *url
