@@ -8,12 +8,12 @@ spec:
   name: Sonarr
   category: Media Management
   description: Sonarr is a TV series collection manager
-  url: https://${APP}.${ROOT_DOMAIN}
+  url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg
   authentik:
     proxy:
       mode: "forward_single"
-      externalHost: https://${APP}.${ROOT_DOMAIN}
+      externalHost: *url
       skipPathRegex: "^/api([/?].*)?$"
   uptime:
     http:

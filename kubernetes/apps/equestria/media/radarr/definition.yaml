@@ -8,12 +8,12 @@ spec:
   name: Radarr
   category: Media Management
   description: Radarr is a movie collection manager
-  url: https://${APP}.${ROOT_DOMAIN}
+  url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg
   authentik:
     proxy:
       mode: "forward_single"
-      externalHost: https://${APP}.${ROOT_DOMAIN}
+      externalHost: *url
       skipPathRegex: "^/api([/?].*)?$"
   uptime:
     http:
