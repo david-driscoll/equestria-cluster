@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./apikey.sops.yaml
   - ./helmrelease.yaml
-  - ./volume.yaml
+  - ./definition.yaml

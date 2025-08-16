@@ -6,6 +6,7 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./secret-key.yaml
+  - ./definition.yaml
 configMapGenerator:
   - name: homarr-values
     files:

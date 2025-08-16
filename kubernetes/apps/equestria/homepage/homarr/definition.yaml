@@ -5,33 +5,40 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Postgres
+  name: Homarr
   category: ${CLUSTER_TITLE}
-  description: Postgres monitoring
-  uptimeFrom:
+  description: Homarr is a home automation manager
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  authentikFrom:
     type: secret
-    name: ${APP}-uptime
+    name: ${APP}-authentik
+  uptime:
+    http:
+      url: *url
+      method: GET
+      accepted_statuscodes: ["200"]
+      parent_name: "apps"
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/secret-uptime.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/secret-authentik.json
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: ${APP}-uptime
+  name: ${APP}-authentik
 spec:
   refreshPolicy: Periodic
   refreshInterval: 10m
   secretStoreRef:
     kind: ClusterSecretStore
-    name: database
+    name: onepassword-connect
   dataFrom:
     - extract:
-        key: postgres-superuser
+        key: 'Homarr OIDC Credentials'
       rewrite:
         - regexp:
             source: "[\\W]"
             target: _
   target:
-    name: ${APP}-uptime
+    name: ${APP}-authentik
     creationPolicy: Owner
     deletionPolicy: Retain
     template:
@@ -42,7 +49,10 @@ spec:
           reloader.stakater.com/auto: "true"
           reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       data:
-        type: postgres
-        name: "${APP}"
-        database_connection_string: "{{ .public_uri }}"
-        parent_name: "cluster"
+        type: oauth2
+        clientId: "{{ .username }}"
+        clientSecret: "{{ .credential }}"
+        clientType: confidential
+        allowedRedirectUris:
+          - path: "https://${OIDC_ISSUER}/applications/${APP}/callback"
+
