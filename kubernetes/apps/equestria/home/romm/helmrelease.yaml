@@ -1,0 +1,120 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app romm
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 15m
+  timeout: 5m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  dependsOn: []
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          *app :
+            image:
+              repository: zurdi15/romm
+              tag: >-
+                3.2.0@sha256:02a99e18d9d04dbf93cda0666ffbade9f8c14ff040fe42b88892682f866060c7
+            env:
+              TZ: "${TIMEZONE}"
+              # Database configuration
+              DB_ENGINE: "postgres"
+              DB_HOST: "{{ .postgres_hostname }}"
+              DB_PORT: "5432"
+              DB_NAME: "{{ .postgres_database }}"
+              DB_USER: "{{ .postgres_username }}"
+              DB_PASSWD: "{{ .postgres_password }}"
+              # Authentication settings
+              ENABLE_EXPERIMENTAL_REDIS: "false"
+              # OAuth configuration
+              ROMM_AUTH_ENABLED: "true"
+              ROMM_AUTH_SECRET_KEY: "{{ .user_secret }}"
+              # Domain settings
+              ALLOWED_HOSTS: "${APP}.${ROOT_DOMAIN}"
+              CSRF_TRUSTED_ORIGINS: "https://${APP}.${ROOT_DOMAIN}"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+
+    defaultPodOptions:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /romm/assets
+      library:
+        existingClaim: ${APP}-library
+        globalMounts:
+          - path: /romm/library
+      redis:
+        type: emptyDir
+        globalMounts:
+          - path: /redis-data
+
+    service:
+      app:
+        controller: *app
+        type: ClusterIP
+        ports:
+          http:
+            port: &port 8080
+
+    ingress:
+      internal:
+        className: internal
+        hosts:
+          - host: "${APP}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
