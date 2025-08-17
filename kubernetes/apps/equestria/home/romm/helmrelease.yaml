@@ -50,20 +50,21 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               # Database configuration
-              DB_ENGINE: "postgres"
+              DB_ENGINE: "postgresql"
               DB_HOST: "{{ .postgres_hostname }}"
               DB_PORT: "5432"
               DB_NAME: "{{ .postgres_database }}"
               DB_USER: "{{ .postgres_username }}"
               DB_PASSWD: "{{ .postgres_password }}"
               # Authentication settings
-              ENABLE_EXPERIMENTAL_REDIS: "false"
-              # OAuth configuration
               ROMM_AUTH_ENABLED: "true"
               ROMM_AUTH_SECRET_KEY: "{{ .user_secret }}"
               # Domain settings
               ALLOWED_HOSTS: "${APP}.${ROOT_DOMAIN}"
               CSRF_TRUSTED_ORIGINS: "https://${APP}.${ROOT_DOMAIN}"
+              # Storage paths
+              LIBRARY_PATH: "/romm/library"
+              RESOURCES_PATH: "/romm/assets"
             envFrom:
               - secretRef:
                   name: ${APP}-secret
@@ -94,10 +95,6 @@ spec:
         existingClaim: ${APP}-library
         globalMounts:
           - path: /romm/library
-      redis:
-        type: emptyDir
-        globalMounts:
-          - path: /redis-data
 
     service:
       app:
@@ -105,7 +102,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: &port 8080
+            port: &port 5000
 
     ingress:
       internal:
