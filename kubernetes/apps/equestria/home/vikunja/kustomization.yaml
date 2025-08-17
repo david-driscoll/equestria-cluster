@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
+  - ./definition.yaml
 configMapGenerator:
 - name: ${APP}-config
   files:
