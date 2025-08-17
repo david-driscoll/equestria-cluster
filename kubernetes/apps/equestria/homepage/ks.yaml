@@ -25,7 +25,7 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/volsync
-    - ../../../../components/tailscale
+    # - ../../../../components/tailscale
   postBuild:
     substitute:
       APP: *app
