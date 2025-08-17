@@ -12,4 +12,4 @@ resources:
   - ./connector/ks.yaml
   - ./nameserver/ks.yaml
   - ./operator/ks.yaml
-  - ./golink/ks.yaml
+  # - ./golink/ks.yaml
