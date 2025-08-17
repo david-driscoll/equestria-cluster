@@ -1,0 +1,164 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app spotizerr
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 15m
+  timeout: 5m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  dependsOn: []
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          *app :
+            image:
+              repository: cooldockerizer93/spotizerr
+              tag: latest
+            env:
+              TZ: "${TIMEZONE}"
+              HOST: "0.0.0.0"
+              REDIS_HOST: "localhost"
+              REDIS_PORT: "6379"
+              REDIS_DB: "0"
+              EXPLICIT_FILTER: "false"
+              PUID: "568"
+              PGID: "568"
+              UMASK: "0022"
+              SKIP_SET_PERMISSIONS: "false"
+              ENABLE_AUTH: "true"
+              JWT_EXPIRATION_HOURS: "720"
+              DEFAULT_ADMIN_USERNAME: "admin"
+              DISABLE_REGISTRATION: "true"
+              SSO_ENABLED: "true"
+              FRONTEND_URL: "https://${APP}.${ROOT_DOMAIN}"
+              SSO_BASE_REDIRECT_URI: "https://${APP}.${ROOT_DOMAIN}/api/auth/sso/callback"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: &port 7171
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 10
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+          redis:
+            image:
+              repository: redis
+              tag: 7.4.1-alpine
+            env:
+              TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
+            command:
+              - sh
+              - -c
+              - 'redis-server --requirepass "$REDIS_PASSWORD" --appendonly yes'
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 256Mi
+
+    defaultPodOptions:
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      shareProcessNamespace: true
+
+    persistence:
+      data:
+        existingClaim: ${APP}-data
+        globalMounts:
+          - path: /app/data/
+      downloads:
+        existingClaim: ${APP}-downloads
+        globalMounts:
+          - path: /app/downloads/
+      logs:
+        existingClaim: ${APP}-logs
+        globalMounts:
+          - path: /app/logs/
+      redis-data:
+        type: emptyDir
+        advancedMounts:
+          redis:
+            redis:
+              - path: /data
+
+    service:
+      app:
+        controller: *app
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    ingress:
+      internal:
+        className: internal
+        hosts:
+          - host: "${APP}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
