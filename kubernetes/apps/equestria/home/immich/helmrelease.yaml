@@ -55,6 +55,8 @@ spec:
               REDIS_DBINDEX: "8"
               LOG_LEVEL: "log"
               IMMICH_PORT: "3001"
+              IMMICH_WORKERS_INCLUDE: "api"
+              IMMICH_API_METRICS: "true"
             envFrom:
               - secretRef:
                   name: ${APP}-secret
@@ -84,6 +86,7 @@ spec:
               TZ: "${TIMEZONE}"
               IMMICH_HOST: "0.0.0.0"
               IMMICH_PORT: "3003"
+              TRANSFORMERS_CACHE: "/cache"
             resources:
               requests:
                 cpu: 100m
@@ -103,6 +106,12 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /usr/src/app/upload
+      cache:
+        type: emptyDir
+        advancedMounts:
+          machine-learning:
+            machine-learning:
+              - path: /cache
 
     service:
       app:
