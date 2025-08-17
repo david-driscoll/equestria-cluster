@@ -42,7 +42,7 @@ spec:
           *app :
             image:
               repository: cooldockerizer93/spotizerr
-              tag: latest
+              tag: 3.1.1@sha256:5fb0614e48fb03c3c40a6107b986f3d2f0237fa435ec0de4296a99a78d34f8f6
             env:
               TZ: "${TIMEZONE}"
               HOST: "0.0.0.0"
@@ -77,10 +77,10 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/health
+                    path: /
                     port: &port 7171
                   initialDelaySeconds: 30
-                  periodSeconds: 10
+                  periodSeconds: 30
                   timeoutSeconds: 10
                   failureThreshold: 3
               readiness:
@@ -88,10 +88,10 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/health
+                    path: /
                     port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 5
+                  initialDelaySeconds: 15
+                  periodSeconds: 10
                   timeoutSeconds: 5
                   failureThreshold: 3
           redis:
@@ -124,16 +124,16 @@ spec:
       shareProcessNamespace: true
 
     persistence:
-      data:
-        existingClaim: ${APP}-data
+      config:
+        existingClaim: ${APP}
         globalMounts:
           - path: /app/data/
       downloads:
-        existingClaim: ${APP}-downloads
+        existingClaim: media-downloads
         globalMounts:
           - path: /app/downloads/
       logs:
-        existingClaim: ${APP}-logs
+        type: emptyDir
         globalMounts:
           - path: /app/logs/
       redis-data:
