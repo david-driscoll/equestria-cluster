@@ -53,6 +53,5 @@ spec:
         clientId: "{{ .username }}"
         clientSecret: "{{ .credential }}"
         clientType: confidential
-        allowedRedirectUris:
-          - path: "https://${OIDC_ISSUER}/applications/${APP}/callback"
+        allowedRedirectUris: "https://${APP}.${ROOT_DOMAIN}/api/auth/callback/oidc"
 
