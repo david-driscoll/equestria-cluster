@@ -3,17 +3,17 @@
 apiVersion: driscoll.dev/v1
 kind: ApplicationDefinition
 metadata:
-  name: who-am-i
+  name: pgadmin
 spec:
-  name: Who am I??
+  name: Postgres Admin
   category: ${CLUSTER_TITLE}
-  description: Just some debugging to get details from idp
-  url: &url https://whoami.${CLUSTER_DOMAIN}
+  description: TODO some more work here
+  url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/peanut.svg
-  authentik:
-    proxy:
-      mode: "forward_single"
-      externalHost: *url
+  # authentik:
+  #   proxy:
+  #     mode: "forward_single"
+  #     externalHost: *url
   uptime:
     http:
       url: *url
