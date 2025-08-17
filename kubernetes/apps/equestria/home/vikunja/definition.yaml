@@ -12,8 +12,13 @@ spec:
   authentik:
     oauth2:
       clientType: confidential
-      allowedRedirectUris: "https://${APP}.${ROOT_DOMAIN}/auth/openid/authentik"
-      propertyMappings: "email,openid,profile,vikunja_scope"
+      allowedRedirectUris:
+        - "https://${APP}.${ROOT_DOMAIN}/auth/openid/authentik"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+        - vikunja_scope
   uptime:
     http:
       url: *url
