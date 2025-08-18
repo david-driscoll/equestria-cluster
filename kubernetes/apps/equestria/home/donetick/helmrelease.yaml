@@ -72,7 +72,6 @@ spec:
           - path: /config/selfhosted.yaml
             subPath: config.yaml
 
-
     service:
       app:
         controller: *app
