@@ -43,7 +43,6 @@ spec:
           *app :
             image:
               repository: donetick/donetick
-              # yamllint disable-line rule:line-length
               tag: latest@sha256:1850a2e9b19683fae4488bfa7dc9d93f7021164ae695e80d65b223cd735a2e30
             env:
               TZ: "${TIMEZONE}"
