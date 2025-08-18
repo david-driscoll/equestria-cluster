@@ -5,6 +5,8 @@ resources:
   - cluster-user.sops.yaml
   - backrest.yaml
   - backrest.sops.yaml
+  - donetick.yaml
+  - donetick.sops.yaml
   - mysql.yaml
   - mysql.sops.yaml
   - postgres.yaml

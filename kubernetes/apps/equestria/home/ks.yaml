@@ -102,11 +102,9 @@ spec:
   components:
     - ../../../../components/ingress/internal
     - ../../../../components/postgres
+    - ../../../../components/s3-access-key
     - ../../../../components/tailscale
-    - ../../../../components/volsync
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_ACCESSMODES: ReadWriteMany
