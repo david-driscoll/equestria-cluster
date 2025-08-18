@@ -18,7 +18,7 @@ jwt:
   # JWT secret must be at least 32 characters long and cryptographically secure
   # Generate one with: openssl rand -base64 32
   # Or use the suggested value from the application startup error message
-  secret: "{{ .jwt_secret }}"
+  secret: "{{ .jwt_password }}"
 oauth2:
   name: authentik
   client_id: "{{ .oidc_username }}"
