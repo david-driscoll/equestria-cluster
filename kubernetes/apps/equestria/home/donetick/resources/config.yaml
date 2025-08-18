@@ -1,0 +1,74 @@
+name: "local"
+# is_done_tick_dot_com: false
+is_user_creation_disabled: false
+# telegram:
+#   token: ""
+# pushover:
+#   token: ""
+database:
+  type: "postgres"
+  migration: true
+  # these are only required for postgres
+  host: "{{ .postgres_hostname }}"
+  port: 5432
+  user: "{{ .postgres_username }}"
+  password: "{{ .postgres_password }}"
+  name: "{{ .postgres_database }}"
+jwt:
+  # JWT secret must be at least 32 characters long and cryptographically secure
+  # Generate one with: openssl rand -base64 32
+  # Or use the suggested value from the application startup error message
+  secret: "{{ .jwt_secret }}"
+server:
+  port: 2021
+  read_timeout: 10s
+  write_timeout: 10s
+  rate_period: 60s
+  rate_limit: 300
+  # cors_allow_origins:
+  #   - "http://localhost:5173"
+  #   - "http://localhost:7926"
+  # serve_frontend: true
+logging:
+  level: "info"
+  encoding: "console"
+scheduler_jobs:
+  due_job: 30m
+  overdue_job: 3h
+  pre_due_job: 3h
+# email:
+#   host:
+#   port:
+#   key:
+#   email:
+#   appHost:
+# mfa:
+#   session_timeout: 10m
+#   backup_code_count: 8
+#   rate_limit_attempts: 5
+#   rate_limit_window: 15m
+storage:
+  storage_type: "remote"
+  bucket_name: "${APP}"
+  # region: "us-east-1"
+  # base_path: ""
+  access_key: "{{ .s3_username }}"
+  secret_key: "{{ .s3_password }}"
+  endpoint: "{{ .s3_endpoint }}"
+  # public_host: "https://your-cdn.com"  # Optional
+  # max_user_storage: 104857600  # 100MB
+  # max_file_size: 2097152       # 2MB
+realtime:
+  enabled: true
+  sse_enabled: true
+  heartbeat_interval: 60s
+  connection_timeout: 120s
+  max_connections: 1000
+  max_connections_per_user: 5
+  event_queue_size: 2048
+  cleanup_interval: 2m
+  stale_threshold: 5m
+  enable_compression: true
+  enable_stats: true
+  allowed_origins:
+    - "*"
