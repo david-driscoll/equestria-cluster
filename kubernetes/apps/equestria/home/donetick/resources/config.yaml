@@ -22,7 +22,7 @@ jwt:
 oauth2:
   name: authentik
   client_id: "{{ .oidc_username }}"
-  client_secret: "{{ .oidc_password }}"
+  client_secret: "{{ .oidc_credential }}"
   redirect_url: "https://${OIDC_ISSUER}/application/o/${CLUSTER_CNAME}-${APP}/end-session/"
   scopes:
     - email
