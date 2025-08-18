@@ -19,6 +19,18 @@ jwt:
   # Generate one with: openssl rand -base64 32
   # Or use the suggested value from the application startup error message
   secret: "{{ .jwt_secret }}"
+oauth2:
+  name: authentik
+  client_id: "{{ .oidc_username }}"
+  client_secret: "{{ .oidc_password }}"
+  redirect_url: "https://${OIDC_ISSUER}/application/o/${CLUSTER_CNAME}-${APP}/end-session/"
+  scopes:
+    - email
+    - openid
+    - profile
+  auth_url: "https://${OIDC_ISSUER}/application/o/authorize/"
+  token_url: "https://${OIDC_ISSUER}/application/o/token/"
+  user_info_url: "https://${OIDC_ISSUER}/application/o/userinfo/"
 server:
   port: 2021
   read_timeout: 10s
