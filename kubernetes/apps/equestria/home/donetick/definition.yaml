@@ -19,6 +19,7 @@ spec:
         - openid
         - profile
       includeClaimsInIdToken: true
+      subMode: user_email
   uptime:
     http:
       url: *url
