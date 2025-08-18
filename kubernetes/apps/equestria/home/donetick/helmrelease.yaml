@@ -48,6 +48,7 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               DT_ENV: selfhosted
+              DT_SERVER_PORT: &port "2021"
             resources:
               requests:
                 cpu: 50m
