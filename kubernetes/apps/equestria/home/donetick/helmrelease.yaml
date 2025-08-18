@@ -69,12 +69,6 @@ spec:
           type: RuntimeDefault
       shareProcessNamespace: true
 
-    persistence:
-      data:
-        existingClaim: ${APP}
-        globalMounts:
-          - path: /data/
-
     service:
       app:
         controller: *app
