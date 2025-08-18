@@ -71,7 +71,6 @@ storage:
   # max_file_size: 2097152       # 2MB
 realtime:
   enabled: true
-  websocket_enabled: true
   sse_enabled: true
   heartbeat_interval: 60s
   connection_timeout: 120s
