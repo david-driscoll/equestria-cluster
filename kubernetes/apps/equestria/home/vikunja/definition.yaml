@@ -19,6 +19,7 @@ spec:
         - openid
         - profile
         - vikunja_scope
+      includeClaimsInIdToken: true
   uptime:
     http:
       url: *url
