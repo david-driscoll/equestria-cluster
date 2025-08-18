@@ -42,7 +42,7 @@ spec:
           *app :
             image:
               repository: vikunja/vikunja
-              tag: unstable@sha256:f28c5ed56a708947a1ced9c46b1fc1698ae48d9af38a6efbd62ea2f22ad16504
+              tag: unstable@sha256:552bb1d40d0ea6b79c54feab884e04f5e613a966bcc445bf9e84f1a656d54dc6
             env:
               TZ: "${TIMEZONE}"
               VIKUNJA_SERVICE_PUBLICURL: "https://${APP}.${ROOT_DOMAIN}"
