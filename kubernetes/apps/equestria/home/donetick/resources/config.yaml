@@ -20,10 +20,10 @@ jwt:
   # Or use the suggested value from the application startup error message
   secret: "{{ .jwt_password }}"
 oauth2:
-  name: authentik
+  name: ${CLUSTER_TITLE}
   client_id: "{{ .oidc_username }}"
   client_secret: "{{ .oidc_credential }}"
-  redirect_url: "https://${OIDC_ISSUER}/application/o/${CLUSTER_CNAME}-${APP}/end-session/"
+  redirect_url: "https://${APP}.${ROOT_DOMAIN}/auth/oauth2"
   scopes:
     - email
     - openid
