@@ -13,7 +13,7 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-        - "https://${APP}.${ROOT_DOMAIN}/auth/openid/authentik"
+        - url: "https://${APP}.${ROOT_DOMAIN}/auth/openid/authentik"
       propertyMappings:
         - email
         - openid
