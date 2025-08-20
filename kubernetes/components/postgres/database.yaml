@@ -14,7 +14,7 @@ spec:
   ensure: present
   extensions:
     - ensure: present
-      name: pgvector
+      name: vector
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
