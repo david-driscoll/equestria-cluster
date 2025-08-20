@@ -98,9 +98,7 @@
     "enabled": false
   },
   "storageTemplate": {
-    "enabled": true,
-    "hashVerificationEnabled": true,
-    "template": "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+    "enabled": true
   },
   "image": {
     "thumbnail": {
