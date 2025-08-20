@@ -139,7 +139,7 @@ keyvalue:
   type: "redis"
 auth:
   local:
-    enabled: true
+    enabled: false
   openid:
     enabled: true
     providers:
@@ -149,9 +149,12 @@ auth:
         clientid: "{{ .oidc_username }}"
         clientsecret: "{{ .oidc_credential }}"
         scope: "openid email profile vikunja"
-        # usernamefallback: true
-        # emailfallback: true
         forceuserinfo: true
+      - name: "Tailscale"
+        authurl: "https://idp.${TAILSCALE_DOMAIN}"
+        clientid: "unused"
+        clientsecret: "unused"
+        scope: "openid email profile"
 
 metrics:
   # If set to true, enables a /metrics endpoint for prometheus to collect metrics about Vikunja. You can query it from `/api/v1/metrics`.
