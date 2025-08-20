@@ -21,16 +21,16 @@ jwt:
   secret: "{{ .jwt_password }}"
 oauth2:
   name: ${CLUSTER_TITLE}
-  client_id: "unused"
-  client_secret: "unused"
+  client_id: "{{ .oidc_username }}"
+  client_secret: "{{ .oidc_credential }}"
   redirect_url: "https://${APP}.${ROOT_DOMAIN}/auth/oauth2"
   scopes:
     - email
     - openid
     - profile
-  auth_url: "https://idp.opossum-yo.ts.net/authorize/1024991260913802"
-  token_url: "https://idp.opossum-yo.ts.net/token"
-  user_info_url: "https://idp.opossum-yo.ts.net/userinfo"
+  auth_url: "{{ .oidc_authorization_url }}"
+  token_url: "{{ .oidc_token_url }}"
+  user_info_url: "{{ .oidc_userinfo_url }}"
 server:
   port: 2021
   read_timeout: 10s
