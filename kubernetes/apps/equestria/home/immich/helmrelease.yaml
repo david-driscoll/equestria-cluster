@@ -60,6 +60,16 @@ spec:
             envFrom:
               - secretRef:
                   name: ${APP}-env
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
@@ -70,11 +80,12 @@ spec:
 
     defaultPodOptions:
       securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      shareProcessNamespace: true
+        supplementalGroups: [44, 109, 303, 568, 10000]
+        seccompProfile: { type: RuntimeDefault }
 
     persistence:
       data:
