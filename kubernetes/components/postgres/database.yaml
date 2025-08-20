@@ -12,9 +12,6 @@ spec:
   name: ${APP}
   owner: ${APP}
   ensure: present
-  extensions:
-    - ensure: present
-      name: vector
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
