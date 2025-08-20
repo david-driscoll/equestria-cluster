@@ -12,6 +12,9 @@ spec:
   name: ${APP}
   owner: ${APP}
   ensure: present
+  extensions:
+    - ensure: present
+      name: pgvector
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
