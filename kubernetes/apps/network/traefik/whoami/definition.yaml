@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Who am I?
+  category: ${CLUSTER_TITLE}
+  description: Debug information about the user
+  url: &url https://whoami.${CLUSTER_DOMAIN}
+  # TODO: Change me someday
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homebox.svg
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
+  uptime:
+    http:
+      url: *url
+      method: GET
+      accepted_statuscodes: ["200"]
+      parent_name: "cluster-apps"
