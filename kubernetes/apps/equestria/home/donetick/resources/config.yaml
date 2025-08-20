@@ -28,9 +28,9 @@ oauth2:
     - email
     - openid
     - profile
-  auth_url: "https://${OIDC_ISSUER}/application/o/authorize/"
-  token_url: "https://${OIDC_ISSUER}/application/o/token/"
-  user_info_url: "https://${OIDC_ISSUER}/application/o/userinfo/"
+  auth_url: "{{ .oidc_issuer }}"
+  token_url: "{{ .oidc_token_url }}"
+  user_info_url: "{{ .oidc_userinfo_url }}"
 server:
   port: 2021
   read_timeout: 10s
