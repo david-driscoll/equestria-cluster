@@ -145,7 +145,7 @@ auth:
     providers:
       authentik:
         name: "Authentik"
-        authurl: "{{ .oidc_authorization_url }}"
+        authurl: "{{ .oidc_issuer }}"
         logouturl: "{{ .oidc_end_session_url }}"
         clientid: "{{ .oidc_username }}"
         clientsecret: "{{ .oidc_credential }}"
