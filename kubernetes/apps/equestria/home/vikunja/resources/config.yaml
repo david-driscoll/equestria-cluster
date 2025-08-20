@@ -143,14 +143,16 @@ auth:
   openid:
     enabled: true
     providers:
-      - name: "Authentik"
+      authentik:
+        name: "Authentik"
         authurl: "https://${OIDC_ISSUER}/application/o/vikunja/"
         logouturl: "https://${OIDC_ISSUER}/application/o/vikunja/end-session/"
         clientid: "{{ .oidc_username }}"
         clientsecret: "{{ .oidc_credential }}"
         scope: "openid email profile vikunja"
         forceuserinfo: true
-      - name: "Tailscale"
+      tailscale:
+        name: "Tailscale"
         authurl: "https://idp.${TAILSCALE_DOMAIN}"
         clientid: "unused"
         clientsecret: "unused"
