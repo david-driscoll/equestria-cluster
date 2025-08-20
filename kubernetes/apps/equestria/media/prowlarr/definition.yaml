@@ -10,6 +10,9 @@ spec:
   description: Prowlarr is an indexer manager
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg
+  access_policy:
+    groups:
+      - media-managers
   authentik:
     proxy:
       mode: forward_single

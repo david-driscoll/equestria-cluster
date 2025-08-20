@@ -10,10 +10,14 @@ spec:
   description: Tailscale Go Link
   url: &url https://go.${TAILSCALE_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale.svg
-  # authentik:
-  #   proxy:
-  #     mode: "forward_single"
-  #     externalHost: *url
+  access_policy:
+    groups:
+      - friends
+      - family
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
   uptime:
     http:
       url: *url

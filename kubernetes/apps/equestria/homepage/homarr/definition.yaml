@@ -9,6 +9,10 @@ spec:
   category: ${CLUSTER_TITLE}
   description: Homarr is a home automation manager
   url: &url https://${APP}.${ROOT_DOMAIN}
+  access_policy:
+    groups:
+      - friends
+      - family
   authentik:
     oauth2:
       clientType: confidential

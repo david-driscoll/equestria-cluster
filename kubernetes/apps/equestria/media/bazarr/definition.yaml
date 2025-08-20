@@ -10,6 +10,9 @@ spec:
   description: Bazarr is a subtitle manager
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bazarr.svg
+  access_policy:
+    groups:
+      - media-managers
   authentik:
     proxy:
       mode: "forward_single"

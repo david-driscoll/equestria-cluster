@@ -9,6 +9,9 @@ spec:
   category: ${CLUSTER_TITLE}
   description: Done Tick is a task management tool
   url: &url https://${APP}.${ROOT_DOMAIN}
+  access_policy:
+    groups:
+      - family
   authentik:
     oauth2:
       clientType: confidential
