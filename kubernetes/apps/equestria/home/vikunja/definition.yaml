@@ -18,7 +18,7 @@ spec:
         - email
         - openid
         - profile
-        - vikunja_scope
+        - vikunja
       includeClaimsInIdToken: true
       subMode: user_email
   uptime:

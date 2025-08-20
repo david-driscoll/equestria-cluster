@@ -151,7 +151,7 @@ auth:
         logouturl: "https://${OIDC_ISSUER}/application/o/vikunja/end-session/"
         clientid: "{{ .oidc_username }}"
         clientsecret: "{{ .oidc_credential }}"
-        scope: "openid email profile vikunja_scope"
+        scope: "openid email profile vikunja"
         usernamefallback: true
         emailfallback: true
         forceuserinfo: true

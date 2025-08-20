@@ -18,6 +18,7 @@ spec:
         - email
         - openid
         - profile
+        - entitlements
       includeClaimsInIdToken: true
       subMode: user_email
   uptime:
