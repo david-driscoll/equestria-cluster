@@ -5,11 +5,11 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Backrest
+  name: Longhorn
   category: ${CLUSTER_TITLE}
-  description: Access to the Backrest tool
+  description: Access to the Longhorn storage engine
   url: &url https://${APP}.${CLUSTER_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/backrest.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/longhorn.svg
   access_policy:
     groups:
       - admins
@@ -22,4 +22,4 @@ spec:
       url: *url
       method: GET
       accepted_statuscodes: ["200"]
-      parent_name: "cluster-apps"
+      parent_name: "cluster-system"
