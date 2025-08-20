@@ -137,13 +137,11 @@ backgrounds:
 
 keyvalue:
   type: "redis"
-
 auth:
   local:
-    enabled: false
+    enabled: true
   openid:
     enabled: true
-    redirecturl: https://${APP}.${ROOT_DOMAIN}/auth/openid/
     providers:
       authentik:
         name: "Authentik"
@@ -154,7 +152,7 @@ auth:
         scope: "openid email profile vikunja"
         # usernamefallback: true
         # emailfallback: true
-        # forceuserinfo: true
+        forceuserinfo: true
 
 metrics:
   # If set to true, enables a /metrics endpoint for prometheus to collect metrics about Vikunja. You can query it from `/api/v1/metrics`.
