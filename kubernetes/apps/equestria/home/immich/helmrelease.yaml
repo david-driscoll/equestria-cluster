@@ -90,7 +90,7 @@ spec:
 
     service:
       machine-learning:
-        controller: machine-learning
+        controller: *app
         type: ClusterIP
         ports:
           http:
