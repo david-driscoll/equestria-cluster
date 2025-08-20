@@ -70,7 +70,7 @@
     "darkStyle": "https://tiles.immich.cloud/v1/style/dark.json"
   },
   "reverseGeocoding": {
-    "enabled": true
+    "enabled": false
   },
   "metadata": {
     "faces": {
@@ -98,7 +98,7 @@
     "enabled": false
   },
   "storageTemplate": {
-    "enabled": true
+    "enabled": false
   },
   "image": {
     "thumbnail": {
