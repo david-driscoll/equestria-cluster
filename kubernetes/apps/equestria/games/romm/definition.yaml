@@ -26,7 +26,7 @@ spec:
       subMode: user_email
   uptime:
     http:
-      url: https://${APP}.${ROOT_DOMAIN}/
+      url: *url
       method: GET
       accepted_statuscodes: ["200"]
       parent_name: "apps"
