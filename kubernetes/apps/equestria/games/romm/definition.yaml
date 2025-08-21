@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Romm
+  category: Media Management
+  description: Romm is a media management tool for organizing and managing your game library.
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/romm.svg
+  access_policy:
+    groups:
+      - media-managers
+  authentik:
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+      - url: "https://${APP}.${ROOT_DOMAIN}/api/oauth/openid"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+      includeClaimsInIdToken: true
+      subMode: user_email
+  uptime:
+    http:
+      url: https://${APP}.${ROOT_DOMAIN}/ping
+      method: GET
+      accepted_statuscodes: ["200"]
+      parent_name: "apps"

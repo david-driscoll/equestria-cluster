@@ -135,9 +135,9 @@ try
   #region Update maria cluster yaml with roles
 
   var userSecretTemplate = "kubernetes/apps/database/maria/cluster/users/maria-user.yaml";
-  var databaseTemplate = "kubernetes/components/maria/database.yaml";
-  var grantTemplate = "kubernetes/apps/database/maria/cluster/grant.yaml";
-  var userTemplate = "kubernetes/apps/database/maria/cluster/user.yaml";
+  // var databaseTemplate = "kubernetes/components/maria/database.yaml";
+  // var grantTemplate = "kubernetes/apps/database/maria/cluster/grant.yaml";
+  // var userTemplate = "kubernetes/apps/database/maria/cluster/user.yaml";
   var pushSecretTemplate = "kubernetes/apps/database/maria/cluster/push-secret.yaml";
   // We also want to update the kustomization.yaml file to include this user.
   var kustomizationPath = "kubernetes/apps/database/maria/cluster/users/kustomization.yaml";
@@ -161,9 +161,9 @@ try
     .Replace("maria-user-password", $"{roleName}-maria-password")
     .Replace("maria-user", $"{roleName}-maria")
     ;
-    var databaseYaml = File.ReadAllText(databaseTemplate)
-    .Replace("${APP}", database)
-    ;
+    // var databaseYaml = File.ReadAllText(databaseTemplate)
+    // .Replace("${APP}", database)
+    // ;
     var pushSecretYaml = File.ReadAllText(pushSecretTemplate)
     .Replace("${APP}-user", $"{roleName}-maria")
     .Replace("maria-user", $"{roleName}-maria")
@@ -172,7 +172,6 @@ try
     var sopsFileName = Path.Combine(usersDirectory, $"{roleName}.sops.yaml");
     File.WriteAllText(fileName, $"""
   {userYaml}
-  {databaseYaml}
   {pushSecretYaml}
   """);
     AnsiConsole.WriteLine($"Updated {fileName} with user {roleName}.");

@@ -11,4 +11,5 @@ spec:
   mariaDbRef:
     waitForIt: true
     name: maria
+    namespace: database
   cleanupPolicy: Skip
