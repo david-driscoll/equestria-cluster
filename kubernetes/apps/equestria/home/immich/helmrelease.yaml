@@ -121,7 +121,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: &port 3001  # Immich server port
+            port: &port 2283
 
     ingress:
       internal:
