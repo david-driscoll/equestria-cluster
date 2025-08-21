@@ -124,8 +124,8 @@ spec:
       matplotlib:
         type: emptyDir
         advancedMounts:
-          server:
-            main:
+          *app :
+            *app :
               - path: /config/matplotlib
       config:
         type: secret
