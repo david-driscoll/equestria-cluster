@@ -144,3 +144,5 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      VOLSYNC_ACCESSMODES: ReadWriteMany
+      TAILSCALE_HOST: photos
