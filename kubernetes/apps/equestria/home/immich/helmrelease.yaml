@@ -106,8 +106,8 @@ spec:
           *app :
             *app :
               - path: /uploads
-          machine-learning:
-            main:
+          *app :
+            machine-learning:
               - path: /cache
                 subPath: cache
               - path: /.cache
@@ -123,10 +123,8 @@ spec:
                 subPath: transformers
       matplotlib:
         type: emptyDir
-        advancedMounts:
-          *app :
-            *app :
-              - path: /config/matplotlib
+        globalMounts:
+          - path: /config/matplotlib
       config:
         type: secret
         name: ${APP}-config

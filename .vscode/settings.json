@@ -9,22 +9,11 @@
   "sops.beta": false,
   "sops.creationEnabled": true,
   "vs-kubernetes": {
-
     "vs-kubernetes.crd-code-completion": "enabled",
-    // "vs-kubernetes.kubeconfig": "./kubeconfig",
-    // "vs-kubernetes.knownKubeconfigs": [
-    //   "./kubeconfig"
-    // ]
-  },
-  "mcp": {
-    "servers": {
-      "kubernetes": {
-        "command": "npx",
-        "args": [
-          "mcp-server-kubernetes"
-        ]
-      }
-    }
+    "vs-kubernetes.kubeconfig": "/Users/david/Development/david-driscoll/equestria-cluster/kubeconfig",
+    "vs-kubernetes.knownKubeconfigs": [
+      "/Users/david/Development/david-driscoll/equestria-cluster/kubeconfig"
+    ]
   },
   "path-autocomplete.disableUpOneFolder": false,
   "path-autocomplete.triggerOutsideStrings": true,
