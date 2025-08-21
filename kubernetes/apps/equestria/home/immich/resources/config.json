@@ -134,7 +134,7 @@
     }
   },
   "server": {
-    "externalDomain": "${APP}.${ROOT_DOMAIN}",
+    "externalDomain": "https://${APP}.${ROOT_DOMAIN}",
     "loginPageMessage": ""
   },
   "notifications": {
