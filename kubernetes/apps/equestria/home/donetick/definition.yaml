@@ -9,6 +9,7 @@ spec:
   category: ${CLUSTER_TITLE}
   description: Done Tick is a task management tool
   url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/donetick.svg
   access_policy:
     groups:
       - family

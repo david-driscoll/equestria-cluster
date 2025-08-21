@@ -9,6 +9,7 @@ spec:
   category: ${CLUSTER_TITLE}
   description: Homarr is a home automation manager
   url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg
   access_policy:
     groups:
       - friends
