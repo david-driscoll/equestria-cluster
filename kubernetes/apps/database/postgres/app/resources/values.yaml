@@ -106,6 +106,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: immich-postgres
+  - name: romm
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: romm-postgres
   monitoring:
     enabled: true
     podMonitor:

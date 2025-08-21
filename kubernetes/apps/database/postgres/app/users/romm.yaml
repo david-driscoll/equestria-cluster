@@ -1,0 +1,199 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name romm-postgres
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  refreshPolicy: Periodic
+  refreshInterval: 4m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: database
+  target:
+    name: *name
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    template:
+      metadata:
+        labels:
+          cnpg.io/reload: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      templateFrom:
+        - target: Data
+          configMap:
+            name: pgsql-user-template
+            items:
+            - key: username
+              templateAs: Values
+            - key: password
+              templateAs: Values
+            - key: hostname
+              templateAs: Values
+            - key: public-hostname
+              templateAs: Values
+            - key: port
+              templateAs: Values
+            - key: database
+              templateAs: Values
+            - key: pgpass
+              templateAs: Values
+            - key: jdbc-uri
+              templateAs: Values
+            - key: uri
+              templateAs: Values
+            - key: public-jdbc-uri
+              templateAs: Values
+            - key: public-uri
+              templateAs: Values
+  dataFrom:
+    - extract:
+        key: "romm-postgres-password"
+      rewrite:
+        - regexp:
+            source: "[\\W]"
+            target: _
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/postgresql.cnpg.io/database_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: &app romm
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  cluster:
+    name: postgres
+  name: romm
+  owner: romm
+  ensure: present
+  allowConnections: true
+  databaseReclaimPolicy: retain
+  schemas:
+    - ensure: present
+      name: public
+      owner: romm
+    - ensure: present
+      name: romm
+      owner: romm
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/pushsecret_v1alpha1.json
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: romm-postgres-push-secret
+spec:
+  deletionPolicy: None
+  refreshInterval: 4m
+  secretStoreRefs:
+    - kind: ClusterSecretStore
+      name: onepassword-connect
+  selector:
+    secret:
+      name: romm-postgres
+  data:
+    - match:
+        secretKey: username
+        remoteRef:
+          remoteKey: &key ${CLUSTER_CNAME}-romm-postgres
+          property: username
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: password
+        remoteRef:
+          remoteKey: *key
+          property: password
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: hostname
+        remoteRef:
+          remoteKey: *key
+          property: hostname
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: public-hostname
+        remoteRef:
+          remoteKey: *key
+          property: public-hostname
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: port
+        remoteRef:
+          remoteKey: *key
+          property: port
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: database
+        remoteRef:
+          remoteKey: *key
+          property: database
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: pgpass
+        remoteRef:
+          remoteKey: *key
+          property: pgpass
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: jdbc-uri
+        remoteRef:
+          remoteKey: *key
+          property: jdbc-uri
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: uri
+        remoteRef:
+          remoteKey: *key
+          property: uri
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: public-jdbc-uri
+        remoteRef:
+          remoteKey: *key
+          property: public-jdbc-uri
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}
+    - match:
+        secretKey: public-uri
+        remoteRef:
+          remoteKey: *key
+          property: public-uri
+      metadata:
+        apiVersion: kubernetes.external-secrets.io/v1alpha1
+        kind: PushSecretMetadata
+        spec: {}

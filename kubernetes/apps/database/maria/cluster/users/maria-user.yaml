@@ -3,7 +3,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: &name mysql-user
+  name: &name ${APP}-user
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -23,18 +23,30 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
           reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-      data:
-        rootHost: '%'
-        rootUser: "${APP}"
-        rootPassword: "{{ .password }}"
-        url: mysql://${APP}:{{ .password }}@${APP}-rw.${NAMESPACE}.svc.cluster.local:3306/${APP}
-        username: "${APP}"
-        password: "{{ .password }}"
-        database: "${APP}"
-        hostname: "${APP}-rw.${NAMESPACE}.svc.cluster.local"
+      templateFrom:
+        - target: Data
+          configMap:
+            name: maria-user-template
+            items:
+            - key: username
+              templateAs: Values
+            - key: password
+              templateAs: Values
+            - key: hostname
+              templateAs: Values
+            - key: public-hostname
+              templateAs: Values
+            - key: port
+              templateAs: Values
+            - key: database
+              templateAs: Values
+            - key: uri
+              templateAs: Values
+            - key: public-uri
+              templateAs: Values
   dataFrom:
     - extract:
-        key: "mysql-user-password"
+        key: "${APP}-user-password"
       rewrite:
         - regexp:
             source: "[\\W]"
