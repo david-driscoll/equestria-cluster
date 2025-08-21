@@ -88,7 +88,7 @@
     "issuerUrl": "{{ .oidc_issuer }}",
     "mobileOverrideEnabled": false,
     "mobileRedirectUri": "",
-    "scope": "openid email profile",
+    "scope": "openid email profile immich_role",
     "signingAlgorithm": "RS256",
     "profileSigningAlgorithm": "none",
     "storageLabelClaim": "preferred_username",
