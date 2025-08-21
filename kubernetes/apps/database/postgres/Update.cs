@@ -279,7 +279,7 @@ static YamlMappingNode UpdateRoleNode(ISerializer serializer, YamlNode copy, str
   var superuserRef = userNode.Query("/superuser").OfType<YamlScalarNode>().Single();
   var secretRef = userNode.Query("/passwordSecret").OfType<YamlMappingNode>().Single();
   nameRef.Value = name;
-  superuserRef.Value = "false";
+  superuserRef.Value = name == "immich" ? "true" : "false";
   secretRef.Children["name"] = new YamlScalarNode(key);
   return userNode;
 }
