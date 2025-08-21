@@ -18,7 +18,7 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/auth/openid/authentik"
+        - url: "https://${APP}.${ROOT_DOMAIN}/auth/login"
       propertyMappings:
         - email
         - openid
