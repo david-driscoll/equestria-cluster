@@ -23,10 +23,11 @@ spec:
           divisor: 1Mi
   args:
     - --maxmemory=$(MAX_MEMORY)Mi
-    - --proactor_threads=2
+    - --proactor_threads=1
     - --cluster_mode=emulated
     - --lock_on_hashtags
-    - --proactor_compatibility
+    - --force_epoll
+    - --alsologtostderr
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
