@@ -45,6 +45,8 @@ spec:
             image:
               repository: ghcr.io/rommapp/romm
               tag: 3.8.1@sha256:9a732c9efb4ea70d6cc5818c7d732a4a990fd06b3e1e90600023459942270463
+            env:
+              ROMM_PORT: &port 8080
             envFrom:
               - secretRef:
                   name: ${APP}-env
@@ -55,7 +57,7 @@ spec:
                 spec:
                   httpGet:
                     path: /
-                    port: &port 80
+                    port: *port
                   initialDelaySeconds: 10
                   periodSeconds: 60
                   timeoutSeconds: 10
