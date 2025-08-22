@@ -100,7 +100,7 @@ spec:
             port: *port
 
     persistence:
-      config:
+      data:
         existingClaim: ${APP}
         globalMounts:
           - path: /romm/config
@@ -109,6 +109,13 @@ spec:
             subPath: assets
           - path: /romm/resources/
             subPath: resources
+      config:
+        type: configMap
+        name: ${APP}-config
+        globalMounts:
+          - path: /romm/config/config.yml
+            subPath: config.yaml
+            readOnly: true
       media-downloads:
         existingClaim: media-downloads
         globalMounts:

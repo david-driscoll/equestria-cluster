@@ -6,4 +6,9 @@ resources:
   - ./helmrelease.yaml
   - ./definition.yaml
   - ./externalsecret.yaml
-
+configMapGenerator:
+- name: ${APP}-config
+  files:
+  - config.yaml=./resources/config.yaml
+  options:
+    disableNameSuffixHash: true
