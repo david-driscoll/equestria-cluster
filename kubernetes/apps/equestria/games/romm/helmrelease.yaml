@@ -97,7 +97,7 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /romm/config/
+          - path: /romm/
       media-downloads:
         existingClaim: media-downloads
         globalMounts:
