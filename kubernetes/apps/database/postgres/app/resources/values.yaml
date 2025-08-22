@@ -88,12 +88,6 @@ cluster:
     superuser: false
     passwordSecret:
       name: pulumi-operator-postgres
-  - name: vikunja
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: vikunja-postgres
   - name: donetick
     ensure: present
     login: true
