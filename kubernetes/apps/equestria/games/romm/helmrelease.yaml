@@ -97,7 +97,7 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /romm/
+          - path: /romm
       media-downloads:
         existingClaim: media-downloads
         globalMounts:
@@ -105,7 +105,7 @@ spec:
       media-roms:
         existingClaim: media-roms
         globalMounts:
-          - path: /roms
+          - path: /romm/library
 
     ingress:
       internal:
