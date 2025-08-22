@@ -10,7 +10,7 @@ resources:
   - ./shared/ks.yaml
   # - ./books/ks.yaml
   - ./downloads/ks.yaml
-  - ./games/ks.yaml
+  # - ./games/ks.yaml
   - ./media/ks.yaml
   - ./pvr/ks.yaml
   - ./idp/ks.yaml
