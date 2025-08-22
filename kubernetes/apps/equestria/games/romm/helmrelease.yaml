@@ -81,6 +81,10 @@ spec:
 
     defaultPodOptions:
       securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
@@ -97,7 +101,12 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /romm
+          - path: /romm/config
+            subPath: config
+          - path: /romm/assets/
+            subPath: assets
+          - path: /romm/resources/
+            subPath: resources
       media-downloads:
         existingClaim: media-downloads
         globalMounts:
