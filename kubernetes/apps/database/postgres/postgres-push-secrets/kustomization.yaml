@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - postgres-user-push-secret.yaml
+  - postgres-superuser-push-secret.yaml
+  - donetick-postgres-push-secret.yaml
+  - immich-postgres-push-secret.yaml
+  - pulumi-operator-postgres-push-secret.yaml
+  - romm-postgres-push-secret.yaml
