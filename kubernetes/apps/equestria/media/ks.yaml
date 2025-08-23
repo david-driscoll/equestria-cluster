@@ -198,7 +198,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app plex
+  name: &app plex2
   namespace: &namespace equestria
 spec:
   targetNamespace: *namespace
@@ -223,7 +223,7 @@ spec:
     - ../../../../components/volsync
   postBuild:
     substitute:
-      APP: *app
+      APP: plex
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 120Gi
       VOLSYNC_STORAGECLASS: longhorn
