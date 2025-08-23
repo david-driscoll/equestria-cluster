@@ -12,7 +12,7 @@ resources:
   - ./downloads/ks.yaml
   # - ./games/ks.yaml
   - ./media/ks.yaml
-  - ./pvr/ks.yaml
+  # - ./pvr/ks.yaml
   - ./idp/ks.yaml
   - ./home/ks.yaml
   - ./homepage/ks.yaml
