@@ -96,13 +96,13 @@ spec:
                 memory: 8Gi
                 cpu: 4
 
-    tolerations:
+    # tolerations:
       # - key: amd.com/gpu
       #   operator: Exists
       #   effect: NoSchedule
-      - key: gpu.intel.com/i915
-        operator: Exists
-        effect: NoSchedule
+      # - key: gpu.intel.com/i915
+      #   operator: Exists
+      #   effect: NoSchedule
     defaultPodOptions:
       securityContext:
         runAsUser: 568
