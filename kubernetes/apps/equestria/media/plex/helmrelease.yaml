@@ -10,7 +10,7 @@ spec:
     name: app-template
   maxHistory: 3
   interval: 1h
-  timeout: 5m
+  timeout: 15m
   install:
     createNamespace: true
     replace: true
@@ -86,23 +86,23 @@ spec:
               # capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                # gpu.intel.com/i915: 1
-                amd.com/gpu: 1
+                gpu.intel.com/i915: 1
+                # amd.com/gpu: 1
                 cpu: 1
                 memory: 4Gi
               limits:
-                # gpu.intel.com/i915: 1
-                amd.com/gpu: 1
+                gpu.intel.com/i915: 1
+                # amd.com/gpu: 1
                 memory: 8Gi
                 cpu: 4
 
     tolerations:
-      - key: amd.com/gpu
-        operator: Exists
-        effect: NoSchedule
-      # - key: gpu.intel.com/i915
+      # - key: amd.com/gpu
       #   operator: Exists
       #   effect: NoSchedule
+      - key: gpu.intel.com/i915
+        operator: Exists
+        effect: NoSchedule
     defaultPodOptions:
       securityContext:
         runAsUser: 568
