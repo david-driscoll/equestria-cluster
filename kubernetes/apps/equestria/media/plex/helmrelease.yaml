@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app plex2
+  name: &app plex
 spec:
   chartRef:
     kind: OCIRepository
