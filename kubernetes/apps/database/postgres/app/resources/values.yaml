@@ -19,14 +19,14 @@ recovery:
     secretKey: "{{ .backblaze_credential }}"
 backups:
   enabled: true
-  endpointURL: https://{{ .backblaze_hostname }}/
+  endpointURL: "{{ .minio_endpoint }}"
   provider: s3
   s3:
-    region: "${CLUSTER_CNAME}"
+    region: "{{ .minio_region }}"
     bucket: "{{ .backblaze_bucket }}"
     path: "/"
-    accessKey: "{{ .backblaze_username }}"
-    secretKey: "{{ .backblaze_credential }}"
+    accessKey: "{{ .minio_username }}"
+    secretKey: "{{ .minio_password }}"
   wal:
     compression: gzip
     encryption: ''
