@@ -225,7 +225,7 @@ spec:
     substitute:
       APP: plex
       NAMESPACE: *namespace
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 120Gi
       VOLSYNC_STORAGECLASS: longhorn-local
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json

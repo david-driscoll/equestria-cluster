@@ -149,17 +149,10 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config/Library/Application Support/Plex Media Server
-      cache:
-        forceRename: ${APP}-cache
-        type: persistentVolumeClaim
-        storageClass: longhorn-local
-        accessMode: ReadWriteOnce
-        size: 128Gi
+      logs:
+        type: emptyDir
         globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Cache
-            subPath: cache
           - path: /config/Library/Application Support/Plex Media Server/Logs
-            subPath: logs
       media-movies:
         existingClaim: media-movies
         globalMounts:
