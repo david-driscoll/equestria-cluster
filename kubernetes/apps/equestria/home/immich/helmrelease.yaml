@@ -46,8 +46,6 @@ spec:
             envFrom:
               - secretRef:
                   name: ${APP}-env
-            securityContext:
-              runAsNonRoot: true
             resources:
               requests:
                 cpu: 100m
@@ -62,8 +60,6 @@ spec:
             envFrom:
               - secretRef:
                   name: ${APP}-env
-            securityContext:
-              runAsNonRoot: true
             resources:
               requests:
                 cpu: 100m
