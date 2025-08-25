@@ -89,6 +89,7 @@ spec:
           *app :
             *app :
               - path: /uploads
+                subPath: uploads
             machine-learning:
               - path: /cache
                 subPath: cache
