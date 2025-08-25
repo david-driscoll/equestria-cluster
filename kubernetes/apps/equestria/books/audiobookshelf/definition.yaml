@@ -6,7 +6,7 @@ metadata:
   name: audiobookshelf
 spec:
   name: Audiobookshelf
-  category: ${CLUSTER_TITLE}
+  category: Media Management
   description: Audiobookshelf
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/peanut.svg

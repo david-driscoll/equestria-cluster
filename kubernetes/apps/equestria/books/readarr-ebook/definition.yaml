@@ -6,7 +6,7 @@ metadata:
   name: readarr-ebook
 spec:
   name: Readarr Ebook
-  category: ${CLUSTER_TITLE}
+  category: Media Management
   description: Readarr Ebook
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg

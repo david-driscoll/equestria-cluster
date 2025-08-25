@@ -5,8 +5,8 @@ kind: ApplicationDefinition
 metadata:
   name: tailscale-golink
 spec:
-  name: Tailscale Go Link
-  category: ${CLUSTER_TITLE}
+  name: Links
+  category: Applications
   description: Tailscale Go Link
   url: &url https://go.${TAILSCALE_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale.svg

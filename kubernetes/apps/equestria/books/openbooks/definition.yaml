@@ -6,7 +6,7 @@ metadata:
   name: openbooks
 spec:
   name: OpenBooks
-  category: ${CLUSTER_TITLE}
+  category: Media Management
   description: OpenBooks
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/openbooks.svg

@@ -6,7 +6,7 @@ metadata:
   name: readarr-audio
 spec:
   name: Readarr Audio
-  category: ${CLUSTER_TITLE}
+  category: Media Management
   description: Readarr Audio
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg

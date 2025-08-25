@@ -7,5 +7,3 @@ resources:
   - backrest.sops.yaml
   - donetick.yaml
   - donetick.sops.yaml
-  - postgres.yaml
-  - postgres.sops.yaml

@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Homarr
-  category: ${CLUSTER_TITLE}
+  category: Applications
   description: Homarr is a home automation manager
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg

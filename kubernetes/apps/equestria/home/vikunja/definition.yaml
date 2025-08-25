@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Vikunja
-  category: ${CLUSTER_TITLE}
+  category: Applications
   description: Vikunja is a task management tool
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vikunja.svg
@@ -25,7 +25,7 @@ spec:
         - vikunja
       includeClaimsInIdToken: true
       subMode: user_email
-      
+
   uptime:
     http:
       url: *url

@@ -6,7 +6,7 @@ metadata:
   name: lazylibrarian
 spec:
   name: LazyLibrarian
-  category: ${CLUSTER_TITLE}
+  category: Media Management
   description: LazyLibrarian
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lazylibrarian.svg

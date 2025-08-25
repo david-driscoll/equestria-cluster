@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Immich
-  category: ${CLUSTER_TITLE}
+  category: Applications
   description: Immich is an image and video backup solution
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg
