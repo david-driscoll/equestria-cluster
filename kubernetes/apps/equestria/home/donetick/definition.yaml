@@ -5,7 +5,7 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Done Tick
+  name: Tasks
   category: Applications
   description: Done Tick is a task management tool
   url: &url https://${APP}.${ROOT_DOMAIN}
