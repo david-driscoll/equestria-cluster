@@ -34,6 +34,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         replicas: 1
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
         containers:
           *app :
             image:
@@ -42,6 +50,16 @@ spec:
             envFrom:
               - secretRef:
                   name: ${APP}-env
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
@@ -56,6 +74,16 @@ spec:
             envFrom:
               - secretRef:
                   name: ${APP}-env
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
@@ -63,6 +91,15 @@ spec:
               limits:
                 cpu: 2
                 memory: 2Gi
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+        supplementalGroups: [44, 109, 303, 568, 10000]
+        seccompProfile: { type: RuntimeDefault }
 
     persistence:
       data:
