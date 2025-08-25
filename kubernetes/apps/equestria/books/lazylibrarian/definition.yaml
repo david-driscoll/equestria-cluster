@@ -10,6 +10,9 @@ spec:
   description: LazyLibrarian
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lazylibrarian.svg
+  access_policy:
+    groups:
+      - media-managers
   # authentik:
   #   proxy:
   #     mode: "forward_single"

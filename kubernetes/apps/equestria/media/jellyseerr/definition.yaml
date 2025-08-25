@@ -10,6 +10,10 @@ spec:
   description: Jellyseerr is a request management system
   url: https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg
+  access_policy:
+    groups:
+      - friends
+      - family
   uptime:
     http:
       url: https://${APP}.${ROOT_DOMAIN}/ping

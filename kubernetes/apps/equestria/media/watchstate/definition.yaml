@@ -8,6 +8,7 @@ spec:
   name: Watchstate
   category: Media Management
   description: Watchstate syncs your current watched state between plex, emby and jellyfin.
+  url: https://${APP}.${ROOT_DOMAIN}
   access_policy:
     groups:
       - media-managers

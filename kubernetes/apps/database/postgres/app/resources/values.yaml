@@ -106,6 +106,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: romm-postgres
+  - name: loki
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: loki-postgres
   monitoring:
     enabled: true
     podMonitor:

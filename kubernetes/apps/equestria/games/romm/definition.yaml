@@ -12,7 +12,8 @@ spec:
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/romm.svg
   access_policy:
     groups:
-      - media-managers
+      - friends
+      - family
   authentik:
     oauth2:
       clientType: confidential
