@@ -42,7 +42,7 @@ backups:
     method: barmanObjectStore
   retentionPolicy: "30d"
 cluster:
-  instances: 2
+  instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4
   storage:
     size: ${POSTGRES_STORAGE:=10Gi}
@@ -106,12 +106,6 @@ cluster:
     superuser: false
     passwordSecret:
       name: romm-postgres
-  - name: loki
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: loki-postgres
   monitoring:
     enabled: true
     podMonitor:
