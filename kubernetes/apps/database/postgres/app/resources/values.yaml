@@ -94,12 +94,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: donetick-postgres
-  - name: immich
+  - name: photos
     ensure: present
     login: true
-    superuser: true
+    superuser: false
     passwordSecret:
-      name: immich-postgres
+      name: photos-postgres
   - name: romm
     ensure: present
     login: true

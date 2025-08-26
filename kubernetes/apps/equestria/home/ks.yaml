@@ -113,7 +113,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app immich
+  name: &app photos
   namespace: &namespace equestria
 spec:
   targetNamespace: *namespace
@@ -142,7 +142,7 @@ spec:
     - ../../../../components/volsync
   postBuild:
     substitute:
-      APP: *app
+      APP: immich
       NAMESPACE: *namespace
       VOLSYNC_ACCESSMODES: ReadWriteMany
       TAILSCALE_HOST: photos
