@@ -125,7 +125,7 @@ spec:
 #   wait: true
 #   force: true
 #   interval: 1h
-#   timeout: 5m
+#   timeout: 10m
 #   dependsOn:
 #     - name: volsync
 #       namespace: volsync-system

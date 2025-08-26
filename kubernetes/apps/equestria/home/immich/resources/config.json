@@ -134,7 +134,7 @@
     }
   },
   "server": {
-    "externalDomain": "https://${APP}.${ROOT_DOMAIN}",
+    "externalDomain": "https://photos.${ROOT_DOMAIN}",
     "loginPageMessage": ""
   },
   "notifications": {

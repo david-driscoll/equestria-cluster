@@ -7,8 +7,6 @@ resources:
   - postgres-superuser.sops.yaml
   - donetick.yaml
   - donetick.sops.yaml
-  - immich.yaml
-  - immich.sops.yaml
   - loki.yaml
   - loki.sops.yaml
   - pulumi-operator.yaml

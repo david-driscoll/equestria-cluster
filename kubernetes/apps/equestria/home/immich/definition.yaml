@@ -8,7 +8,7 @@ spec:
   name: Immich
   category: Applications
   description: Immich is an image and video backup solution
-  url: &url https://${APP}.${ROOT_DOMAIN}
+  url: &url https://photos.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg
   access_policy:
     groups:
@@ -18,10 +18,8 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/auth/login"
         - url: "https://photos.${ROOT_DOMAIN}/auth/login"
         - url: "https://photos.${TAILSCALE_DOMAIN}/auth/login"
-        - url: "https://${APP}.${ROOT_DOMAIN}/user-settings"
         - url: "https://photos.${ROOT_DOMAIN}/user-settings"
         - url: "https://photos.${TAILSCALE_DOMAIN}/user-settings"
         - url: app.immich:///oauth-callback
