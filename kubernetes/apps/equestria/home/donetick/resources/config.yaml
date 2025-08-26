@@ -23,7 +23,7 @@ oauth2:
   name: ${CLUSTER_TITLE}
   client_id: "{{ .oidc_username }}"
   client_secret: "{{ .oidc_credential }}"
-  redirect_url: "https://${APP}.${ROOT_DOMAIN}/auth/oauth2"
+  redirect_url: "https://tasks.${ROOT_DOMAIN}/auth/oauth2"
   scopes:
     - email
     - openid
@@ -39,6 +39,7 @@ server:
   rate_limit: 300
   cors_allow_origins:
     - "https://${APP}.${ROOT_DOMAIN}"
+    - "https://tasks.${ROOT_DOMAIN}"
   serve_frontend: true
 logging:
   level: "info"
