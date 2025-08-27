@@ -3,7 +3,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: &name peppermint-postgres
+  name: &name grafana-postgres
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -52,7 +52,7 @@ spec:
               templateAs: Values
   dataFrom:
     - extract:
-        key: "peppermint-postgres-password"
+        key: "grafana-postgres-password"
       rewrite:
         - regexp:
             source: "[\\W]"
@@ -63,21 +63,21 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: &app peppermint
+  name: &app grafana
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
   cluster:
     name: postgres
-  name: peppermint
-  owner: peppermint
+  name: grafana
+  owner: grafana
   ensure: present
   allowConnections: true
   databaseReclaimPolicy: retain
   schemas:
     - ensure: present
       name: public
-      owner: peppermint
+      owner: grafana
     - ensure: present
-      name: peppermint
-      owner: peppermint
+      name: grafana
+      owner: grafana

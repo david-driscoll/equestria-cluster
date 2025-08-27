@@ -87,24 +87,42 @@ cluster:
     superuser: false
     passwordSecret:
       name: pulumi-operator-postgres
+  - name: vikunja
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: vikunja-postgres
+  - name: peppermint
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: peppermint-postgres
   - name: donetick
     ensure: present
     login: true
     superuser: false
     passwordSecret:
       name: donetick-postgres
-  - name: photos
+  - name: immich
     ensure: present
     login: true
-    superuser: false
+    superuser: true
     passwordSecret:
-      name: photos-postgres
+      name: immich-postgres
   - name: romm
     ensure: present
     login: true
     superuser: false
     passwordSecret:
       name: romm-postgres
+  - name: grafana
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: grafana-postgres
   monitoring:
     enabled: true
     podMonitor:
