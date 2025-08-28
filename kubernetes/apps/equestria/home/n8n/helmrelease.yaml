@@ -37,7 +37,6 @@ spec:
         replicas: 1
         pod:
           securityContext:
-            runAsNonRoot: true
             fsGroupChangePolicy: "OnRootMismatch"
         containers:
           *app :
@@ -107,7 +106,6 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
