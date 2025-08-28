@@ -13,8 +13,6 @@ resources:
   - immich.sops.yaml
   - n8n.yaml
   - n8n.sops.yaml
-  - peppermint.yaml
-  - peppermint.sops.yaml
   - pulumi-operator.yaml
   - pulumi-operator.sops.yaml
   - romm.yaml

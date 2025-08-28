@@ -7,7 +7,6 @@ resources:
   - grafana-postgres-push-secret.yaml
   - immich-postgres-push-secret.yaml
   - n8n-postgres-push-secret.yaml
-  - peppermint-postgres-push-secret.yaml
   - pulumi-operator-postgres-push-secret.yaml
   - romm-postgres-push-secret.yaml
   - vikunja-postgres-push-secret.yaml
