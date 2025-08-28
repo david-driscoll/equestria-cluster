@@ -190,7 +190,9 @@ spec:
     - ../../../../components/ingress/internal
     - ../../../../components/postgres
     - ../../../../components/tailscale
+    - ../../../../components/volsync
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      VOLSYNC_ACCESSMODES: ReadWriteMany
