@@ -60,7 +60,7 @@ cors:
   # A list of origins which may access the api. These need to include the protocol (`http://` or `https://`) and port, if any.
   origins:
     - "https://${APP}.${ROOT_DOMAIN}"
-    - "https://tasks.${ROOT_DOMAIN}"
+    # - "https://tasks.${ROOT_DOMAIN}"
     # - "http://127.0.0.1:*"
     # - "http://localhost:*"
 #
@@ -95,13 +95,13 @@ log:
   # Where the normal log should go. Possible values are stdout, stderr, file or off to disable standard logging.
   standard: "stdout"
   # Change the log level. Possible values (case-insensitive) are CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG.
-  level: "DEBUG"
+  level: "WARNING"
   database: "stdout"
-  databaselevel: "DEBUG"
+  databaselevel: "WARNING"
   http: "off"
   echo: "stdout"
   events: "true"
-  eventslevel: "DEBUG"
+  eventslevel: "WARNING"
   mail: "off"
   maillevel: "INFO"
 
@@ -178,7 +178,7 @@ defaultsettings:
   # Start of the week for the user. `0` is sunday, `1` is monday and so on.
   week_start: 0
   # The language of the user interface. Must be an ISO 639-1 language code followed by an ISO 3166-1 alpha-2 country code. Check https://kolaente.dev/vikunja/vikunja/frontend/src/branch/main/src/i18n/lang for a list of possible languages. Will default to the browser language the user uses when signing up.
-  language: "EN"
+  language: "en"
   # The time zone of each individual user. This will affect when users get reminders and overdue task emails.
   timezone: "${TIMEZONE}"
 #
