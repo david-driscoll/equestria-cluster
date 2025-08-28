@@ -56,6 +56,7 @@ spec:
               # User management
               EXTERNAL_HOOK_FILES: /config/.n8n/hooks.js
               N8N_FORWARD_AUTH_HEADER: X-Authentik-Email
+              N8N_BLOCK_ENV_ACCESS_IN_NODE: false
 
               # App Configuration
               N8N_PERSONALIZATION_ENABLED: true
