@@ -51,6 +51,7 @@ module.exports = {
                 req.headers[process.env.N8N_FORWARD_AUTH_HEADER.toLowerCase()];
               if (!email) {
                 console.log("Skipping auth: N8N_FORWARD_AUTH_HEADER header is not found");
+                console.log(`headers: ${JSON.stringify(Object.keys(req.headers))}`);
                 return next();
               }
 
