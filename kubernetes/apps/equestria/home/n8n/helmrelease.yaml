@@ -67,7 +67,7 @@ spec:
               # N8N_PROXY_HOPS: "1"
 
               # Logging
-              N8N_LOG_LEVEL: verbose
+              N8N_LOG_LEVEL: debug
               N8N_LOG_OUTPUT: console
               N8N_DIAGONISTICS_ENABLED: true
               N8N_METRICS: true
