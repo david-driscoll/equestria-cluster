@@ -1,0 +1,20 @@
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: fix-permissions
+        image: busybox:1.36
+        command: ['sh', '-c']
+        args:
+          - |
+            echo "Fixing permissions for n8n directories..."
+            mkdir -p /config/.n8n
+            chown -R 1000:1000 /config
+            chmod -R 755 /config
+            echo "Permissions fixed!"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        securityContext:
+          runAsUser: 0
+          runAsNonRoot: false
