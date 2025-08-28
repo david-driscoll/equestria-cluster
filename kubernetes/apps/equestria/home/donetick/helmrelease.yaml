@@ -92,6 +92,7 @@ spec:
       config:
         type: secret
         name: ${APP}-config
+        defaultMode: 493
         globalMounts:
           - path: /config/selfhosted.yaml
             subPath: config.yaml

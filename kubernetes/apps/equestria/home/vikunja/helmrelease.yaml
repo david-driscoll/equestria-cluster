@@ -69,6 +69,7 @@ spec:
       config:
         type: secret
         name: ${APP}-config
+        defaultMode: 493
         globalMounts:
           - path: /etc/vikunja/config.yml
             subPath: config.yaml

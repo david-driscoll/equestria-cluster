@@ -110,6 +110,7 @@ spec:
       config:
         type: configMap
         name: ${APP}-config
+        defaultMode: 493
         globalMounts:
           - path: /romm/config/config.yml
             subPath: config.yaml

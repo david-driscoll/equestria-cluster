@@ -132,6 +132,7 @@ spec:
       config:
         type: secret
         name: ${APP}-config
+        defaultMode: 493
         globalMounts:
           - path: /etc/immich/config.json
             subPath: config.json

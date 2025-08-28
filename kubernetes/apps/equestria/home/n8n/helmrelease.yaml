@@ -124,6 +124,7 @@ spec:
       hook-files:
         type: configMap
         name: ${APP}-hooks
+        defaultMode: 493
         globalMounts:
           - path: /config/.n8n/hooks.js
             subPath: hooks.js

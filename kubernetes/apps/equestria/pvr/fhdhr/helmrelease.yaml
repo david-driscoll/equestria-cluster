@@ -197,6 +197,7 @@ spec:
       config-ini:
         type: secret
         name: fhdhr-config
+        defaultMode: 493
         globalMounts:
           - path: /config/
       temp:
