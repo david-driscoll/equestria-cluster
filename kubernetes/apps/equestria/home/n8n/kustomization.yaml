@@ -5,11 +5,15 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
-  - ./secret-key.yaml
   - ./definition.yaml
 configMapGenerator:
   - name: ${APP}-values
     files:
       - values.yaml=./values.yaml
+    options:
+      disableNameSuffixHash: true
+  - name: ${APP}-hooks
+    files:
+      - ./resources/hooks.js
     options:
       disableNameSuffixHash: true

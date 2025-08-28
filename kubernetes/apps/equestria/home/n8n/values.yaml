@@ -1,0 +1,126 @@
+#Prod like set up with CloudNativePG and nginx-ingress
+
+# Define hostname anchor at the top of the file
+_shared_config:
+  hostname: &hostname ${APP}.${ROOT_DOMAIN}
+  url: &url https://${APP}.${ROOT_DOMAIN}
+
+image:
+  repository: n8nio/n8n
+  tag: 1.81.4
+  pullPolicy: Always
+
+main:
+  config:
+    n8n:
+      editor_base_url: *url
+    executions_mode: queue
+    db:
+      type: postgresdb
+      postgresdb:
+        host: "{{ .postgres_hostname }}"
+        user: "{{ .postgres_username }}"
+        password: "{{ .postgres_password }}"
+        # pool:
+        #   size: 10
+    # webhook related settings
+    webhook_url: *url
+    queue:
+      health:
+        check:
+          active: true
+      bull:
+        redis:
+          host: redis.database.svc.cluster.local
+          port: 6379
+  secret:
+    n8n:
+      encryption_key: "{{ .n8n_password }}"
+  persistence: &persistence
+    enabled: true
+    type: dynamic
+    storageClassName: longhorn
+  extraEnv: &extraEnv
+    GENERIC_TIMEZONE:
+      value: "${TIMEZONE}"
+    TZ:
+      value: "${TIMEZONE}"
+
+    # User management
+    EXTERNAL_HOOK_FILES:
+      value: /config/.n8n/hooks.js
+    N8N_FORWARD_AUTH_HEADER:
+      value: X-authentik-email
+
+    # App Configuration
+    N8N_PERSONALIZATION_ENABLED:
+      value: true
+    N8N_VERSION_NOTIFICATIONS_ENABLED:
+      value: true
+    N8N_HIRING_BANNER_ENABLED:
+      value: false
+    N8N_USER_MANAGEMENT_DISABLED:
+      value: true
+    N8N_TEMPLATES_ENABLED:
+      value: true
+    # N8N_PROXY_HOPS: "1"
+
+    # Logging
+    N8N_LOG_LEVEL:
+      value: verbose
+    N8N_LOG_OUTPUT:
+      value: console
+    N8N_DIAGONISTICS_ENABLED:
+      value: true
+    N8N_METRICS:
+      value: true
+    NODE_FUNCTION_ALLOW_EXTERNAL:
+      value: databricks/sql # external packages
+    # DB_POSTGRESDB_PASSWORD:
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: db-app
+    #       key: password
+  # Mount the CNPG CA Cert into N8N container
+  extraVolumeMounts: &extraVolumeMounts
+    - name: hooks
+      mountPath: /config/.n8n
+      readOnly: true
+  extraVolumes: &extraVolumes
+    - name: hooks
+      configMap:
+        name: ${APP}-hooks
+        items:
+          - key: ca.crt
+            path: ca.crt
+  resources:
+    limits:
+      memory: 2048Mi
+    requests:
+      memory: 512Mi
+
+worker:
+  enabled: true
+  persistence: *persistence
+  extraEnv: *extraEnv # using YAML magic (anchors) to reference main extraEnv
+  extraVolumeMounts: *extraVolumeMounts # using YAML magic (anchors) to reference main extraVolumeMounts
+  extraVolumes: *extraVolumes # using YAML magic (anchors) to reference main extraVolumes
+
+webhook:
+  enabled: true
+  persistence: *persistence
+  extraEnv: *extraEnv # using YAML magic (anchors) to reference main extraEnv
+  extraVolumeMounts: *extraVolumeMounts # using YAML magic (anchors) to reference main extraVolumeMounts
+  extraVolumes: *extraVolumes # using YAML magic (anchors) to reference main extraVolumes
+
+ingress:
+  enabled: true
+  className: internal
+  annotations:
+    reloader.stakater.com/auto: "true"
+    external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: *hostname
+      paths:
+        - /
