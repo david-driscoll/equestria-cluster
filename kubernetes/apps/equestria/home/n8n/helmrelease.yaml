@@ -118,7 +118,7 @@ spec:
           - path: /config/.cache
       hook-files:
         type: configMap
-        name: ${APP}-hooks
+        name: n8n-hooks
         defaultMode: 493
         globalMounts:
           - path: /config/.n8n/hooks.js

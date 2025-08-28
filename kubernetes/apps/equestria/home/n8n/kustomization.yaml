@@ -7,7 +7,7 @@ resources:
   - ./externalsecret.yaml
   - ./definition.yaml
 configMapGenerator:
-  - name: ${APP}-hooks
+  - name: n8n-hooks
     files:
       - ./resources/hooks.js
     options:
