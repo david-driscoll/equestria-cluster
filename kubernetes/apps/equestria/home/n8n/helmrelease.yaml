@@ -42,8 +42,8 @@ spec:
         containers:
           *app :
             image:
-              repository: donetick/donetick
-              tag: v0.1.53
+              repository: ghcr.io/n8n-io/n8n
+              tag: 1.109.0@sha256:f4d4c22a1a1fa51bbe6e23e0d181b87c9201648657c0d6b0e682d8e198276999
             env:
               N8N_PORT: &port 8080
               N8N_HOST: &host "n8n.${ROOT_DOMAIN}"
