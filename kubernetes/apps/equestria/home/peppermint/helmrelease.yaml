@@ -84,7 +84,7 @@ spec:
       internal:
         className: internal
         hosts:
-          - host: "${APP}.${ROOT_DOMAIN}"
+          - host: "helpdesk.${ROOT_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

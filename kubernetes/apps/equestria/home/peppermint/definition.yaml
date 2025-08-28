@@ -16,6 +16,8 @@ spec:
   authentik:
     oauth2:
       clientType: public
+      allowedRedirectUris:
+        - url: https://helpdesk.${ROOT_DOMAIN}/auth/oidc
       propertyMappings:
         - email
         - openid

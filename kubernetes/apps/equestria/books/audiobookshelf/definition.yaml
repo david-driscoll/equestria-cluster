@@ -9,7 +9,7 @@ spec:
   category: Media Management
   description: Audiobookshelf
   url: &url https://${APP}.${CLUSTER_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/peanut.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/audiobookshelf.svg
   access_policy:
     groups:
       - media-managers
