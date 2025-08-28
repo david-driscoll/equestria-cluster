@@ -46,8 +46,8 @@ spec:
               tag: v0.1.53
             env:
               N8N_PORT: &port 8080
-              N8N_HOST: &host "n8n.${SECRET_DOMAIN}"
-              WEBHOOK_URL: "https://n8n.${SECRET_DOMAIN}"
+              N8N_HOST: &host "n8n.${ROOT_DOMAIN}"
+              WEBHOOK_URL: "https://n8n.${ROOT_DOMAIN}"
               N8N_USER_FOLDER: /config
               N8N_RUNNERS_ENABLED: true
               N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: true
