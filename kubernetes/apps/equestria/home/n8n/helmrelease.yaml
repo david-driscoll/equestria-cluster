@@ -1,29 +1,15 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/ocirepository-source-v1beta2.json
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
-metadata:
-  name: ${APP}
-spec:
-  interval: 1h
-  layerSelector:
-    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
-    operation: copy
-  ref:
-    tag: 1.0.12
-  url: oci://8gears.container-registry.com/library/n8n
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app ${APP}
+  name: &app donetick
 spec:
   chartRef:
     kind: OCIRepository
-    name: *app
+    name: app-template
   maxHistory: 3
-  interval: 1h
+  interval: 15m
   timeout: 5m
   install:
     createNamespace: true
@@ -42,6 +28,125 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  valuesFrom:
-    - kind: ConfigMap
-      name: ${APP}-values
+  dependsOn: []
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        pod:
+          securityContext:
+            runAsNonRoot: false
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          *app :
+            image:
+              repository: donetick/donetick
+              tag: v0.1.53
+            env:
+              N8N_PORT: &port 8080
+              N8N_HOST: &host "n8n.${SECRET_DOMAIN}"
+              WEBHOOK_URL: "https://n8n.${SECRET_DOMAIN}"
+              N8N_USER_FOLDER: /config
+              N8N_RUNNERS_ENABLED: true
+              N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: true
+              GENERIC_TIMEZONE: "${TIMEZONE}"
+              TZ: "${TIMEZONE}"
+
+              # User management
+              EXTERNAL_HOOK_FILES: /config/.n8n/hooks.js
+              N8N_FORWARD_AUTH_HEADER: X-authentik-email
+
+              # App Configuration
+              N8N_PERSONALIZATION_ENABLED: true
+              N8N_VERSION_NOTIFICATIONS_ENABLED: true
+              N8N_HIRING_BANNER_ENABLED: false
+              N8N_USER_MANAGEMENT_DISABLED: true
+              N8N_TEMPLATES_ENABLED: true
+              # N8N_PROXY_HOPS: "1"
+
+              # Logging
+              N8N_LOG_LEVEL: verbose
+              N8N_LOG_OUTPUT: console
+              N8N_DIAGONISTICS_ENABLED: true
+              N8N_METRICS: true
+              NODE_FUNCTION_ALLOW_EXTERNAL: databricks/sql
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 500Mi
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/ping
+                    port: &port 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /config/.cache
+      hook-files:
+        type: configMap
+        name: ${APP}-hooks
+        globalMounts:
+          - path: /config/.n8n/hooks.js
+            subPath: hooks.js
+            readOnly: true
+
+    service:
+      app:
+        controller: *app
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    ingress:
+      internal:
+        className: internal
+        hosts:
+          - host: "${APP}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+          - host: "tasks.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
