@@ -52,7 +52,7 @@ spec:
               ENABLE_KUBERNETES: true
             envFrom:
               - secretRef:
-                  name: homarr-env
+                  name: ${APP}-env
             resources:
               requests:
                 cpu: 100m
@@ -88,13 +88,8 @@ spec:
         seccompProfile: { type: RuntimeDefault }
 
     persistence:
-      config:
-        type: secret
-        name: ${APP}-config
-        defaultMode: 493
-        globalMounts:
-          - path: /config/selfhosted.yaml
-            subPath: config.yaml
+      appdata:
+        existingClaim: *app
 
     service:
       app:
