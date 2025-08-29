@@ -103,7 +103,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: &port 2021
+            port: *port
 
     ingress:
       internal:
