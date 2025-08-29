@@ -147,7 +147,7 @@ spec:
           type: ClusterRoleBinding
           roleRef:
             apiGroup: rbac.authorization.k8s.io
-            kind: Role
+            kind: ClusterRole
             name: homarr
           subjects:
             - kind: ServiceAccount
