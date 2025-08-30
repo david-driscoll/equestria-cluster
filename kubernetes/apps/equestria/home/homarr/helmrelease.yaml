@@ -61,7 +61,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/health/ready
-                    port: &port 7575
+                    port: &port 3000
                   initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
