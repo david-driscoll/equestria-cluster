@@ -38,7 +38,7 @@ spec:
         replicas: 3
         pod:
           securityContext:
-            runAsNonRoot: true
+            runAsNonRoot: false
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
@@ -83,7 +83,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
+        runAsNonRoot: false
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
