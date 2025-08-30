@@ -53,7 +53,7 @@ spec:
               WEBHOOK_URL: "https://n8n.${ROOT_DOMAIN}"
               N8N_USER_FOLDER: /config
               N8N_RUNNERS_ENABLED: true
-              N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: true
+              N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: false
               GENERIC_TIMEZONE: "${TIMEZONE}"
               TZ: "${TIMEZONE}"
 
