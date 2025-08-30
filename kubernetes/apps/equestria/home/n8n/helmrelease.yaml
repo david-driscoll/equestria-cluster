@@ -58,7 +58,7 @@ spec:
               TZ: "${TIMEZONE}"
 
               # User management
-              EXTERNAL_HOOK_FILES: /config/.n8n/hooks.js
+              EXTERNAL_HOOK_FILES: /hooks/hooks.js
               N8N_FORWARD_AUTH_HEADER: X-Authentik-Email
               N8N_BLOCK_ENV_ACCESS_IN_NODE: false
 
@@ -130,7 +130,7 @@ spec:
         name: n8n-hooks
         defaultMode: 493
         globalMounts:
-          - path: /config/.n8n/hooks.js
+          - path: /hooks/hooks.js
             subPath: hooks.js
             readOnly: true
 
