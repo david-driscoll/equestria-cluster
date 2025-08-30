@@ -56,11 +56,11 @@ spec:
                     key: credential
             resources:
               requests:
-                cpu: 50m
-                memory: 256Mi
+                cpu: 100m
+                memory: 512Mi
               limits:
-                cpu: 500m
-                memory: 500Mi
+                cpu: 2
+                memory: 2Gi
             probes:
               liveness: &probes
                 enabled: true
