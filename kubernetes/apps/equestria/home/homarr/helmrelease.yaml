@@ -44,11 +44,6 @@ spec:
             image:
               repository: ghcr.io/homarr-labs/homarr
               tag: v1.35.0
-            env:
-              TZ: "${TIMEZONE}"
-              PUID: ${PUID}
-              PGID: ${PGID}
-              ENABLE_KUBERNETES: true
             envFrom:
               - secretRef:
                   name: ${APP}-env

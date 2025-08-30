@@ -105,6 +105,12 @@ cluster:
     superuser: true
     passwordSecret:
       name: immich-postgres
+  - name: homarr
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: homarr-postgres
   - name: romm
     ensure: present
     login: true
