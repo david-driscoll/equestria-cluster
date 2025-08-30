@@ -1,5 +1,0 @@
-#!/bin/sh
-
-rclone mkdir /data/backrest
-rclone mkdir /data/donetick
-rclone serve s3 --cache-dir /cache --vfs-cache-mode writes --addr :8080 --auth-key $R3_USER_CLUSTER_USER,$R3_PASSWORD_CLUSTER_USER --auth-key $R3_USER_BACKREST,$R3_PASSWORD_BACKREST --auth-key $R3_USER_DONETICK,$R3_PASSWORD_DONETICK /data

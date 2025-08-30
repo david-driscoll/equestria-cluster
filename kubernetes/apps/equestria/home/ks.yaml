@@ -70,7 +70,6 @@ spec:
   components:
     - ../../../../components/ingress/internal
     - ../../../../components/postgres
-    - ../../../../components/s3-access-key
     - ../../../../components/tailscale
   postBuild:
     substitute:
