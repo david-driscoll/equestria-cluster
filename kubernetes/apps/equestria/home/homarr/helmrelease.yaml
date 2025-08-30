@@ -43,7 +43,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/homarr-labs/homarr
-              tag: v1.35.0
+              tag: v1.35.0@sha256:4011480f2ec5ec0bcd825c2ebd668b6e6358f2f5b224c51e8c6a9d5a19cb7c16
             envFrom:
               - secretRef:
                   name: ${APP}-env
