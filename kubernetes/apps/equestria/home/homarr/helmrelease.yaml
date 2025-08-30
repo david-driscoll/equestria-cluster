@@ -32,10 +32,9 @@ spec:
   values:
     controllers:
       *app :
-        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
-        replicas: 3
+        replicas: 2
         pod:
           securityContext:
             runAsNonRoot: false
@@ -151,66 +150,3 @@ spec:
             - kind: ServiceAccount
               name: *app
               namespace: ${NAMESPACE}
-
-
-#           {{- include "homarr.labels" . | nindent 4 }}
-# ---
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: {{ .Release.Name }}-sa-token
-#   annotations:
-#     kubernetes.io/service-account.name: "{{ .Release.Name }}-sa"
-# type: kubernetes.io/service-account-token
-# ---
-# ---
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: RoleBinding
-# metadata:
-#   name: {{ .Release.Name }}-rolebinding
-#   labels:
-#       {{- include "homarr.labels" . | nindent 4 }}
-# subjects:
-#   - kind: ServiceAccount
-#     name: {{ .Release.Name }}-sa
-#     namespace: {{ .Release.Namespace }}
-# roleRef:
-#   kind: Role
-#   name: {{ .Release.Name }}-role
-#   apiGroup: rbac.authorization.k8s.io
-# ---
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: ClusterRole
-# metadata:
-#   name: {{ .Release.Name }}-cluster-role
-#   labels:
-#       {{- include "homarr.labels" . | nindent 4 }}
-# rules:
-#   - apiGroups: [ "" ]
-#     resources: [ "pods", "services", "secrets", "configmaps", "persistentvolumeclaims", "namespaces", "persistentvolumes", "nodes" ]
-#     verbs: [ "get", "list", "watch", "use" ]
-#   - apiGroups: [ "apps" ]
-#     resources: [ "deployments" ]
-#     verbs: [ "get", "list", "watch" ]
-#   - apiGroups: [ "networking.k8s.io" ]
-#     resources: [ "ingresses" ]
-#     verbs: [ "get", "list", "watch" ]
-#   - apiGroups: [ "metrics.k8s.io" ]
-#     resources: [ "nodes", "pods" ]
-#     verbs: [ "get", "list", "watch" ]
-
-# ---
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: ClusterRoleBinding
-# metadata:
-#   name: {{ .Release.Name }}-cluster-rolebinding
-#   labels:
-#       {{- include "homarr.labels" . | nindent 4 }}
-# subjects:
-#   - kind: ServiceAccount
-#     name: {{ .Release.Name }}-sa
-#     namespace: {{ .Release.Namespace }}
-# roleRef:
-#   kind: ClusterRole
-#   name: {{ .Release.Name }}-cluster-role
-#   apiGroup: rbac.authorization.k8s.io
