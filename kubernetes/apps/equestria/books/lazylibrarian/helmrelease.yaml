@@ -71,8 +71,8 @@ spec:
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
-              PUID: 568
-              PGID: 568
+              PUID: ${PUID}
+              PGID: ${PGID}
               UMASK: 002
               TZ: America/New_York
               DOCKER_MODS: linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg

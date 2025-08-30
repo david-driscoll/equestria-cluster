@@ -156,6 +156,8 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      PUID: "1000"
+      PGID: "1000"
       VOLSYNC_ACCESSMODES: ReadWriteMany
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -191,4 +193,6 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      PUID: "1000"
+      PGID: "1000"
       VOLSYNC_CAPACITY: 5Gi

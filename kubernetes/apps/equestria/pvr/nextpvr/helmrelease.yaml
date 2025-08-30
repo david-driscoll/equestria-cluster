@@ -66,8 +66,8 @@ spec:
               tag: stable@sha256:b5c2908e786b969318dcd2f52dde484713149c2abaf30b641c482a7a4cc9e31b
             env:
               TZ: America/New_York
-              PUID: 568
-              PGID: 568
+              PUID: ${PUID}
+              PGID: ${PGID}
             # probes:
             #   liveness: &probes
             #     enabled: true

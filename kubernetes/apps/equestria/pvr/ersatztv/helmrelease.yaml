@@ -66,8 +66,8 @@ spec:
               repository: jasongdove/ersatztv
               tag: latest@sha256:5464348e1989be72161e1e6ef197cf1a1c403efed8090474ce1ffe501a375c37
             env:
-              PUID: 568
-              PGID: 568
+              PUID: ${PUID}
+              PGID: ${PGID}
               TZ: America/New_York
               ETV_CONFIG_FOLDER: /config
               ETV_TRANSCODE_FOLDER: /transcode

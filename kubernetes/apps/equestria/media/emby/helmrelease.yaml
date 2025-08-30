@@ -53,8 +53,8 @@ spec:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               # EMBY_FFmpeg__probesize: 50000000
               # EMBY_FFmpeg__analyzeduration: 50000000
-              PUID: 568
-              PGID: 568
+              PUID: ${PUID}
+              PGID: ${PGID}
               TZ: America/New_York
             probes:
               liveness: &probes
