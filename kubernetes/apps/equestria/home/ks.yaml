@@ -194,7 +194,7 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      PUID: "1000"
-      PGID: "1000"
+      PUID: "0"
+      PGID: "0"
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_ACCESSMODES: ReadWriteMany
