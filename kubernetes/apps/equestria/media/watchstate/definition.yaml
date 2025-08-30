@@ -5,7 +5,7 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Watchstate frontend/public/images/logo.png
+  name: Watchstate
   category: Media Management
   description: Watchstate syncs your current watched state between plex, emby and jellyfin.
   icon: https://raw.githubusercontent.com/arabcoders/watchstate/refs/heads/master/frontend/public/images/logo.png
