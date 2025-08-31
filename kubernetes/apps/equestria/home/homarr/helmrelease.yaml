@@ -49,10 +49,10 @@ spec:
                   name: ${APP}-env
             resources:
               requests:
-                cpu: 100m
+                cpu: 200m
                 memory: 256Mi
               limits:
-                cpu: 600m
+                cpu: 2
                 memory: 1Gi
             probes:
               liveness: &probes
