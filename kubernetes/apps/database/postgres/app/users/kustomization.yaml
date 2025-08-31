@@ -13,8 +13,6 @@ resources:
   - homarr.sops.yaml
   - immich.yaml
   - immich.sops.yaml
-  - n8n.yaml
-  - n8n.sops.yaml
   - pulumi-operator.yaml
   - pulumi-operator.sops.yaml
   - romm.yaml
