@@ -68,6 +68,11 @@ spec:
         seccompProfile: { type: RuntimeDefault }
 
     persistence:
+      assets:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /home/user/glance-assets
+            subPath: assets
       config:
         type: secret
         name: ${APP}-config
