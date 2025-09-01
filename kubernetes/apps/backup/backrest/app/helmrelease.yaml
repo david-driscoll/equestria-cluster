@@ -23,7 +23,7 @@ spec:
       retries: 7
       strategy: rollback
   rollback:
-    force: true
+    force: false # true
     cleanupOnFail: true
     recreate: true
   uninstall:
@@ -37,7 +37,7 @@ spec:
           *app :
             image:
               repository: docker.io/garethgeorge/backrest
-              tag: v1.9.2@sha256:f8306faef0a3cbedc7daa55756f1d4c105d8c104aa773656bdad4fa8553dab5a
+              tag: v1.9.2
               pullPolicy: IfNotPresent
 
             env:
