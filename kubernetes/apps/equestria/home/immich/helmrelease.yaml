@@ -130,7 +130,7 @@ spec:
       matplotlib:
         type: emptyDir
         globalMounts:
-          - path: /config/matplotlib
+          - path: /.config/matplotlib
       config:
         type: secret
         name: ${APP}-config
