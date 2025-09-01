@@ -69,7 +69,7 @@ spec:
             image:
               repository: fancybits/channels-dvr
               tag: latest@sha256:284fed6f4ee5150d41d9a7f247a63e190f6f1c3a4e4bc740f029df6d36955d29
-              pullPolicy: Always
+              pullPolicy: IfNotPresent
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:

@@ -45,7 +45,7 @@ spec:
             image:
               repository: ghcr.io/home-operations/radarr
               tag: 5.27.5@sha256:af67ce80302e21f7228e2da671943c48b27a25faf27e19c4fcb7ad33c1c0e3c0
-              pullPolicy: Always
+              pullPolicy: IfNotPresent
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:

@@ -45,7 +45,7 @@ spec:
             image:
               repository: ghcr.io/home-operations/sonarr
               tag: 4.0.15@sha256:ca6c735014bdfb04ce043bf1323a068ab1d1228eea5bab8305ca0722df7baf78
-              pullPolicy: Always
+              pullPolicy: IfNotPresent
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
