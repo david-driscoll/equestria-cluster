@@ -71,7 +71,7 @@ david-driscoll/stargate-command-cluster:
     dest: kubernetes/apps/tailscale-system/
     exclude: |
       kustomization.yaml
-      go/
+      golink/
   - source: talos/talenv.yaml
     dest: talos/talenv.yaml
   - source: talos/patches/global/machine-kubelet.yaml
