@@ -34,6 +34,7 @@ david-driscoll/stargate-command-cluster:
       postgres/app/cluster.yaml
       postgres/app/users/
       postgres/app/resources/
+      postgres/postgres-push-secrets/
   - source: kubernetes/apps/kube-system/
     dest: kubernetes/apps/kube-system/
     deleteOrphaned: true
@@ -63,8 +64,14 @@ david-driscoll/stargate-command-cluster:
     deleteOrphaned: true
   - source: kubernetes/apps/observability/
     dest: kubernetes/apps/observability/
-    # exclude: |
-    #   kustomization.yaml
+    exclude: |
+      kustomization.yaml
+      uptime-kuma/
+  - source: kubernetes/apps/tailscale-system/
+    dest: kubernetes/apps/tailscale-system/
+    exclude: |
+      kustomization.yaml
+      go/
   - source: talos/talenv.yaml
     dest: talos/talenv.yaml
   - source: talos/patches/global/machine-kubelet.yaml
