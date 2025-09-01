@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
+- name: Homelab
+  columns:
+    - size: full
+      widgets: []
