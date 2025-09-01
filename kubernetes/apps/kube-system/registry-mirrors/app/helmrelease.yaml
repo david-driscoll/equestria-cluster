@@ -42,6 +42,8 @@ spec:
             runAsGroup: 568
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups:
+              - 65542 # gladius:external-services
         containers:
           *app :
             image:
@@ -70,8 +72,7 @@ spec:
                 enabled: false
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+              readOnlyRootFilesystem: true
 
     defaultPodOptions:
       securityContext:
