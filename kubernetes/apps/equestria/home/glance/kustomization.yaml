@@ -11,5 +11,7 @@ configMapGenerator:
 - name: ${APP}-config
   files:
   - glance.yml=./resources/glance.yml
+  - home.yaml=./resources/home.yaml
+  - homelab.yaml=./resources/homelab.yaml
   options:
     disableNameSuffixHash: true
