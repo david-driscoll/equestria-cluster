@@ -31,17 +31,13 @@ tasks:
     desc: Reboot the cluster without downtime
     dir: '{{.TALOS_DIR}}'
     cmd: |
-      talosctl upgrade -n 10.10.206.10 --wait
-      sleep 20
-      talosctl upgrade -n 10.10.206.12 --wait
-      sleep 20
       talosctl upgrade -n 10.10.206.14 --wait
       sleep 20
-      talosctl upgrade -n 10.10.206.11 --wait
+      talosctl upgrade -n 10.10.206.16 --wait
       sleep 20
-      talosctl upgrade -n 10.10.206.13 --wait
+      talosctl upgrade -n 10.10.206.17 --wait
       sleep 20
-      talosctl upgrade -n 10.10.206.15 --wait
+      talosctl upgrade -n 10.10.206.10 --wait
     vars:
       MODE: '{{.MODE | default "auto"}}'
     deps:
