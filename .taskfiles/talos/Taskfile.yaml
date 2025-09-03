@@ -69,7 +69,6 @@ tasks:
     deps:
       - generate-config
     preconditions:
-      - talosctl --nodes {{.IP}} get machineconfig
       - talosctl config info
       - test -f {{.TALOSCONFIG}}
       - which talhelper talosctl yq

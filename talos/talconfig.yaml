@@ -180,7 +180,7 @@ nodes:
           type: xfs
         provisioning:
           diskSelector:
-            match: disk.dev_path == "/dev/sdb"
+            match: disk.model == "Samsung SSD 990 EVO Plus 1TB"
           grow: false
           minSize: 1TB
           maxSize: 1TB
