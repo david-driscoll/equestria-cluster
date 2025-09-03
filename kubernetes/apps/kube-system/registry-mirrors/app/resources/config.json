@@ -121,6 +121,34 @@
               "destination": "/registry.k8s.io"
             }
           ]
+        },
+        {
+          "urls": ["https://public.ecr.aws"],
+          "tlsVerify": true,
+          "onDemand": true,
+          "maxRetries": 3,
+          "retryDelay": "15m",
+          "onlySigned": false,
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/public.ecr.aws"
+            }
+          ]
+        },
+        {
+          "urls": ["https://cgr.dev"],
+          "tlsVerify": true,
+          "onDemand": true,
+          "maxRetries": 3,
+          "retryDelay": "15m",
+          "onlySigned": false,
+          "content": [
+            {
+              "prefix": "**",
+              "destination": "/cgr.dev"
+            }
+          ]
         }
       ]
     }
