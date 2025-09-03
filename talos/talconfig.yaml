@@ -203,8 +203,7 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
-    patches: &intel_un1290_patches
-      - "@./patches/un1290/machine-disks.yaml"
+    patches: &intel_un1290_patches []
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "58:47:ca:7a:09:3d"
@@ -247,7 +246,7 @@ patches:
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
-  - "@./patches/global/machine-registries.yaml"
+  # - "@./patches/global/machine-registries.yaml"
   - "@./patches/global/cluster-admissionregistration.yaml"
 
 # Controller patches
