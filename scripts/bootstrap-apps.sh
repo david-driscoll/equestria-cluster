@@ -130,7 +130,7 @@ function main() {
     check_cli helmfile kubectl kustomize sops talhelper yq
 
     # Apply resources and Helm releases
-    wait_for_nodes
+    # wait_for_nodes
     apply_namespaces
     apply_sops_secrets
     apply_crds
