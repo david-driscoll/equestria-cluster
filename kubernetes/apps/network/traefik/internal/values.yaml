@@ -42,6 +42,12 @@ ports:
     port: 5432
     exposedPort: 5432
     protocol: TCP
+  mariadb:
+    expose:
+      default: true
+    port: 3306
+    exposedPort: 3306
+    protocol: TCP
 ingressClass:
   enabled: true
   isDefaultClass: false
