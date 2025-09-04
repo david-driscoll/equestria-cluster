@@ -18,7 +18,7 @@
 #   force: true
 #   interval: 1h
 #   retryInterval: 2m
-#   timeout: 5m
+#   timeout: 10m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
@@ -49,7 +49,7 @@
 #   force: true
 #   interval: 1h
 #   retryInterval: 2m
-#   timeout: 5m
+#   timeout: 10m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
@@ -88,7 +88,7 @@
 #   wait: true
 #   interval: 30m
 #   retryInterval: 1m
-#   timeout: 5m
+#   timeout: 10m
 #   components:
 #     - ../../../../components/tailscale
 #   postBuild:
@@ -116,7 +116,7 @@
 #   force: true
 #   interval: 1h
 #   retryInterval: 2m
-#   timeout: 5m
+#   timeout: 10m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
@@ -148,7 +148,7 @@
 #   force: true
 #   interval: 1h
 #   retryInterval: 2m
-#   timeout: 5m
+#   timeout: 10m
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
@@ -178,7 +178,8 @@ spec:
   wait: true
   force: true
   interval: 1h
-  timeout: 5m
+  retryInterval: 2m
+  timeout: 10m
   sourceRef:
     kind: GitRepository
     name: flux-system
