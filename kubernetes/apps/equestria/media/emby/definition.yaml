@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Emby
-  category: Media Management
+  category: Media
   description: Emby is a media server software
   url: https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/emby.svg
