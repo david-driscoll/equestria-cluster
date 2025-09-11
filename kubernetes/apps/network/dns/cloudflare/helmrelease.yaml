@@ -52,7 +52,6 @@ spec:
             key: credential
     extraArgs:
       - --cloudflare-dns-records-per-page=5000
-      - --traefik-disable-legacy
     sources:
       - "traefik-proxy"
       - "crd"
