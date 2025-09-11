@@ -6,7 +6,7 @@ metadata:
   labels:
     prometheus: longhorn
     role: alert-rules
-  name: ${APP}-pvc-usage-rules
+  name: longhorn-pvc-usage-rules
   namespace: monitoring
 spec:
   groups:
@@ -85,9 +85,6 @@ spec:
         summary: Longhorn node {{$labels.node}} experiences high CPU pressure for more than 5m.
       expr: (longhorn_node_cpu_usage_millicpu / longhorn_node_cpu_capacity_millicpu) * 100 > 90
       for: 5m
-      labels:
-        issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
-        severity: warning
       labels:
         issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
         severity: warning
