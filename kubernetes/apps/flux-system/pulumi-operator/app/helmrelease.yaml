@@ -40,5 +40,8 @@ spec:
         memory: 256Mi
     serviceMonitor:
       enabled: true
+      endpoints:
+        - port: http-metrics
+          path: /metrics
     nameOverride: "pulumi-operator"
     fullnameOverride: "pulumi-operator"
