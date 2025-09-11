@@ -14,33 +14,30 @@ spec:
     rules:
     - alert: LonghornVolumeActualSpaceUsedWarning
       annotations:
-        description: The actual space used by Longhorn volume {{$labels.volume}} on {{$labels.node}} is at {{$value}}% capacity for
-          more than 5 minutes.
+        description: The actual space used by PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} (Longhorn volume {{$labels.volume}} on {{$labels.node}}) is at {{$value}}% capacity for more than 5 minutes.
         summary: The actual used space of Longhorn volume is over 90% of the capacity.
-      expr: (longhorn_volume_actual_size_bytes / longhorn_volume_capacity_bytes) * 100 > 90
+      expr: ((longhorn_volume_actual_size_bytes / longhorn_volume_capacity_bytes) * 100) * on(volume) group_left(persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_info * on(volumename) group_right(persistentvolumeclaim, namespace) kube_persistentvolume_info{volumename=~"pvc-.*"}) > 90
       for: 5m
       labels:
-        issue: The actual used space of Longhorn volume {{$labels.volume}} on {{$labels.node}} is high.
+        issue: The actual used space of PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} is high.
         severity: warning
     - alert: LonghornVolumeStatusCritical
       annotations:
-        description: Longhorn volume {{$labels.volume}} on {{$labels.node}} is Fault for
-          more than 2 minutes.
+        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} (Longhorn volume {{$labels.volume}} on {{$labels.node}}) is Fault for more than 2 minutes.
         summary: Longhorn volume {{$labels.volume}} is Fault
-      expr: longhorn_volume_robustness == 3
+      expr: (longhorn_volume_robustness == 3) * on(volume) group_left(persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_info * on(volumename) group_right(persistentvolumeclaim, namespace) kube_persistentvolume_info{volumename=~"pvc-.*"})
       for: 5m
       labels:
-        issue: Longhorn volume {{$labels.volume}} is Fault.
+        issue: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} is Fault.
         severity: critical
     - alert: LonghornVolumeStatusWarning
       annotations:
-        description: Longhorn volume {{$labels.volume}} on {{$labels.node}} is Degraded for
-          more than 5 minutes.
+        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} (Longhorn volume {{$labels.volume}} on {{$labels.node}}) is Degraded for more than 5 minutes.
         summary: Longhorn volume {{$labels.volume}} is Degraded
-      expr: longhorn_volume_robustness == 2
+      expr: (longhorn_volume_robustness == 2) * on(volume) group_left(persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_info * on(volumename) group_right(persistentvolumeclaim, namespace) kube_persistentvolume_info{volumename=~"pvc-.*"})
       for: 5m
       labels:
-        issue: Longhorn volume {{$labels.volume}} is Degraded.
+        issue: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} is Degraded.
         severity: warning
     - alert: LonghornNodeStorageWarning
       annotations:
@@ -88,6 +85,9 @@ spec:
         summary: Longhorn node {{$labels.node}} experiences high CPU pressure for more than 5m.
       expr: (longhorn_node_cpu_usage_millicpu / longhorn_node_cpu_capacity_millicpu) * 100 > 90
       for: 5m
+      labels:
+        issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
+        severity: warning
       labels:
         issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
         severity: warning
