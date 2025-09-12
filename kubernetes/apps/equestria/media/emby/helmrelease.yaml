@@ -75,13 +75,9 @@ spec:
             #   capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                gpu.intel.com/i915: 1
-                gpu.intel.com/millicores: 400
                 cpu: 100m
                 memory: 500Mi
               limits:
-                gpu.intel.com/i915: 1
-                gpu.intel.com/millicores: 400
                 memory: 4Gi
                 cpu: 4000m
 
