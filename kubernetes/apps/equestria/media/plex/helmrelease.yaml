@@ -87,11 +87,12 @@ spec:
             resources:
               requests:
                 gpu.intel.com/i915: 1
-                # amd.com/gpu: 1
+                gpu.intel.com/millicores: 400
                 cpu: 1
                 memory: 4Gi
               limits:
                 gpu.intel.com/i915: 1
+                gpu.intel.com/millicores: 700
                 # amd.com/gpu: 1
                 memory: 8Gi
                 cpu: 8
