@@ -1,0 +1,98 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  annotations:
+    reconcile.fluxcd.io/requestedAt: "2025-09-11T19:47:32.704811-04:00"
+  creationTimestamp: "2025-09-11T23:42:44Z"
+  finalizers:
+  - finalizers.fluxcd.io
+  generation: 1
+  labels:
+    kustomize.toolkit.fluxcd.io/name: cluster-apps
+    kustomize.toolkit.fluxcd.io/namespace: flux-system
+  name: prowlarr
+  namespace: equestria
+  resourceVersion: "11445408"
+  uid: f95b5abf-7f33-44ba-b812-52b56b24d5bd
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: prowlarr∏re
+  components:
+  - ../../../../components/tailscale
+  - ../../../../components/volsync
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  dependsOn:
+  - name: shared-volumes
+    namespace: equestria
+  force: true
+  interval: 1h
+  path: ./kubernetes/apps/equestria/downloads/prowlarr
+  postBuild:
+    substitute:
+      APP: prowlarr
+      NAMESPACE: equestria
+    substituteFrom:
+    - kind: Secret
+      name: cluster-secrets
+      optional: false
+    - kind: ConfigMap
+      name: cluster-versions
+      optional: false
+    - kind: Secret
+      name: shared-secrets
+      optional: false
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: equestria
+  timeout: 10m
+  wait: true
+status:
+  conditions:
+  - lastTransitionTime: "2025-09-11T23:42:45Z"
+    message: Running health checks for revision refs/heads/main@sha1:7112aef7c3171c2083c8683a9ce44ccd8e79b6f4
+      with a timeout of 10m0s
+    observedGeneration: 1
+    reason: Progressing
+    status: "True"
+    type: Reconciling
+  - lastTransitionTime: "2025-09-11T23:42:45Z"
+    message: Reconciliation in progress
+    observedGeneration: 1
+    reason: Progressing
+    status: Unknown
+    type: Ready
+  - lastTransitionTime: "2025-09-11T23:42:45Z"
+    message: Running health checks for revision refs/heads/main@sha1:7112aef7c3171c2083c8683a9ce44ccd8e79b6f4
+      with a timeout of 10m0s
+    observedGeneration: 1
+    reason: Progressing
+    status: Unknown
+    type: Healthy
+  inventory:
+    entries:
+    - id: equestria_prowlarr__PersistentVolumeClaim
+      v: v1
+    - id: equestria_prowlarr_driscoll.dev_ApplicationDefinition
+      v: v1
+    - id: equestria_prowlarr-volsync_external-secrets.io_ExternalSecret
+      v: v1
+    - id: equestria_prowlarr_helm.toolkit.fluxcd.io_HelmRelease
+      v: v2
+    - id: equestria_prowlarr-tailscale_networking.k8s.io_Ingress
+      v: v1
+    - id: equestria_prowlarr-internal_traefik.io_IngressRoute
+      v: v1alpha1
+    - id: equestria_prowlarr-dst_volsync.backube_ReplicationDestination
+      v: v1alpha1
+    - id: equestria_prowlarr_volsync.backube_ReplicationSource
+      v: v1alpha1
+  lastAttemptedRevision: refs/heads/main@sha1:7112aef7c3171c2083c8683a9ce44ccd8e79b6f4
+  observedGeneration: -1
