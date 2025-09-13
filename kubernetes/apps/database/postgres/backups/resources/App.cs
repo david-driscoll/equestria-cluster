@@ -24,20 +24,21 @@ using OnePassword.Connect.Sdk.Models;
 
 var opClient = new OnePasswordConnectClient(new OnePasswordConnectOptions()
 {
+  BaseUrl = Environment.GetEnvironmentVariable("CONNECT_HOST") ?? throw new InvalidOperationException("CONNECT_HOST is required"),
   ApiKey = Environment.GetEnvironmentVariable("CONNECT_TOKEN") ?? throw new InvalidOperationException("CONNECT_TOKEN is required"),
 });
-opClient.BaseUrl = Environment.GetEnvironmentVariable("CONNECT_HOST") ?? throw new InvalidOperationException("CONNECT_HOST is required");
 
-async Task<FullItem> GetItemById(string title)
+var vaultId = (await opClient.GetVaultsAsync("")).Single(z => z.Name == "Eris").Id ?? throw new InvalidOperationException("Eris vault not found");
+
+async Task<FullItem> GetItemByTitle(string title)
 {
-  var items = await opClient.GetVaultItemsAsync("Eris", $"title eq \"{title}\"");
-  return await opClient.GetVaultItemByIdAsync("Eris", (items.SingleOrDefault(i => i.Title == title) ?? throw new InvalidOperationException($"{title} item not found")).Id);
+  var items = await opClient.GetVaultItemsAsync(vaultId, $"title eq \"{title}\"");
+  return await opClient.GetVaultItemByIdAsync(vaultId, (items.SingleOrDefault(i => i.Title == title) ?? throw new InvalidOperationException($"{title} item not found")).Id);
 }
 static string GetField(FullItem item, string label) => item.Fields.Single(f => f.Label == label).Value ?? throw new InvalidOperationException($"{label} field not found in {item.Title}");
-var backblaze = await GetItemById("backblaze-b2-credentials");
-var postgres = await GetItemById("equestria-postgres-superuser");
-var connectionString = postgres.Fields.Single(f => f.Label == "public-connection-string").Value;
-var s3Bucket = "equestria-db";
+var backblaze = await GetItemByTitle("Backblaze S3 Equestria Database");
+var postgres = await GetItemByTitle("equestria-postgres-superuser");
+var connectionString = postgres.Fields.Single(f => f.Label == "public-connection-string").Value.Dump();
 
 var backupDir = "/tmp/backups";
 var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
@@ -51,7 +52,6 @@ Directory.CreateDirectory(backupDir);
 var backblazeClient = BackblazeClient.Initialize(GetField(backblaze, "username"), GetField(backblaze, "credential"));
 
 await using var dataSource = NpgsqlDataSource.Create(connectionString);
-
 
 // Get list of databases
 Console.WriteLine("Fetching list of databases...");
@@ -122,7 +122,7 @@ async Task<List<string>> GetDatabases(NpgsqlDataSource dataSource)
   await using (var connection = await dataSource.OpenConnectionAsync())
   {
     using var command = connection.CreateCommand();
-    command.CommandText = "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres');";
+    command.CommandText = "SELECT datname FROM pg_database WHERE datistemplate = false;";
     await using var reader = await command.ExecuteReaderAsync();
     while (await reader.ReadAsync())
     {
