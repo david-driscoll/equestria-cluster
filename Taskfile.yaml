@@ -12,7 +12,6 @@ vars:
   TALOS_DIR: '{{.ROOT_DIR}}/talos'
   PRIVATE_DIR: '{{.ROOT_DIR}}/.private'
   TALOSCONFIG: '{{.ROOT_DIR}}/talos/clusterconfig/talosconfig'
-  CLUSTER_NAME: 'equestria'
 
 env:
   KUBECONFIG: '{{.ROOT_DIR}}/kubeconfig'
@@ -23,7 +22,6 @@ includes:
   bootstrap: .taskfiles/bootstrap
   kubernetes: .taskfiles/k8s
   talos: .taskfiles/talos
-  restic: .taskfiles/restic
 
 tasks:
 
