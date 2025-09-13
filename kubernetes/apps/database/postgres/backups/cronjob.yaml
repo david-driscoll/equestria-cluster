@@ -49,8 +49,8 @@ spec:
         containers:
           main: &job
             image:
-              repository: mcr.microsoft.com/dotnet/runtime
-              tag: 10.0-noble
+              repository: daviddriscoll/pulumi
+              tag: latest
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
@@ -58,12 +58,7 @@ spec:
             command:
               - /bin/sh
               - -c
-              - |
-                # Install .NET SDK and PostgreSQL client tools
-                apt-get update && apt-get install -y dotnet-sdk-8.0 postgresql-client && rm -rf /var/lib/apt/lists/*
-
-                # Run the C# app
-                dotnet run /scripts/App.cs
+              - dotnet run /scripts/App.cs
             resources:
               requests:
                 memory: 256Mi
