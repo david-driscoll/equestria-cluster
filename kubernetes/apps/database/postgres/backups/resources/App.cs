@@ -58,32 +58,32 @@ Console.WriteLine("Fetching list of databases...");
 var databases = await GetDatabases(dataSource);
 Console.WriteLine($"Found databases: {string.Join(", ", databases)}");
 
-// // Create individual database dumps
-// foreach (var db in databases)
-// {
-//   Console.WriteLine($"Backing up database: {db}");
-//   var backupFile = Path.Combine(backupDir, $"{db}_{timestamp}.sql.gz");
+// Create individual database dumps
+foreach (var db in databases)
+{
+  Console.WriteLine($"Backing up database: {db}");
+  var backupFile = Path.Combine(backupDir, $"{db}_{timestamp}.sql.gz");
 
-//   await CreateDatabaseDump(postgresHost, postgresPort, postgresUser, postgresPassword, db, backupFile);
+  // await CreateDatabaseDump(postgresHost, postgresPort, postgresUser, postgresPassword, db, backupFile);
 
-//   if (File.Exists(backupFile))
-//   {
-//     Console.WriteLine($"Successfully created backup: {backupFile}");
+  // if (File.Exists(backupFile))
+  // {
+  //   Console.WriteLine($"Successfully created backup: {backupFile}");
 
-//     // Upload to Backblaze
-//     Console.WriteLine($"Uploading {backupFile} to Backblaze...");
-//     var fileName = $"database-dumps/{db}/{Path.GetFileName(backupFile)}";
-//     await UploadFile(backblazeClient, bucket.BucketId, backupFile, fileName);
+  //   // Upload to Backblaze
+  //   Console.WriteLine($"Uploading {backupFile} to Backblaze...");
+  //   var fileName = $"database-dumps/{db}/{Path.GetFileName(backupFile)}";
+  //   await UploadFile(backblazeClient, bucket.BucketId, backupFile, fileName);
 
-//     Console.WriteLine($"Successfully uploaded {backupFile} to Backblaze");
-//     File.Delete(backupFile);
-//   }
-//   else
-//   {
-//     Console.WriteLine($"Failed to create backup for database: {db}");
-//     Environment.Exit(1);
-//   }
-// }
+  //   Console.WriteLine($"Successfully uploaded {backupFile} to Backblaze");
+  //   File.Delete(backupFile);
+  // }
+  // else
+  // {
+  //   Console.WriteLine($"Failed to create backup for database: {db}");
+  //   Environment.Exit(1);
+  // }
+}
 
 // // Create global dump
 // Console.WriteLine("Creating global database dump...");
