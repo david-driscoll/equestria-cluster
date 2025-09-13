@@ -50,7 +50,7 @@ spec:
           main: &job
             image:
               repository: mcr.microsoft.com/dotnet/runtime
-              tag: 10.0-alpine
+              tag: 10.0-noble
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
@@ -60,7 +60,7 @@ spec:
               - -c
               - |
                 # Install .NET SDK and PostgreSQL client tools
-                apk add --no-cache dotnet10-sdk postgresql-client
+                apt-get update && apt-get install -y dotnet-sdk-8.0 postgresql-client && rm -rf /var/lib/apt/lists/*
 
                 # Run the C# app
                 dotnet run /scripts/App.cs
