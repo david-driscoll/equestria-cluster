@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  unlock:
+    desc: unlock a given restic repository
+    preconditions:
+      - which ssh
+    requires:
+      vars: [NAME]
+    cmds:
+      - cmd: ssh root@truenas.driscoll.tech -- "restic unlock -r /mnt/stash/backup/{{.CLUSTER_NAME}}/volsync/{{.NAME}} -p ~/restic-pw"
