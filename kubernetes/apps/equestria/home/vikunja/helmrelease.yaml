@@ -42,7 +42,7 @@ spec:
           *app :
             image:
               repository: vikunja/vikunja
-              tag: latest
+              tag: latest@sha256:3839751335af9e8f8f7105021ef2c7bd1c9cf6fcf01ec122cd6431f7ba24a756
             env:
               TZ: "${TIMEZONE}"
             resources:
