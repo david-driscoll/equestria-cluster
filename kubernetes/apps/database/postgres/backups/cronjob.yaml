@@ -87,3 +87,8 @@ spec:
             subPath: App.cs
       tmp:
         type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /.dotnet
+            subPath: dotnet
