@@ -63,7 +63,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/n8n-io/n8n
-              tag: 1.112.3@sha256:c5fe3ff0b79f7831dc21f9c709bdb7eee4fff4453a28ce84c8e9fa5b9f562686
+              tag: 1.114.0@sha256:53fa4605b931ccb0076b6b9163844ce36bb7f33f12ca5a6b4f14ddfba2dc077c
             env:
               N8N_PORT: &port 8080
               N8N_HOST: &host "n8n.${ROOT_DOMAIN}"
