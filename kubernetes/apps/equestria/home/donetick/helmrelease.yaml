@@ -43,7 +43,7 @@ spec:
           *app :
             image:
               repository: donetick/donetick
-              tag: v0.1.61@sha256:819d2d796efa7b843d9f3aeb10fcce00055c9c8f47520eb85d4356c2eb7bd804
+              tag: v0.1.62@sha256:af23415a9da22db00d53a1bab71f47f22066c78baa320fa353adad766f69877f
             env:
               TZ: "${TIMEZONE}"
               DT_ENV: selfhosted
