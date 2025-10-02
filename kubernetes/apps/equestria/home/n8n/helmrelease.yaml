@@ -151,6 +151,31 @@ spec:
             subPath: hooks.js
             readOnly: true
 
+      media-movies:
+        existingClaim: media-movies
+        globalMounts:
+          - path: /media/movies
+
+      media-tv:
+        existingClaim: media-tv
+        globalMounts:
+          - path: /media/tv
+
+      media-ebooks:
+        existingClaim: media-audiobooks
+        globalMounts:
+          - path: /media/ebooks
+
+      media-books:
+        existingClaim: media-books
+        globalMounts:
+          - path: /media/books
+
+      media-audiobooks:
+        existingClaim: media-audiobooks
+        globalMounts:
+          - path: /media/audiobooks
+
     service:
       app:
         controller: *app
