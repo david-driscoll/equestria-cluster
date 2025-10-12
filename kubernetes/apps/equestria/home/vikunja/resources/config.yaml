@@ -1,5 +1,6 @@
 service:
   JWTSecret: "{{ .user_secret }}"
+  publicurl: "https://${APP}.${ROOT_DOMAIN}"
   rootpath: "/data/"
   # maxitemsperpage: 50
   # Set the motd message, available from the /info endpoint

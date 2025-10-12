@@ -73,6 +73,10 @@ spec:
         globalMounts:
           - path: /etc/vikunja/config.yml
             subPath: config.yaml
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.cache
 
     service:
       app:
