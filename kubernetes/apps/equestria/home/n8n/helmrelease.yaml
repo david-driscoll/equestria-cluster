@@ -161,21 +161,6 @@ spec:
         globalMounts:
           - path: /media/tv
 
-      media-ebooks:
-        existingClaim: media-audiobooks
-        globalMounts:
-          - path: /media/ebooks
-
-      media-books:
-        existingClaim: media-books
-        globalMounts:
-          - path: /media/books
-
-      media-audiobooks:
-        existingClaim: media-audiobooks
-        globalMounts:
-          - path: /media/audiobooks
-
     service:
       app:
         controller: *app
