@@ -49,7 +49,7 @@ redis:
   # Whether to enable redis or not
   enabled: true
   # The host of the redis server including its port.
-  host: "valkey.database.svc.cluster.local:6379"
+  host: "valkey-sa.database.svc.cluster.local:6379"
   # 0 means default database
   db: 7
 #
