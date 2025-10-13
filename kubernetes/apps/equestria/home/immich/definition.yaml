@@ -27,7 +27,7 @@ spec:
         - url: "https://photos.${TAILSCALE_DOMAIN}/auth/login"
         - url: "https://photos.${TAILSCALE_DOMAIN}/user-settings"
         - url: app.immich:///oauth-callback
-          matching_node: strict
+          matching_mode: strict
       propertyMappings:
         - email
         - openid
