@@ -96,7 +96,7 @@ spec:
       serviceAccountName: ${APP}
       resources:
         requests:
-          cpu: 500m
+          cpu: 200m
           memory: 256Mi
         limits:
           cpu: 1

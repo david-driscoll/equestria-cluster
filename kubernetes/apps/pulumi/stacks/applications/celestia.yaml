@@ -124,9 +124,9 @@ spec:
       image: pulumi/pulumi-nodejs:3.202.0
       resources:
         requests:
-          cpu: 500m
+          cpu: 200m
           memory: 256Mi
         limits:
-          cpu: 2
+          cpu: 1
           memory: 2Gi
       pulumiLogLevel: 11
