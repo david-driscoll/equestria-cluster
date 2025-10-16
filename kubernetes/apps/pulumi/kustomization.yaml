@@ -11,4 +11,3 @@ resources:
   - ./shared/ks.yaml
   - ./stacks/ks.yaml
   - ./pulumi-operator/ks.yaml
-
