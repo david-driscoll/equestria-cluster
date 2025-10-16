@@ -14,6 +14,7 @@ spec:
   serviceAccountName: ${APP}
   stack: *stack
   resyncFrequencySeconds: 600
+  retryMaxBackoffDurationSeconds: 60
   backend: postgres://postgres-rw.database.svc.cluster.local
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false

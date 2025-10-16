@@ -14,6 +14,7 @@ spec:
   serviceAccountName: ${APP}
   stack: authentik
   resyncFrequencySeconds: 90
+  retryMaxBackoffDurationSeconds: 60
   backend: postgres://postgres-rw.database.svc.cluster.local
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
