@@ -22,25 +22,6 @@ spec:
   # prerequisites:
   #   - name: home-operations
   envRefs:
-    # Pulumi CLI verbose logging - enables debug output
-    PULUMI_DEBUG_COMMANDS:
-      type: Literal
-      literal:
-        value: "true"
-    # Pulumi log to stderr (used by automation API)
-    PULUMI_LOG_TO_STDERR:
-      type: Literal
-      literal:
-        value: "true"
-    # gRPC logging verbosity (valid values: info, warning, error)
-    GRPC_GO_LOG_SEVERITY_LEVEL:
-      type: Literal
-      literal:
-        value: "info"
-    GRPC_GO_LOG_VERBOSITY_LEVEL:
-      type: Literal
-      literal:
-        value: "99"
     GITHUB_TOKEN:
       type: Secret
       secret:
