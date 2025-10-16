@@ -147,8 +147,8 @@ auth:
         name: "Authentik"
         authurl: "{{ .oidc_issuer }}"
         logouturl: "{{ .oidc_end_session_url }}"
-        clientid: "{{ .oidc_username }}"
-        clientsecret: "{{ .oidc_credential }}"
+        clientid: "{{ .oidc_client_id }}"
+        clientsecret: "{{ .oidc_client_secret }}"
         scope: "openid email profile vikunja"
         forceuserinfo: true
       tailscale:

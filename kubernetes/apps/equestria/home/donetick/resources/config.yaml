@@ -21,8 +21,8 @@ jwt:
   secret: "{{ .jwt_password }}"
 oauth2:
   name: ${CLUSTER_TITLE}
-  client_id: "{{ .oidc_username }}"
-  client_secret: "{{ .oidc_credential }}"
+  client_id: "{{ .oidc_client_id }}"
+  client_secret: "{{ .oidc_client_secret }}"
   redirect_url: "https://tasks.${ROOT_DOMAIN}/auth/oauth2"
   scopes:
     - email
