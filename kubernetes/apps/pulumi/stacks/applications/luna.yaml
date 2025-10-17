@@ -15,7 +15,7 @@ spec:
   stack: *stack
   resyncFrequencySeconds: 600
   retryMaxBackoffDurationSeconds: 60
-  backend: s3://home-operations/applications?endpoint=s3.us-east-005.backblazeb2.com
+  backend: postgres://postgres-rw.database.svc.cluster.local
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
