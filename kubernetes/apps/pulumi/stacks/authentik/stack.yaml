@@ -91,4 +91,4 @@ spec:
         limits:
           cpu: 1
           memory: 2Gi
-      pulumiLogLevel: 11
+      # pulumiLogLevel: 11
