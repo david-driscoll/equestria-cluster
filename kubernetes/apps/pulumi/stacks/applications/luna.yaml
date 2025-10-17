@@ -15,7 +15,7 @@ spec:
   stack: *stack
   resyncFrequencySeconds: 600
   retryMaxBackoffDurationSeconds: 60
-  backend: postgres://postgres-rw.database.svc.cluster.local
+  backend: s3://home-operations/applications?endpoint=s3.us-east-005.backblazeb2.com
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
@@ -24,25 +24,24 @@ spec:
   #   - name: home-operations
   #   - name: authentik
   envRefs:
-    # Pulumi CLI verbose logging - enables debug output
-    PULUMI_DEBUG_COMMANDS:
+    AWS_ACCESS_KEY_ID:
+      type: Secret
+      secret:
+        name: backblaze-home-operations
+        key: username
+    AWS_SECRET_ACCESS_KEY:
+      type: Secret
+      secret:
+        name: backblaze-home-operations
+        key: credential
+    AWS_USE_PATH_STYLE_ENDPOINT:
       type: Literal
       literal:
         value: "true"
-    # Pulumi log to stderr (used by automation API)
-    PULUMI_LOG_TO_STDERR:
+    AWS_REGION:
       type: Literal
       literal:
-        value: "true"
-    # gRPC logging verbosity (valid values: info, warning, error)
-    GRPC_GO_LOG_SEVERITY_LEVEL:
-      type: Literal
-      literal:
-        value: "info"
-    GRPC_GO_LOG_VERBOSITY_LEVEL:
-      type: Literal
-      literal:
-        value: "99"
+        value: "us-east-005"
     GITHUB_TOKEN:
       type: Secret
       secret:
@@ -66,43 +65,6 @@ spec:
       secret:
         name: pulumi-operator-passphrase
         key: password
-    PGUSER:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: username
-    PGPASSWORD:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: password
-    PGHOST:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: hostname
-    PGPORT:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: port
-    PGDATABASE:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: database
-    # HOME:
-    #   type: Literal
-    #   literal:
-    #     value: /tmp/.pulumi
-    # PULUMI_HOME:
-    #   type: Literal
-    #   literal:
-    #     value: /tmp/.pulumi
-    # USER:
-    #   type: Literal
-    #   literal:
-    #     value: pulumi
   secretsRef:
     github:token:
       type: Secret

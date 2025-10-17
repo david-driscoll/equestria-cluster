@@ -8,4 +8,4 @@ resources:
   - ./sgc.yaml
   - ./celestia.yaml
   - ./luna.yaml
-  # - ./alpha-site.yaml
+  - ./alpha-site.yaml

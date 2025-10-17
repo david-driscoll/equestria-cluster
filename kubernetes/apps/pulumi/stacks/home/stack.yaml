@@ -62,18 +62,6 @@ spec:
       secret:
         name: pulumi-operator-passphrase
         key: password
-    # HOME:
-    #   type: Literal
-    #   literal:
-    #     value: /tmp/.pulumi
-    # PULUMI_HOME:
-    #   type: Literal
-    #   literal:
-    #     value: /tmp/.pulumi
-    # USER:
-    #   type: Literal
-    #   literal:
-    #     value: pulumi
   secretsRef:
     github:token:
       type: Secret

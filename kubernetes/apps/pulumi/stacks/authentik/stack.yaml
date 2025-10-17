@@ -15,7 +15,7 @@ spec:
   stack: authentik
   resyncFrequencySeconds: 90
   retryMaxBackoffDurationSeconds: 60
-  backend: postgres://postgres-rw.database.svc.cluster.local
+  backend: s3://home-operations/authentik?endpoint=s3.us-east-005.backblazeb2.com
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
@@ -23,6 +23,24 @@ spec:
   # prerequisites:
   #   - name: home-operations
   envRefs:
+    AWS_ACCESS_KEY_ID:
+      type: Secret
+      secret:
+        name: backblaze-home-operations
+        key: username
+    AWS_SECRET_ACCESS_KEY:
+      type: Secret
+      secret:
+        name: backblaze-home-operations
+        key: credential
+    AWS_USE_PATH_STYLE_ENDPOINT:
+      type: Literal
+      literal:
+        value: "true"
+    AWS_REGION:
+      type: Literal
+      literal:
+        value: "us-east-005"
     GITHUB_TOKEN:
       type: Secret
       secret:
@@ -46,43 +64,6 @@ spec:
       secret:
         name: pulumi-operator-passphrase
         key: password
-    PGUSER:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: username
-    PGPASSWORD:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: password
-    PGHOST:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: hostname
-    PGPORT:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: port
-    PGDATABASE:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: database
-    # HOME:
-    #   type: Literal
-    #   literal:
-    #     value: /tmp/.pulumi
-    # PULUMI_HOME:
-    #   type: Literal
-    #   literal:
-    #     value: /tmp/.pulumi
-    # USER:
-    #   type: Literal
-    #   literal:
-    #     value: pulumi
   secretsRef:
     github:token:
       type: Secret

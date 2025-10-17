@@ -3,7 +3,7 @@
 apiVersion: pulumi.com/v1
 kind: Stack
 metadata:
-  name: &stack celestia
+  name: &stack alpha-site
 spec:
   fluxSource:
     sourceRef:
