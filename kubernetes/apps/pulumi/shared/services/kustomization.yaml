@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - ./dockge-services.yaml
   - ./proxmox-services.yaml
+  - ./ssh-egress.yaml
 

@@ -4,8 +4,8 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    tailscale.com/tailnet-ip: "100.111.10.104"
-    tailscale.com/proxy-group: egress
+    tailscale.com/tailnet-fqdn: "luna.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: ssh-egress
   name: egress-proxmox-luna
 spec:
   externalName: luna
@@ -26,8 +26,8 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    tailscale.com/tailnet-id: "100.111.10.103"
-    tailscale.com/proxy-group: egress
+    tailscale.com/tailnet-fqdn: "celestia.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: ssh-egress
   name: egress-proxmox-celestia
 spec:
   externalName: celestia
@@ -46,8 +46,8 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    tailscale.com/tailnet-ip: "100.111.10.200"
-    tailscale.com/proxy-group: egress
+    tailscale.com/tailnet-fqdn: "alpha-site.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: ssh-egress
   name: egress-proxmox-alpha-site
 spec:
   externalName: alpha-site

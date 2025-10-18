@@ -1,0 +1,11 @@
+---
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: ssh-egress
+spec:
+  type: egress
+  hostnamePrefix: ssh
+  replicas: 1
+  tags: ["tag:ssh-egress"]
+  proxyClass: proxy
