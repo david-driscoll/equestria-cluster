@@ -10,20 +10,37 @@ spec:
       apiVersion: source.toolkit.fluxcd.io/v1
       kind: GitRepository
       name: home-operations
-    dir: stacks/applications
+    dir: stacks/authentik
   serviceAccountName: ${APP}
   stack: *stack
-  resyncFrequencySeconds: 600
+  resyncFrequencySeconds: 90
   retryMaxBackoffDurationSeconds: 60
-  backend: postgres://postgres-rw.database.svc.cluster.local
-  continueResyncOnCommitMatch: true
+  backend: s3://home-operations/applications?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
+  continueResyncOnCommitMatch: false
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
   # refresh: true
   # prerequisites:
   #   - name: home-operations
-  #   - name: authentik
   envRefs:
+    AWS_ACCESS_KEY_ID:
+      type: Secret
+      secret:
+        name: backblaze-home-operations
+        key: username
+    AWS_SECRET_ACCESS_KEY:
+      type: Secret
+      secret:
+        name: backblaze-home-operations
+        key: credential
+    AWS_USE_PATH_STYLE_ENDPOINT:
+      type: Literal
+      literal:
+        value: "true"
+    AWS_REGION:
+      type: Literal
+      literal:
+        value: "us-east-005"
     GITHUB_TOKEN:
       type: Secret
       secret:
@@ -47,31 +64,6 @@ spec:
       secret:
         name: pulumi-operator-passphrase
         key: password
-    PGUSER:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: username
-    PGPASSWORD:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: password
-    PGHOST:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: hostname
-    PGPORT:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: port
-    PGDATABASE:
-      type: Secret
-      secret:
-        name: pulumi-operator-postgres
-        key: database
   secretsRef:
     github:token:
       type: Secret

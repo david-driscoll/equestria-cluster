@@ -15,7 +15,7 @@ spec:
   stack: home-operations
   resyncFrequencySeconds: 90
   retryMaxBackoffDurationSeconds: 60
-  backend: s3://home-operations/home?endpoint=s3.us-east-005.backblazeb2.com
+  backend: s3://home-operations/home?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
