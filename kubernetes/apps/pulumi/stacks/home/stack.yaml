@@ -24,12 +24,12 @@ spec:
     AWS_ACCESS_KEY_ID:
       type: Secret
       secret:
-        name: backblaze-home-operations
+        name: truenas-home-operations
         key: username
     AWS_SECRET_ACCESS_KEY:
       type: Secret
       secret:
-        name: backblaze-home-operations
+        name: truenas-home-operations
         key: credential
     AWS_USE_PATH_STYLE_ENDPOINT:
       type: Literal
@@ -38,7 +38,7 @@ spec:
     AWS_REGION:
       type: Literal
       literal:
-        value: "us-east-005"
+        value: "home-operations"
     GITHUB_TOKEN:
       type: Secret
       secret:
