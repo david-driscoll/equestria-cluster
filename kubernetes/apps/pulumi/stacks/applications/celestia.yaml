@@ -32,7 +32,7 @@ spec:
       type: Secret
       secret:
         name: truenas-home-operations
-        key: credential
+        key: password
     AWS_USE_PATH_STYLE_ENDPOINT:
       type: Literal
       literal:
