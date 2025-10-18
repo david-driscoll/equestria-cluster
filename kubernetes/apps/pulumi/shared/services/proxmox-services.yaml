@@ -17,6 +17,9 @@ spec:
     - port: 8007
       targetPort: 8007
       name: pbs
+    - port: 22
+      targetPort: 22
+      name: ssh
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.32.0/service.json
 apiVersion: v1
@@ -53,3 +56,6 @@ spec:
     - port: 8006
       targetPort: 8006
       name: pve
+    - port: 22
+      targetPort: 22
+      name: ssh
