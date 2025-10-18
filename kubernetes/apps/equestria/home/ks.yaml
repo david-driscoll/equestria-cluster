@@ -31,7 +31,7 @@ spec:
   components:
     - ../../../../components/ingress/internal
     - ../../../../components/postgres
-    - ../../../../components/tailscale-new
+    - ../../../../components/tailscale
     - ../../../../components/volsync
   postBuild:
     substitute:
@@ -72,7 +72,7 @@ spec:
   components:
     - ../../../../components/ingress/internal
     - ../../../../components/postgres
-    - ../../../../components/tailscale-new
+    - ../../../../components/tailscale
   postBuild:
     substitute:
       APP: *app
@@ -112,7 +112,7 @@ spec:
   components:
     - ../../../../components/ingress/internal
     - ../../../../components/postgres
-    - ../../../../components/tailscale-new
+    - ../../../../components/tailscale
     - ../../../../components/volsync
   postBuild:
     substitute:
@@ -154,7 +154,7 @@ spec:
   components:
     - ../../../../components/ingress/authenticated
     - ../../../../components/postgres
-    - ../../../../components/tailscale-new
+    - ../../../../components/tailscale
     - ../../../../components/volsync
   postBuild:
     substitute:
@@ -230,7 +230,7 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/ingress/authenticated
-    - ../../../../components/tailscale-new
+    - ../../../../components/tailscale
     - ../../../../components/volsync
   postBuild:
     substitute:
