@@ -38,7 +38,13 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn: []
+  dependsOn:
+    - name: tailscale-operator
+      namespace: tailscale-system
+    - name: onepassword-connect
+      namespace: kube-system
+    - name: external-secrets
+      namespace: kube-system
   path: ./kubernetes/apps/pulumi/shared/services
   prune: true
   wait: true

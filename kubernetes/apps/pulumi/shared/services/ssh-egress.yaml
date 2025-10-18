@@ -9,3 +9,4 @@ spec:
   replicas: 1
   tags: ["tag:ssh-egress"]
   proxyClass: proxy
+  
