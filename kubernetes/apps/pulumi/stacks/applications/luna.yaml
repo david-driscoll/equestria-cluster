@@ -10,7 +10,7 @@ spec:
       apiVersion: source.toolkit.fluxcd.io/v1
       kind: GitRepository
       name: home-operations
-    dir: stacks/authentik
+    dir: stacks/applications
   serviceAccountName: ${APP}
   stack: *stack
   resyncFrequencySeconds: 90
