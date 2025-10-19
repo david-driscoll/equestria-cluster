@@ -13,10 +13,10 @@ spec:
     dir: stacks/applications
   serviceAccountName: ${APP}
   stack: *stack
-  resyncFrequencySeconds: 90
+  resyncFrequencySeconds: 300
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/applications?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
-  continueResyncOnCommitMatch: false
+  continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
   # refresh: true
