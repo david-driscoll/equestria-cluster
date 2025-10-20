@@ -19,6 +19,8 @@ additionalArguments:
   - '--providers.file.filename=/config/store.yaml'
   - '--serversTransport.insecureSkipVerify=true'
   - --certificatesresolvers.tailscale.tailscale=true
+  - --entryPoints.web.address=:80/tcp
+  - --entryPoints.websecure.address=:443/tcp
   - --entryPoints.postgres.address=:5432/tcp
   - --entryPoints.mariadb.address=:3306/tcp
 volumes:
@@ -36,6 +38,19 @@ ports:
   traefik:
     expose:
       default: true
+  web:
+    port: 80
+    exposedPort: 80
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
+  websecure:
+    port: 443
+    exposedPort: 443
+    tls:
+      enabled: true
   postgres:
     expose:
       default: true
@@ -78,10 +93,11 @@ providers:
   kubernetesGateway:
     enabled: true
     experimentalChannel: true
+    statusAddress:
+      ip: "${INTERNAL_IP}"
 logs:
   access:
     enabled: true
-    addInternals: true
   general:
     # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
     format: common
@@ -112,8 +128,7 @@ experimental:
       version: "v1.0.0"
   fastProxy:
     enabled: true
-  kubernetesGateway:
-    enabled: true
+  otlpLogs: true
 web:
   forwardedHeaders:
     insecure: true
@@ -124,3 +139,48 @@ websecure:
     insecure: true
   proxyProtocol:
     insecure: true
+
+tlsStore:
+  default:
+    certificates:
+      - secretName: &default-certificate le-production-tls
+    defaultCertificate:
+      secretName: *default-certificate
+gatewayClass:
+  enabled: true
+gateway:
+  enabled: true
+  annotations:
+    external-dns.alpha.kubernetes.io/target: &hostname "${INTERNAL_DOMAIN}"
+  infrastructure:
+    annotations:
+        external-dns.alpha.kubernetes.io/hostname: *hostname
+  name: internal
+  listeners:
+    web:
+      port: 80
+      protocol: HTTP
+      namespacePolicy:
+        from: All
+
+    websecure:
+      port: 443
+      protocol: HTTPS
+      namespacePolicy:
+        from: All
+      mode: Terminate
+      certificateRefs:
+        - name: le-production-tls
+          kind: Secret
+
+    postgres:
+      protocol: TCP
+      port: 5432
+      namespacePolicy:
+        from: All
+
+    mariadb:
+      protocol: TCP
+      port: 3306
+      namespacePolicy:
+        from: All
