@@ -18,3 +18,7 @@ spec:
       kind: Kustomization
       name: flux-system
       namespace: flux-system
+    - apiVersion: source.toolkit.fluxcd.io/v1
+      kind: GitRepository
+      name: home-operations
+      namespace: ${CLUSTER_CNAME}
