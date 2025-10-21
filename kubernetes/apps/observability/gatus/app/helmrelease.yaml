@@ -46,7 +46,7 @@ spec:
             args:
               - --auto-httproute
               # - --auto-service
-              - --auto-ingress
+              # - --auto-ingressx
               - --enable-httproute
               - --enable-service
               - --enable-ingress
@@ -131,26 +131,20 @@ spec:
             subPath: secret.yaml
             readOnly: true
 
-    ingress:
+    route:
       internal:
-        className: internal
-        annotations:
-          uptime-kuma.autodiscovery.probe.enabled: "false"
-        hosts:
-          # - host: "uptime.${ROOT_DOMAIN}"
-          #   paths:
-          #     - path: /
-          #       pathType: Prefix
-          #       service:
-          #         identifier: app
-          #         port: http
-          - host: "gatus.${CLUSTER_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          # - "uptime.${ROOT_DOMAIN}"
+          - "gatus.${CLUSTER_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     rbac:
       roles:
         *app :
