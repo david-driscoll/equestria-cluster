@@ -755,6 +755,157 @@ spec:
                       enum: [configMap, secret]
                     name:
                       type: string
+                gatus:
+                  description: List of endpoints to monitor
+                  items:
+                    type: object
+                    description: Configuration for a monitored endpoint
+                    required: [url]
+                    properties:
+                      group:
+                        type: string
+                      url:
+                        type: string
+                      method:
+                        type: string
+                        enum: [GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS]
+                        default: GET
+                      conditions:
+                        type: array
+                        minItems: 1
+                        items:
+                          type: string
+                      interval:
+                        type: string
+                        default: "60s"
+                        pattern: '^[0-9]+(ns|us|µs|ms|s|m|h)$'
+                      timeout:
+                        type: string
+                        default: "10s"
+                        pattern: '^[0-9]+(ns|us|µs|ms|s|m|h)$'
+                      client:
+                        type: object
+                        properties:
+                          insecure:
+                            type: boolean
+                            default: false
+                          ignore-redirect:
+                            type: boolean
+                            default: false
+                          timeout:
+                            type: string
+                            pattern: '^[0-9]+(ns|us|µs|ms|s|m|h)$'
+                          dns-resolver:
+                            type: string
+                          oauth2:
+                            type: object
+                            properties:
+                              token-url:
+                                type: string
+                              client-id:
+                                type: string
+                              client-secret:
+                                type: string
+                            required: [token-url, client-id, client-secret]
+                          identity-aware-proxy:
+                            type: object
+                            properties:
+                              audience:
+                                type: string
+                            required: [audience]
+                          proxy-url:
+                            type: string
+                          network:
+                            type: string
+                            enum: [tcp4, tcp6]
+                      alerts:
+                        type: array
+                        items:
+                          type: object
+                          required: [type]
+                          properties:
+                            type:
+                              type: string
+                            enabled:
+                              type: boolean
+                              default: true
+                            failure-threshold:
+                              type: integer
+                              default: 3
+                              minimum: 1
+                            success-threshold:
+                              type: integer
+                              default: 2
+                              minimum: 1
+                            send-on-resolved:
+                              type: boolean
+                              default: false
+                            description:
+                              type: string
+                            # provider-specific fields will be accepted as additionalProperties
+                      body:
+                        type: string
+                      headers:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      graphql:
+                        type: boolean
+                        default: false
+                      dns:
+                        type: object
+                        properties:
+                          query-type:
+                            type: string
+                            enum: [A, AAAA, CNAME, MX, TXT, SRV, PTR, SOA, NS]
+                          query-name:
+                            type: string
+                        required: [query-type, query-name]
+                      ssh:
+                        type: object
+                        properties:
+                          username:
+                            type: string
+                          password:
+                            type: string
+                          private-key:
+                            type: string
+                        required: [username]
+                      ui:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                            default: "Health Dashboard"
+                          description:
+                            type: string
+                          header:
+                            type: string
+                          logo:
+                            type: string
+                          link:
+                            type: string
+                          buttons:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                label:
+                                  type: string
+                                url:
+                                  type: string
+                                icon:
+                                  type: string
+                      disable-monitoring-lock:
+                        type: boolean
+                gatusFrom:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [configMap, secret]
+                    name:
+                      type: string
                 authentik:
                   type: object
                   properties:
