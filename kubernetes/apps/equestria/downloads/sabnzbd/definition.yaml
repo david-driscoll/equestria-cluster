@@ -18,9 +18,9 @@ spec:
       mode: "forward_single"
       externalHost: *url
       skipPathRegex: "^/api([/?].*)?$"
-  uptime:
-    http:
+  gatus:
+    - group: "Applications"
       url: https://${APP}.${ROOT_DOMAIN}/api?mode=version
       method: GET
-      accepted_statuscodes: ["200"]
-      parent_name: "apps"
+      conditions:
+        - "status == 200"

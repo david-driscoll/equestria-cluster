@@ -13,9 +13,9 @@ spec:
   access_policy:
     groups:
       - media-managers
-  uptime:
-    http:
+  gatus:
+    - group: "Applications"
       url: https://${APP}.${ROOT_DOMAIN}/status
       method: GET
-      accepted_statuscodes: ["200"]
-      parent_name: "apps"
+      conditions:
+        - "status == 200"

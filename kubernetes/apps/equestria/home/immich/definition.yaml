@@ -35,9 +35,9 @@ spec:
         - immich_role
       includeClaimsInIdToken: true
       subMode: user_email
-  uptime:
-    http:
+  gatus:
+    - group: "Applications"
       url: *url
       method: GET
-      accepted_statuscodes: ["200"]
-      parent_name: "apps"
+      conditions:
+        - "status == 200"
