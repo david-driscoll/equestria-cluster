@@ -81,7 +81,7 @@ spec:
   workspaceTemplate:
     spec:
       # renovate: datasource=docker depName=pulumi/pulumi-nodejs
-      image: ghcr.io/pulumi/pulumi-nodejs:3.203.0@sha256:d00cff830fed8ec7111cb98e93996d9977f7b7fcdc1b2817b7920f6582a9766d
+      image: ghcr.io/pulumi/pulumi-nodejs:3.204.0@sha256:2bb8a80c990d4ed799af093cce199caa3a565d4c72c380189ba46d245eb60dc2
       serviceAccountName: ${APP}
       resources:
         requests:
