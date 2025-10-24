@@ -54,7 +54,6 @@ spec:
                 group: traefik.io
                 kind: Middleware
                 name: authenticated-user
-                namespace: network
 
       alertmanagerSpec:
         replicas: 2
@@ -97,7 +96,6 @@ spec:
                 group: traefik.io
                 kind: Middleware
                 name: authenticated-user
-                namespace: network
       prometheusSpec:
         image:
           registry: docker.io

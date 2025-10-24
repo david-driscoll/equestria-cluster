@@ -4,6 +4,8 @@ apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 components:
   - ../internal
+resources:
+  - ./middleware.yaml
 patches:
   - target:
       group: gateway.networking.k8s.io
@@ -22,7 +24,6 @@ patches:
                   group: traefik.io
                   kind: Middleware
                   name: authenticated-user
-                  namespace: network
   - target:
       group: helm.toolkit.fluxcd.io
       version: v2
@@ -43,4 +44,3 @@ patches:
                         group: traefik.io
                         kind: Middleware
                         name: authenticated-user
-                        namespace: network

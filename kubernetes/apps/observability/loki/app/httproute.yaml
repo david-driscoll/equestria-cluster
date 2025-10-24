@@ -24,4 +24,3 @@ spec:
             group: traefik.io
             kind: Middleware
             name: authenticated-user
-            namespace: network
