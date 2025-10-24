@@ -23,4 +23,5 @@ spec:
           extensionRef:
             group: traefik.io
             kind: Middleware
-            name: network-authenticated-user
+            name: authenticated-user
+            namespace: network

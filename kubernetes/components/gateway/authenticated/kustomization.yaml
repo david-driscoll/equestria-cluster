@@ -21,7 +21,8 @@ patches:
                 extensionRef:
                   group: traefik.io
                   kind: Middleware
-                  name: network-authenticated-user
+                  name: authenticated-user
+                  namespace: network
   - target:
       group: helm.toolkit.fluxcd.io
       version: v2
@@ -41,4 +42,5 @@ patches:
                       extensionRef:
                         group: traefik.io
                         kind: Middleware
-                        name: network-authenticated-user
+                        name: authenticated-user
+                        namespace: network
