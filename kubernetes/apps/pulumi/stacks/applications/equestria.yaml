@@ -21,7 +21,7 @@ spec:
   workspaceReclaimPolicy: Delete
   # refresh: true
   prerequisites:
-    - name: home-operations
+    # - name: home-operations
     - name: authentik
   envRefs:
     AWS_ACCESS_KEY_ID:
