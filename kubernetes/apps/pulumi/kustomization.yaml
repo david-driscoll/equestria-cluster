@@ -6,8 +6,8 @@ namespace: pulumi
 components:
   - ../../components/common
   - ../../components/repos/app-template
-resources: []
-  # - ./secret-store.yaml
-  # - ./shared/ks.yaml
-  # - ./stacks/ks.yaml
-  # - ./pulumi-operator/ks.yaml
+resources:
+  - ./secret-store.yaml
+  - ./shared/ks.yaml
+  - ./stacks/ks.yaml
+  - ./pulumi-operator/ks.yaml
