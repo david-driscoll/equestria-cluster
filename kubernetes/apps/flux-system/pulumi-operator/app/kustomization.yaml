@@ -1,8 +1,0 @@
----
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  # renovate: datasource=github-releases depName=pulumi/pulumi-kubernetes-operator
-  - https://github.com/pulumi/pulumi-kubernetes-operator/operator/config/crd?ref=v2.3.0
-  - ./helmrelease.yaml
