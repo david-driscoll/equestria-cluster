@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Spotizerr
+  category: ${CLUSTER_TITLE}
+  description: Self-hosted music download manager with lossless quality support
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  authentikFrom:
+    type: secret
+    name: ${APP}-authentik
+  uptime:
+    http:
+      url: *url
+      method: GET
+      accepted_statuscodes: ["200"]
+      parent_name: "apps"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/secret-authentik.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: ${APP}-authentik
+spec:
+  refreshPolicy: Periodic
+  refreshInterval: 10m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  dataFrom:
+    - extract:
+        key: 'Spotizerr OIDC Credentials'
+      rewrite:
+        - regexp:
+            source: "[\\W]"
+            target: _
+  target:
+    name: ${APP}-authentik
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    template:
+      metadata:
+        labels:
+          cnpg.io/reload: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      data:
+        type: oauth2
+        clientId: "{{ .username }}"
+        clientSecret: "{{ .credential }}"
+        clientType: confidential
+        allowedRedirectUris: "https://${APP}.${ROOT_DOMAIN}/api/auth/sso/callback"
+        propertyMappings: "email,openid,profile"
