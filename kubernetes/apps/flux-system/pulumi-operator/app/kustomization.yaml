@@ -4,11 +4,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # renovate: datasource=github-releases depName=pulumi/pulumi-kubernetes-operator
-  - https://raw.githubusercontent.com/pulumi/pulumi-kubernetes-operator/refs/tags/v2.3.0/operator/config/crd/bases/auto.pulumi.com_updates.yaml
-  # renovate: datasource=github-releases depName=pulumi/pulumi-kubernetes-operator
-  - https://raw.githubusercontent.com/pulumi/pulumi-kubernetes-operator/refs/tags/v2.3.0/operator/config/crd/bases/auto.pulumi.com_workspaces.yaml
-  # renovate: datasource=github-releases depName=pulumi/pulumi-kubernetes-operator
-  - https://raw.githubusercontent.com/pulumi/pulumi-kubernetes-operator/refs/tags/v2.3.0/operator/config/crd/bases/pulumi.com_programs.yaml
-  # renovate: datasource=github-releases depName=pulumi/pulumi-kubernetes-operator
-  - https://raw.githubusercontent.com/pulumi/pulumi-kubernetes-operator/refs/tags/v2.3.0/operator/config/crd/bases/pulumi.com_stacks.yaml
+  - https://github.com/pulumi/pulumi-kubernetes-operator/operator/config/crd?ref=v2.3.0
   - ./helmrelease.yaml
