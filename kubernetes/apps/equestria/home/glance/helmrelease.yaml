@@ -28,9 +28,6 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: spike-volumes
-      namespace: equestria
   values:
     controllers:
       *app :
