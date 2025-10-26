@@ -11,7 +11,6 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs
   mountOptions:
     - nfsvers=4
     - hard
@@ -30,7 +29,6 @@ metadata:
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
-  storageClassName: nfs
   volumeName: media
   accessModes:
     - ReadWriteMany
