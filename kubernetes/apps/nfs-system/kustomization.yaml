@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: nfs-system
+metadata:
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+components:
+  - ../../components/common
+resources:
+  - ./secret-store.yaml
+  - ./csi-driver-nfs/ks.yaml

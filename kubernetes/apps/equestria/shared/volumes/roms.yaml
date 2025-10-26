@@ -12,14 +12,18 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   mountOptions:
-    - nfsvers=4
+    - nfsvers=4.1
     - hard
     - intr
   capacity:
     storage: 40Ti
-  nfs:
-    server: "${SPIKE_IP}"
-    path: /mnt/stash/media/roms
+  storageClassName: nfs-csi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: spike-media-roms-volume-id
+    volumeAttributes:
+      server: "${SPIKE_IP}"
+      share: /mnt/stash/media/roms
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master-standalone-strict/persistentvolumeclaim-v1.json
 apiVersion: v1
@@ -29,6 +33,7 @@ metadata:
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
+  storageClassName: nfs-csi
   volumeName: spike-media-roms
   accessModes:
     - ReadWriteMany
