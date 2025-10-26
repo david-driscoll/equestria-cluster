@@ -107,7 +107,7 @@ spec:
 
     persistence:
       data:
-        existingClaim: immich-data
+        existingClaim: spike-data-immich
       mc-cache:
         existingClaim: *app
         advancedMounts:
