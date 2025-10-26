@@ -9,6 +9,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: csi-driver-nfs
+      namespace: nfs-system
   path: ./kubernetes/apps/volsync-system/volsync/app
   prune: true
   wait: true
