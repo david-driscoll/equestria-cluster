@@ -57,7 +57,7 @@ spec:
               RADARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: media-management-credentials
+                    name: spike-management-credentials
                     key: radarr_apikey
               RADARR__LOG__DBENABLED: "False"
               RADARR__LOG__LEVEL: info
@@ -113,12 +113,12 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      media-downloads:
-        existingClaim: media-downloads
+      spike-downloads:
+        existingClaim: spike-downloads
         globalMounts:
           - path: /media/downloads
-      media-movies:
-        existingClaim: media-movies
+      spike-movies:
+        existingClaim: spike-movies
         globalMounts:
           - path: /media/movies
 ---

@@ -91,7 +91,7 @@ spec:
       tmp:
         type: emptyDir
       guides:
-        existingClaim: media-dvr
+        existingClaim: spike-dvr
 
     defaultPodOptions:
       securityContext:

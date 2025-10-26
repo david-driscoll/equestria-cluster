@@ -115,8 +115,8 @@ spec:
         size: 1Gi
         globalMounts:
           - path: /bookbounty/config
-      media-downloads:
-        existingClaim: media-downloads
+      spike-downloads:
+        existingClaim: spike-downloads
         globalMounts:
           - path: /bookbounty/downloads
             subPath: bookbounty-audio

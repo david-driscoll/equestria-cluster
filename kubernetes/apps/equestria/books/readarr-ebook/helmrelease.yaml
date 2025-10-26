@@ -136,12 +136,12 @@ spec:
         existingClaim: readarr-ebook-config
         globalMounts:
           - path: /config
-      media-downloads:
-        existingClaim: media-downloads
+      spike-downloads:
+        existingClaim: spike-downloads
         globalMounts:
           - path: /media/downloads
-      media-ebooks:
-        existingClaim: media-books
+      spike-ebooks:
+        existingClaim: spike-books
         globalMounts:
           - path: /media/ebooks
 

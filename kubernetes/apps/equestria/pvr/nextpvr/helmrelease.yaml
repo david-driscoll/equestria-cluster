@@ -142,6 +142,6 @@ spec:
       config:
         existingClaim: nextpvr-config
       recordings:
-        existingClaim: media-dvr
+        existingClaim: spike-dvr
       buffer:
         type: emptyDir

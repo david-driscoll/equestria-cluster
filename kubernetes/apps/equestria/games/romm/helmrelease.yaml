@@ -119,12 +119,12 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /redis-data
-      media-downloads:
-        existingClaim: media-downloads
+      spike-downloads:
+        existingClaim: spike-downloads
         globalMounts:
           - path: /media/downloads
-      media-roms:
-        existingClaim: media-roms
+      spike-roms:
+        existingClaim: spike-roms
         globalMounts:
           - path: /romm/library
 
