@@ -172,7 +172,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn: []
+  dependsOn:
+    - name: shared-volumes
+      namespace: equestria
   path: ./kubernetes/apps/equestria/pvr/iptv-sync
   prune: true
   wait: true

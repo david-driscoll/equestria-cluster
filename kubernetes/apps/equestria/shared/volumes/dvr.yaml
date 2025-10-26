@@ -9,21 +9,16 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: truenas-stash
+  storageClassName: nfs
   mountOptions:
-    - noatime
     - nfsvers=4
+    - hard
+    - intr
   capacity:
     storage: 200Gi
-  csi:
-    driver: org.democratic-csi.stash
-    readOnly: false
-    volumeHandle: stash-dvr
-    volumeAttributes:
-      server: "${SPIKE_IP}"
-      share: /mnt/stash/media/dvr
-      node_attach_driver: nfs
-      provisioner_driver: freenas-nfs
+  nfs:
+    server: "${SPIKE_IP}"
+    path: /mnt/stash/media/dvr
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master-standalone-strict/persistentvolumeclaim-v1.json
 apiVersion: v1
@@ -31,7 +26,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: media-dvr
 spec:
-  storageClassName: truenas-stash
+  storageClassName: nfs
   volumeName: media-dvr
   accessModes:
     - ReadWriteMany

@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/bazarr
   prune: true
   wait: true
@@ -46,7 +46,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/emby
   prune: true
   wait: true
@@ -79,7 +79,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/jellyfin
   prune: true
   wait: true
@@ -112,7 +112,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/jellyseerr
   prune: true
   wait: true
@@ -145,7 +145,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/radarr
   prune: true
   wait: true
@@ -178,7 +178,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/sonarr
   prune: true
   wait: true
@@ -211,7 +211,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/plex
   prune: true
   wait: true
@@ -246,7 +246,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/media/tautulli
   prune: true
   wait: true

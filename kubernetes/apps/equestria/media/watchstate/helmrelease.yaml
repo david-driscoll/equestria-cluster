@@ -29,7 +29,9 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  dependsOn: []
+  dependsOn:
+    - name: shared-volumes
+      namespace: equestria
   values:
     controllers:
       *app :

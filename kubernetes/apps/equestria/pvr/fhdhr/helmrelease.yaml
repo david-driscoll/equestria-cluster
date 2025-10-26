@@ -29,10 +29,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: truenas-iscsi-stash
-      namespace: democratic-csi
-    - name: truenas-stash
-      namespace: democratic-csi
+    - name: shared-volumes
+      namespace: equestria
   values:
     controllers:
       fhdhr:

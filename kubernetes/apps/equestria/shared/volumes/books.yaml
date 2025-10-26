@@ -9,21 +9,16 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: truenas-stash
+  storageClassName: nfs
   mountOptions:
-    - noatime
     - nfsvers=4
+    - hard
+    - intr
   capacity:
     storage: 2Ti
-  csi:
-    driver: org.democratic-csi.stash
-    readOnly: false
-    volumeHandle: stash-media-books
-    volumeAttributes:
-      server: "${SPIKE_IP}"
-      share: /mnt/stash/media/ebooks
-      node_attach_driver: nfs
-      provisioner_driver: freenas-nfs
+  nfs:
+    server: "${SPIKE_IP}"
+    path: /mnt/stash/media/ebooks
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master-standalone-strict/persistentvolumeclaim-v1.json
 apiVersion: v1
@@ -31,7 +26,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: media-books
 spec:
-  storageClassName: truenas-stash
+  storageClassName: nfs
   volumeName: media-books
   accessModes:
     - ReadWriteMany

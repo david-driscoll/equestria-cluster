@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: shared-volumes
-      namespace: *namespace
+      namespace: equestria
   path: ./kubernetes/apps/equestria/games/romm
   prune: true
   wait: true
