@@ -23,7 +23,7 @@ spec:
       server: "${SPIKE_IP}"
       share: /mnt/stash/data/immich
       node_attach_driver: nfs
-      provisioner_driver: freenas-api-nfs
+      provisioner_driver: freenas-nfs
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master-standalone-strict/persistentvolumeclaim-v1.json
 apiVersion: v1

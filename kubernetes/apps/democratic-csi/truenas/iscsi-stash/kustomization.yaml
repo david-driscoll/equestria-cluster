@@ -27,7 +27,7 @@ patches:
         value: stash/eris
       - op: replace
         path: /spec/values/driver/config/driver
-        value: freenas-api-iscsi
+        value: freenas-iscsi
       - op: remove
         path: /spec/values/storageClasses/0/mountOptions/0
       - op: remove

@@ -24,7 +24,7 @@ patches:
         value: stash/eris
       - op: replace
         path: /spec/values/driver/config/driver
-        value: freenas-api-nfs
+        value: freenas-nfs
       - op: remove
         path: /spec/values/node/driver/extraEnv
       - op: remove

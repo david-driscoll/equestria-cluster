@@ -20,7 +20,7 @@ spec:
       iqn: iqn.2005-10.org.freenas.ctl:channels
       lun: "0"
       node_attach_driver: iscsi
-      provisioner_driver: freenas-api-iscsi
+      provisioner_driver: freenas-iscsi
 
 ---
 apiVersion: v1
