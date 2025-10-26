@@ -150,6 +150,7 @@ spec:
         sshConnection:
           host: ${SPIKE_IP}
           port: 22
+          username: root
         zfs:
           # datasetParentName: data/appdata
           detachedSnapshotsDatasetParentName: dummy/path/

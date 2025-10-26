@@ -4,3 +4,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./helmrelease.yaml
+  - ./secret.yaml
+
+patches:
+  - target:
+      kind: HelmRelease
+      name: truenas-sci-base
+    patch: |
+      - op: add
+        path: /spec/valuesFrom/-
+        value:
+          targetPath: driver.config.sshConnection.privateKey
+          kind: Secret
+          name: truenas-ssh-key
+          valuesKey: truenas-private-key
