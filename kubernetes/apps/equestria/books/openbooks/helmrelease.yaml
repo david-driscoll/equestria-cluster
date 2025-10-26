@@ -127,8 +127,8 @@ spec:
         storageClass: truenas-stash
         accessMode: ReadWriteOnce
         size: 1Gi
-      spike-downloads:
-        existingClaim: spike-downloads
+      spike-media-downloads:
+        existingClaim: spike-media-downloads
         globalMounts:
           - path: /books
             subPath: openbooks

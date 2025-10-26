@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: spike-books
+  name: spike-media-books
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
@@ -25,11 +25,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: spike-books
+  name: spike-media-books
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
-  volumeName: spike-books
+  volumeName: spike-media-books
   accessModes:
     - ReadWriteMany
   resources:

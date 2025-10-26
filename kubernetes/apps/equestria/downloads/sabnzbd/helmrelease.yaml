@@ -105,8 +105,8 @@ spec:
         type: emptyDir
       tmp:
         type: emptyDir
-      spike-downloads:
-        existingClaim: spike-downloads
+      spike-media-downloads:
+        existingClaim: spike-media-downloads
         globalMounts:
           - path: /media/downloads
 ---

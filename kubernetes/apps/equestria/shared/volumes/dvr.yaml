@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: spike-dvr
+  name: spike-media-dvr
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
@@ -25,11 +25,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: spike-dvr
+  name: spike-media-dvr
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
-  volumeName: spike-dvr
+  volumeName: spike-media-dvr
   accessModes:
     - ReadWriteMany
   resources:

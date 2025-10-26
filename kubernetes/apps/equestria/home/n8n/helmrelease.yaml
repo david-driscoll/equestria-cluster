@@ -150,13 +150,13 @@ spec:
             subPath: hooks.js
             readOnly: true
 
-      spike-movies:
-        existingClaim: spike-movies
+      spike-media-movies:
+        existingClaim: spike-media-movies
         globalMounts:
           - path: /media/movies
 
-      spike-tv:
-        existingClaim: spike-tv
+      spike-media-tv:
+        existingClaim: spike-media-tv
         globalMounts:
           - path: /media/tv
 

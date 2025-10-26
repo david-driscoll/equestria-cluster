@@ -121,12 +121,12 @@ spec:
     persistence:
       config:
         existingClaim: audiobookshelf-config
-      spike-books:
-        existingClaim: spike-books
+      spike-media-books:
+        existingClaim: spike-media-books
         globalMounts:
           - path: /media/books
-      spike-audiobooks:
-        existingClaim: spike-audiobooks
+      spike-media-audiobooks:
+        existingClaim: spike-media-audiobooks
         globalMounts:
           - path: /media/audiobooks
 

@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: spike-roms
+  name: spike-media-roms
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
@@ -25,11 +25,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: spike-roms
+  name: spike-media-roms
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
-  volumeName: spike-roms
+  volumeName: spike-media-roms
   accessModes:
     - ReadWriteMany
   resources:

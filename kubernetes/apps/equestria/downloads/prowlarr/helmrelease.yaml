@@ -54,7 +54,7 @@ spec:
               PROWLARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: spike-management-credentials
+                    name: spike-media-management-credentials
                     key: prowlarr_apikey
               PROWLARR__LOG__DBENABLED: "False"
               PROWLARR__LOG__LEVEL: info
@@ -110,12 +110,12 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      spike-downloads:
-        existingClaim: spike-downloads
+      spike-media-downloads:
+        existingClaim: spike-media-downloads
         globalMounts:
           - path: /media/downloads
-      spike-movies:
-        existingClaim: spike-movies
+      spike-media-movies:
+        existingClaim: spike-media-movies
         globalMounts:
           - path: /media/movies
 ---

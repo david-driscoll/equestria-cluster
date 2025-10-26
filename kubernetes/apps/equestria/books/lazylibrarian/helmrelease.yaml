@@ -100,13 +100,13 @@ spec:
         storageClass: truenas-stash
         accessMode: ReadWriteOnce
         size: 1Gi
-      spike-downloads:
-        existingClaim: spike-downloads
+      spike-media-downloads:
+        existingClaim: spike-media-downloads
         globalMounts:
           - path: /books
             subPath: lazylibrarian
-      spike-books:
-        existingClaim: spike-books
+      spike-media-books:
+        existingClaim: spike-media-books
         globalMounts:
           - path: /media/books
 

@@ -156,18 +156,18 @@ spec:
         globalMounts:
           - path: /logs
 
-      spike-movies:
-        existingClaim: spike-movies
+      spike-media-movies:
+        existingClaim: spike-media-movies
         globalMounts:
           - path: /media/movies
 
-      spike-tv:
-        existingClaim: spike-tv
+      spike-media-tv:
+        existingClaim: spike-media-tv
         globalMounts:
           - path: /media/tv
 
-      spike-dvr:
-        existingClaim: spike-dvr
+      spike-media-dvr:
+        existingClaim: spike-media-dvr
         globalMounts:
           - path: /media/dvr
 

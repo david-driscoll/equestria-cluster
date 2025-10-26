@@ -54,7 +54,7 @@ spec:
               SONARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: spike-management-credentials
+                    name: spike-media-management-credentials
                     key: sonarr_apikey
               SONARR__LOG__DBENABLED: "False"
               SONARR__LOG__LEVEL: info
@@ -110,12 +110,12 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      spike-downloads:
-        existingClaim: spike-downloads
+      spike-media-downloads:
+        existingClaim: spike-media-downloads
         globalMounts:
           - path: /media/downloads
-      spike-tv:
-        existingClaim: spike-tv
+      spike-media-tv:
+        existingClaim: spike-media-tv
         globalMounts:
           - path: /media/tv
 ---

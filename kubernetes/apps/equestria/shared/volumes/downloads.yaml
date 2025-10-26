@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: spike-downloads
+  name: spike-media-downloads
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
@@ -25,11 +25,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: spike-downloads
+  name: spike-media-downloads
   labels:
     kustomize.toolkit.fluxcd.io/force: enabled
 spec:
-  volumeName: spike-downloads
+  volumeName: spike-media-downloads
   accessModes:
     - ReadWriteMany
   resources:
