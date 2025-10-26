@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: shared-volumes
+    - name: spike-volumes
   path: ./kubernetes/apps/equestria/books/readarr-ebook
   prune: true
   wait: true

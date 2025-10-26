@@ -26,7 +26,7 @@ spec:
     secretRef:
       name: sops-age
   dependsOn:
-  - name: shared-volumes
+  - name: spike-volumes
     namespace: equestria
   force: true
   interval: 1h

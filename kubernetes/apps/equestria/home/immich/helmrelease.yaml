@@ -28,7 +28,7 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: shared-volumes
+    - name: spike-volumes
       namespace: equestria
   values:
     controllers:

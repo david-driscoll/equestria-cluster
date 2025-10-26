@@ -10,7 +10,7 @@
 #     labels:
 #       app.kubernetes.io/name: *app
 #   dependsOn:
-#     - name: shared-volumes
+#     - name: spike-volumes
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/ersatztv
 #   prune: true
@@ -41,7 +41,7 @@
 #     labels:
 #       app.kubernetes.io/name: *app
 #   dependsOn:
-#     - name: shared-volumes
+#     - name: spike-volumes
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/fhdhr
 #   prune: true
@@ -72,7 +72,7 @@
 #     labels:
 #       app.kubernetes.io/name: *app
 #   dependsOn:
-#     - name: shared-volumes
+#     - name: spike-volumes
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/nextpvr
 #   prune: true
@@ -108,7 +108,7 @@
 #     labels:
 #       app.kubernetes.io/name: *app
 #   dependsOn:
-#     - name: shared-volumes
+#     - name: spike-volumes
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/threadfin
 #   prune: true
@@ -140,7 +140,7 @@
 #     labels:
 #       app.kubernetes.io/name: *app
 #   dependsOn:
-#     - name: shared-volumes
+#     - name: spike-volumes
 #       namespace: *namespace
 #   path: ./kubernetes/apps/equestria/pvr/channels
 #   prune: true
@@ -173,7 +173,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: shared-volumes
+    - name: spike-volumes
       namespace: equestria
   path: ./kubernetes/apps/equestria/pvr/iptv-sync
   prune: true

@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: shared-volumes
+    - name: spike-volumes
       namespace: equestria
   path: ./kubernetes/apps/equestria/games/romm
   prune: true
