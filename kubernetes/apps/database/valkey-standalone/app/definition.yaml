@@ -11,8 +11,8 @@ spec:
   access_policy:
     groups:
       - admins
-  gatus:
-    - group: "System"
-      url: tcp://valkey-sa.database.svc.cluster.local:6379
-      conditions:
-      - "[CONNECTED] == true"
+  # gatus:
+  #   - group: "System"
+  #     url: tcp://valkey-sa.database.svc.cluster.local:6379
+  #     conditions:
+  #     - "[CONNECTED] == true"
