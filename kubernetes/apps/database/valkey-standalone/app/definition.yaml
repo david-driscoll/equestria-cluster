@@ -12,7 +12,7 @@ spec:
     groups:
       - admins
   gatus:
-    - group: "${CLUSTER_TITLE}"
+    - group: "K8S: ${CLUSTER_TITLE}"
       url: tcp://valkey-sa.database.svc.cluster.local:6379
       conditions:
       - "[CONNECTED] == true"
