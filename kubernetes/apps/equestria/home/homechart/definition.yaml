@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Homechart
+  category: Applications
+  description: Run your household with one simple app.
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://homechart.app/homechart.png
+  access_policy:
+    groups:
+      - family
+  authentik:
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+        - url: "https://${APP}.${ROOT_DOMAIN}/oidc"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+      subMode: user_email
+
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"

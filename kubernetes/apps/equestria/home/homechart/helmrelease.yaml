@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: homechart
+spec:
+  interval: 1h
+  url: https://helm.homechart.app/
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app homechart
+spec:
+  interval: 15m
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  chart:
+    spec:
+      chart: homechart
+      sourceRef:
+        kind: HelmRepository
+        name: homechart
+      interval: 1h
+  values:
+    homechart:
+      deployment:
+        replicas: 2
+      ingress:
+        ingressClassName: internal
+        host: "${APP}.${ROOT_DOMAIN}"
+      config:
+        values:
+          HOMECHART_APP_BASEURL: "https://${APP}.${ROOT_DOMAIN}"
+        secrets: {}
+    postgresql:
+      enabled: false
