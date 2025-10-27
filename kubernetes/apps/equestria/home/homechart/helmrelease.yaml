@@ -43,6 +43,7 @@ spec:
     homechart:
       deployment:
         replicas: 2
+        repository: ghcr.io/candiddev/homechart:v2025.10.27
       ingress:
         ingressClassName: internal
         host: "${APP}.${ROOT_DOMAIN}"
