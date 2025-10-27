@@ -60,7 +60,7 @@ spec:
               #     key: email
               # PLEX_CLAIM_TOKEN:
               #   secretKeyRef:
-              #     name: spike-media-management-credentials
+              #     name: spike-management-credentials
               #     key: claim
             probes:
               liveness: &probes

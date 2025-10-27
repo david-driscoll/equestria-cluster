@@ -54,7 +54,7 @@ spec:
               SONARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: spike-media-management-credentials
+                    name: spike-management-credentials
                     key: sonarr_apikey
               SONARR__LOG__DBENABLED: "False"
               SONARR__LOG__LEVEL: info

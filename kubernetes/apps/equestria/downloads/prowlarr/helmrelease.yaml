@@ -54,7 +54,7 @@ spec:
               PROWLARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: spike-media-management-credentials
+                    name: spike-management-credentials
                     key: prowlarr_apikey
               PROWLARR__LOG__DBENABLED: "False"
               PROWLARR__LOG__LEVEL: info
