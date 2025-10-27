@@ -153,6 +153,56 @@ All applications use standardized ks.yaml files with:
 -   Component references to shared functionality (`../../../../components/ingress/internal`, etc.)
 -   PostBuild substitution variables (`APP`, `NAMESPACE`, plus app-specific vars)
 
+### App onboarding: vendor Helm charts (e.g., Homechart)
+
+When adding a new app that ships its own Helm chart, follow this pattern:
+
+1) App folder layout under the target namespace
+- `kubernetes/apps/<NAMESPACE>/<CATEGORY>/<APP>/`
+    - `kustomization.yaml` that references:
+        - `helmrelease.yaml` (can include an embedded HelmRepository followed by the HelmRelease in a single multi-doc file)
+        - `externalsecret.yaml` (if the app needs DB or other credentials)
+        - `definition.yaml` (ApplicationDefinition + optional Gatus checks)
+
+2) Helm repository and release
+- Prefer embedding a small, app-specific HelmRepository in the same file as the HelmRelease (two YAML documents). Example fields to set in the HelmRelease:
+    - `chart.spec.chart`: upstream chart name
+    - `chart.spec.sourceRef`: references the embedded HelmRepository by name
+    - `values.ingress`: set `ingressClassName` and host to `${APP}.${ROOT_DOMAIN}`
+    - If the chart includes its own Postgres, disable it via `values.postgresql.enabled: false` and use the shared cluster Postgres instead
+
+3) Database provisioning via component
+- If the app uses Postgres, include `../../../../components/postgres` in the app Kustomization’s `components` list and add a `dependsOn` entry for `postgres` in the `database` namespace. The Database (CNPG) object is created by the component; no app-local DB manifests are required.
+
+4) ExternalSecret pattern for DB credentials
+- Use a `ClusterSecretStore` named `database` to extract the per-app key `'${APP}-postgres'` and rewrite keys with a `postgres_` prefix.
+- Emit the exact env vars the chart expects using `target.template.data`. For example, for Homechart:
+    - `HOMECHART_postgresql_hostname`, `HOMECHART_postgresql_database`, `HOMECHART_postgresql_username`, `HOMECHART_postgresql_password`, `HOMECHART_postgresql_port` (5432)
+- Avoid unsupported fields (e.g., `decode`) in ExternalSecret; use `rewrite` + template variables instead.
+
+5) Ingress and base URL alignment
+- If the app needs a base URL env (e.g., `HOMECHART_APP_BASEURL`), set it to `https://${APP}.${ROOT_DOMAIN}` and ensure the ingress host matches the same value.
+
+6) Namespace ks.yaml wiring
+- Add a new Kustomization entry in `kubernetes/apps/<NAMESPACE>/<CATEGORY>/ks.yaml` pointing to the app folder, with:
+    - `components`: at minimum `../../../../components/ingress/internal` and, if applicable, `../../../../components/postgres`
+    - `dependsOn`: reference `postgres` in `database` namespace when using the Postgres component
+    - `postBuild.substitute`: include `APP` and `NAMESPACE` (and any app-specific substitutions)
+
+7) Optional components
+- Add `../../../../components/tailscale` to expose the app over Tailscale if desired.
+- Add `../../../../components/volsync` when persistent data should be replicated/backed up; set `VOLSYNC_*` substitutions as needed.
+
+8) ApplicationDefinition and health
+- Provide a `definition.yaml` for UI metadata (name, icon, URL, access policy) and a simple Gatus check for the app URL.
+
+9) Validate before pushing
+- Run flux-local testing (or the Docker-based variant) to validate manifests render and Helm charts resolve:
+    - `docker run --rm -v "$(pwd):/workspace" -w /workspace ghcr.io/allenporter/flux-local:v7.8.0 test --enable-helm --all-namespaces --path /workspace/kubernetes/flux/cluster -v`
+
+Notes
+- It’s acceptable to register shared Helm repositories under `kubernetes/flux/meta/repos/` when used by multiple apps. For one-off vendor charts, embedding the HelmRepository with the app’s HelmRelease keeps the scope local and avoids clutter under `flux/meta`.
+
 ## Automation and Updates
 
 -   **Renovate**: Automated dependency updates via .github/renovate.json5
