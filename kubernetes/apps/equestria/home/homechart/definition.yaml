@@ -14,16 +14,9 @@ spec:
     groups:
       - family
   authentik:
-    oauth2:
-      clientType: confidential
-      allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/oidc"
-      propertyMappings:
-        - email
-        - openid
-        - profile
-      subMode: user_email
-
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
   gatus:
     - group: "Applications"
       url: *url
