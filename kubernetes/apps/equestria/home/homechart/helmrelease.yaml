@@ -38,6 +38,26 @@ spec:
           securityContext:
             runAsNonRoot: false
             fsGroupChangePolicy: "OnRootMismatch"
+        initContainers:
+          config:
+            image:
+              repository: ghcr.io/candiddev/homechart
+              tag: v2025.10.27
+            env:
+              TZ: "${TIMEZONE}"
+              homechart_cli_configPath: /config/config.json
+            command: ['config']
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
         containers:
           *app :
             image:
