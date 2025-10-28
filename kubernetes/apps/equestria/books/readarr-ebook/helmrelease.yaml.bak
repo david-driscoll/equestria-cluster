@@ -1,11 +1,10 @@
+
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
-# http://channels.eris.svc.cluster.local:8089/devices/ANY/channels.m3u?format=ts&codec=copy
-# http://channels.eris.svc.cluster.local:8089/devices/ANY/guide/xmltv?duration=1209600
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app channels
+  name: &app readarr
 spec:
   chartRef:
     kind: OCIRepository
@@ -56,55 +55,67 @@ spec:
               - "/bin/sh"
               - "-c"
             args: |-
-              chown -R 568:568 /channels-dvr
-              chmod -R 777 /channels-dvr
-              echo "Done.";
+                chown -R 568:568 /config
+                chmod -R 777 /config
+                echo "Done.";
         containers:
           app:
             image:
-              repository: fancybits/channels-dvr
-              tag: latest@sha256:284fed6f4ee5150d41d9a7f247a63e190f6f1c3a4e4bc740f029df6d36955d29
-              pullPolicy: IfNotPresent
+              repository: ghcr.io/home-operations/readarr
+              tag: 0.4.18@sha256:8f7551205fbdccd526db23a38a6fba18b0f40726e63bb89be0fb2333ff4ee4cd
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
               PUID: ${PUID}
               PGID: ${PGID}
               UMASK: 002
+              READARR__APP__INSTANCENAME: Readarr
+              READARR__APP__THEME: dark
+              READARR__AUTH__METHOD: External
+              READARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              READARR__AUTH__APIKEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: readarr-apikey
+                    key: apikey
+              READARR__LOG__DBENABLED: "False"
+              READARR__LOG__LEVEL: info
+              READARR__PORT: &port 8787
               TZ: America/New_York
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &port 8089
-                  initialDelaySeconds: 10
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
+            # probes:
+            #   liveness: &probes
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /ping
+            #         port: *port
+            #       initialDelaySeconds: 10
+            #       periodSeconds: 60
+            #       timeoutSeconds: 10
+            #       failureThreshold: 5
+            #   readiness: *probes
             securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: "OnRootMismatch"
+              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
-                memory: 1Gi
+                memory: 100Mi
               limits:
-                # nvidia.com/gpu: 1
+                cpu: 2
                 memory: 4Gi
-                cpu: 4000m
 
     defaultPodOptions:
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: "OnRootMismatch"
-        supplementalGroups: [44, 109, 303, 568, 10000]
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
@@ -116,46 +127,42 @@ spec:
           http:
             port: *port
 
+
     persistence:
       config:
-        existingClaim: channels-config
+        existingClaim: readarr-ebook-config
         globalMounts:
-          - path: /channels-dvr
-      spike-media-dvr:
-        existingClaim: spike-media-dvr
+          - path: /config
+      spike-media-downloads:
+        existingClaim: spike-media-downloads
         globalMounts:
-          - path: /media/dvr
-      spike-media-movies:
-        existingClaim: spike-media-movies
+          - path: /media/downloads
+      spike-media-ebooks:
+        existingClaim: spike-media-books
         globalMounts:
-          - path: /media/movies
-      spike-media-tv:
-        existingClaim: spike-media-tv
-        globalMounts:
-          - path: /media/tv
+          - path: /media/ebooks
 
-    route:
-      internal:
-        parentRefs:
-          - name: internal
-            namespace: network
-            kind: Gateway
-        hostnames:
-          - "${APP}.${ROOT_DOMAIN}"
-        kind: HTTPRoute
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
+
+    ingress:
+      app:
+        className: internal
+        hosts:
+          - host: "${APP}.${ROOT_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: *port
         annotations:
           reloader.stakater.com/auto: "true"
           external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
-          gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:8089"
+          gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:8787"
+          # gethomepage.dev/widget.key: ""
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
-          gethomepage.dev/icon: channels.svg
-          gethomepage.dev/name: Channels
-          # gethomepage.dev/widget.type: channels
+          gethomepage.dev/group: Media Management
+          gethomepage.dev/icon: readarr.svg
+          gethomepage.dev/name: Readarr
+          gethomepage.dev/widget.type: readarr
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "${APP}"
-

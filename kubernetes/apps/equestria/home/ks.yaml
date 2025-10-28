@@ -29,7 +29,7 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/ingress/internal
+    - ../../../../components/gateway/internal
     - ../../../../components/postgres
     - ../../../../components/tailscale
     - ../../../../components/volsync
@@ -144,7 +144,7 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/ingress/internal
+    - ../../../../components/gateway/internal
     - ../../../../components/postgres
     - ../../../../components/tailscale
     - ../../../../components/volsync
@@ -224,7 +224,7 @@ spec:
 #     name: flux-system
 #     namespace: flux-system
 #   components:
-#     - ../../../../components/ingress/internal
+#     - ../../../../components/gateway/internal
 #     - ../../../../components/postgres
 #     - ../../../../components/tailscale
 #     - ../../../../components/volsync
