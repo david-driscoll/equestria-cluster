@@ -14,9 +14,16 @@ spec:
     groups:
       - family
   authentik:
-    proxy:
-      mode: "forward_single"
-      externalHost: *url
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+      - url: "https://${APP}.${ROOT_DOMAIN}/api/auth/callback/oidc"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+      includeClaimsInIdToken: true
+      subMode: user_email
   gatus:
     - group: "Applications"
       url: *url
