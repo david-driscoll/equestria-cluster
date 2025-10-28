@@ -46,7 +46,8 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               homechart_cli_configPath: /config/config.json
-            command: ['config']
+            args:
+              - config
             resources:
               requests:
                 cpu: 100m
