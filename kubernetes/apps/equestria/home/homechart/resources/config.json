@@ -19,6 +19,6 @@
     "memoryMaxSizeMB": 512
   },
   "database": {
-    "uri": "{{ .postgres_uri }}"
+    "uri": "{{ .postgres_uriql }}"
   }
 }
