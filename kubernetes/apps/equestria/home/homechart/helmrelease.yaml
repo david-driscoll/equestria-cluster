@@ -82,7 +82,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: &port 8080
+            port: &port 3000
 
     ingress:
       internal:
