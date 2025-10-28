@@ -144,7 +144,7 @@ auth:
     enabled: true
     providers:
       authentik:
-        name: "Authentik"
+        name: "${CLUSTER_TITLE}"
         authurl: "{{ .oidc_issuer }}"
         logouturl: "{{ .oidc_end_session_url }}"
         clientid: "{{ .oidc_client_id }}"

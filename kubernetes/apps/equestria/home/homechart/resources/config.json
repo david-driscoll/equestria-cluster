@@ -19,7 +19,7 @@
   },
   "oidc": {
     "authentik": {
-      "displayName": "Authentik",
+      "displayName": "${CLUSTER_TITLE}",
       "clientID": "{{ .oidc_client_id }}",
       "clientSecret": "{{ .oidc_client_secret }}",
       "oidcIssuerURL": "{{ .oidc_issuer }}",
