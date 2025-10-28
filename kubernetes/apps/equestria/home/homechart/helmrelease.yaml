@@ -45,6 +45,7 @@ spec:
               tag: v2025.10.27
             env:
               TZ: "${TIMEZONE}"
+              cli_configPath: /config/config.json
             resources:
               requests:
                 cpu: 100m
