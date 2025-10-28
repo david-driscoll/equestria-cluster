@@ -66,8 +66,9 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/gateway/forwardauth
+    - ../../../../components/gateway/internal
     - ../../../../components/postgres
+    - ../../../../components/tailscale
   postBuild:
     substitute:
       APP: *app
