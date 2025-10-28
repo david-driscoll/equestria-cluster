@@ -5,9 +5,6 @@
     "disableSignup": true,
     "keepCalendarEventDays": 0,
     "keepCookMealPlanDays": 0,
-    "proxyAddress": "[::1]",
-    "proxyHeaderEmail": "X-authentik-email",
-    "proxyHeaderName": "X-authentik-name",
     "sessionExpirationDefault": "7d",
     "sessionExpirationRememberMe": "30d"
   },
@@ -19,5 +16,14 @@
   },
   "database": {
     "uri": "{{ .postgres_uriql }}"
+  },
+  "oidc": {
+    "authentik": {
+      "displayName": "${CLUSTER_TITLE}",
+      "clientID": "{{ .oidc_client_id }}",
+      "clientSecret": "{{ .oidc_client_secret }}",
+      "oidcIssuerURL": "{{ .oidc_issuer }}",
+      "scopes": ["openid", "profile", "email"]
+    }
   }
 }
