@@ -133,8 +133,13 @@ spec:
         seccompProfile: { type: RuntimeDefault }
 
     persistence:
+
       config:
         existingClaim: ${APP}
+        globalMounts:
+          - path: /home/node/
+            subPath: home
+          - path: /config
       cache:
         type: emptyDir
         globalMounts:
