@@ -130,7 +130,7 @@ spec:
       securityContext:
         runAsNonRoot: false
         runAsUser: 1000
-        runAsGroup: 1000
+        runAsGroup: 568
         seccompProfile: { type: RuntimeDefault }
 
     persistence:
