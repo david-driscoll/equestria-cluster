@@ -137,7 +137,7 @@ spec:
           port: http
           passHostHeader: true
       middlewares:
-        - name: local-user
+        - name: internal-network
           namespace: network
     - match: Host(`${APP}.${ROOT_DOMAIN}`)
       kind: Rule

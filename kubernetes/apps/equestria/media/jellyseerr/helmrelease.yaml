@@ -114,7 +114,7 @@ spec:
           port: http
           passHostHeader: true
       middlewares:
-        - name: local-user
+        - name: internal-network
           namespace: network
     - match: Host(`${APP}.${ROOT_DOMAIN}`)
       kind: Rule
@@ -124,5 +124,5 @@ spec:
           port: http
           passHostHeader: true
       middlewares:
-        - name: local-user # authenticated-user waiting for support
+        - name: internal-network # authenticated-user waiting for support
           namespace: network
