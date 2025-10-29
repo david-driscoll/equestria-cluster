@@ -21,5 +21,3 @@ resources:
   - pulumi-operator.sops.yaml
   - romm.yaml
   - romm.sops.yaml
-  - vikunja.yaml
-  - vikunja.sops.yaml

@@ -81,12 +81,6 @@ cluster:
     superuser: true
     passwordSecret:
       name: postgres-user
-  - name: vikunja
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: vikunja-postgres
   - name: homechart
     ensure: present
     login: true

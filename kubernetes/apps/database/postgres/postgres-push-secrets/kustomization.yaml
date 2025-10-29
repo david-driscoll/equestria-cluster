@@ -11,4 +11,3 @@ resources:
   - n8n-postgres-push-secret.yaml
   - pulumi-operator-postgres-push-secret.yaml
   - romm-postgres-push-secret.yaml
-  - vikunja-postgres-push-secret.yaml
