@@ -16,7 +16,7 @@ spec:
   resyncFrequencySeconds: 3600
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/home?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
-  continueResyncOnCommitMatch: true
+  continueResyncOnCommitMatch: false
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
   # refresh: true
