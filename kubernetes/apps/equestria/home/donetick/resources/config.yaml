@@ -4,7 +4,7 @@ is_user_creation_disabled: true
 # telegram:
 #   token: ""
 pushover:
-  token: "{{ .pushover_password }}"
+  token: "{{ .pushover_credential }}"
 database:
   type: "postgres"
   migration: true
