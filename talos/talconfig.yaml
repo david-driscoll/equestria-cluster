@@ -245,7 +245,7 @@ patches:
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
-  # - "@./patches/global/machine-registries.yaml"
+  - "@./patches/global/machine-registries.yaml"
 
 # Controller patches
 controlPlane:

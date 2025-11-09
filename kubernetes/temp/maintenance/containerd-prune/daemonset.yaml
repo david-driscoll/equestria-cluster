@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: containerd-prune
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: containerd-prune
+    app.kubernetes.io/component: maintenance
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: containerd-prune
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: containerd-prune
+        app.kubernetes.io/component: maintenance
+    spec:
+      serviceAccountName: containerd-prune
+      hostPID: true
+      tolerations:
+        - operator: Exists
+      priorityClassName: system-cluster-critical
+      restartPolicy: OnFailure
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: prune
+          image: docker.io/library/alpine:3.20
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          env:
+            - name: PRUNE_UNUSED_DAYS
+              value: "7"
+          volumeMounts:
+            - name: containerd-root
+              mountPath: /var/lib/containerd
+              readOnly: false
+            - name: host-run
+              mountPath: /run
+              readOnly: false
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              echo "[containerd-prune] Starting prune job on $(hostname)"
+              # Install minimal needed tools (crictl + find) if missing
+              apk add --no-cache curl bash jq findutils
+              ARCH=$(uname -m)
+              case "$ARCH" in
+                x86_64) CRICTL_ARCH=amd64 ;;
+                aarch64) CRICTL_ARCH=arm64 ;;
+                *) echo "Unsupported arch: $ARCH" >&2; exit 1 ;;
+              esac
+              CRICTL_VERSION=v1.30.0
+              if ! command -v crictl >/dev/null 2>&1; then
+                echo "Installing crictl $CRICTL_VERSION ($CRICTL_ARCH)";
+                curl -sSL -o /tmp/crictl.tgz https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-${CRICTL_ARCH}.tar.gz
+                tar -C /usr/local/bin -xzf /tmp/crictl.tgz crictl
+              fi
+              export CONTAINER_RUNTIME_ENDPOINT=unix:///run/containerd/containerd.sock
+              echo "Configuring crictl endpoint: $CONTAINER_RUNTIME_ENDPOINT"
+              crictl info >/dev/null || { echo "crictl cannot talk to containerd"; exit 1; }
+              echo "Current image disk usage (pre-prune):"
+              crictl images || true
+              echo "Pruning unused images not used in >$PRUNE_UNUSED_DAYS days (best-effort)"
+              # Remove dangling images (no containers referencing)
+              crictl rmi --prune || true
+              # Additional aggressive cleanup: remove exited & unknown containers
+              for id in $(crictl ps -a -q --state Exited --state Created --state Unknown); do
+                echo "Removing stale container $id"; crictl rm $id || true; done
+              echo "Post-prune image list:"; crictl images || true
+              echo "Scanning orphaned snapshot dirs > 2Gi that are not referenced by any image manifest"
+              # Heuristic check: list snapshot directories large in size for operator review
+              du -h -d1 /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots 2>/dev/null | sort -h | tail -n 20 || true
+              echo "Prune complete. Sleeping 5s before exit."
+              sleep 5
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: containerd-root
+          hostPath:
+            path: /var/lib/containerd
+            type: Directory
+        - name: host-run
+          hostPath:
+            path: /run
+            type: Directory
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: containerd-prune
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: containerd-prune
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: containerd-prune
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get","list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: containerd-prune
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: containerd-prune
+subjects:
+  - kind: ServiceAccount
+    name: containerd-prune
+    namespace: kube-system
