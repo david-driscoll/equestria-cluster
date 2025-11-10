@@ -6,9 +6,12 @@ namespace: openebs-system
 metadata:
   labels:
     pod-security.kubernetes.io/enforce: privileged
+
 components:
   - ../../components/common
   - ../../components/repos/app-template
+
 resources:
+  - ./namespace.yaml
   - ./secret-store.yaml
   - ./openebs/ks.yaml

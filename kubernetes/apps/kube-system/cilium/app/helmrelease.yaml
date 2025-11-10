@@ -24,26 +24,8 @@ spec:
         kind: HelmRepository
         name: *app
         namespace: *namespace
-  maxHistory: 3
   interval: 1h
   timeout: 10m
-  install:
-    createNamespace: true
-    replace: true
-    remediation:
-      retries: 7
-  upgrade:
-    crds: CreateReplace
-    cleanupOnFail: true
-    remediation:
-      retries: 7
-      strategy: rollback
-  rollback:
-    force: false # true
-    cleanupOnFail: true
-    recreate: true
-  uninstall:
-    keepHistory: false
   valuesFrom:
     - kind: ConfigMap
       name: cilium-values
