@@ -24,4 +24,3 @@ resources:
   - ./snapshot-controller/ks.yaml
   - ./external-secrets/ks.yaml
   - ./registry/ks.yaml
-  - ./maintenance/containerd-prune/ks.yaml
