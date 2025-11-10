@@ -23,10 +23,9 @@ spec:
       tolerations:
         - operator: Exists
       priorityClassName: system-cluster-critical
-      restartPolicy: OnFailure
       nodeSelector:
         kubernetes.io/os: linux
-      containers:
+      initContainers:
         - name: prune
           image: docker.io/library/alpine:3.20
           imagePullPolicy: IfNotPresent
@@ -75,7 +74,10 @@ spec:
               echo "Largest overlayfs snapshot dirs (top 20):"
               du -h -d1 /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots 2>/dev/null | sort -h | tail -n 20 || true
               echo "Prune complete."
-              sleep 5
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.10
+          imagePullPolicy: IfNotPresent
       terminationGracePeriodSeconds: 30
       volumes:
         - name: containerd-root
