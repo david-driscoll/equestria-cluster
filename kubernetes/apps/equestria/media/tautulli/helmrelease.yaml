@@ -96,12 +96,13 @@ spec:
             namespace: network
             kind: Gateway
         hostnames:
-          - "tautulli.${CLUSTER_DOMAIN}"
+          - "${APP}.${ROOT_DOMAIN}"
+          - "${APP}.${CLUSTER_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
               - identifier: *app
-                port: http
+                port: *port
 
     persistence:
       config:
