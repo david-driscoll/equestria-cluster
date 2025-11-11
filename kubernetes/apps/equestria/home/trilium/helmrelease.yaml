@@ -31,6 +31,7 @@ spec:
   values:
     controllers:
       *app :
+        strategy: Recreate
         type: deployment
         replicas: 1
         initContainers:
@@ -42,8 +43,8 @@ spec:
               - sh
               - -c
               - |
-                chown -R 1000:1000 /data
-                chmod -R 755 /data
+                chown -R 1000:1000 /home/node/trilium-data
+                chmod -R 755 /home/node/trilium-data
         containers:
           *app :
             image:
@@ -54,7 +55,6 @@ spec:
               TRILIUM_NETWORK_PORT: &port 8080
               TRILIUM_NETWORK_TRUSTEDREVERSEPROXY: "true"
               TRILIUM_ENV: production
-              TRILIUM_DATA_DIR: &pvc /data
             envFrom:
               - secretRef:
                   name: ${APP}-env
@@ -118,7 +118,7 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - subPath: data
-            path: *pvc
+            path: /home/node/trilium-data
       tmp:
         type: emptyDir
     defaultPodOptions:
