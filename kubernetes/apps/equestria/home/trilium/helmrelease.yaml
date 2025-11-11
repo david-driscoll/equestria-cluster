@@ -68,7 +68,7 @@ spec:
               readiness:
                 enabled: true
     service:
-      app:
+      *app :
         controller: *app
         type: ClusterIP
         ports:
@@ -86,7 +86,7 @@ spec:
         kind: HTTPRoute
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: *port
 
     persistence:

@@ -61,6 +61,7 @@ spec:
 #   components:
 #     - ../../../../components/tailscale
 #     - ../../../../components/volsync
+#     - ../../../../components/gateway/internal
 #   postBuild:
 #     substitute:
 #       APP: *app
@@ -95,6 +96,7 @@ spec:
 #   components:
 #     - ../../../../components/tailscale
 #     - ../../../../components/volsync
+#     - ../../../../components/gateway/internal
 #   postBuild:
 #     substitute:
 #       APP: *app
@@ -130,6 +132,8 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
+    # has it's own ingress
+    # - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app
@@ -164,6 +168,8 @@ spec:
     - ../../../../components/tailscale
     - ../../../../components/volsync
     - ../../../../components/volsync/backblaze
+    # has it's own ingress
+    # - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app
@@ -198,6 +204,8 @@ spec:
     - ../../../../components/tailscale
     - ../../../../components/volsync
     - ../../../../components/volsync/backblaze
+    # has it's own ingress
+    # - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app
@@ -231,6 +239,7 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
+    - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app
@@ -265,7 +274,9 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/volsync
+    - ../../../../components/volsync/backblaze
     - ../../../../components/tailscale
+    - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app

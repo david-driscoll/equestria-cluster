@@ -131,13 +131,13 @@ spec:
             subPath: config.json
 
     service:
-      machine-learning:
+      immich-machine-learning:
         controller: *app
         type: ClusterIP
         ports:
           http:
             port: 3003
-      app:
+      *app :
         controller: *app
         type: ClusterIP
         ports:
@@ -156,5 +156,5 @@ spec:
         kind: HTTPRoute
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: *port
