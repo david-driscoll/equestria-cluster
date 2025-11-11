@@ -42,8 +42,8 @@ spec:
               - sh
               - -c
               - |
-                chown -R 1000:1000 /home/node/trilium-data
-                chmod -R 755 /home/node/trilium-data
+                chown -R 1000:1000 /data
+                chmod -R 755 /data
         containers:
           *app :
             image:
