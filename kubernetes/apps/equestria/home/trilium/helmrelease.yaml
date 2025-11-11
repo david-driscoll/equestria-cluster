@@ -42,7 +42,7 @@ spec:
             env:
               TZ: "${CONFIG_TZ}"
               TRILIUM_NETWORK_PORT: &port 8080
-              TRILIUM_NETWORK_TRUSTEDREVERSEPROXY: "true"
+              TRILIUM_NETWORK_TRUSTEDREVERSEPROXY: "${CLUSTER_NETWORK}"
               TRILIUM_ENV: production
             envFrom:
               - secretRef:
