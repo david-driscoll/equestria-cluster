@@ -33,10 +33,17 @@ spec:
       *app :
         type: deployment
         replicas: 1
-        pod:
-          labels:
-            ingress.home.arpa/nginx-internal: allow
-            authentik.home.arpa/https: allow
+        initContainers:
+          init-permissions:
+            image:
+              repository: busybox
+              tag: "1.37"
+            command:
+              - sh
+              - -c
+              - |
+                chown -R 1000:1000 /home/node/trilium-data
+                chmod -R 755 /home/node/trilium-data
         containers:
           *app :
             image:
@@ -65,8 +72,26 @@ spec:
             probes:
               liveness:
                 enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health-check
+                    port: *port
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 3
               readiness:
                 enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health-check
+                    port: *port
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
     service:
       *app :
         controller: *app
@@ -97,14 +122,8 @@ spec:
             path: *pvc
       tmp:
         type: emptyDir
-        medium: Memory
-        sizeLimit: 16Mi
     defaultPodOptions:
-      hostUsers: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: &uid 1000
-        runAsGroup: *uid
-        fsGroup: *uid
-        fsGroupChangePolicy: Always
-        seccompProfile: { type: "RuntimeDefault" }
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
