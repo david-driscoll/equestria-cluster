@@ -59,7 +59,6 @@ spec:
               - secretRef:
                   name: ${APP}-env
             securityContext:
-              readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               capabilities:
                 drop: ["ALL"]
