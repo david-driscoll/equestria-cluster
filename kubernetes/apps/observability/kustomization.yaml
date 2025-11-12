@@ -13,6 +13,5 @@ resources:
   - ./loki/ks.yaml
   - ./alloy/ks.yaml
   - ./silence-operator/ks.yaml
-  - ./grafana/ks.yaml
   - ./exporters/ks.yaml
   - ./gatus/ks.yaml
