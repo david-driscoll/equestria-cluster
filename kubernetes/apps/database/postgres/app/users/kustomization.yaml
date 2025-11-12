@@ -9,8 +9,6 @@ resources:
   - donetick.sops.yaml
   - gatus.yaml
   - gatus.sops.yaml
-  - grafana.yaml
-  - grafana.sops.yaml
   - homechart.yaml
   - homechart.sops.yaml
   - immich.yaml
