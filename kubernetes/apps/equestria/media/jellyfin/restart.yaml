@@ -48,7 +48,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: kubectl
-              image: bitnami/kubectl@sha256:dc0ac251cb8c38095f763f4e9b9244ba7f6b9afc887967ce789794c1e597f52e
+              image: bitnami/kubectl@sha256:5df7de31ece99cc40aa34d627a61b1bb4d17d1a3341e2f63a63b46b1136080cd
               command:
                 - 'kubectl'
                 - 'rollout'
