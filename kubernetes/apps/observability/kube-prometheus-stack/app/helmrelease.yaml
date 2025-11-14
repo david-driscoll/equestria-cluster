@@ -79,8 +79,7 @@ spec:
     kubeProxy:
       enabled: false
     prometheus:
-      server:
-        fullnameOverride: prometheus
+      fullnameOverride: prometheus
       logLevel: debug
       route:
         main:
@@ -164,7 +163,6 @@ spec:
                 requests:
                   storage: 50Gi
     prometheus-node-exporter:
-      logLevel: debug
       fullnameOverride: node-exporter
       prometheus:
         monitor:
@@ -176,7 +174,6 @@ spec:
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
     kube-state-metrics:
-      logLevel: debug
       fullnameOverride: kube-state-metrics
       metricLabelsAllowlist:
         - pods=[*]
@@ -192,7 +189,6 @@ spec:
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
     grafana:
-      logLevel: debug
       enabled: false
       forceDeployDashboards: true
     additionalPrometheusRulesMap:
