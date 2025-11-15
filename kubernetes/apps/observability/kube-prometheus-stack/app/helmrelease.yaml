@@ -99,7 +99,7 @@ spec:
                 kind: Middleware
                 name: authenticated-user
       prometheusSpec:
-        logLevel: debug
+        # logLevel: debug
         image:
           registry: docker.io
           repository: prompp/prompp
