@@ -8,10 +8,3 @@ metadata:
 spec:
   externalName: unused
   type: ExternalName
-  ports:
-    - port: 10901
-      targetPort: 10901
-      name: grpc
-    - port: 10902
-      targetPort: 10902
-      name: http
