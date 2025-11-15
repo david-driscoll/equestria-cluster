@@ -38,8 +38,6 @@ ports:
   traefik:
     expose:
       default: true
-    middlewares:
-      - network-error-pages@kubernetescrd
   web:
     port: 80
     exposedPort: 80
@@ -48,15 +46,11 @@ ports:
         to: websecure
         scheme: https
         permanent: true
-    middlewares:
-      - network-error-pages@kubernetescrd
   websecure:
     port: 443
     exposedPort: 443
     tls:
       enabled: true
-    middlewares:
-      - network-error-pages@kubernetescrd
   postgres:
     expose:
       default: true
@@ -74,11 +68,15 @@ ingressClass:
   isDefaultClass: false
   name: internal
 metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
-    namespaceSelector:
-      any: true
+  addInternals: true
+  prometheus:
+    disableAPICheck: true
+    service:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+    prometheusRule:
+      enabled: true
 resources:
   requests:
     cpu: 50m

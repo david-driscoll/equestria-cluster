@@ -10,3 +10,4 @@ spec:
       enable: true
   tailscale:
     acceptRoutes: true
+
