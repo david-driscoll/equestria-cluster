@@ -5,7 +5,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-fqdn: "sgc-thanos-write.${TAILSCALE_DOMAIN}"
     tailscale.com/proxy-group: egress
-  name: thanos-write-remote
+  name: ${APP}-thanos-write
 spec:
   externalName: unused
   type: ExternalName

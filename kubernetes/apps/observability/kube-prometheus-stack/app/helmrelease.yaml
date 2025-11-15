@@ -103,8 +103,6 @@ spec:
         enabled: true
       thanosServiceMonitor:
         enabled: true
-      thanosServiceExternal:
-        enabled: true
       prometheusSpec:
         image:
           registry: docker.io
@@ -124,11 +122,11 @@ spec:
         #   ingressClassName: tailscale
         #   hosts:
         #     - thanos-sidecar-write.${TAILSCALE_DOMAIN}
-        thanos:
-          objectStorageConfig:
-            existingSecret:
-              name: ${APP}-objstore
-              key: objstore.yml
+        # thanos:
+        #   objectStorageConfig:
+        #     existingSecret:
+        #       name: ${APP}-objstore
+        #       key: objstore.yml
 
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
@@ -143,14 +141,14 @@ spec:
             cpu: 100m
           limits:
             memory: 2000Mi
-        # remoteWriteDashboards: true
-        # remoteWrite:
-        #   - url: http://thanos-write-remote.observability.svc.cluster.local:10901/api/v1/receive
-        #     queueConfig:
-        #       maxSamplesPerSend: 10000
-        #       batchSendDeadline: 5s
-        #       minShards: 1
-        #       maxShards: 4
+        remoteWriteDashboards: true
+        remoteWrite:
+          - url: http://${APP}-thanos-write.observability.svc.cluster.local:10901/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
