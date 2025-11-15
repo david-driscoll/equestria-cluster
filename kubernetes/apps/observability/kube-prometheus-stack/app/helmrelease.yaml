@@ -113,20 +113,6 @@ spec:
           runAsUser: 64535
           runAsGroup: 64535
           fsGroup: 64535
-        # thanosIngress:
-        #   enabled: true
-        #   annotations:
-        #     tailscale.com/proxy-group: ingress
-        #     tailscale.com/experimental-forward-cluster-traffic-via-ingress: "true"
-        #     tailscale.com/tags: "tag:apps"
-        #   ingressClassName: tailscale
-        #   hosts:
-        #     - thanos-sidecar-write.${TAILSCALE_DOMAIN}
-        # thanos:
-        #   objectStorageConfig:
-        #     existingSecret:
-        #       name: ${APP}-objstore
-        #       key: objstore.yml
 
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false

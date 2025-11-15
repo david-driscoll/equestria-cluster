@@ -70,6 +70,7 @@ david-driscoll/stargate-command-cluster:
     exclude: |
       kustomization.yaml
       kube-prometheus-stack/app/helmrelease.yaml
+      kube-prometheus-stack/app/thanos-write-remote.yaml
   - source: kubernetes/apps/tailscale-system/
     dest: kubernetes/apps/tailscale-system/
     exclude: |

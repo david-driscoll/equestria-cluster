@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    tailscale.com/tailnet-fqdn: "sgc-thanos-write.${TAILSCALE_DOMAIN}"
+    tailscale.com/tailnet-fqdn: "${APP}-thanos.${TAILSCALE_DOMAIN}"
     tailscale.com/proxy-group: egress
   name: ${APP}-thanos
 spec:
@@ -12,3 +12,5 @@ spec:
   ports:
     - port: 10901
       name: grpc
+    - port: 10902
+      name: http
