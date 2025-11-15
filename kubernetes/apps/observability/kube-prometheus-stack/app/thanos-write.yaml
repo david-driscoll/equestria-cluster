@@ -4,9 +4,6 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: "thanos-write.${TAILSCALE_DOMAIN}"
-    tailscale.com/proxy-group: egress
-    # Disable Cilium service handling to allow iptables/netfilter DNAT
-    service.cilium.io/shared: "false"
   name: thanos-write
 spec:
   externalName: unused
