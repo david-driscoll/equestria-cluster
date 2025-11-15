@@ -127,14 +127,19 @@ spec:
             cpu: 100m
           limits:
             memory: 2000Mi
-        remoteWriteDashboards: true
-        remoteWrite:
-          - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
+        thanos:
+          objectStorageConfig:
+            existingSecret:
+              name: ${APP}-objstore
+              key: objstore.yml
+        # remoteWriteDashboards: true
+        # remoteWrite:
+        #   - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
+        #     queueConfig:
+        #       maxSamplesPerSend: 10000
+        #       batchSendDeadline: 5s
+        #       minShards: 1
+        #       maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
