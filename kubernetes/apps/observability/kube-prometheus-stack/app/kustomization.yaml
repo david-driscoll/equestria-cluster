@@ -8,6 +8,7 @@ resources:
   - ./scrapeconfig.yaml
   - ./definition.yaml
   - ./objstore.yaml
+  # - ./thanos-write-remote.yaml
 configMapGenerator:
   - name: alertmanager-config-tpl
     files:
