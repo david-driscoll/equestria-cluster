@@ -98,10 +98,6 @@ spec:
                 group: traefik.io
                 kind: Middleware
                 name: authenticated-user
-      thanosService:
-        enabled: true
-      thanosServiceMonitor:
-        enabled: true
       prometheusSpec:
         logLevel: debug
         image:
@@ -127,19 +123,14 @@ spec:
             cpu: 100m
           limits:
             memory: 2000Mi
-        thanos:
-          objectStorageConfig:
-            existingSecret:
-              name: thanos-objstore
-              key: objstore.yml
-        # remoteWriteDashboards: true
-        # remoteWrite:
-        #   - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
-        #     queueConfig:
-        #       maxSamplesPerSend: 10000
-        #       batchSendDeadline: 5s
-        #       minShards: 1
-        #       maxShards: 4
+        remoteWriteDashboards: true
+        remoteWrite:
+          - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
