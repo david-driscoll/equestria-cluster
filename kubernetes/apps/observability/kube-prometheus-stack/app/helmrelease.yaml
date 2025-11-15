@@ -130,7 +130,7 @@ spec:
         thanos:
           objectStorageConfig:
             existingSecret:
-              name: ${APP}-objstore
+              name: thanos-objstore
               key: objstore.yml
         # remoteWriteDashboards: true
         # remoteWrite:
