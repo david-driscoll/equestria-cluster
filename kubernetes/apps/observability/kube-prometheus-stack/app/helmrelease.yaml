@@ -80,7 +80,6 @@ spec:
       enabled: false
     prometheus:
       fullnameOverride: prometheus
-      logLevel: debug
       route:
         main:
           enabled: true
@@ -104,6 +103,7 @@ spec:
       thanosServiceMonitor:
         enabled: true
       prometheusSpec:
+        logLevel: debug
         image:
           registry: docker.io
           repository: prompp/prompp
