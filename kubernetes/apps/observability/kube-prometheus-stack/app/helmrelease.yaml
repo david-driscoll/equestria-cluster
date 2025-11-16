@@ -174,30 +174,30 @@ spec:
               minShards: 1
               maxShards: 4
           ###
-          - url: http://thanos-receive-service.observability.svc.cluster.local:10901/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://thanos-receive-service.observability.svc.cluster.local:12921/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:10901/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:12921/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
+          # - url: http://thanos-receive-service.observability.svc.cluster.local:10901/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: http://thanos-receive-service.observability.svc.cluster.local:12921/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:10901/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:12921/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
