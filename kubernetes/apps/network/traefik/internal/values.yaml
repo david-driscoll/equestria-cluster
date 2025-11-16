@@ -75,8 +75,6 @@ metrics:
       enabled: true
     serviceMonitor:
       enabled: true
-    prometheusRule:
-      enabled: true
 resources:
   requests:
     cpu: 50m
