@@ -125,25 +125,13 @@ spec:
             memory: 2000Mi
         remoteWriteDashboards: true
         remoteWrite:
-          # - url: https://thanos-write.${ROOT_DOMAIN}/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
+          - url: https://thanos-write.${ROOT_DOMAIN}/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
           - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://thanos-write-ingress.observability.svc.cluster.local:10901/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://thanos-write-ingress.observability.svc.cluster.local:12921/api/v1/receive
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
