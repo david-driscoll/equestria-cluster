@@ -131,7 +131,19 @@ spec:
           #     batchSendDeadline: 5s
           #     minShards: 1
           #     maxShards: 4
-          - url: http://thanos-write.opossum-yo.ts.net:12921/api/v1/receive
+          - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
+          - url: http://thanos-write-ingress.observability.svc.cluster.local:10901/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
+          - url: http://thanos-write-ingress.observability.svc.cluster.local:12921/api/v1/receive
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s

@@ -5,17 +5,8 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: "thanos-write.${TAILSCALE_DOMAIN}"
-  name: thanos-write
+    tailscale.com/proxy-group: egress
+  name: thanos-write-ingress
 spec:
-  externalName: thanos-write
+  externalName: unused
   type: ExternalName
-  ports:
-    - port: 10901
-      targetPort: 10901
-      name: grpc
-    - port: 10902
-      targetPort: 10902
-      name: http
-    - port: 19291
-      targetPort: 19291
-      name: remote
