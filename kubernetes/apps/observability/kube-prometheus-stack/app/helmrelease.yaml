@@ -131,98 +131,18 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'https://thanos-receive-ingress.opossum-yo.ts.net/api/v1/receive'
+          - url: 'https://thanos-write.opossum-yo.ts.net/api/v1/receive'
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'https://kube-prometheus-stack-receive-ingress.opossum-yo.ts.net/api/v1/receive'
+          - url: 'https+insecure://thanos-write.observability.svc.cluster.local:443/api/v1/receive'
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'http://thanos-receive-service.observability.svc.cluster.local:10901/api/v1/receive'
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: 'http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:10901/api/v1/receive'
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-
-          # - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://thanos-receive-service.${TAILSCALE_DOMAIN}:10901/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://thanos-receive-service.${TAILSCALE_DOMAIN}:12921/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: https://thanos-receive-ingress.${TAILSCALE_DOMAIN}/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://kube-prometheus-stack-receive-service.${TAILSCALE_DOMAIN}:10901/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://kube-prometheus-stack-receive-service.${TAILSCALE_DOMAIN}:12921/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: https://kube-prometheus-stack-receive-ingress.${TAILSCALE_DOMAIN}/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          ###
-          # - url: http://thanos-receive-service.observability.svc.cluster.local:10901/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://thanos-receive-service.observability.svc.cluster.local:12921/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:10901/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
-          # - url: http://kube-prometheus-stack-receive-service.observability.svc.cluster.local:12921/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
