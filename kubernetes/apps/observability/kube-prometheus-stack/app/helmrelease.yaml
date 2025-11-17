@@ -137,42 +137,42 @@ spec:
           #     batchSendDeadline: 5s
           #     minShards: 1
           #     maxShards: 4
-          - url: http://thanos-receive-service.${TAILSCALE_DOMAIN}:10901/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://thanos-receive-service.${TAILSCALE_DOMAIN}:12921/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: https://thanos-receive-ingress.${TAILSCALE_DOMAIN}/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://kube-prometheus-stack-receive-service.${TAILSCALE_DOMAIN}:10901/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: http://kube-prometheus-stack-receive-service.${TAILSCALE_DOMAIN}:12921/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: https://kube-prometheus-stack-receive-ingress.${TAILSCALE_DOMAIN}/api/v1/receive
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
+          # - url: http://thanos-receive-service.${TAILSCALE_DOMAIN}:10901/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: http://thanos-receive-service.${TAILSCALE_DOMAIN}:12921/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: https://thanos-receive-ingress.${TAILSCALE_DOMAIN}/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: http://kube-prometheus-stack-receive-service.${TAILSCALE_DOMAIN}:10901/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: http://kube-prometheus-stack-receive-service.${TAILSCALE_DOMAIN}:12921/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
+          # - url: https://kube-prometheus-stack-receive-ingress.${TAILSCALE_DOMAIN}/api/v1/receive
+          #   queueConfig:
+          #     maxSamplesPerSend: 10000
+          #     batchSendDeadline: 5s
+          #     minShards: 1
+          #     maxShards: 4
           ###
           # - url: http://thanos-receive-service.observability.svc.cluster.local:10901/api/v1/receive
           #   queueConfig:
