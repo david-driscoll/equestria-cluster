@@ -10,6 +10,10 @@ metadata:
 spec:
   externalName: unused
   type: ExternalName
+  ports:
+    - port: 443
+      targetPort: 443
+      name: https
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/service.json
 apiVersion: v1
@@ -22,6 +26,10 @@ metadata:
 spec:
   externalName: unused
   type: ExternalName
+  ports:
+    - port: 10901
+      targetPort: 10901
+      name: https
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/service.json
 apiVersion: v1
@@ -34,6 +42,10 @@ metadata:
 spec:
   externalName: unused
   type: ExternalName
+  ports:
+    - port: 443
+      targetPort: 443
+      name: https
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/service.json
 apiVersion: v1
@@ -46,3 +58,7 @@ metadata:
 spec:
   externalName: unused
   type: ExternalName
+  ports:
+    - port: 10901
+      targetPort: 10901
+      name: https
