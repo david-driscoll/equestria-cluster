@@ -14,3 +14,25 @@ spec:
     - port: 443
       targetPort: 443
       name: https
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/service.json
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: "thanos-write.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: egress
+  name: thanos-receive
+spec:
+  externalName: unused
+  type: ExternalName
+  ports:
+    - port: 10901
+      targetPort: 10901
+      name: http
+    - port: 10902
+      targetPort: 10902
+      name: grpc
+    - port: 19291
+      targetPort: 19291
+      name: remote
