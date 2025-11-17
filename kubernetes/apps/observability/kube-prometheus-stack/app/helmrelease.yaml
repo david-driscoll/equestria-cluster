@@ -131,18 +131,6 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'https://thanos-write.opossum-yo.ts.net/api/v1/receive'
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
-          - url: 'https+insecure://thanos-write.observability.svc.cluster.local:443/api/v1/receive'
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
