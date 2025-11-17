@@ -131,7 +131,7 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'http://thanos-receive.observability.svc.cluster.local:19291/api/v1/receive'
+          - url: 'https://thanos-receive.opossum-yo.ts.net:19291/api/v1/receive'
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
