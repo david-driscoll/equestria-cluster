@@ -135,7 +135,7 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: https://thanos-receive.observability.svc.cluster.local/api/v1/receive
+          - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
@@ -153,18 +153,25 @@ spec:
                 requests:
                   storage: 50Gi
         # Send alerts to central SGC Alertmanager via static target (SNI + TLS)
-        alerting:
-          alertmanagers:
-            - scheme: https
-              apiVersion: v2
-              static_configs:
-                - targets:
-                    - alertmanager.${ROOT_DOMAIN}:443
-              pathPrefix: /
-              timeout: 10s
-              tls_config:
-                server_name: alertmanager.${ROOT_DOMAIN}
-                insecure_skip_verify: true
+        alertingEndpoints:
+          - name: alertmanager-sgc
+            namespace: observability
+            port: http
+            scheme: http
+            pathPrefix: ""
+            tlsConfig: {}
+            bearerTokenFile: ""
+            apiVersion: v2
+          - scheme: https
+            apiVersion: v2
+            static_configs:
+              - targets:
+                  - alertmanager.${ROOT_DOMAIN}:443
+            pathPrefix: /
+            timeout: 10s
+            tls_config:
+              server_name: alertmanager.${ROOT_DOMAIN}
+              insecure_skip_verify: true
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
