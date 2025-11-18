@@ -5,7 +5,8 @@ route:
   group_by: ["alertname", "job"]
   group_interval: 10m
   group_wait: 1m
-  # receiver: null
+  receiver: 'forward-to-primary-alertmanager'
+
   repeat_interval: 12h
   routes:
     - receiver: heartbeat
@@ -25,3 +26,8 @@ inhibit_rules:
       - severity = "critical"
     target_matchers:
       - severity = "warning"
+
+receivers:
+- name: 'forward-to-primary-alertmanager'
+  webhook_configs:
+  - url: 'https://alertmanager.${ROOT_DOMAIN}/api/v2/alerts'
