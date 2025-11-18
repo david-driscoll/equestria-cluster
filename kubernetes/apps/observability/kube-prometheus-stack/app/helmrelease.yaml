@@ -135,12 +135,12 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          # - url: https://thanos-receive.observability.svc.cluster.local/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
+          - url: https://thanos-receive.observability.svc.cluster.local/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
