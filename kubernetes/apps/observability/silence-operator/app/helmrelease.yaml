@@ -28,7 +28,7 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    alertmanagerAddress: http://kube-prometheus-stack-alertmanager:9093
+    alertmanagerAddress: https://alertmanager.${ROOT_DOMAIN}
     image:
       registry: quay.io
       name: giantswarm/silence-operator

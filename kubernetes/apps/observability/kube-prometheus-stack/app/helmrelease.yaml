@@ -36,7 +36,6 @@ spec:
       - IPv4
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
-      fullnameOverride: alertmanager
       route:
         main:
           enabled: true
@@ -60,6 +59,7 @@ spec:
         replicas: 2
         useExistingSecret: true
         configSecret: alertmanager-secret
+        clusterLabel: ${CLUSTER_CNAME}
         # alertmanagerConfiguration:
         #   name: alertmanager
         #   global:
@@ -79,7 +79,6 @@ spec:
     kubeProxy:
       enabled: false
     prometheus:
-      fullnameOverride: prometheus
       route:
         main:
           enabled: true
@@ -131,7 +130,7 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'https://thanos-receive.opossum-yo.ts.net:19291/api/v1/receive'
+          - url: 'https://thanos-receive.${TAILSCALE_DOMAIN}:19291/api/v1/receive'
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
@@ -148,6 +147,15 @@ spec:
               resources:
                 requests:
                   storage: 50Gi
+        # Send alerts to central SGC Alertmanager
+        alerting:
+          alertmanagers:
+            - scheme: https
+              tls_config:
+                insecure_skip_verify: false
+              static_configs:
+                - targets:
+                    - 'alertmanager.${ROOT_DOMAIN}:443'
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
