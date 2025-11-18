@@ -27,12 +27,6 @@ spec:
   externalName: unused
   type: ExternalName
   ports:
-    - port: 10901
-      targetPort: 10901
-      name: http
-    - port: 10902
-      targetPort: 10902
-      name: grpc
-    - port: 19291
-      targetPort: 19291
-      name: remote
+    - port: 443
+      targetPort: 443
+      name: https
