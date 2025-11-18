@@ -156,13 +156,8 @@ spec:
         alertingEndpoints:
           - name: alertmanager-sgc
             namespace: observability
-            port: http
-            scheme: http
-            pathPrefix: ""
-            tlsConfig: {}
-            bearerTokenFile: ""
-            apiVersion: v2
-          - scheme: https
+            port: https
+            scheme: https
             apiVersion: v2
             static_configs:
               - targets:
