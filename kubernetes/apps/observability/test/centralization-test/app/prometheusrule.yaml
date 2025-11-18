@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: centralization-test-rule
+  namespace: observability
+  labels:
+    role: test
+spec:
+  groups:
+    - name: centralization-test
+      rules:
+        - alert: AlwaysFiring
+          expr: vector(1)
+          for: 0m
+          labels:
+            severity: critical
+            test: centralization
+          annotations:
+            summary: "Always firing alert for centralization test"
+            description: "This alerts to verify Prometheus -> Alertmanager forwarding to SGC."

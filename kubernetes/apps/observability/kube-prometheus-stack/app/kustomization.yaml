@@ -10,5 +10,6 @@ resources:
   # - ./ingress.yaml
   - ./thanos-write.yaml
   - ./config.yaml
+  - ./service.yaml
 generatorOptions:
   disableNameSuffixHash: true

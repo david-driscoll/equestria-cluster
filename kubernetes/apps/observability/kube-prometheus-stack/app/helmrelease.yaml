@@ -149,12 +149,9 @@ spec:
         # Send alerts to central SGC Alertmanager
         alerting:
           alertmanagers:
-            - scheme: https
-              tls_config:
-                insecure_skip_verify: false
-              static_configs:
-                - targets:
-                    - 'alertmanager.sgc.driscoll.tech:443'
+            - name: alertmanager-sgc
+              namespace: observability
+              port: http-web
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
