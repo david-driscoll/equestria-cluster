@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/alertmanagerconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager
+spec:
+  route:
+    groupBy: ["alertname", "job"]
+    groupInterval: 10m
+    groupWait: 1m
+    receiver: 'forward-to-primary-alertmanager'
+    repeatInterval: 12h
+    routes:
+      - receiver: heartbeat
+        groupInterval: 5m
+        groupWait: 0s
+        matchers:
+          - alertname =~ "Watchdog"
+        repeatInterval: 5m
+      - receiver: "null"
+        matchers:
+          - severity = "none"
+          - alertname =~ "InfoInhibitor|Watchdog"
+      - receiver: 'forward-to-primary-alertmanager'
+        continue: true
+        matchers:
+          - severity = "error"
+          - severity = "critical"
+  inhibitRules:
+    - equal:
+        - "alertname"
+        - "namespace"
+      sourceMatch:
+        - name: severity
+          value: critical
+          matchType: =
+      targetMatch:
+        - name: severity
+          value: warning
+          matchType: =
+  receivers:
+  - name: 'forward-to-primary-alertmanager'
+    webhookConfigs:
+    - url: 'https://alertmanager.${ROOT_DOMAIN}/api/v2/alerts'

@@ -9,9 +9,6 @@ resources:
   - ./definition.yaml
   # - ./ingress.yaml
   - ./thanos-write.yaml
-configMapGenerator:
-  - name: alertmanager-config-tpl
-    files:
-      - alertmanager.yaml=./resources/alertmanager.yaml
+  - ./config.yaml
 generatorOptions:
   disableNameSuffixHash: true
