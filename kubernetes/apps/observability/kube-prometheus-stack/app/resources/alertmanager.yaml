@@ -5,7 +5,7 @@ route:
   group_by: ["alertname", "job"]
   group_interval: 10m
   group_wait: 1m
-  receiver: pushover
+  # receiver: null
   repeat_interval: 12h
   routes:
     - receiver: heartbeat
@@ -18,11 +18,6 @@ route:
       matchers:
         - severity = "none"
         - alertname =~ "InfoInhibitor|Watchdog"
-    - receiver: pushover
-      continue: true
-      matchers:
-        - severity = "error"
-        - severity = "critical"
 inhibit_rules:
   - equal: ["alertname", "namespace"]
     source_matchers:
@@ -30,38 +25,3 @@ inhibit_rules:
       - severity = "critical"
     target_matchers:
       - severity = "warning"
-receivers:
-  - name: "null"
-  - name: pushover
-    pushover_configs:
-      - html: true
-        user_key: "{{ .pushover_username }}"
-        token: "{{ .pushover_credential }}"
-        url_title: View in AlertManager
-        message: |-
-          {{ "{{-" }} range .Alerts {{ "}}" }}
-            {{ "{{-" }} if ne .Annotations.description "" {{ "}}" }}
-              {{ "{{" }} .Annotations.description {{ "}}" }}
-            {{ "{{-" }} else if ne .Annotations.summary "" {{ "}}" }}
-              {{ "{{" }} .Annotations.summary {{ "}}" }}
-            {{ "{{-" }} else if ne .Annotations.message "" {{ "}}" }}
-              {{ "{{" }} .Annotations.message {{ "}}" }}
-            {{ "{{-" }} else {{ "}}" }}
-              Alert description not available
-            {{ "{{-" }} end {{ "}}" }}
-            {{ "{{-" }} if gt (len .Labels.SortedPairs) 0 {{ "}}" }}
-              <small>
-              {{ "{{-" }} range .Labels.SortedPairs {{ "}}" }}
-                <b>{{ "{{" }} .Name {{ "}}" }}:</b> {{ "{{" }} .Value {{ "}}" }}
-              {{ "{{-" }} end {{ "}}" }}
-              </small>
-            {{ "{{-" }} end {{ "}}" }}
-          {{ "{{-" }} end {{ "}}" }}
-        priority: |-
-          {{ "{{" }} if eq .Status "firing" {{ "}}" }}1{{ "{{" }} else {{ "}}" }}0{{ "{{" }} end {{ "}}" }}
-        send_resolved: true
-        sound: gamelan
-        # ttl: 1d
-        title: >-
-          {{ "{{" }} .CommonLabels.alertname {{ "}}" }}
-          [{{ "{{" }} .Status | toUpper {{ "}}" }}{{ "{{" }} if eq .Status "firing" {{ "}}" }}:{{ "{{" }} .Alerts.Firing | len {{ "}}" }}{{ "{{" }} end {{ "}}" }}]
