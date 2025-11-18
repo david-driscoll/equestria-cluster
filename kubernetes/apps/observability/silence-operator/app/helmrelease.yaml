@@ -28,7 +28,7 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    alertmanagerAddress: http://alertmanager-operated.observability.svc.cluster.local:9093
+    alertmanagerAddress: https://alertmanager.sgc.driscoll.tech
     image:
       registry: quay.io
       name: giantswarm/silence-operator

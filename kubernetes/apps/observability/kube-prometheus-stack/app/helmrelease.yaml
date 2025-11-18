@@ -36,6 +36,7 @@ spec:
       - IPv4
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
+      enabled: false
       annotations:
         reloader.stakater.com/auto: "true"
       route:
@@ -134,12 +135,6 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: 'https://thanos-receive.${TAILSCALE_DOMAIN}:19291/api/v1/receive'
-            queueConfig:
-              maxSamplesPerSend: 10000
-              batchSendDeadline: 5s
-              minShards: 1
-              maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
@@ -159,7 +154,7 @@ spec:
                 insecure_skip_verify: false
               static_configs:
                 - targets:
-                    - 'alertmanager.${ROOT_DOMAIN}:443'
+                    - 'alertmanager.sgc.driscoll.tech:443'
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:

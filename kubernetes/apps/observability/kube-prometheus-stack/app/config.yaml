@@ -9,7 +9,7 @@ spec:
     groupBy: ["alertname", "job"]
     groupInterval: 10m
     groupWait: 1m
-    receiver: 'forward-to-primary-alertmanager'
+    receiver: 'null'
     repeatInterval: 12h
     routes:
       - receiver: "null"
@@ -20,7 +20,7 @@ spec:
           - name: alertname
             value: "InfoInhibitor|Watchdog"
             matchType: "=~"
-      - receiver: 'forward-to-primary-alertmanager'
+      - receiver: 'null'
         continue: true
         matchers:
           - name: severity
@@ -40,6 +40,4 @@ spec:
           matchType: '='
   receivers:
   - name: "null"
-  - name: 'forward-to-primary-alertmanager'
-    webhookConfigs:
-    - url: 'https://alertmanager.${ROOT_DOMAIN}/api/v2/alerts'
+  # forward-to-primary-alertmanager disabled: rely on Prometheus alerting.alertmanagers to send alerts directly to SGC
