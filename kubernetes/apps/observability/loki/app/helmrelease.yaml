@@ -78,7 +78,7 @@ spec:
         ruler:
           enable_api: true
           enable_alertmanager_v2: true
-          alertmanager_url: https://alertmanager.sgc.driscoll.tech
+          alertmanager_url: https://alertmanager.${ROOT_DOMAIN}
           storage:
             type: local
             local:

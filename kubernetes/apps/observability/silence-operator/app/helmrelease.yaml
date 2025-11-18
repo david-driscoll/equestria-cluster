@@ -28,7 +28,7 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    alertmanagerAddress: https://alertmanager.sgc.driscoll.tech
+    alertmanagerAddress: https://alertmanager.${ROOT_DOMAIN}
     image:
       registry: quay.io
       name: giantswarm/silence-operator

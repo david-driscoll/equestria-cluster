@@ -146,12 +146,19 @@ spec:
               resources:
                 requests:
                   storage: 50Gi
-        # Send alerts to central SGC Alertmanager
+        # Send alerts to central SGC Alertmanager via static target (SNI + TLS)
         alerting:
           alertmanagers:
-            - name: alertmanager-sgc
-              namespace: observability
-              port: http-web
+            - scheme: https
+              apiVersion: v2
+              static_configs:
+                - targets:
+                    - alertmanager.${ROOT_DOMAIN}:443
+              pathPrefix: /
+              timeout: 10s
+              tls_config:
+                server_name: alertmanager.${ROOT_DOMAIN}
+                insecure_skip_verify: true
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
