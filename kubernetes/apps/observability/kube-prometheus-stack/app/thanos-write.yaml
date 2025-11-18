@@ -21,7 +21,6 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: "thanos-write.${TAILSCALE_DOMAIN}"
-    tailscale.com/proxy-group: egress
   name: thanos-receive
 spec:
   externalName: unused
