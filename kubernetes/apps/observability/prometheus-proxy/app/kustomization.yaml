@@ -5,7 +5,6 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./definition.yaml
-  # - ./ingress.yaml
   - ./thanos-write.yaml
 generatorOptions:
   disableNameSuffixHash: true
