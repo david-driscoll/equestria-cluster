@@ -110,7 +110,7 @@ spec:
               resources:
                 requests:
                   storage: 50Gi
-    thanosRuler:
+    ruler:
       enabled: true
       alertmanagersConfig:
         alertmanagers:
