@@ -69,11 +69,11 @@ spec:
                 kind: Middleware
                 name: authenticated-user
       prometheusSpec:
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelectorNilUsesHelmValues: false
-        ruleSelectorNilUsesHelmValues: false
-        scrapeConfigSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
+        # podMonitorSelectorNilUsesHelmValues: false
+        # probeSelectorNilUsesHelmValues: false
+        # ruleSelectorNilUsesHelmValues: false
+        # scrapeConfigSelectorNilUsesHelmValues: false
+        # serviceMonitorSelectorNilUsesHelmValues: false
         retention: 14d
         retentionSize: 50GB
         resources:
@@ -84,12 +84,6 @@ spec:
             memory: 2000Mi
         remoteWriteDashboards: true
         remoteWrite:
-          # - url: https://thanos-write.${ROOT_DOMAIN}/api/v1/receive
-          #   queueConfig:
-          #     maxSamplesPerSend: 10000
-          #     batchSendDeadline: 5s
-          #     minShards: 1
-          #     maxShards: 4
           - url: http://thanos-write-svc.observability.svc.cluster.local:19291/api/v1/receive
             queueConfig:
               maxSamplesPerSend: 10000
