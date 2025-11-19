@@ -3,22 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app gatus
+  name: &app smartctl-exporter
   namespace: &namespace observability
 spec:
   targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: onepassword-connect
-      namespace: kube-system
-    - name: external-secrets
-      namespace: kube-system
-  path: ./kubernetes/apps/observability/gatus/app
-  components:
-    - ../../../../components/postgres
-    - ../../../../components/gateway/forwardauth
+  path: ./kubernetes/apps/observability/smartctl-exporter/app
   prune: true
   wait: true
   force: false # true

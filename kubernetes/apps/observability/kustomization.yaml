@@ -9,9 +9,7 @@ components:
 resources:
   - ./secret-store.yaml
   - ./crds/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
+  - ./prometheus-proxy/ks.yaml
   - ./loki/ks.yaml
   - ./alloy/ks.yaml
-  - ./silence-operator/ks.yaml
-  - ./exporters/ks.yaml
-  - ./gatus/ks.yaml
+  - ./smartctl-exporter/ks.yaml

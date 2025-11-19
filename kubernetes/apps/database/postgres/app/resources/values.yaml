@@ -111,12 +111,6 @@ cluster:
     superuser: false
     passwordSecret:
       name: romm-postgres
-  - name: gatus
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: gatus-postgres
   - name: pulumi-operator
     ensure: present
     login: true
