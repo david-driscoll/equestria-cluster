@@ -94,13 +94,6 @@ spec:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
           region: home
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: longhorn
-              resources:
-                requests:
-                  storage: 50Gi
         # Send alerts to central SGC Alertmanager via static target (SNI + TLS)
         alertingEndpoints:
           - name: alertmanager-sgc
@@ -110,6 +103,22 @@ spec:
             apiVersion: v2
             pathPrefix: /
             timeout: 10s
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              resources:
+                requests:
+                  storage: 50Gi
+    thanosRuler:
+      enabled: true
+      alertmanagersConfig:
+        alertmanagers:
+          - static_configs:
+              - alertmanager-sgc.observability.svc.cluster.local:9093
+            scheme: http
+            timeout: 10s
+            api_version: v2
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
