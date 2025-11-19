@@ -6,5 +6,6 @@ resources:
   - ./helmrelease.yaml
   - ./definition.yaml
   - ./thanos-write.yaml
+  - ./externalsecret.yaml
 generatorOptions:
   disableNameSuffixHash: true

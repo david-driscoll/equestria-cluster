@@ -113,12 +113,11 @@ spec:
     thanosRuler:
       enabled: true
       alertmanagersConfig:
-        alertmanagers:
-          - static_configs:
-              - alertmanager-sgc.observability.svc.cluster.local:9093
-            scheme: http
-            timeout: 10s
-            api_version: v2
+        existingSecret:
+          name: thanos-ruler-alertmanager-config
+          key: alertmanager.yaml
+        queryEndpoints:
+          - prometheus-operated.observability.svc.cluster.local:9090
       # thanosRulerSpec:
       #   alertDropLabels:
       #     - cluster
