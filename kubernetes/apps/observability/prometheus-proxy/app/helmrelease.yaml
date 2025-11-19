@@ -110,7 +110,7 @@ spec:
               resources:
                 requests:
                   storage: 50Gi
-    ruler:
+    thanosRuler:
       enabled: true
       alertmanagersConfig:
         alertmanagers:
@@ -119,6 +119,9 @@ spec:
             scheme: http
             timeout: 10s
             api_version: v2
+      # thanosRulerSpec:
+      #   alertDropLabels:
+      #     - cluster
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
