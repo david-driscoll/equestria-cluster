@@ -135,7 +135,7 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-          - url: https://thanos-write.${TAILSCALE_DOMAIN}/api/v1/receive
+          - url: http://thanos-write-svc.observability.svc.cluster.local:19291/api/v1/receive
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
@@ -156,17 +156,11 @@ spec:
         alertingEndpoints:
           - name: alertmanager-sgc
             namespace: observability
-            port: https
-            scheme: https
+            port: http
+            scheme: http
             apiVersion: v2
-            static_configs:
-              - targets:
-                  - alertmanager.${ROOT_DOMAIN}:443
             pathPrefix: /
             timeout: 10s
-            tls_config:
-              server_name: alertmanager.${ROOT_DOMAIN}
-              insecure_skip_verify: true
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
