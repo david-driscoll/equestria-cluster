@@ -37,44 +37,6 @@ spec:
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
       enabled: false
-      annotations:
-        reloader.stakater.com/auto: "true"
-      route:
-        main:
-          enabled: true
-          annotations:
-            reloader.stakater.com/auto: "true"
-            external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
-          hostnames:
-            - alertmanager.${CLUSTER_DOMAIN}
-          parentRefs:
-            - name: internal
-              namespace: network
-              kind: Gateway
-          filters:
-            - type: ExtensionRef
-              extensionRef:
-                group: traefik.io
-                kind: Middleware
-                name: authenticated-user
-
-      alertmanagerSpec:
-        replicas: 2
-        alertmanagerConfiguration:
-          name: alertmanager
-        clusterLabel: ${CLUSTER_CNAME}
-        # alertmanagerConfiguration:
-        #   name: alertmanager
-        #   global:
-        #     resolvetimeout: 10m
-        externalUrl: https://alertmanager.${CLUSTER_DOMAIN}
-        storage:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: longhorn
-              resources:
-                requests:
-                  storage: 1Gi
     kubeEtcd:
       service:
         selector:
