@@ -104,7 +104,6 @@ function apply_crds() {
 
     # Apply additional custom CRDs
     local -r custom_crds=(
-    local -r custom_crds=(
         # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
         https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.86.2/stripped-down-crds.yaml
         # renovate: datasource=github-releases depName=kubernetes-sigs/external-dns
