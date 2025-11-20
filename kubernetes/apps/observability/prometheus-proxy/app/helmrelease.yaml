@@ -90,23 +90,18 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
-            writeRelabelConfigs:
-              - action: replace
-                targetLabel: cluster
-                replacement: ${CLUSTER_CNAME}
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
           region: home
-        # Alert forwarding is handled centrally by Thanos Ruler - do not configure per-cluster Alertmanager discovery here
-        # # For ExternalName services without endpoints, also configure a static alertmanager job. This ensures Prometheus can discover the alertmanager via DNS instead of k8s endpoint discovery.
-        # additionalAlertManagerConfigs:
-        #   - scheme: http
-        #     api_version: v2
-        #     path_prefix: /
-        #     static_configs:
-        #       - targets:
-        #           - alertmanager-svc.observability.svc.cluster.local:9093
+        # alertingEndpoints:
+        #   - name: alertmanager-svc
+        #     namespace: observability
+        #     port: http
+        #     scheme: http
+        #     apiVersion: v2
+        #     pathPrefix: /
+        #     timeout: 10s
         storageSpec:
           volumeClaimTemplate:
             spec:
