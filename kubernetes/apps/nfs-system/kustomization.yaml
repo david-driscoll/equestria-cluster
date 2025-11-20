@@ -9,6 +9,5 @@ metadata:
 components:
   - ../../components/common
 resources:
-  - ./namespace.yaml
   - ./secret-store.yaml
   - ./csi-driver-nfs/ks.yaml

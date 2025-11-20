@@ -6,5 +6,4 @@ namespace: cloudnative-pg
 components:
   - ../../components/common
 resources:
-  - ./namespace.yaml
   - ./operator/ks.yaml
