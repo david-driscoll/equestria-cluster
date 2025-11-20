@@ -5,7 +5,9 @@ kind: Component
 resources:
   - ./cluster-secrets.sops.yaml
   - ./shared-secrets.sops.yaml
+  - ./namespace.yaml
   - ./democratic-csi.yaml
+  - ./sops-age.sops.yaml
   - ./service-account.yaml
   - ./middleware.yaml
   - ./templates

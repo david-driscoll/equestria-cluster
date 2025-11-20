@@ -59,9 +59,9 @@ function apply_sops_secrets() {
 
     local -r secrets=(
         # "${ROOT_DIR}/bootstrap/github-deploy-key.sops.yaml"
-        "${ROOT_DIR}/bootstrap/sops-age.sops.yaml"
         "${ROOT_DIR}/kubernetes/components/common/cluster-secrets.sops.yaml"
         "${ROOT_DIR}/kubernetes/components/common/shared-secrets.sops.yaml"
+        "${ROOT_DIR}/kubernetes/components/common/sops-age.sops.yaml"
     )
 
     for secret in "${secrets[@]}"; do
@@ -89,21 +89,7 @@ function apply_sops_secrets() {
 function apply_crds() {
     log debug "Applying CRDs"
 
-    local -r crd_helmfile="${ROOT_DIR}/bootstrap/helmfile.d/00-crds.yaml"
-
-    if [[ ! -f "${crd_helmfile}" ]]; then
-        log error "CRD helmfile does not exist" "file=${crd_helmfile}"
-    fi
-
-    # Extract CRDs using helmfile template with yq post-renderer
-    if ! helmfile --file "${crd_helmfile}" template | kubectl apply --server-side --filename - &>/dev/null; then
-        log error "Failed to apply CRDs from helmfile"
-    fi
-
-    log info "CRDs applied successfully from helmfile"
-
-    # Apply additional custom CRDs
-    local -r custom_crds=(
+    local -r crds=(
         # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
         https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.86.2/stripped-down-crds.yaml
         # renovate: datasource=github-releases depName=kubernetes-sigs/external-dns
@@ -113,19 +99,15 @@ function apply_crds() {
         "${ROOT_DIR}/kubernetes/apps/observability/crds/kuma/crds.yaml"
     )
 
-    for crd in "${custom_crds[@]}"; do
-        if [[ ! -f "${crd}" ]]; then
-            log warn "Custom CRD file does not exist" "crd=${crd}"
-            continue
-        fi
+    for crd in "${crds[@]}"; do
         if kubectl diff --filename "${crd}" &>/dev/null; then
-            log info "Custom CRD is up-to-date" "crd=${crd}"
+            log info "CRDs are up-to-date" "crd=${crd}"
             continue
         fi
         if kubectl apply --server-side --filename "${crd}" &>/dev/null; then
-            log info "Custom CRD applied" "crd=${crd}"
+            log info "CRDs applied" "crd=${crd}"
         else
-            log error "Failed to apply custom CRD" "crd=${crd}"
+            log error "Failed to apply CRDs" "crd=${crd}"
         fi
     done
 }
@@ -134,13 +116,13 @@ function apply_crds() {
 function apply_helm_releases() {
     log debug "Applying Helm releases with helmfile"
 
-    local -r app_helmfile="${ROOT_DIR}/bootstrap/helmfile.d/01-apps.yaml"
+    local -r helmfile_file="${ROOT_DIR}/bootstrap/helmfile.yaml"
 
-    if [[ ! -f "${app_helmfile}" ]]; then
-        log error "App helmfile does not exist" "file=${app_helmfile}"
+    if [[ ! -f "${helmfile_file}" ]]; then
+        log error "File does not exist" "file=${helmfile_file}"
     fi
 
-    if ! helmfile --file "${app_helmfile}" apply --hide-notes --skip-diff-on-install --suppress-diff --suppress-secrets; then
+    if ! helmfile --file "${helmfile_file}" apply --hide-notes --skip-diff-on-install --suppress-diff --suppress-secrets; then
         log error "Failed to apply Helm releases"
     fi
 
