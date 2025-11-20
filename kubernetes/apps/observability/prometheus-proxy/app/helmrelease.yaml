@@ -90,6 +90,10 @@ spec:
               batchSendDeadline: 5s
               minShards: 1
               maxShards: 4
+            writeRelabelConfigs:
+              - action: replace
+                targetLabel: cluster
+                replacement: ${CLUSTER_CNAME}
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
