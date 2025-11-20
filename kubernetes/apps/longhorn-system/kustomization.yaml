@@ -6,6 +6,7 @@ namespace: longhorn-system
 components:
   - ../../components/common
 resources:
+  - ./namespace.yaml
   - ./secret-store.yaml
   - ./longhorn/ks.yaml
 
