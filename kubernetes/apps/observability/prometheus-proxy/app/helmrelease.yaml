@@ -84,7 +84,7 @@ spec:
             memory: 2000Mi
         remoteWriteDashboards: true
         remoteWrite:
-          - url: http://thanos-write-svc.observability.svc.cluster.local:19291/api/v1/receive
+          - url: http://thanos-write.observability.svc.cluster.local:19291/api/v1/receive
             queueConfig:
               maxSamplesPerSend: 10000
               batchSendDeadline: 5s
@@ -95,7 +95,7 @@ spec:
           environment: homelab
           region: home
         alertingEndpoints:
-          - name: alertmanager-svc
+          - name: alertmanager-operated
             namespace: observability
             port: http
             scheme: http
@@ -109,7 +109,7 @@ spec:
             timeout: 10s
             static_configs:
               - targets:
-                - alertmanager-svc.observability.svc.cluster.local:9093
+                - alertmanager-operated.observability.svc.cluster.local:9093
         storageSpec:
           volumeClaimTemplate:
             spec:
