@@ -6,9 +6,14 @@ metadata:
   name: cluster-meta
   namespace: &namespace flux-system
 spec:
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   interval: 1h
   path: ./kubernetes/flux/meta
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,6 +29,10 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   dependsOn:
     - name: cluster-meta
       namespace: flux-system
@@ -31,11 +40,12 @@ spec:
   interval: 1h
   path: ./kubernetes/apps
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
+  wait: true
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -82,7 +92,7 @@ spec:
                       name: RemediateOnFailure
                     remediation:
                       remediateLastFailure: true
-                      retries: 2
+                      retries: 6
               target:
                 group: helm.toolkit.fluxcd.io
                 kind: HelmRelease
