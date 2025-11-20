@@ -9,3 +9,4 @@ resources:
   - ./namespace.yaml
   - ./secret-store.yaml
   - ./cert-manager/ks.yaml
+  - ./trust-manager/ks.yaml
