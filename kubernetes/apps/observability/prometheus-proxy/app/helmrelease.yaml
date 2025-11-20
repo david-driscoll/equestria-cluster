@@ -102,6 +102,14 @@ spec:
             apiVersion: v2
             pathPrefix: /
             timeout: 10s
+        additionalAlertManagerConfigs:
+          - scheme: http
+            api_version: v2
+            path_prefix: /
+            timeout: 10s
+            static_configs:
+              - targets:
+                - alertmanager-svc.observability.svc.cluster.local:9093
         storageSpec:
           volumeClaimTemplate:
             spec:
@@ -110,7 +118,7 @@ spec:
                 requests:
                   storage: 50Gi
     thanosRuler:
-      enabled: true
+      enabled: false
       alertmanagersConfig:
         existingSecret:
           name: thanos-ruler-alertmanager-config
