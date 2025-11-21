@@ -111,6 +111,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: romm-postgres
+  - name: grafana
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: grafana-postgres
   - name: pulumi-operator
     ensure: present
     login: true

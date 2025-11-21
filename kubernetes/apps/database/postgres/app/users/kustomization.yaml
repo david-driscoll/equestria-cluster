@@ -7,6 +7,8 @@ resources:
   - postgres-superuser.sops.yaml
   - donetick.yaml
   - donetick.sops.yaml
+  - grafana.yaml
+  - grafana.sops.yaml
   - homechart.yaml
   - homechart.sops.yaml
   - immich.yaml
