@@ -157,8 +157,6 @@ spec:
               - identifier: app
                 port: *port
         annotations:
-          reloader.stakater.com/auto: "true"
-          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
           gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:8787"
           # gethomepage.dev/widget.key: ""
           gethomepage.dev/enabled: "true"
