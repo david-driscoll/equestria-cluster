@@ -7,6 +7,7 @@ components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
+  - ./namespace.yaml
   - ./secret-store.yaml
   - ./authkey/ks.yaml
   - ./operator/ks.yaml
