@@ -13,7 +13,7 @@ spec:
       namespace: network
       kind: Gateway
   hostnames:
-    - "${APP}.${CLUSTER_DOMAIN}"
+    - "${APP}.${ROOT_DOMAIN}"
   rules:
     - backendRefs:
         - name: loki
