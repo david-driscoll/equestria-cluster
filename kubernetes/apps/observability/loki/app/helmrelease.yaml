@@ -120,17 +120,23 @@ spec:
       env:
         - name: TMPDIR
           value: /tmp
-      # Provide a writable /tmp for the sidecar via an EmptyDir volume
+      # Provide a writable /tmp for the sidecar via a dedicated EmptyDir volume (avoid name collision with main container's tmp)
       extraVolumes:
-        - name: tmp
+        - name: tmp-sidecar
           emptyDir: {}
         - name: rules
           emptyDir: {}
       extraVolumeMounts:
         - name: rules
           mountPath: /rules/fake
-        - name: tmp
+        - name: tmp-sidecar
           mountPath: /tmp
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
       rules:
         searchNamespace: ALL
         folder: /rules/fake
