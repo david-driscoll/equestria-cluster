@@ -1,11 +1,11 @@
 groups:
-  - name: "PrometheusWatcher"
+  - name: "PrometheusWatcher sgc"
     rules:
       - alert: "PrometheusDown"
         annotations:
           summary: "Prometheus has disappeared from Thanos target discovery"
           description: "Prometheus instance has been down for more than 5 minutes"
-        expr: absent(up{job=~".*prometheus.*",cluster="${CLUSTER_CNAME}"})
+        expr: absent(up{job=~".*prometheus.*",cluster="sgc"})
         for: 5m
         labels:
           severity: critical
@@ -17,6 +17,39 @@ groups:
           summary: "Prometheus has disappeared from Thanos target discovery"
           description: "Prometheus instance has been down for more than 5 minutes"
         expr: absent(up{job=~".*prometheus.*",cluster="equestria"})
+        for: 5m
+        labels:
+          severity: critical
+          component: observability
+  - name: "PrometheusWatcher celestia"
+    rules:
+      - alert: "PrometheusDown"
+        annotations:
+          summary: "Prometheus has disappeared from Thanos target discovery"
+          description: "Prometheus instance has been down for more than 5 minutes"
+        expr: absent(up{job=~".*prometheus.*",cluster="celestia"})
+        for: 5m
+        labels:
+          severity: critical
+          component: observability
+  - name: "PrometheusWatcher luna"
+    rules:
+      - alert: "PrometheusDown"
+        annotations:
+          summary: "Prometheus has disappeared from Thanos target discovery"
+          description: "Prometheus instance has been down for more than 5 minutes"
+        expr: absent(up{job=~".*prometheus.*",cluster="luna"})
+        for: 5m
+        labels:
+          severity: critical
+          component: observability
+  - name: "PrometheusWatcher alpha-site"
+    rules:
+      - alert: "PrometheusDown"
+        annotations:
+          summary: "Prometheus has disappeared from Thanos target discovery"
+          description: "Prometheus instance has been down for more than 5 minutes"
+        expr: absent(up{job=~".*prometheus.*",cluster="alpha-site"})
         for: 5m
         labels:
           severity: critical
