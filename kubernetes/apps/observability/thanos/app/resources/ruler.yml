@@ -1,55 +1,11 @@
 groups:
-  - name: "PrometheusWatcher sgc"
+  - name: "PrometheusWatcher"
     rules:
       - alert: "PrometheusDown"
         annotations:
-          summary: "Prometheus has disappeared from Thanos target discovery"
-          description: "Prometheus instance has been down for more than 5 minutes"
-        expr: absent(up{job=~".*prometheus.*",cluster="sgc"})
-        for: 5m
-        labels:
-          severity: critical
-          component: observability
-  - name: "PrometheusWatcher equestria"
-    rules:
-      - alert: "PrometheusDown"
-        annotations:
-          summary: "Prometheus has disappeared from Thanos target discovery"
-          description: "Prometheus instance has been down for more than 5 minutes"
-        expr: absent(up{job=~".*prometheus.*",cluster="equestria"})
-        for: 5m
-        labels:
-          severity: critical
-          component: observability
-  - name: "PrometheusWatcher celestia"
-    rules:
-      - alert: "PrometheusDown"
-        annotations:
-          summary: "Prometheus has disappeared from Thanos target discovery"
-          description: "Prometheus instance has been down for more than 5 minutes"
-        expr: absent(up{job=~".*prometheus.*",cluster="celestia"})
-        for: 5m
-        labels:
-          severity: critical
-          component: observability
-  - name: "PrometheusWatcher luna"
-    rules:
-      - alert: "PrometheusDown"
-        annotations:
-          summary: "Prometheus has disappeared from Thanos target discovery"
-          description: "Prometheus instance has been down for more than 5 minutes"
-        expr: absent(up{job=~".*prometheus.*",cluster="luna"})
-        for: 5m
-        labels:
-          severity: critical
-          component: observability
-  - name: "PrometheusWatcher alpha-site"
-    rules:
-      - alert: "PrometheusDown"
-        annotations:
-          summary: "Prometheus has disappeared from Thanos target discovery"
-          description: "Prometheus instance has been down for more than 5 minutes"
-        expr: absent(up{job=~".*prometheus.*",cluster="alpha-site"})
+          summary: "Prometheus has disappeared from Thanos target discovery ({{ $labels.cluster }})"
+          description: "Prometheus instance in cluster {{ $labels.cluster }} has been down for more than 5 minutes"
+        expr: sum by (cluster) (up{job=~".*prometheus.*"}) == 0
         for: 5m
         labels:
           severity: critical
