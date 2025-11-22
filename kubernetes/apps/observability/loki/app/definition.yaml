@@ -6,7 +6,7 @@ metadata:
   name: loki
 spec:
   name: Loki
-  category: ${CLUSTER_TITLE}
+  category: Observability
   description: Loki is a log aggregation system designed to work with Prometheus.
   url: &url https://loki.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/loki.svg
