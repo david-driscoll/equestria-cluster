@@ -19,8 +19,7 @@ spec:
       externalHost: *url
       skipPathRegex: "^/api([/?].*)?$"
   gatus:
-    - group: *category
-      url: *url
+    - url: *url
       method: GET
       conditions:
         - "[STATUS] == 200"
