@@ -95,17 +95,7 @@ spec:
           tailscale.com/expose: "true"
           tailscale.com/hostname: loki
           tailscale.com/tags: "tag:observability"
-      # Provide a writable /tmp for the sidecar via a dedicated EmptyDir volume (avoid name collision with main container's tmp)
-      extraVolumes:
-        - name: tmp-sidecar
-          emptyDir: {}
-        - name: rules
-          emptyDir: {}
-      extraVolumeMounts:
-        - name: rules
-          mountPath: /rules/fake
-        - name: tmp-sidecar
-          mountPath: /tmp
+      # Left intentionally blank: avoid duplicating mounts that the chart already creates for the main container
     gateway:
       enabled: false
       replicas: 0
@@ -136,7 +126,12 @@ spec:
         capabilities:
           drop:
             - ALL
-        readOnlyRootFilesystem: true
+        readOnlyRootFilesystem: false
+      extraVolumeMounts:
+        - name: tmp-sidecar
+          mountPath: /tmp
+        - name: rules
+          mountPath: /rules/fake
       rules:
         searchNamespace: ALL
         folder: /rules/fake
