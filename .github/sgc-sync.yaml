@@ -69,7 +69,12 @@ david-driscoll/stargate-command-cluster:
     dest: kubernetes/apps/observability/
     exclude: |
       kustomization.yaml
-      prometheus-proxy/
+      alertmanager/
+      exporters/
+      grafana/
+      prometheus/
+      thanos/
+      loki/
       alloy/app/kustomization.yaml
   - source: kubernetes/apps/tailscale-system/
     dest: kubernetes/apps/tailscale-system/
