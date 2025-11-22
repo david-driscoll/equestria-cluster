@@ -70,12 +70,11 @@ david-driscoll/stargate-command-cluster:
     exclude: |
       kustomization.yaml
       alertmanager/
-      exporters/
       grafana/
       prometheus/
       thanos/
       loki/
-      alloy/app/kustomization.yaml
+      alloy/
   - source: kubernetes/apps/tailscale-system/
     dest: kubernetes/apps/tailscale-system/
     exclude: |
