@@ -95,7 +95,6 @@ spec:
           tailscale.com/expose: "true"
           tailscale.com/hostname: loki
           tailscale.com/tags: "tag:observability"
-      # Left intentionally blank: avoid duplicating mounts that the chart already creates for the main container
     gateway:
       enabled: false
       replicas: 0
@@ -116,22 +115,8 @@ spec:
     sidecar:
       image:
         repository: ghcr.io/home-operations/k8s-sidecar
-        tag: 2.1.2@sha256:d9e169add4e71fd5931a24e11696853f3d804ebc2022cd81f038e7ef22f4d626
+        tag: 1.30.9@sha256:74d65c3def9276b24b5bfe41f8efb773174e7a1ecf3c9b5a31bd02cfdee232c9
       enableUniqueFilenames: true
-      env:
-        - name: TMPDIR
-          value: /tmp
-      containerSecurityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: false
-      extraVolumeMounts:
-        - name: tmp-sidecar
-          mountPath: /tmp
-        - name: rules
-          mountPath: /rules/fake
       rules:
         searchNamespace: ALL
         folder: /rules/fake
