@@ -1,0 +1,65 @@
+---
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: obsidian-sync
+  namespace: obsidian-sync
+spec:
+  name: Obsidian Sync
+  slug: obsidian-sync
+  icon: https://obsidian.md/favicon.ico
+  url: https://obsidian.internal.example.com  # Replace with your actual domain
+  description: Self-hosted Obsidian LiveSync server using CouchDB
+  category: Productivity
+  
+  # Access policy - customize based on your Authentik groups
+  access_policy:
+    groups:
+      - users
+      - admins
+  
+  # Authentik proxy provider configuration
+  authentik:
+    proxy:
+      name: Obsidian Sync
+      externalHost: https://obsidian.internal.example.com  # Replace with your actual domain
+      internalHost: http://obsidian-sync.obsidian-sync.svc.cluster.local:5984
+      internalHostSslValidation: false
+      mode: forward_single
+      authorizationFlow: default-provider-authorization-implicit-consent
+      authenticationFlow: default-authentication-flow
+      accessTokenValidity: hours=24
+      cookieDomain: internal.example.com  # Replace with your actual domain
+      skipPathRegex: |-
+        ^/_session.*$
+        ^/_utils.*$
+        ^/favicon.ico$
+        ^/_up$
+  
+  # Uptime monitoring configuration
+  uptime:
+    http:
+      url: https://obsidian.internal.example.com/_up  # Replace with your actual domain
+      method: GET
+      interval: 60
+      timeout: 10
+      max_retries: 3
+      accepted_statuscodes:
+        - "200-299"
+      active: true
+  
+  # Gatus monitoring configuration
+  gatus:
+    - name: Obsidian Sync
+      group: productivity
+      url: https://obsidian.internal.example.com/_up  # Replace with your actual domain
+      interval: 1m
+      conditions:
+        - "[STATUS] == 200"
+        - "[RESPONSE_TIME] < 1000"
+      alerts:
+        - type: ntfy
+          enabled: true
+          failure-threshold: 3
+          success-threshold: 2
+          send-on-resolved: true

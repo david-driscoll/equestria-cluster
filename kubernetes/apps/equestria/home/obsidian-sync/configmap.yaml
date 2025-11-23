@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: obsidian-sync-config
+  namespace: obsidian-sync
+data:
+  cors.ini: |
+    [httpd]
+    enable_cors = true
+
+    [cors]
+    # SECURITY: Restrict origins to your specific domains in production
+    # For Obsidian apps, use: origins = https://app.obsidian.md, app://obsidian.md
+    # For development/testing only, you can use: origins = *
+    origins = *
+    credentials = true
+    methods = GET, PUT, POST, HEAD, DELETE
+    headers = accept, authorization, content-type, origin, referer
+    max_age = 3600
