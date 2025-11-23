@@ -70,7 +70,7 @@ spec:
               limits:
                 memory: 512Mi
     service:
-      app:
+      *app :
         controller: *app
         ports:
           http:
@@ -105,9 +105,9 @@ spec:
           - backendRefs:
               - identifier: *app
                 port: *port
-        filters:
-          - type: ExtensionRef
-            extensionRef:
-              group: traefik.io
-              kind: Middleware
-              name: obsidian-sync-cors
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: obsidian-sync-cors
