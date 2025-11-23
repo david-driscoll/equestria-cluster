@@ -1,0 +1,34 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: obsidian-sync-cors
+  namespace: obsidian-sync
+spec:
+  headers:
+    accessControlAllowCredentials: true
+    # Explicitly list required headers for security
+    accessControlAllowHeaders:
+      - "Authorization"
+      - "Content-Type"
+      - "Accept"
+      - "Origin"
+      - "X-Requested-With"
+      - "X-Auth-Token"
+    accessControlAllowMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - HEAD
+      - OPTIONS
+    # SECURITY: Pre-configured with Obsidian-specific origins
+    # Obsidian desktop app uses app://obsidian.md
+    # Obsidian web uses https://app.obsidian.md
+    accessControlAllowOriginList:
+      - "https://app.obsidian.md"
+      - "app://obsidian.md"
+      - "capacitor://localhost"
+      - "http://localhost"
+    accessControlMaxAge: 100
+    addVaryHeader: true

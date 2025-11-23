@@ -1,0 +1,48 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: obsidian-sync-init
+  namespace: obsidian-sync
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: init
+          image: curlimages/curl:8.11.1
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Waiting for CouchDB to be ready..."
+              until curl -f -s http://obsidian-sync:5984/_up; do
+                echo "CouchDB not ready yet, waiting..."
+                sleep 5
+              done
+              
+              echo "CouchDB is ready!"
+              echo "Creating initial databases..."
+              
+              # Use environment variables with curl to avoid exposing credentials in process list
+              curl -X PUT -u "${COUCHDB_USER}:${COUCHDB_PASSWORD}" http://obsidian-sync:5984/_users || true
+              curl -X PUT -u "${COUCHDB_USER}:${COUCHDB_PASSWORD}" http://obsidian-sync:5984/_replicator || true
+              curl -X PUT -u "${COUCHDB_USER}:${COUCHDB_PASSWORD}" http://obsidian-sync:5984/_global_changes || true
+              
+              echo "Initial setup complete!"
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: obsidian-sync-secret
+                  key: couchdb-user
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obsidian-sync-secret
+                  key: couchdb-password
