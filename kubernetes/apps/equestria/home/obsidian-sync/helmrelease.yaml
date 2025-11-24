@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -76,6 +77,24 @@ spec:
           http:
             port: &port 5984
 
+    configMaps:
+      *app :
+        data:
+          cors.ini: |
+            [httpd]
+            enable_cors = true
+
+            [cors]
+            # SECURITY: Restrict origins to your specific domains in production
+            # For Obsidian apps, use: origins = https://app.obsidian.md, app://obsidian.md
+            # For development/testing only, you can use: origins = *
+            origins = *
+            credentials = true
+            methods = GET, PUT, POST, HEAD, DELETE
+            headers = accept, authorization, content-type, origin, referer
+            max_age = 3600
+
+
     persistence:
       data:
         enabled: true
@@ -86,7 +105,7 @@ spec:
       config:
         enabled: true
         type: configMap
-        name: obsidian-sync-config
+        name: *app
         globalMounts:
           - path: /opt/couchdb/etc/local.d/cors.ini
             subPath: cors.ini
@@ -110,4 +129,4 @@ spec:
                 extensionRef:
                   group: traefik.io
                   kind: Middleware
-                  name: obsidian-sync-cors
+                  name: ${APP}-cors
