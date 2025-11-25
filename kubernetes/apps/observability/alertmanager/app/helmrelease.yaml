@@ -62,7 +62,7 @@ spec:
                 name: authenticated-user
 
       alertmanagerSpec:
-        replicas: 1
+        replicas: 2
         alertmanagerConfiguration:
           name: alertmanager
         # alertmanagerConfiguration:

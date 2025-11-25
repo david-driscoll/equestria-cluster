@@ -117,6 +117,7 @@ spec:
     # Ruler - Evaluates recording and alerting rules on historical data
     ruler:
       enabled: true
+      queryURL: https://thanos.${ROOT_DOMAIN}
       alertmanagersConfig:
         alertmanagers:
           - static_configs:

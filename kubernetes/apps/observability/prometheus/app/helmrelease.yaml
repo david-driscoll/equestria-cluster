@@ -68,6 +68,7 @@ spec:
       thanosServiceMonitor:
         enabled: true
       prometheusSpec:
+        externalUrl: https://prometheus.${CLUSTER_DOMAIN}
         # podMonitorSelectorNilUsesHelmValues: false
         # probeSelectorNilUsesHelmValues: false
         # ruleSelectorNilUsesHelmValues: false
