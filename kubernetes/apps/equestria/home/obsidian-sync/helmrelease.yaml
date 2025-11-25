@@ -29,6 +29,13 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 5984
+        runAsGroup: 5984
+        fsGroup: 5984
+        fsGroupChangePolicy: OnRootMismatch
     controllers:
       *app :
         annotations:
@@ -41,7 +48,7 @@ spec:
               tag: 3.5.1
 
             env:
-              TZ: ${TZ}
+              TZ: ${TIMEZONE}
               COUCHDB_USER:
                 valueFrom:
                   secretKeyRef:
