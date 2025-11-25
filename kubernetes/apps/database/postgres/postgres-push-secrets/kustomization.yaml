@@ -5,7 +5,6 @@ resources:
   - postgres-superuser-push-secret.yaml
   - donetick-postgres-push-secret.yaml
   - grafana-postgres-push-secret.yaml
-  - homechart-postgres-push-secret.yaml
   - immich-postgres-push-secret.yaml
   - n8n-postgres-push-secret.yaml
   - romm-postgres-push-secret.yaml
