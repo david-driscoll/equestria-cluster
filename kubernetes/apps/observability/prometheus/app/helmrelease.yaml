@@ -77,10 +77,11 @@ spec:
         retentionSize: 50GB
         resources:
           requests:
-            memory: 500Mi
             cpu: 100m
+            memory: 1Gi
           limits:
-            memory: 2000Mi
+            cpu: 500m
+            memory: 2Gi
         thanos:
           objectStorageConfig:
             existingSecret:
