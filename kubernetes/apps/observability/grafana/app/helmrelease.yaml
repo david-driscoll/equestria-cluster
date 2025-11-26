@@ -83,97 +83,105 @@ spec:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
-          - name: default
-            orgId: 1
-            folder: ""
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/default
-          - name: node-monitoring
-            orgId: 1
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: node-monitoring
             folder: Node
-            type: file
-            disableDeletion: false
-            editable: true
             options:
               path: /var/lib/grafana/dashboards/node-monitoring
-          - name: cilium
-            orgId: 1
-            folder: Cilium
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: cilium
+            folder: Services/Cilium
             options:
               path: /var/lib/grafana/dashboards/cilium
-          - name: data
-            orgId: 1
-            folder: Data
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: services
+            folder: Services
             options:
-              path: /var/lib/grafana/dashboards/data
-          - name: media
-            orgId: 1
-            folder: Media
+              path: /var/lib/grafana/dashboards/services
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: media
+            folder: Media
             options:
               path: /var/lib/grafana/dashboards/media
-          - name: flux
-            orgId: 1
-            folder: Flux
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: flux
+            folder: Flux
             options:
               path: /var/lib/grafana/dashboards/flux
-          - name: kubernetes
-            orgId: 1
-            folder: Kubernetes
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: kubernetes
+            folder: Kubernetes
             options:
               path: /var/lib/grafana/dashboards/kubernetes
-          - name: network
-            orgId: 1
-            folder: Network
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: kubernetes-other
+            folder: Kubernetes Other
+            options:
+              path: /var/lib/grafana/dashboards/kubernetes-other
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: network
+            folder: Network
             options:
               path: /var/lib/grafana/dashboards/network
-          - name: nginx
-            orgId: 1
-            folder: Nginx
+          - orgId: 1
             type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/nginx
-          - name: system
-            orgId: 1
-            folder: System
-            type: file
-            disableDeletion: false
-            editable: true
+            disableDeletion: true
+            editable: false
             allowUiUpdates: true
+            name: system
+            folder: System
             options:
-              path:
-                /var/lib/grafana/dashboards/system
-                # - name: thanos
-                #   orgId: 1
-                #   folder: Thanos
-                #   type: file
-                #   disableDeletion: false
-                #   editable: true
-                #   allowUiUpdates: true
-                #   options:
-                #     path: /var/lib/grafana/dashboards/thanos
+              path: /var/lib/grafana/dashboards/system
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: thanos
+            folder: Services/Thanos
+            options:
+              path: /var/lib/grafana/dashboards/thanos
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: unifi
+            folder: Services/Unifi
+            options:
+              path: /var/lib/grafana/dashboards/unifi
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -206,27 +214,65 @@ spec:
     dashboards:
       node-monitoring:
         node-exporter-full:
-          # renovate: depName="Node Exporter Full"
           gnetId: 1860
-          revision: 41
           datasource: Prometheus
         node-exporter-bsd:
-          # renovate: depName="Node Exporter BSD"
           gnetId: 4260
-          revision: 15
           datasource: Prometheus
         node-feature-discovery:
           url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
           datasource: Prometheus
-      data:
+        smartctl-exporter:
+          gnetId: 22604
+          datasource: Prometheus
+      services:
         external-secrets:
           url: https://raw.githubusercontent.com/external-secrets/external-secrets/main/docs/snippets/dashboard.json
           datasource: Prometheus
-        # zfs:
-        #   # renovate: depName="ZFS"
-        #   gnetId: 7845
-        #   revision: 4
-        #   datasource: Prometheus
+        network-ups-tools:
+          gnetId: 12455
+          datasource: Prometheus
+        cert-manager:
+          gnetId: 20842
+          datasource: Prometheus
+        volsync:
+          gnetId: 21356
+          datasource:
+            - {name: DS_PROMETHEUS, value: Prometheus}
+            - {name: VAR_REPLICATIONDESTNAME, value: ".*-bootstrap"}
+        spegel:
+          gnetId: 18089
+          datasource: Prometheus
+      network:
+        blackbox-exporter:
+          gnetId: 7587
+          datasource: Prometheus
+        cloudflared:
+          # renovate: depName="Cloudflare Tunnels (cloudflared)"
+          gnetId: 17457
+          datasource: Prometheus
+        external-dns:
+          gnetId: 15038
+          datasource: Prometheus
+        coredns:
+          gnetId: 14981
+          datasource: Prometheus
+        speedtest-exporter-hub:
+          gnetId: 13665
+          datasource: Prometheus
+      unifi:
+        unifi-client-insights:
+          gnetId: 11315
+          datasourceName: "Prometheus"
+        unifi-network-sites:
+          gnetId: 11311
+          datasourceName: "Prometheus"
+        unifi-uap-insights:
+          gnetId: 11314
+          datasourceName: "Prometheus"
+        unifi-usw-insights:
+          gnetId: 11312
+          datasourceName: "Prometheus"
       flux:
         flux-cluster:
           url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
@@ -238,170 +284,90 @@ spec:
           url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
           datasource: Prometheus
       kubernetes:
+        k8s-system-api-server:
+          url: "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json"
+          datasource: Prometheus
+        k8s-system-coredns:
+          url: "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json"
+          datasource: Prometheus
+        k8s-views-global:
+          url: "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json"
+          datasource: Prometheus
+        k8s-views-namespaces:
+          url: "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json"
+          datasource: Prometheus
+        k8s-views-nodes:
+          url: "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json"
+          datasource: Prometheus
+        k8s-views-pods:
+          url: "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json"
+          datasource: Prometheus
+      kubernetes-other:
         kubernetes-api-server:
-          # renovate: depName="Kubernetes / System / API Server"
           gnetId: 15761
-          revision: 19
           datasource: Prometheus
         kubernetes-coredns:
-          # renovate: depName="Kubernetes / System / CoreDNS"
           gnetId: 15762
-          revision: 21
           datasource: Prometheus
         kubernetes-global:
-          # renovate: depName="Kubernetes / Views / Global"
           gnetId: 15757
-          revision: 43
           datasource: Prometheus
         kubernetes-namespaces:
-          # renovate: depName="Kubernetes / Views / Namespaces"
           gnetId: 15758
-          revision: 42
           datasource: Prometheus
         kubernetes-nodes:
-          # renovate: depName="Kubernetes / Views / Nodes"
           gnetId: 15759
-          revision: 37
           datasource: Prometheus
         kubernetes-prometheus:
-          # renovate: depName="Prometheus"
           gnetId: 19105
-          revision: 7
           datasource: Prometheus
-        smartctl-exporter:
-          # renovate: depName="SMARTctl Exporter Dashboard"
-          gnetId: 22604
-          revision: 2
-          datasource:
-            - {name: DS_PROMETHEUS, value: Prometheus}
         kubernetes-volumes:
-          # renovate: depName="K8s / Storage / Volumes / Cluster"
           gnetId: 11454
-          revision: 14
           datasource: Prometheus
         kubernetes-pods:
-          # renovate: depName="Kubernetes / Views / Pods"
           gnetId: 15760
-          revision: 36
           datasource: Prometheus
       media:
         miniflux:
           url: https://raw.githubusercontent.com/miniflux/v2/main/contrib/grafana/dashboard.json
           datasource: Prometheus
-      network:
-        # apc-ups:
-        #   # renovate: depName="APC UPS (SNMP)"
-        #   gnetId: 12340
-        #   revision: 1
-        #   datasource: Prometheus
-        blackbox-exporter:
-          # renovate: depName="Prometheus Blackbox Exporter"
-          gnetId: 7587
-          revision: 3
+      thanos:
+        thanos-bucket-replicate:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/bucket-replicate.json
           datasource: Prometheus
-        cert-manager:
-          # renovate: depName="Cert-manager-Kubernetes"
-          gnetId: 20842
-          revision: 3
+        thanos-compact:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/compact.json
           datasource: Prometheus
-        # frigate:
-        #   # renovate: depName="Frigate"
-        #   gnetId: 18226
-        #   revision: 9
-        #   datasource:
-        #     - {name: DS_PROMETHEUS, value: Prometheus}
-        # cloudflared:
-        #   # renovate: depName="Cloudflare Tunnels (cloudflared)"
-        #   gnetId: 17457
-        #   revision: 6
-        #   datasource:
-        #     - {name: DS_PROMETHEUS, value: Prometheus}
-        external-dns:
-          # renovate: depName="External-dns"
-          gnetId: 15038
-          revision: 3
+        thanos-overview:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/overview.json
           datasource: Prometheus
-        # opnsense:
-        #   # renovate: depName="OPNsense"
-        #   gnetId: 21113
-        #   revision: 1
-        #   datasource:
-        #     - {name: DS_PROMETHEUS-K0, value: Prometheus}
-        speedtest-exporter-hub:
-          # renovate: depName="Speedtest Exporter"
-          gnetId: 13665
-          revision: 4
-          datasource:
-            - {name: DS_PROMETHEUS, value: Prometheus}
-      system:
-        volsync:
-          # renovate: depName="VolSync Dashboard"
-          gnetId: 21356
-          revision: 3
-          datasource:
-            - {name: DS_PROMETHEUS, value: Prometheus}
-            - {name: VAR_REPLICATIONDESTNAME, value: ".*-bootstrap"}
-        # kasa:
-        #   # renovate: depName="Kasa"
-        #   gnetId: 10957
-        #   revision: 3
-        #   datasource:
-        #     - { name: DS_PROMETHEUS, value: Prometheus }
-        # minio:
-        #   # renovate: depName="MinIO Dashboard"
-        #   gnetId: 13502
-        #   revision: 26
-        #   datasource:
-        #     - {name: DS_PROMETHEUS, value: Prometheus}
-        spegel:
-          # renovate: depName="Spegel"
-          gnetId: 18089
-          revision: 1
-          datasource:
-            - name: DS_PROMETHEUS
-              value: Prometheus
-      # thanos:
-      #   thanos-bucket-replicate:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/bucket-replicate.json
-      #     datasource: Prometheus
-      #   thanos-compact:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/compact.json
-      #     datasource: Prometheus
-      #   thanos-overview:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/overview.json
-      #     datasource: Prometheus
-      #   thanos-query-frontend:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/query-frontend.json
-      #     datasource: Prometheus
-      #   thanos-query:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/query.json
-      #     datasource: Prometheus
-      #   thanos-receive:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/receive.json
-      #     datasource: Prometheus
-      #   thanos-rule:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/rule.json
-      #     datasource: Prometheus
-      #   thanos-sidecar:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/sidecar.json
-      #     datasource: Prometheus
-      #   thanos-store:
-      #     url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/store.json
-      #     datasource: Prometheus
+        thanos-query-frontend:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/query-frontend.json
+          datasource: Prometheus
+        thanos-query:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/query.json
+          datasource: Prometheus
+        thanos-receive:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/receive.json
+          datasource: Prometheus
+        thanos-rule:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/rule.json
+          datasource: Prometheus
+        thanos-sidecar:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/sidecar.json
+          datasource: Prometheus
+        thanos-store:
+          url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/store.json
+          datasource: Prometheus
     sidecar:
       dashboards:
         enabled: true
-        searchNamespace: observability
-        labelValue: "true"
+        searchNamespace: ALL
         label: grafana_dashboard
         folderAnnotation: grafana_folder
         provider:
-          disableDelete: true
+          allowUiUpdates: true
           foldersFromFilesStructure: true
-      datasources:
-        enabled: true
-        searchNamespace: observability
-        labelValue: "true"
     plugins:
       - grafana-clock-panel
       - grafana-piechart-panel
