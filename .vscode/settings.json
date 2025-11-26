@@ -9,6 +9,7 @@
   "sops.beta": false,
   "sops.creationEnabled": true,
   "vs-kubernetes": {
+    "resource-commands-on-files": true,
     "vs-kubernetes.crd-code-completion": "enabled",
     "vs-kubernetes.kubeconfig": "/Users/david/Development/david-driscoll/equestria-cluster/kubeconfig",
     "vs-kubernetes.knownKubeconfigs": [
@@ -47,5 +48,6 @@
   },
   "peacock.color": "#639",
   "vscode-kubernetes.log-viewer.follow": true,
-  "vscode-kubernetes.log-viewer.timestamp": true
+  "vscode-kubernetes.log-viewer.timestamp": true,
+  "vscode-kubernetes.log-viewer.autorun": false
 }
