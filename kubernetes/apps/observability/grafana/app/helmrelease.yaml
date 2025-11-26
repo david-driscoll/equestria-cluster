@@ -104,9 +104,9 @@ spec:
           - {name: "Loki", orgId: 1}
           - {name: "Prometheus", orgId: 1}
         datasources:
-        - name: "Thanos"
+        - name: "Prometheus"
           type: prometheus
-          uid: thanos
+          uid: prometheus
           isDefault: true
           access: proxy
           url: http://thanos-query.observability.svc.cluster.local:9090
