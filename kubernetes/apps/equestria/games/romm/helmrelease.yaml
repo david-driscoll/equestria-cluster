@@ -75,8 +75,7 @@ spec:
               limits:
                 cpu: 1000m
                 memory: 2Gi
-    rawResources:
-      
+
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
