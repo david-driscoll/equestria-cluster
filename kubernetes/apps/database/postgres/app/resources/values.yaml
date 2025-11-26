@@ -93,6 +93,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: n8n-postgres
+  - name: vikunja
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: vikunja-postgres
   - name: romm
     ensure: present
     login: true

@@ -7,3 +7,4 @@ resources:
   - immich-postgres-push-secret.yaml
   - n8n-postgres-push-secret.yaml
   - romm-postgres-push-secret.yaml
+  - vikunja-postgres-push-secret.yaml

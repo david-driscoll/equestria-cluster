@@ -13,3 +13,5 @@ resources:
   - n8n.sops.yaml
   - romm.yaml
   - romm.sops.yaml
+  - vikunja.yaml
+  - vikunja.sops.yaml
