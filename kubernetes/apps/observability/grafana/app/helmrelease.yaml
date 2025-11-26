@@ -126,6 +126,109 @@ spec:
           jsonData:
             implementation: prometheus
 
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: node-monitoring
+            folder: Node
+            options:
+              path: /var/lib/grafana/dashboards/node-monitoring
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: cilium
+            folder: Services/Cilium
+            options:
+              path: /var/lib/grafana/dashboards/cilium
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: services
+            folder: Services
+            options:
+              path: /var/lib/grafana/dashboards/services
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: media
+            folder: Media
+            options:
+              path: /var/lib/grafana/dashboards/media
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: flux
+            folder: Flux
+            options:
+              path: /var/lib/grafana/dashboards/flux
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: k8s
+            folder: K8S
+            options:
+              path: /var/lib/grafana/dashboards/k8s
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: kubernetes
+            folder: Kubernetes
+            options:
+              path: /var/lib/grafana/dashboards/kubernetes
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: network
+            folder: Network
+            options:
+              path: /var/lib/grafana/dashboards/network
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: system
+            folder: System
+            options:
+              path: /var/lib/grafana/dashboards/system
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: thanos
+            folder: Thanos
+            options:
+              path: /var/lib/grafana/dashboards/thanos
+          - orgId: 1
+            type: file
+            disableDeletion: true
+            editable: false
+            allowUiUpdates: true
+            name: unifi
+            folder: Unifi
+            options:
+              path: /var/lib/grafana/dashboards/unifi
       dashboards:
         node-monitoring:
           node-exporter-full:
