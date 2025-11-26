@@ -470,15 +470,6 @@ spec:
         thanos-store:
           url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/store.json
           datasource: [{name: datasource, value: Prometheus}]
-    sidecar:
-      dashboards:
-        enabled: true
-        searchNamespace: ALL
-        label: grafana_dashboard
-        folderAnnotation: grafana_folder
-        provider:
-          allowUiUpdates: true
-          foldersFromFilesStructure: true
     plugins:
       - grafana-clock-panel
       - grafana-piechart-panel
