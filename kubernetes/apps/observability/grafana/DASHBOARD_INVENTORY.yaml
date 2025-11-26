@@ -9,6 +9,7 @@ dashboards:
     folder: Data
     items:
       - external-secrets (url)
+      - minio (CRD)  # now managed as GrafanaDashboard CRD
   - owner: grafana-helm
     folder: Flux
     items:
@@ -45,3 +46,11 @@ dashboards:
     folder: Network
     items:
       - nut/unpoller (CRD)
+      - unifi (CRD)
+      - cloudflared (CRD)
+      - tailscale (CRD)
+  - owner: app-crd
+    folder: Data
+    items:
+      - minio (CRD)  # Requires MinIO exporter and Prometheus metrics to be useful
+      - backblaze (none)  # No standard Grafana dashboard found; requires metrics or custom dashboard

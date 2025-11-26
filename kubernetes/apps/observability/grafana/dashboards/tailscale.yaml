@@ -1,0 +1,14 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: tailscale-overview
+  labels:
+    grafana_dashboard: "true"
+  annotations:
+    grafana_folder: "Network"
+spec:
+  url: "https://grafana.com/api/dashboards/24177/revisions/latest/download"
+  datasources:
+    - inputName: "DS_PROMETHEUS"
+      datasourceName: "Prometheus"

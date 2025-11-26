@@ -16,4 +16,3 @@ resources:
   - ./grafana/ks.yaml
   - ./thanos/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  - ./exporters/ks.yaml

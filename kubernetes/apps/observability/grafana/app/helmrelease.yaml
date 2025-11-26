@@ -391,7 +391,7 @@ spec:
     sidecar:
       dashboards:
         enabled: true
-        searchNamespace: ALL
+        searchNamespace: observability
         labelValue: "true"
         label: grafana_dashboard
         folderAnnotation: grafana_folder
@@ -400,7 +400,7 @@ spec:
           foldersFromFilesStructure: true
       datasources:
         enabled: true
-        searchNamespace: ALL
+        searchNamespace: observability
         labelValue: "true"
     plugins:
       - grafana-clock-panel
