@@ -80,7 +80,7 @@ spec:
 
     grafana:
       enabled: false
-      forceDeployDashboards: true
+      forceDeployDashboards: false
 
     kubeEtcd: &disabled
       enabled: false
