@@ -332,7 +332,7 @@ spec:
       namespace: volsync-system
     - name: postgres
       namespace: database
-    - name: redis
+    - name: valkey
       namespace: database
   sourceRef:
     kind: GitRepository
