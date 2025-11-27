@@ -10,13 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: volsync
-      namespace: volsync-system
-    - name: onepassword-connect
-      namespace: kube-system
-    - name: external-secrets
-      namespace: kube-system
+  dependsOn: []
   path: ./kubernetes/apps/observability/grafana/operator
   components: []
   prune: true
