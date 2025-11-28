@@ -6,7 +6,7 @@ metadata:
 spec:
   name: Obsidian Sync
   icon: https://obsidian.md/favicon.ico
-  url: &url https://obsidian.${ROOT_DOMAIN}
+  url: &url https://obsidian-sync.${ROOT_DOMAIN}
   description: Self-hosted Obsidian LiveSync server using CouchDB
   category: Applications
   access_policy:
@@ -21,7 +21,7 @@ spec:
 
   gatus:
     - name: Obsidian Sync
-      url: https://obsidian.${ROOT_DOMAIN}/_up
+      url: https://obsidian-sync.${ROOT_DOMAIN}/_up
       interval: 1m
       conditions:
         - "[STATUS] == 200"
