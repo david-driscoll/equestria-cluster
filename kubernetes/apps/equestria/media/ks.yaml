@@ -27,7 +27,7 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
     - ../../../../components/gateway/internal
   postBuild:
     substitute:
@@ -167,7 +167,7 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
     # has it's own ingress
     # - ../../../../components/gateway/internal
   postBuild:
@@ -203,7 +203,7 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
     # has it's own ingress
     # - ../../../../components/gateway/internal
   postBuild:
@@ -274,7 +274,7 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
     - ../../../../components/tailscale
     - ../../../../components/gateway/internal
   postBuild:
@@ -309,7 +309,7 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
     - ../../../../components/tailscale
     - ../../../../components/gateway/internal
   postBuild:

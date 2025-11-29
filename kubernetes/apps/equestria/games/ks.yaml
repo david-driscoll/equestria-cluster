@@ -29,7 +29,7 @@ spec:
     - ../../../../components/tailscale
     - ../../../../components/postgres
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app

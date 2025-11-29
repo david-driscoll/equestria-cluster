@@ -108,7 +108,7 @@ spec:
     - ../../../../components/postgres
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app
@@ -151,7 +151,7 @@ spec:
     - ../../../../components/postgres
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app
@@ -228,7 +228,7 @@ spec:
     - ../../../../components/gateway/forwardauth
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app
@@ -302,7 +302,7 @@ spec:
     - ../../../../components/gateway/internal
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
+    # - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app
