@@ -73,7 +73,7 @@ spec:
               extensionRef:
                 group: traefik.io
                 kind: Middleware
-                name: authenticated-user
+                name: local-user
       operator:
         dashboardsConfigMapRefEnabled: true
         matchLabels:
