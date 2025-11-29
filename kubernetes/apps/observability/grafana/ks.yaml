@@ -51,6 +51,7 @@ spec:
   path: ./kubernetes/apps/observability/grafana/app
   components:
     - ../../../../components/volsync
+    - ../../../../components/volsync/backblaze
     - ../../../../components/postgres
   prune: true
   wait: true
