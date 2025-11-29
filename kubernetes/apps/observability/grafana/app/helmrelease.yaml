@@ -145,7 +145,7 @@ spec:
             editable: false
             allowUiUpdates: true
             name: cilium
-            folder: Services/Cilium
+            folder: Cilium
             options:
               path: /var/lib/grafana/dashboards/cilium
           - orgId: 1
