@@ -117,7 +117,6 @@ spec:
     # Ruler - Evaluates recording and alerting rules on historical data
     ruler:
       enabled: true
-      queryURL: https://thanos.${ROOT_DOMAIN}
       alertmanagersConfig:
         alertmanagers:
           - static_configs:
@@ -125,7 +124,7 @@ spec:
             scheme: http
             timeout: 10s
             api_version: v2
-      queryUrl: http://thanos-query.observability.svc.cluster.local:9090
+      queryUrl: https://thanos.${ROOT_DOMAIN}
       queries:
         - http://thanos-query.observability.svc.cluster.local:9090
       ruleFile: /conf/rules/*.yml
