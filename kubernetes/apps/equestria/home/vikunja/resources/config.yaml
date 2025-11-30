@@ -150,13 +150,6 @@ auth:
         clientid: "{{ .oidc_client_id }}"
         clientsecret: "{{ .oidc_client_secret }}"
         scope: "openid email profile vikunja"
-        forceuserinfo: true
-      tailscale:
-        name: "Tailscale"
-        authurl: "https://idp.${TAILSCALE_DOMAIN}"
-        clientid: "unused"
-        clientsecret: "unused"
-        scope: "openid email profile"
 
 metrics:
   # If set to true, enables a /metrics endpoint for prometheus to collect metrics about Vikunja. You can query it from `/api/v1/metrics`.
