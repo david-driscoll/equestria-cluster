@@ -15,6 +15,7 @@ spec:
   stack: authentik
   resyncFrequencySeconds: 90
   retryMaxBackoffDurationSeconds: 60
+  refresh: true
   backend: s3://home-operations/authentik?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
