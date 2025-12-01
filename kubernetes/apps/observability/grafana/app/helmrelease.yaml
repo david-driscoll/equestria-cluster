@@ -81,7 +81,7 @@ spec:
 
       defaultDashboardsTimezone: ${TIMEZONE}
       imageRenderer:
-        enabled: true
+        enabled: false
       serviceMonitor:
         enabled: true
       sidecar:
