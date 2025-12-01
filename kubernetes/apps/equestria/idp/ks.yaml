@@ -9,9 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: spike-volumes
-      namespace: equestria
+  dependsOn: []
   path: ./kubernetes/apps/equestria/idp/authentik-remote-cluster
   prune: true
   wait: false
