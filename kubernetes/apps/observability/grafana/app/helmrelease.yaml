@@ -95,7 +95,7 @@ spec:
               enabled: true
       persistence:
         enabled: true
-        volumeName: grafana
+        existingClaim: grafana
       datasources:
         datasources.yaml:
           apiVersion: 1
