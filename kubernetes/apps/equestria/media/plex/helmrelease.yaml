@@ -138,18 +138,18 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/Library/Application Support/Plex Media Server/Logs
+      spike-media:
+        existingClaim: spike-media
+        globalMounts:
+          - path: /media/
       spike-media-movies:
         existingClaim: spike-media-movies
         globalMounts:
-          - path: /media/movies
+          - path: /old/media/movies
       spike-media-tv:
         existingClaim: spike-media-tv
         globalMounts:
-          - path: /media/tv
-      spike-media-dvr:
-        existingClaim: spike-media-dvr
-        globalMounts:
-          - path: /media/dvr
+          - path: /old/media/tv
       tmp:
         type: emptyDir
       transcode:

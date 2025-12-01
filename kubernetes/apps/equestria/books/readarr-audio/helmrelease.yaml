@@ -134,13 +134,15 @@ spec:
         globalMounts:
           - path: /config
       spike-media-downloads:
-        existingClaim: spike-media-downloads
+        existingClaim: spike-media
         globalMounts:
           - path: /media/downloads
+            subPath: downloads
       spike-media-ebooks:
-        existingClaim: spike-media-audiobooks
+        existingClaim: spike-media
         globalMounts:
           - path: /media/ebooks
+            subPath: ebooks
 
 
     route:

@@ -108,13 +108,10 @@ spec:
         globalMounts:
           - path: /config
       spike-media-downloads:
-        existingClaim: spike-media-downloads
+        existingClaim: spike-media
         globalMounts:
           - path: /media/downloads
-      spike-media-movies:
-        existingClaim: spike-media-movies
-        globalMounts:
-          - path: /media/movies
+            subPath: downloads
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1

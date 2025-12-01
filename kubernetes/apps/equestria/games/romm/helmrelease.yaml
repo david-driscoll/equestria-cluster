@@ -117,13 +117,15 @@ spec:
         globalMounts:
           - path: /redis-data
       spike-media-downloads:
-        existingClaim: spike-media-downloads
+        existingClaim: spike-media
         globalMounts:
           - path: /media/downloads
+            subPath: downloads
       spike-media-roms:
-        existingClaim: spike-media-roms
+        existingClaim: spike-media
         globalMounts:
           - path: /romm/library
+            subPath: roms
 
     route:
       internal:

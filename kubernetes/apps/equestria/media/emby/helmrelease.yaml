@@ -167,11 +167,13 @@ spec:
           - path: /logs
 
       spike-media-movies:
-        existingClaim: spike-media-movies
+        existingClaim: spike-media
         globalMounts:
           - path: /media/movies
+            subPath: movies
 
       spike-media-tv:
-        existingClaim: spike-media-tv
+        existingClaim: spike-media
         globalMounts:
           - path: /media/tv
+            subPath: tvshows
