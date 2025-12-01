@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: spike-volumes
+    - name: truenas-volumes
       namespace: equestria
   path: ./kubernetes/apps/equestria/downloads/sabnzbd
   prune: true
@@ -45,7 +45,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: spike-volumes
+    - name: truenas-volumes
       namespace: equestria
   path: ./kubernetes/apps/equestria/downloads/prowlarr
   prune: true

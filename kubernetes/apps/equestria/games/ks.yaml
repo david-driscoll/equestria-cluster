@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: spike-volumes
+    - name: truenas-volumes
       namespace: equestria
   path: ./kubernetes/apps/equestria/games/romm
   prune: true
