@@ -101,14 +101,15 @@ spec:
         accessMode: ReadWriteOnce
         size: 1Gi
       spike-media-downloads:
-        existingClaim: spike-media-downloads
+        existingClaim: spike-media
         globalMounts:
           - path: /books
-            subPath: lazylibrarian
+            subPath: downloads/lazylibrarian
       spike-media-books:
-        existingClaim: spike-media-books
+        existingClaim: spike-media
         globalMounts:
           - path: /media/books
+            subPath: books
 
     route:
       app:

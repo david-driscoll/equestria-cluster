@@ -108,17 +108,20 @@ spec:
         globalMounts:
           - path: /config/cache/
       spike-media-downloads:
-        existingClaim: spike-media-downloads
+        existingClaim: spike-media
         globalMounts:
           - path: /media/downloads
+            subPath: downloads
       spike-media-movies:
-        existingClaim: spike-media-movies
+        existingClaim: spike-media
         globalMounts:
           - path: /media/movies
+            subPath: movies
       spike-media-tv:
-        existingClaim: spike-media-tv
+        existingClaim: spike-media
         globalMounts:
           - path: /media/tv
+            subPath: tv
 
     route:
       internal:

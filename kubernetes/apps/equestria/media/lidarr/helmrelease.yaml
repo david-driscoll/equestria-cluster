@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app sabnzbd
+  name: &app lidarr
 spec:
   chartRef:
     kind: OCIRepository
@@ -38,40 +38,45 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/sabnzbd
-              tag: 4.5.5@sha256:da57e01cdebc547852b6df85c8df8c0e4d87792742c7608c5590dc653b184e8c
+              repository: ghcr.io/home-operations/lidarr
+              tag: 3.1.1@sha256:0982783dcc1ede8d45458ffc1d0d96607503035d743f6d18f9c2676a765d5dfe
               pullPolicy: IfNotPresent
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
-              TZ: ${TIMEZONE}
-              SABNZBD__PORT: &port 8080
-              SABNZBD__HOST_WHITELIST_ENTRIES: >-
-                ${APP},
-                ${APP}.${CLUSTER_CNAME},
-                ${APP}.${CLUSTER_CNAME}.svc,
-                ${APP}.${CLUSTER_CNAME}.svc.cluster,
-                ${APP}.${CLUSTER_CNAME}.svc.cluster.local,
-                ${APP}.${ROOT_DOMAIN}
+              PUID: ${PUID}
+              PGID: ${PGID}
+              UMASK: 002
+              LIDARR__APP__INSTANCENAME: Lidarr
+              LIDARR__APP__THEME: dark
+              LIDARR__AUTH__METHOD: External
+              LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              LIDARR__AUTH__APIKEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: spike-management-credentials
+                    key: lidarr_apikey
+              LIDARR__LOG__DBENABLED: "False"
+              LIDARR__LOG__LEVEL: info
+              LIDARR__PORT: &port 8686
+              TZ: America/New_York
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /api?mode=version
+                    path: /ping
                     port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
               readiness: *probes
             securityContext:
               runAsNonRoot: true
               runAsUser: 568
               runAsGroup: 568
-              fsGroup: 568
-              fsGroupChangePolicy: "OnRootMismatch"
               supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
@@ -86,7 +91,6 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
@@ -101,14 +105,13 @@ spec:
     persistence:
       config:
         existingClaim: ${APP}
-      incomplete:
-        type: emptyDir
-      tmp:
-        type: emptyDir
+        globalMounts:
+          - path: /config
       spike-media:
         existingClaim: spike-media
         globalMounts:
           - path: /media
+
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1
@@ -123,7 +126,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`${APP}.${ROOT_DOMAIN}`) && QueryRegexp(`apikey`, `^.*$`)
+    - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.*`)
       kind: Rule
       priority: -1
       services:

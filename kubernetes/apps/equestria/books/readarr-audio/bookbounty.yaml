@@ -113,10 +113,10 @@ spec:
         globalMounts:
           - path: /bookbounty/config
       spike-media-downloads:
-        existingClaim: spike-media-downloads
+        existingClaim: spike-media
         globalMounts:
           - path: /bookbounty/downloads
-            subPath: bookbounty-audio
+            subPath: downloads/bookbounty
 
 
     ingress:

@@ -91,7 +91,10 @@ spec:
       tmp:
         type: emptyDir
       guides:
-        existingClaim: spike-media-dvr
+        existingClaim: spike-media
+        globalMounts:
+          - path: /guides
+            subPath: dvr
 
     defaultPodOptions:
       securityContext:
