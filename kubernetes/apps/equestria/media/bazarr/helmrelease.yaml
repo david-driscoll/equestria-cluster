@@ -112,12 +112,12 @@ spec:
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      spike-media-movies:
+      spike-media-movies-old:
         existingClaim: spike-media
         globalMounts:
           - path: /media/movies
             subPath: movies
-      spike-media-tv:
+      spike-media-tv-old:
         existingClaim: spike-media
         globalMounts:
           - path: /media/tv
