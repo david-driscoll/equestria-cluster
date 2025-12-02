@@ -81,11 +81,11 @@ spec:
               # capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                gpu.intel.com/i915: 1
+                gpu.intel.com/i915: 2
                 cpu: 1
                 memory: 4Gi
               limits:
-                gpu.intel.com/i915: 1
+                gpu.intel.com/i915: 2
                 # amd.com/gpu: 1
                 memory: 8Gi
                 cpu: 8
