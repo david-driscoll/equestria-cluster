@@ -42,7 +42,7 @@ spec:
               tag: v1.2.0
               pullPolicy: IfNotPresent
             # -- environment variables.
-            # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
+            # See Kapowarr image documentation for environment variable details.
             env:
               PUID: ${PUID}
               PGID: ${PGID}
