@@ -151,7 +151,7 @@ spec:
         globalMounts:
           - path: /transcode
 
-      spike-media-movies-old:
+      spike-media-movies:
         existingClaim: spike-media
         globalMounts:
           - path: /media
