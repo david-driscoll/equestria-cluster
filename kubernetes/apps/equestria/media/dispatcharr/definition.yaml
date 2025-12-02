@@ -20,7 +20,7 @@ spec:
       skipPathRegex: "^/api([/?].*)?$"
   gatus:
     - group: "Applications"
-      url: https://${APP}.${ROOT_DOMAIN}/ping
+      url: https://${APP}.${ROOT_DOMAIN}/
       method: GET
       conditions:
         - "[STATUS] == 200"
