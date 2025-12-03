@@ -59,7 +59,7 @@ spec:
               SONARR__LOG__DBENABLED: "False"
               SONARR__LOG__LEVEL: info
               SONARR__PORT: &port 8989
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
             probes:
               liveness: &probes
                 enabled: true

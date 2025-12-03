@@ -63,7 +63,7 @@ spec:
             env:
               PUID: ${PUID}
               PGID: ${PGID}
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
               ETV_CONFIG_FOLDER: /config
               ETV_TRANSCODE_FOLDER: /transcode
             probes:

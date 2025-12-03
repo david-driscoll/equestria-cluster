@@ -69,7 +69,7 @@ spec:
               PUID: ${PUID}
               PGID: ${PGID}
               UMASK: 002
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
               # search_type: non-fiction
               libgen_address: http://libgen.is
               selected_path_type: 'file'

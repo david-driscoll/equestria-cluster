@@ -63,7 +63,7 @@ spec:
               THREADFIN_PORT: &port 34400
               PUID: ${PUID}
               PGID: ${PGID}
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
             # probes:
             #   liveness: &probes
             #     enabled: true

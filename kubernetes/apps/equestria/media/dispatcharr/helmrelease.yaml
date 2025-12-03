@@ -51,7 +51,7 @@ spec:
               REDIS_HOST: valkey.database.svc.cluster.local
               CELERY_BROKER_URL: redis://valkey.database.svc.cluster.local:6379/6
               DISPATCHARR_LOG_LEVEL: info
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
               DISPATCHARR_PORT: &port 9191
             probes:
               liveness: &probes
@@ -66,14 +66,6 @@ spec:
                   timeoutSeconds: 10
                   failureThreshold: 5
               readiness: *probes
-            securityContext:
-              runAsNonRoot: true
-              runAsUser: 568
-              runAsGroup: 568
-              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 gpu.intel.com/i915: 2
@@ -89,10 +81,6 @@ spec:
               repository: jesmann/global-channel-search
               tag: 2.6.0
             command: ["/bin/sh", "-c", "sleep infinity"]
-
-    defaultPodOptions:
-      securityContext:
-        seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
     service:

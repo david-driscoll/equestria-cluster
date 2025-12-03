@@ -39,7 +39,7 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.42.2@sha256:9ad8a3506e1d8ebda873a668603c1a2c10e6887969564561be669efd65ae8871
             env:
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
               PUID: ${PUID}
               PGID: ${PGID}
               PLEX_ADVERTISE_URL: https://${APP}.${ROOT_DOMAIN}:443,https://plex.${CLUSTER_DOMAIN}:443,https://${APP}.${TAILSCALE_DOMAIN}:443,http://${APP}.${INTERNAL_CLUSTER_SERVICE}:32400

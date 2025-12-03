@@ -89,7 +89,7 @@ spec:
               repository: fhdhr/fhdhr
               tag: latest@sha256:2c5437e0014b490a49119f614ea558132fd48c1defb2f45d22ed72b321009d36
             env:
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
               PUID: ${PUID}
               PGID: ${PGID}
             probes:

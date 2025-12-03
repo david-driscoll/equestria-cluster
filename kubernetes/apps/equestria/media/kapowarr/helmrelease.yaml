@@ -47,7 +47,7 @@ spec:
               PUID: ${PUID}
               PGID: ${PGID}
               UMASK: 002
-              TZ: America/New_York
+              TZ: ${TIMEZONE}
               KAPOWARR_PORT: &port 5800
             probes:
               liveness: &probes
