@@ -135,5 +135,5 @@ spec:
           port: http
           passHostHeader: true
       middlewares:
-        - name: authenticated-user
+        - name: local-user
           namespace: network
