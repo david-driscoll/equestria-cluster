@@ -47,18 +47,6 @@ spec:
               PUID: ${PUID}
               PGID: ${PGID}
               UMASK: 002
-              LIDARR__APP__INSTANCENAME: Lidarr
-              LIDARR__APP__THEME: dark
-              LIDARR__AUTH__METHOD: External
-              LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
-              LIDARR__AUTH__APIKEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: spike-management-credentials
-                    key: lidarr_apikey
-              LIDARR__LOG__DBENABLED: "False"
-              LIDARR__LOG__LEVEL: info
-              LIDARR__PORT: &port 8686
               TZ: America/New_York
             probes:
               liveness: &probes
@@ -67,7 +55,7 @@ spec:
                 spec:
                   httpGet:
                     path: /ping
-                    port: *port
+                    port: &port 5656
                   initialDelaySeconds: 10
                   periodSeconds: 60
                   timeoutSeconds: 10
@@ -107,11 +95,16 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      spike-media:
+      spike-media-downloads:
         existingClaim: spike-media
         globalMounts:
-          - path: /media
-
+          - path: /media/downloads
+            subPath: downloads
+      spike-media-music:
+        existingClaim: spike-media
+        globalMounts:
+          - path: /media/music
+            subPath: music
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1

@@ -156,13 +156,13 @@ spec:
         globalMounts:
           - path: /logs
 
-      spike-media-movies-old:
+      spike-media-movies:
         existingClaim: spike-media
         globalMounts:
           - path: /media/movies
             subPath: movies
 
-      spike-media-tv-old:
+      spike-media-tv:
         existingClaim: spike-media
         globalMounts:
           - path: /media/tv
