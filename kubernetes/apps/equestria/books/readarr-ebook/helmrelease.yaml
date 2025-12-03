@@ -133,13 +133,13 @@ spec:
         existingClaim: readarr-ebook-config
         globalMounts:
           - path: /config
-      spike-media-downloads:
-        existingClaim: spike-media
+      truenas-media-downloads:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      spike-media-ebooks:
-        existingClaim: spike-media
+      truenas-media-ebooks:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/ebooks
             subPath: ebooks

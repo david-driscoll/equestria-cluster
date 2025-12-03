@@ -166,14 +166,14 @@ spec:
         globalMounts:
           - path: /logs
 
-      spike-media-movies:
-        existingClaim: spike-media
+      truenas-media-movies:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/movies
             subPath: movies
 
-      spike-media-tv:
-        existingClaim: spike-media
+      truenas-media-tv:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/tv
             subPath: tvshows

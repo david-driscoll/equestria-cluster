@@ -112,8 +112,8 @@ spec:
         size: 1Gi
         globalMounts:
           - path: /bookbounty/config
-      spike-media-downloads:
-        existingClaim: spike-media
+      truenas-media-downloads:
+        existingClaim: truenas-media
         globalMounts:
           - path: /bookbounty/downloads
             subPath: downloads/bookbounty

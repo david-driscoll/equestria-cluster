@@ -116,13 +116,13 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /redis-data
-      spike-media-downloads:
-        existingClaim: spike-media
+      truenas-media-downloads:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      spike-media-roms:
-        existingClaim: spike-media
+      truenas-media-roms:
+        existingClaim: truenas-media
         globalMounts:
           - path: /romm/library
             subPath: roms

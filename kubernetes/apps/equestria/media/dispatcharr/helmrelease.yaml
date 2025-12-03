@@ -108,8 +108,8 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /home/dispatcharr/conf
-      spike-media:
-        existingClaim: spike-media
+      truenas-media:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media
       tmpfs:

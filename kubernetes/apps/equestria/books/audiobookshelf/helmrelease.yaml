@@ -121,13 +121,13 @@ spec:
     persistence:
       config:
         existingClaim: audiobookshelf-config
-      spike-media-books:
-        existingClaim: spike-media
+      truenas-media-books:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/books
             subPath: books
-      spike-media-audiobooks:
-        existingClaim: spike-media
+      truenas-media-audiobooks:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/audiobooks
             subPath: audiobooks

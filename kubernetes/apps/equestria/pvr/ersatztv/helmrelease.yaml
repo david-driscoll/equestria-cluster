@@ -151,7 +151,7 @@ spec:
         globalMounts:
           - path: /transcode
 
-      spike-media-movies:
-        existingClaim: spike-media
+      truenas-media-movies:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media

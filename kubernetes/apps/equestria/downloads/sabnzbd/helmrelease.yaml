@@ -105,8 +105,8 @@ spec:
         type: emptyDir
       tmp:
         type: emptyDir
-      spike-media:
-        existingClaim: spike-media
+      truenas-media:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media
 ---

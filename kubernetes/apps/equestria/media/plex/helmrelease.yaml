@@ -138,8 +138,8 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/Library/Application Support/Plex Media Server/Logs
-      spike-media:
-        existingClaim: spike-media
+      truenas-media:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/
       tmp:

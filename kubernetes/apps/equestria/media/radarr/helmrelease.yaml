@@ -107,13 +107,13 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      spike-media-downloads:
-        existingClaim: spike-media
+      truenas-media-downloads:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      spike-media-movies:
-        existingClaim: spike-media
+      truenas-media-movies:
+        existingClaim: truenas-media
         globalMounts:
           - path: /media/movies
             subPath: movies

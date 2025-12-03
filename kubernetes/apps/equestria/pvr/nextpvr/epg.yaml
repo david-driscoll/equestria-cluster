@@ -91,7 +91,7 @@ spec:
       tmp:
         type: emptyDir
       guides:
-        existingClaim: spike-media
+        existingClaim: truenas-media
         globalMounts:
           - path: /guides
             subPath: dvr
