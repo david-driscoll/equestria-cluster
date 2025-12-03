@@ -107,21 +107,8 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/cache/
-      truenas-media-downloads:
+      media:
         existingClaim: truenas-media
-        globalMounts:
-          - path: /media/downloads
-            subPath: downloads
-      truenas-media-movies:
-        existingClaim: truenas-media
-        globalMounts:
-          - path: /media/movies
-            subPath: movies
-      truenas-media-tv:
-        existingClaim: truenas-media
-        globalMounts:
-          - path: /media/tv
-            subPath: tv
 
     route:
       internal:

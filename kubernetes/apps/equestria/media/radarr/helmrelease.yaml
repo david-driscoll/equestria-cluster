@@ -107,16 +107,8 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      truenas-media-downloads:
+      media:
         existingClaim: truenas-media
-        globalMounts:
-          - path: /media/downloads
-            subPath: downloads
-      truenas-media-movies:
-        existingClaim: truenas-media
-        globalMounts:
-          - path: /media/movies
-            subPath: movies
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1

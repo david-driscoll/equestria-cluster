@@ -152,10 +152,8 @@ spec:
             subPath: hooks.js
             readOnly: true
 
-      truenas-media:
+      media:
         existingClaim: truenas-media
-        globalMounts:
-          - path: /media/
 
     service:
       app:

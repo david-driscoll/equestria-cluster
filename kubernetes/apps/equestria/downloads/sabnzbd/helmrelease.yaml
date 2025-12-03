@@ -105,10 +105,8 @@ spec:
         type: emptyDir
       tmp:
         type: emptyDir
-      truenas-media:
+      media:
         existingClaim: truenas-media
-        globalMounts:
-          - path: /media
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1
