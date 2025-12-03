@@ -95,7 +95,7 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /home/dispatcharr/conf
+          - path: /data
       media:
         existingClaim: truenas-media
       tmpfs:
