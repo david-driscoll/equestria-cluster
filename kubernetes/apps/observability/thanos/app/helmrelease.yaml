@@ -164,10 +164,10 @@ spec:
       resources:
         requests:
           cpu: 200m
-          memory: 1Gi
+          memory: 2Gi
         limits:
-          cpu: 500m
-          memory: 4Gi
+          cpu: 1000m
+          memory: 8Gi
     # receiveDistributor:
     #   enabled: true
     #   logLevel: info
