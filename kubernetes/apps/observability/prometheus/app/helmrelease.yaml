@@ -48,6 +48,7 @@ spec:
       annotations:
         reloader.stakater.com/auto: "true"
       # logLevel: debug
+      priorityClassName: observability-critical
       route:
         main:
           enabled: true

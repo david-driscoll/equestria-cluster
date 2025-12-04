@@ -34,6 +34,7 @@ spec:
       retries: 3
   values:
     deploymentMode: SingleBinary
+    priorityClassName: observability-critical
     loki:
       auth_enabled: false
       analytics:

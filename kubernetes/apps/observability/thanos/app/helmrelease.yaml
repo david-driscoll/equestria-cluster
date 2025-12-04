@@ -28,6 +28,7 @@ spec:
     global:
       security:
         allowInsecureImages: true
+    priorityClassName: observability-critical
 
     image:
       registry: quay.io
