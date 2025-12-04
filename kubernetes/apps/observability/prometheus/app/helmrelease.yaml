@@ -70,11 +70,11 @@ spec:
         enabled: true
       prometheusSpec:
         externalUrl: https://prometheus.${CLUSTER_DOMAIN}
-        # podMonitorSelectorNilUsesHelmValues: false
-        # probeSelectorNilUsesHelmValues: false
-        # ruleSelectorNilUsesHelmValues: false
-        # scrapeConfigSelectorNilUsesHelmValues: false
-        # serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        ruleSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
         retention: 14d
         retentionSize: 50GB
         resources:
