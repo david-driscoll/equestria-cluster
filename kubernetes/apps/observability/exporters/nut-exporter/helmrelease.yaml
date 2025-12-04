@@ -65,12 +65,6 @@ spec:
             scheme: http
             scrapeTimeout: 30s
             metricRelabelings:
-              - action: replace
-                regex: 'network_ups_tools_(.+)'
-                replacement: 'nut_$1'
-                sourceLabels:
-                  - __name__
-                targetLabel: __name__
               - targetLabel: ups
                 replacement: &ups apc-ups-1
               - action: replace
@@ -97,12 +91,6 @@ spec:
             scheme: http
             scrapeTimeout: 30s
             metricRelabelings:
-              - action: replace
-                regex: 'network_ups_tools_(.+)'
-                replacement: 'nut_$1'
-                sourceLabels:
-                  - __name__
-                targetLabel: __name__
               - targetLabel: ups
                 replacement: &ups apc-ups-2
               - action: replace
