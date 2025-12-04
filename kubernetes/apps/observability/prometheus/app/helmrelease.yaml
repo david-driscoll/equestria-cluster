@@ -75,8 +75,8 @@ spec:
         ruleSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
-        retention: 14d
-        retentionSize: 50GB
+        retention: 3d
+        retentionSize: 20GB
         resources:
           requests:
             cpu: 100m
@@ -84,12 +84,14 @@ spec:
           limits:
             cpu: 500m
             memory: 2Gi
-        thanos:
-          objectStorageConfig:
-            existingSecret:
-              name: thanos-objstore
-              key: objstore.yml
         remoteWriteDashboards: true
+        remoteWrite:
+          - url: http://thanos-receive.observability.svc.cluster.local:19291/api/v1/receive
+            queueConfig:
+              maxSamplesPerSend: 10000
+              batchSendDeadline: 5s
+              minShards: 1
+              maxShards: 4
         externalLabels:
           cluster: ${CLUSTER_CNAME}
           environment: homelab
@@ -116,7 +118,7 @@ spec:
               storageClassName: longhorn
               resources:
                 requests:
-                  storage: 50Gi
+                  storage: 20Gi
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
