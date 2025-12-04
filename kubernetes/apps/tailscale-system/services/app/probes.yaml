@@ -22,7 +22,7 @@ metadata:
   namespace: tailscale-system
 spec:
   interval: 5m
-  module: tcp_connect
+  module: ssh_banner
   prober:
     url: blackbox-exporter.observability.svc.cluster.local:9115
   targets:
@@ -52,7 +52,7 @@ metadata:
   namespace: tailscale-system
 spec:
   interval: 5m
-  module: tcp_connect
+  module: ssh_banner
   prober:
     url: blackbox-exporter.observability.svc.cluster.local:9115
   targets:
@@ -82,7 +82,7 @@ metadata:
   namespace: tailscale-system
 spec:
   interval: 5m
-  module: tcp_connect
+  module: ssh_banner
   prober:
     url: blackbox-exporter.observability.svc.cluster.local:9115
   targets:
@@ -93,7 +93,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
-  name: proxmox-luna-pve
+  name: proxmox-luna
   namespace: tailscale-system
 spec:
   interval: 5m
@@ -104,20 +104,6 @@ spec:
     staticConfig:
       static:
         - https://proxmox-luna.${TAILSCALE_DOMAIN}:8006
----
-apiVersion: monitoring.coreos.com/v1
-kind: Probe
-metadata:
-  name: proxmox-luna-pbs
-  namespace: tailscale-system
-spec:
-  interval: 5m
-  module: http_2xx
-  prober:
-    url: blackbox-exporter.observability.svc.cluster.local:9115
-  targets:
-    staticConfig:
-      static:
         - https://proxmox-luna.${TAILSCALE_DOMAIN}:8007
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -127,7 +113,7 @@ metadata:
   namespace: tailscale-system
 spec:
   interval: 5m
-  module: tcp_connect
+  module: ssh_banner
   prober:
     url: blackbox-exporter.observability.svc.cluster.local:9115
   targets:
@@ -138,7 +124,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
-  name: proxmox-celestia-pve
+  name: proxmox-celestia
   namespace: tailscale-system
 spec:
   interval: 5m
@@ -149,20 +135,6 @@ spec:
     staticConfig:
       static:
         - https://proxmox-celestia.${TAILSCALE_DOMAIN}:8006
----
-apiVersion: monitoring.coreos.com/v1
-kind: Probe
-metadata:
-  name: proxmox-celestia-pbs
-  namespace: tailscale-system
-spec:
-  interval: 5m
-  module: http_2xx
-  prober:
-    url: blackbox-exporter.observability.svc.cluster.local:9115
-  targets:
-    staticConfig:
-      static:
         - https://proxmox-celestia.${TAILSCALE_DOMAIN}:8007
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -179,6 +151,7 @@ spec:
     staticConfig:
       static:
         - https://proxmox-alpha-site.${TAILSCALE_DOMAIN}:8006
+        - https://proxmox-alpha-site.${TAILSCALE_DOMAIN}:8007
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -187,7 +160,7 @@ metadata:
   namespace: tailscale-system
 spec:
   interval: 5m
-  module: tcp_connect
+  module: ssh_banner
   prober:
     url: blackbox-exporter.observability.svc.cluster.local:9115
   targets:
