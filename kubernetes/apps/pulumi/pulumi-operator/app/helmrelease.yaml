@@ -39,5 +39,8 @@ spec:
         memory: 256Mi
     serviceMonitor:
       enabled: true
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
     nameOverride: "pulumi-operator"
     fullnameOverride: "pulumi-operator"
