@@ -65,7 +65,7 @@ spec:
             scrapeTimeout: 30s
             metricRelabelings:
               - targetLabel: ups
-                replacement: *app
+                replacement: *ups
               - action: replace
                 replacement: server
                 sourceLabels:
@@ -99,7 +99,7 @@ spec:
             scrapeTimeout: 30s
             metricRelabelings:
               - targetLabel: ups
-                replacement: *app
+                replacement: *ups
               - action: replace
                 replacement: server
                 sourceLabels:
