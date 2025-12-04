@@ -57,6 +57,7 @@ cluster:
   logLevel: "info"
   affinity:
     topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
   enableSuperuserAccess: true
   superuserSecret: "postgres-superuser"
   roles:
