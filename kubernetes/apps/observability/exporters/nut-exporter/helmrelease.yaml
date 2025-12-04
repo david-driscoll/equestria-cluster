@@ -54,9 +54,10 @@ spec:
             port: 9199
 
     serviceMonitor:
-      &ups apc-ups-1:
+      *app :
         enabled: true
-        serviceName: app
+        service:
+          name: *app
         endpoints:
           - interval: 30s
             path: /ups_metrics
@@ -65,7 +66,7 @@ spec:
             scrapeTimeout: 30s
             metricRelabelings:
               - targetLabel: ups
-                replacement: *ups
+                replacement: &ups apc-ups-1
               - action: replace
                 replacement: server
                 sourceLabels:
@@ -83,16 +84,7 @@ spec:
                 - alpha-site.${TAILSCALE_DOMAIN}
               ups:
                 - *ups
-            selector:
-              matchLabels:
-                app.kubernetes.io/instance: *app
-                app.kubernetes.io/name: *app
-                app.kubernetes.io/service: *app
 
-      &ups apc-ups-2:
-        enabled: true
-        serviceName: app
-        endpoints:
           - interval: 30s
             path: /ups_metrics
             port: metrics
@@ -100,7 +92,7 @@ spec:
             scrapeTimeout: 30s
             metricRelabelings:
               - targetLabel: ups
-                replacement: *ups
+                replacement: &ups apc-ups-2
               - action: replace
                 replacement: server
                 sourceLabels:
@@ -118,8 +110,3 @@ spec:
                 - alpha-site.${TAILSCALE_DOMAIN}
               ups:
                 - *ups
-            selector:
-              matchLabels:
-                app.kubernetes.io/instance: *app
-                app.kubernetes.io/name: *app
-                app.kubernetes.io/service: *app
