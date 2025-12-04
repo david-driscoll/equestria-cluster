@@ -58,7 +58,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ssh-dockge-celestia.tailscale-system.svc.cluster.local:22
+        - dockge-celestia.tailscale-system.svc.cluster.local:22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -73,7 +73,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://ssh-dockge-as.tailscale-system.svc.cluster.local:443
+        - https://dockge-as.tailscale-system.svc.cluster.local:443
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -88,7 +88,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ssh-dockge-as.tailscale-system.svc.cluster.local:22
+        - dockge-as.tailscale-system.svc.cluster.local:22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -103,7 +103,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://ssh-proxmox-luna.tailscale-system.svc.cluster.local:8006
+        - https://proxmox-luna.tailscale-system.svc.cluster.local:8006
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -118,7 +118,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://ssh-proxmox-luna.tailscale-system.svc.cluster.local:8007
+        - https://proxmox-luna.tailscale-system.svc.cluster.local:8007
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -133,7 +133,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ssh-proxmox-luna.tailscale-system.svc.cluster.local:22
+        - proxmox-luna.tailscale-system.svc.cluster.local:22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -148,7 +148,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://ssh-proxmox-celestia.tailscale-system.svc.cluster.local:8006
+        - https://proxmox-celestia.tailscale-system.svc.cluster.local:8006
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -163,7 +163,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://ssh-proxmox-celestia.tailscale-system.svc.cluster.local:8007
+        - https://proxmox-celestia.tailscale-system.svc.cluster.local:8007
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -178,7 +178,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://ssh-proxmox-alpha-site.tailscale-system.svc.cluster.local:8006
+        - https://proxmox-alpha-site.tailscale-system.svc.cluster.local:8006
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -193,4 +193,4 @@ spec:
   targets:
     staticConfig:
       static:
-        - ssh-proxmox-alpha-site.tailscale-system.svc.cluster.local:22
+        - proxmox-alpha-site.tailscale-system.svc.cluster.local:22
