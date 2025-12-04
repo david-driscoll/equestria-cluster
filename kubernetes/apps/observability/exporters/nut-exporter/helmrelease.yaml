@@ -87,6 +87,7 @@ spec:
               matchLabels:
                 app.kubernetes.io/instance: *app
                 app.kubernetes.io/name: *app
+                app.kubernetes.io/service: *app
 
       &ups apc-ups-2:
         enabled: true
@@ -121,3 +122,4 @@ spec:
               matchLabels:
                 app.kubernetes.io/instance: *app
                 app.kubernetes.io/name: *app
+                app.kubernetes.io/service: *app
