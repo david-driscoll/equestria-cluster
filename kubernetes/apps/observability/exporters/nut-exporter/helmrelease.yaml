@@ -78,7 +78,7 @@ spec:
                 regex: (pod)
             params:
               server:
-                - alpha-site.${TAILSCALE_DOMAIN}:3493
+                - alpha-site.${TAILSCALE_DOMAIN}
             selector:
               matchLabels:
                 app.kubernetes.io/instance: *app
