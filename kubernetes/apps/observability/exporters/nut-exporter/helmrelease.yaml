@@ -64,6 +64,8 @@ spec:
             scheme: http
             scrapeTimeout: 30s
             metricRelabelings:
+              - targetLabel: ups
+                replacement: *app
               - action: replace
                 replacement: server
                 sourceLabels:
@@ -96,6 +98,8 @@ spec:
             scheme: http
             scrapeTimeout: 30s
             metricRelabelings:
+              - targetLabel: ups
+                replacement: *app
               - action: replace
                 replacement: server
                 sourceLabels:
