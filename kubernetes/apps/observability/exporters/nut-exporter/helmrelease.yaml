@@ -56,7 +56,7 @@ spec:
     serviceMonitor:
       &ups apc-ups-1:
         enabled: true
-        serviceName: *ups
+        serviceName: app
         endpoints:
           - interval: 30s
             path: /ups_metrics
@@ -88,7 +88,7 @@ spec:
 
       &ups apc-ups-2:
         enabled: true
-        serviceName: *ups
+        serviceName: app
         endpoints:
           - interval: 30s
             path: /ups_metrics
