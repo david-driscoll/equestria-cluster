@@ -95,7 +95,7 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /app
+          - path: /app/db
       truenas-media:
         existingClaim: truenas-media
         globalMounts:
