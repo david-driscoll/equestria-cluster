@@ -96,14 +96,11 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /app
-      truenas-media-downloads:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      truenas-media-comics:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /media/comics
             subPath: comics
 

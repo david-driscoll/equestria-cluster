@@ -138,9 +138,6 @@ spec:
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      truenas-media-ebooks:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /media/ebooks
             subPath: ebooks
 

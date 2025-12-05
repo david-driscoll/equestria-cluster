@@ -139,6 +139,9 @@ spec:
       config:
         existingClaim: nextpvr-config
       recordings:
-        existingClaim: truenas-media-dvr
+        existingClaim: truenas-media
+        globalMounts:
+          - path: /recordings
+            subPath: dvr
       buffer:
         type: emptyDir

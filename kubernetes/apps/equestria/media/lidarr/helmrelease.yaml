@@ -100,9 +100,6 @@ spec:
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      truenas-media-music:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /media/music
             subPath: music
 ---

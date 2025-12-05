@@ -100,14 +100,11 @@ spec:
         storageClass: truenas-stash
         accessMode: ReadWriteOnce
         size: 1Gi
-      truenas-media-downloads:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /books
             subPath: downloads/lazylibrarian
-      truenas-media-books:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /media/books
             subPath: books
 

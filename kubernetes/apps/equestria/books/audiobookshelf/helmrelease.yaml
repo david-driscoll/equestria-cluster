@@ -121,14 +121,11 @@ spec:
     persistence:
       config:
         existingClaim: audiobookshelf-config
-      truenas-media-books:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /media/books
             subPath: books
-      truenas-media-audiobooks:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /media/audiobooks
             subPath: audiobooks
 

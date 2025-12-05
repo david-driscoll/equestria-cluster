@@ -133,14 +133,11 @@ spec:
         existingClaim: readarr-audio-config
         globalMounts:
           - path: /config
-      truenas-media-downloads:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      truenas-media-ebooks:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /media/ebooks
             subPath: ebooks
 

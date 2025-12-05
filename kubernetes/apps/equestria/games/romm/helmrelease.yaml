@@ -121,9 +121,6 @@ spec:
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      truenas-media-roms:
-        existingClaim: truenas-media
-        globalMounts:
           - path: /romm/library
             subPath: roms
 
