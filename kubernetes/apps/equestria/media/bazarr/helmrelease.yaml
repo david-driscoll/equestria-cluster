@@ -72,7 +72,6 @@ spec:
               runAsGroup: 568
               fsGroup: 568
               fsGroupChangePolicy: "OnRootMismatch"
-              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
@@ -87,6 +86,7 @@ spec:
     defaultPodOptions:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
