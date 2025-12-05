@@ -247,7 +247,7 @@ spec:
             url: https://raw.githubusercontent.com/external-secrets/external-secrets/main/docs/snippets/dashboard.json
             datasource: [{name: DS_PROMETHEUS, value: Prometheus}]
           network-ups-tools:
-            gnetId: 15406
+            gnetId: 12455
             datasource: [{name: DS_PROMETHEUS, value: Prometheus}]
           cert-manager:
             gnetId: 20842
