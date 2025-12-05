@@ -66,7 +66,6 @@ spec:
               runAsNonRoot: true
               runAsUser: 568
               runAsGroup: 568
-              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
@@ -80,6 +79,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
+        supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
