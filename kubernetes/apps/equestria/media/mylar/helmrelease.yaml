@@ -41,12 +41,10 @@ spec:
               repository: lscr.io/linuxserver/mylar3
               tag: "0.8.3"
               pullPolicy: IfNotPresent
-            # -- environment variables.
-            # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
+              TZ: "${TIMEZONE}"
               PUID: ${PUID}
               PGID: ${PGID}
-              TZ: ${TIMEZONE}
             probes:
               liveness: &probes
                 enabled: true
@@ -67,30 +65,13 @@ spec:
                   periodSeconds: 10
                   failureThreshold: 20
               readiness: *probes
-            securityContext:
-              runAsNonRoot: true
-              runAsUser: 568
-              runAsGroup: 568
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
                 memory: 100Mi
               limits:
-                cpu: 2000m
-                memory: 3Gi
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [44, 109, 10000]
-        seccompProfile: { type: RuntimeDefault }
+                cpu: 1
+                memory: 2Gi
 
     # -- Configures service settings for the chart.
     service:
