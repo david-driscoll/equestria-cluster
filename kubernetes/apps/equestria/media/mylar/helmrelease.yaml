@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: lscr.io/linuxserver/mylar3
-              tag: "0.8.3"
+              tag: "2021.12.13@sha256:64f398b4f1b9be85195ae792ca2e5fe05802352f8ea81f8ab5fa1ff725ca902a"
               pullPolicy: IfNotPresent
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
