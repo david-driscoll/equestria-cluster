@@ -55,7 +55,7 @@ spec:
                 custom: true
                 spec: &spec
                   httpGet:
-                    path: /api/v1/ping
+                    path: /ping
                     port: *port
                   initialDelaySeconds: 30
                   periodSeconds: 60
