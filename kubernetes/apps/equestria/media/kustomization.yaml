@@ -11,8 +11,8 @@ resources:
   - ./sonarr/ks.yaml
   - ./plex/ks.yaml
   - ./tautulli/ks.yaml
-  # - ./lidarr/ks.yaml
-  # - ./kapowarr/ks.yaml
+  - ./lidarr/ks.yaml
+  - ./kapowarr/ks.yaml
   - ./dispatcharr/ks.yaml
   - ./watchstate/ks.yaml
   # - ./streammaster/ks.yaml
