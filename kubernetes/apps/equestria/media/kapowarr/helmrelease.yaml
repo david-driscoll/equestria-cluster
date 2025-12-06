@@ -48,7 +48,7 @@ spec:
               PGID: ${PGID}
               UMASK: 002
               TZ: ${TIMEZONE}
-              KAPOWARR_PORT: &port 5800
+              KAPOWARR_PORT: &port 5656
             probes:
               liveness: &probes
                 enabled: true

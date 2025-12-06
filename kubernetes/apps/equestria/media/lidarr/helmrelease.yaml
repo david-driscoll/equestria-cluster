@@ -47,6 +47,7 @@ spec:
               PUID: ${PUID}
               PGID: ${PGID}
               UMASK: 002
+              LIDARR__PORT: &port 8686
               TZ: ${TIMEZONE}
             probes:
               liveness: &probes
@@ -55,7 +56,7 @@ spec:
                 spec:
                   httpGet:
                     path: /ping
-                    port: &port 5656
+                    port: *port
                   initialDelaySeconds: 10
                   periodSeconds: 60
                   timeoutSeconds: 10
