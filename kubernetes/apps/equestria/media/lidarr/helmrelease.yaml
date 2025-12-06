@@ -53,14 +53,21 @@ spec:
               liveness: &probes
                 enabled: true
                 custom: true
-                spec:
+                spec: &spec
                   httpGet:
-                    path: /ping
+                    path: /api/v1/ping
                     port: *port
-                  initialDelaySeconds: 10
+                  initialDelaySeconds: 30
                   periodSeconds: 60
                   timeoutSeconds: 10
                   failureThreshold: 5
+              startup:
+                <<: *probes
+                spec:
+                  <<: *spec
+                  initialDelaySeconds: 60
+                  periodSeconds: 10
+                  failureThreshold: 20
               readiness: *probes
             securityContext:
               runAsNonRoot: true
