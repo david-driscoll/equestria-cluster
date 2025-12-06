@@ -119,7 +119,7 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      truenas-media-downloads:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads

@@ -127,7 +127,7 @@ spec:
         storageClass: truenas-stash
         accessMode: ReadWriteOnce
         size: 1Gi
-      truenas-media-downloads:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /books

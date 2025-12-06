@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kapowarr
+  name: &app mylar
   namespace: &namespace equestria
 spec:
   targetNamespace: *namespace
@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: truenas-volumes
       namespace: equestria
-  path: ./kubernetes/apps/equestria/media/kapowarr
+  path: ./kubernetes/apps/equestria/media/mylar
   prune: true
   wait: true
   force: true

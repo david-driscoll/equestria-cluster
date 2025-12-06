@@ -5,11 +5,11 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Kapowarr
+  name: Mylar
   category: Media Management
-  description: Kapowarr is a software to build and manage a comic book library, fitting in the *arr suite of software.
+  description: Mylar is a software to build and manage a comic book library, fitting in the *arr suite of software.
   url: &url https://${APP}.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kapowarr.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/mylar.svg
   access_policy:
     groups:
       - media-managers

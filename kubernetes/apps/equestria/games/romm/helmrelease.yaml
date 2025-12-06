@@ -116,7 +116,7 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /redis-data
-      truenas-media-downloads:
+      truenas-media:
         existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
