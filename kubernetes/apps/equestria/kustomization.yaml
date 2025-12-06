@@ -10,7 +10,7 @@ resources:
   - ./shared
   # - ./books
   - ./downloads
-  - ./games
+  # - ./games
   - ./media
   # - ./pvr
   - ./idp
