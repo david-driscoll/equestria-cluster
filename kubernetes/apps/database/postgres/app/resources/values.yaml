@@ -67,36 +67,36 @@ cluster:
     superuser: true
     passwordSecret:
       name: postgres-user
-  - name: immich
-    ensure: present
-    login: true
-    superuser: true
-    passwordSecret:
-      name: immich-postgres
-  - name: n8n
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: n8n-postgres
-  - name: vikunja
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: vikunja-postgres
-  - name: romm
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: romm-postgres
   - name: grafana
     ensure: present
     login: true
     superuser: false
     passwordSecret:
       name: grafana-postgres
+  - name: immich
+    ensure: present
+    login: true
+    superuser: true
+    passwordSecret:
+      name: immich-postgres
+  - name: vikunja
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: vikunja-postgres
+  - name: n8n
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: n8n-postgres
+  - name: romm
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: romm-postgres
   monitoring:
     enabled: true
     podMonitor:

@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app emby
+  namespace: &namespace equestria
+spec:
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: truenas-volumes
+      namespace: equestria
+  path: ./kubernetes/apps/equestria/media/emby
+  prune: true
+  wait: true
+  force: true
+  interval: 1h
+  timeout: 1h
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  components:
+    - ../../../../components/tailscale
+    - ../../../../components/volsync
+    - ../../../../components/gateway/internal
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
+      VOLSYNC_CAPACITY: 60Gi
+      VOLSYNC_STORAGECLASS: longhorn-local
