@@ -71,29 +71,29 @@ spec:
             #   capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                gpu.intel.com/i915: 1
                 cpu: 1
                 memory: 1Gi
-              limits:
                 gpu.intel.com/i915: 1
+              limits:
                 memory: 4Gi
                 cpu: 4
+                gpu.intel.com/i915: 1
 
-    # tolerations:
-    #   - key: nvidia.com/gpu
-    #     operator: Exists
-    #     effect: NoSchedule
-    # defaultPodOptions:
-    #   securityContext:
-    #     runAsNonRoot: true
-    #     runAsUser: 568
-    #     runAsGroup: 568
-    #     fsGroup: 568
-    #     fsGroupChangePolicy: OnRootMismatch
-    #     supplementalGroups: [44, 109, 10000]
-    #     seccompProfile: { type: RuntimeDefault }
-    # nodeSelector:
-    #   intel.feature.node.kubernetes.io/gpu: "true"
+    tolerations:
+      - key: amd.com/gpu
+        operator: Exists
+        effect: NoSchedule
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [44, 109, 10000]
+        seccompProfile: { type: RuntimeDefault }
+      nodeSelector:
+        intel.feature.node.kubernetes.io/gpu: "true"
 
     service:
       app:

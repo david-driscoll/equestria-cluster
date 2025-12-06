@@ -8,9 +8,10 @@ components:
   - ../../components/repos/app-template
 resources:
   - ./shared
+  - ./idp
   # - ./books
   - ./downloads
   # - ./games
+  - ./home
   - ./media
   # - ./pvr
-  - ./idp
