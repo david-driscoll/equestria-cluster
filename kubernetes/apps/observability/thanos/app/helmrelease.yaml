@@ -151,11 +151,11 @@ spec:
         enabled: false
       mode: standalone
       # logLevel: info
-      tsdbRetention: 7d
+      tsdbRetention: 10d
       persistence:
         enabled: true
         storageClass: longhorn
-        size: 20Gi
+        size: 70Gi
       service:
         annotations:
           tailscale.com/expose: "true"
