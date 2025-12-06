@@ -80,7 +80,7 @@ spec:
                 gpu.intel.com/i915: 1
 
     tolerations:
-      - key: amd.com/gpu
+      - key: gpu.intel.com/i915
         operator: Exists
         effect: NoSchedule
     defaultPodOptions:
