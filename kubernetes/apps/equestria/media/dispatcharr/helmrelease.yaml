@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dispatcharr/dispatcharr
-              tag: 0.12.0-20251128180538
+              tag: 0.12.0-20251128180538@sha256:d8048d573fd6ec905fddeaf4cd4e0c4031c0b275eba1adbda65718ee86c3637d
               pullPolicy: IfNotPresent
             # -- environment variables.
             # See Dispatcharr documentation for environment variable details.
@@ -79,7 +79,7 @@ spec:
           gcs:
             image:
               repository: jesmann/global-channel-search
-              tag: 2.6.0
+              tag: 2.6.0@sha256:acee0c9fa5c7222a1f0763de518c0e4b176c84a9ab7f8f0b1404eaf037fd0568
             command: ["/bin/sh", "-c", "sleep infinity"]
 
     # -- Configures service settings for the chart.
