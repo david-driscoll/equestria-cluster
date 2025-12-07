@@ -79,10 +79,6 @@ spec:
                 cpu: 4
                 gpu.intel.com/i915: 1
 
-    tolerations:
-      - key: gpu.intel.com/i915
-        operator: Exists
-        effect: NoSchedule
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -92,8 +88,6 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44, 109, 10000]
         seccompProfile: { type: RuntimeDefault }
-      nodeSelector:
-        intel.feature.node.kubernetes.io/gpu: "true"
 
     service:
       app:
