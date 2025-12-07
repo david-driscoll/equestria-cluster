@@ -150,13 +150,6 @@ spec:
         globalMounts:
           - path: /logs
 
-      truenas-media-movies:
+      media:
         existingClaim: truenas-media
-        globalMounts:
-          - path: /media/movies
-            subPath: movies
-          - path: /media/tv
-            subPath: tv
-          - path: /media/dvr
-            subPath: dvr
 
