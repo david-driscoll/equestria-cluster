@@ -83,6 +83,9 @@ spec:
             command: ["/bin/sh", "-c", "sleep infinity"]
 
     # -- Configures service settings for the chart.
+    defaultPodOptions:
+      nodeSelector:
+        intel.feature.node.kubernetes.io/gpu: "true"
     service:
       app:
         controller: app
@@ -101,7 +104,7 @@ spec:
       tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /tmp
+            - path: /tmp
 
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
