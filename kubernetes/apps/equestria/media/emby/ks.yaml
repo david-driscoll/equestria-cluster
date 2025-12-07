@@ -32,4 +32,4 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 60Gi
-      VOLSYNC_STORAGECLASS: longhorn-local
+      VOLSYNC_STORAGECLASS: longhorn
