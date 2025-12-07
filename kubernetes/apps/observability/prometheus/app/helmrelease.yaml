@@ -69,6 +69,8 @@ spec:
       thanosServiceMonitor:
         enabled: true
       prometheusSpec:
+        scrapeInterval: 60s
+        evaluationInterval: 60s
         externalUrl: https://prometheus.${CLUSTER_DOMAIN}
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
@@ -145,6 +147,10 @@ spec:
               replacement: $1
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
+    kubelet:
+      serviceMonitor:
+        resourceInterval: 60s
+        cAdvisorInterval: 60s
     grafana:
       enabled: false
       forceDeployDashboards: true
