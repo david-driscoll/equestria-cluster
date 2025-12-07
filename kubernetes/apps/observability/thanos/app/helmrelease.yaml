@@ -155,7 +155,7 @@ spec:
       persistence:
         enabled: true
         storageClass: longhorn
-        size: 70Gi
+        size: 80Gi
       service:
         annotations:
           tailscale.com/expose: "true"
