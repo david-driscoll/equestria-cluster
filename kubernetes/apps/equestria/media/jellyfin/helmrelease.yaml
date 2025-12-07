@@ -88,8 +88,16 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [44, 109, 10000]
         seccompProfile: { type: RuntimeDefault }
-      nodeSelector:
-        intel.feature.node.kubernetes.io/gpu: "true"
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: intel.feature.node.kubernetes.io/gpu
+                operator: In
+                values:
+                - "true"
 
     service:
       app:
