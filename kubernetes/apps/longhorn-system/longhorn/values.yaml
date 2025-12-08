@@ -1,0 +1,47 @@
+---
+
+defaultBackupStore:
+  backupTarget: nfs://${SPIKE_IP}:/mnt/stash/backup/${CLUSTER_CNAME}/longhorn
+  # backupTargetCredentialSecret: s3-secret
+
+persistence:
+  defaultDataLocality: best-effort
+defaultSettings:
+  createDefaultDiskLabeledNodes: false
+  defaultDataLocality: best-effort
+  defaultLonghornStaticStorageClass: longhorn
+  defaultReplicaCount: 2
+  guaranteedEngineManagerCPU: 12
+  guaranteedReplicaManagerCPU: 12
+  guaranteedInstanceManagerCpu: 12
+  nodeDownPoddeletionPolicy: Retain-both-statefulset-and-deployment-pod
+  volumeAttachmentRecoveryPolicy: never
+  orphanAutoDeletion: true
+  replicaAutoBalance: best-effort
+  storageMinimalAvailablePercentage: 5
+  storageReservedPercentageForDefaultDisk: 10
+
+  # backupTargetCredentialSecret: s3-secret
+  defaultDataPath: /var/mnt/longhorn/
+  storageOverProvisioningPercentage: 600
+  upgradeChecker: true
+  priorityClass: high-priority
+  # taintToleration: key1=value1:NoSchedule; key2:NoExecute
+  # systemManagedComponentsNodeSelector: "label-key1:label-value1"
+  # disableSchedulingOnCordonedNode: false
+  # replicaZoneSoftAntiAffinity: false
+  # replicaDiskSoftAntiAffinity: false
+
+  allowEmptyDiskSelectorVolume: true
+ingress:
+  enabled: true
+  ingressClassName: internal
+  host: "longhorn.${CLUSTER_DOMAIN}"
+  annotations:
+    reloader.stakater.com/auto: "true"
+    external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: network-local-user@kubernetescrd
+metrics:
+  serviceMonitor:
+    enabled: true

@@ -1,0 +1,4 @@
+resources:
+  - ./app/ks.yaml
+  - ./postgres-push-secrets/ks.yaml
+  - ./backups/ks.yaml

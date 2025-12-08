@@ -26,7 +26,6 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/volsync
-    # - ../../../../components/volsync/backblaze
     - ../../../../components/tailscale
     - ../../../../components/gateway/internal
   postBuild:

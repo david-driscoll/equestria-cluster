@@ -27,7 +27,6 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    # - ../../../../components/volsync/backblaze
     # has it's own ingress
     # - ../../../../components/gateway/internal
   postBuild:

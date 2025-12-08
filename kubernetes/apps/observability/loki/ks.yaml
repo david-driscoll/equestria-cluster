@@ -20,7 +20,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  path: ./kubernetes/apps/observability/loki/app
+  path: ./kubernetes/apps/observability/loki
   dependsOn:
     - name: volsync
       namespace: volsync-system

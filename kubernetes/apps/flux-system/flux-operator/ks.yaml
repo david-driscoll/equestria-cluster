@@ -14,14 +14,15 @@ spec:
       kind: HelmRelease
       name: *app
       namespace: *namespace
-  interval: 1h
-  path: ./kubernetes/apps/flux-system/flux-operator/app
+  path: ./kubernetes/apps/flux-system/flux-operator
   prune: true
+  wait: false
+  force: false # true
+  interval: 1h
   retryInterval: 2m
+  timeout: 10m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   targetNamespace: *namespace
-  timeout: 10m
-  wait: false
