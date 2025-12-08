@@ -62,7 +62,7 @@ function apply_sops_secrets() {
         "${ROOT_DIR}/kubernetes/components/common/cluster-secrets.sops.yaml"
         "${ROOT_DIR}/kubernetes/components/common/shared-secrets.sops.yaml"
         "${ROOT_DIR}/kubernetes/components/common/sops-age.sops.yaml"
-        "${ROOT_DIR}/kubernetes/apps/kube-system/1password/connect/secret.sops.yaml"
+        "${ROOT_DIR}/kubernetes/apps/kube-system/1password/secret.sops.yaml"
     )
 
     for secret in "${secrets[@]}"; do
@@ -95,9 +95,8 @@ function apply_crds() {
         https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.87.0/stripped-down-crds.yaml
         # renovate: datasource=github-releases depName=kubernetes-sigs/external-dns
         # https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/tags/v0.20.0/docs/sources/crd/crd-manifest.yaml
-        "${ROOT_DIR}/kubernetes/apps/observability/crds/application/application-crd.yaml"
-        "${ROOT_DIR}/kubernetes/apps/observability/crds/application/cluster-crd.yaml"
-        "${ROOT_DIR}/kubernetes/apps/observability/crds/kuma/crds.yaml"
+        "${ROOT_DIR}/kubernetes/apps/observability/crds/application-crd.yaml"
+        "${ROOT_DIR}/kubernetes/apps/observability/crds/cluster-crd.yaml"
     )
 
     for crd in "${crds[@]}"; do
