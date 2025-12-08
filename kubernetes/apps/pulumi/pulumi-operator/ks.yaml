@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn: []
-  path: ./kubernetes/apps/pulumi/pulumi-operator/app
+  path: ./kubernetes/apps/pulumi/pulumi-operator
   prune: true
   wait: true
   force: false # true

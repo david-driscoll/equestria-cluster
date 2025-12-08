@@ -28,7 +28,6 @@ spec:
     - ../../../../components/gateway/internal
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    # - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app
