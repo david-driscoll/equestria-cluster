@@ -11,8 +11,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: grafana-operator
-      namespace: *namespace
     - name: volsync
       namespace: volsync-system
     - name: onepassword-connect
