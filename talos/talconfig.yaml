@@ -34,6 +34,8 @@ nodes:
           grow: false
           minSize: 1TB
           maxSize: 1TB
+    nodeLabels: &nodeLabels
+      node.longhorn.io/create-default-disk: 'config'
     nodeAnnotations:
       node.longhorn.io/default-disks-config: |
         {
@@ -133,6 +135,7 @@ nodes:
           grow: false
           minSize: 1TB
           maxSize: 1TB
+    nodeLabels: *nodeLabels
     nodeAnnotations: &amd_minifm_annotations
       node.longhorn.io/default-disks-config: |
         {
@@ -183,6 +186,7 @@ nodes:
           grow: false
           minSize: 1TB
           maxSize: 1TB
+    nodeLabels: *nodeLabels
     nodeAnnotations: &intel_un1290_annotations
       node.longhorn.io/default-disks-config: |
         {
@@ -222,6 +226,7 @@ nodes:
       secureboot: false
     controlPlane: true
     userVolumes: *intel_un1290_user_volumes
+    nodeLabels: *nodeLabels
     nodeAnnotations: *intel_un1290_annotations
     schematic: *intel_un1290_schematic
     patches: *intel_un1290_patches
