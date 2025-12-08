@@ -23,3 +23,7 @@ spec:
   targetNamespace: *namespace
   timeout: 10m
   wait: false
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
