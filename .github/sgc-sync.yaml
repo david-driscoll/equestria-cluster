@@ -31,9 +31,6 @@ david-driscoll/stargate-command-cluster:
     dest: kubernetes/apps/database/
     exclude: |
       storage/config.yaml
-      storage/s3/generated/
-      storage/s3/helmrelease.yaml
-      storage/s3/resources/
       postgres/app/cluster.yaml
       postgres/app/users/
       postgres/app/resources/
@@ -77,6 +74,10 @@ david-driscoll/stargate-command-cluster:
       thanos/
       loki/
       alloy/
+      speedtest-exporter/
+      nut-exporter/
+      unpoller/
+      silences/
   - source: kubernetes/apps/tailscale-system/
     dest: kubernetes/apps/tailscale-system/
     exclude: |
