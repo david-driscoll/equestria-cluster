@@ -57,11 +57,6 @@ Project-specific patterns (follow these exactly)
   - Usage: Use `components/postgres`, `components/mysql`, or `components/mariadb` for cluster- or namespace-scoped DB provisioning. Store DB credentials in per-app `*.sops.yaml` secrets (e.g., `kubernetes/apps/database/postgres/secret.sops.yaml`) and reference those secrets from HelmRelease values. Prefer the component templates for creating databases/users rather than hand-rolling raw SQL resources.
   - Examples: `kubernetes/components/postgres/database.yaml`, `kubernetes/components/mysql/cluster.yaml`, `kubernetes/components/mariadb/database.yaml`, `kubernetes/apps/database/postgres/ks.yaml`.
 
-- democratic-csi
-  - Purpose: Storage runtime configuration and CRs for democratic-csi, exposing storage classes used by applications.
-  - Usage: Install once as a cluster-scoped component (found under `components/common/democratic-csi.yaml`). Applications request the storage class by name in their PVCs or volsync templates.
-  - Examples: `kubernetes/components/common/democratic-csi.yaml`, `kubernetes/apps/*/*/ks.yaml` references to storage classes.
-
 - code (code-server)
   - Purpose: Developer-focused code-server HelmRelease using the `app-template` pattern to quickly provision per-namespace dev instances.
   - Usage: Use `components/code/code-server.yaml` as a reference HelmRelease (or include the component directly when you want a standardized code-server). Adjust host and ingress values to `${APP}-code.${CLUSTER_DOMAIN}` and set `persistence`/`service` ports to match your app's conventions.
