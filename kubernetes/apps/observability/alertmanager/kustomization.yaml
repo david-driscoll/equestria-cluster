@@ -7,5 +7,9 @@ resources:
   - ./helmrelease.yaml
   - ./definition.yaml
   - ./config.yaml
+configMapGenerator:
+  - name: alertmanager-values
+    files:
+      - values.yaml=./values.yaml
 generatorOptions:
   disableNameSuffixHash: true
