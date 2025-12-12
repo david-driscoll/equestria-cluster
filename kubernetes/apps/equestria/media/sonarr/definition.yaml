@@ -13,10 +13,10 @@ spec:
   access_policy:
     groups:
       - media-managers
-  # authentik:
-  #   proxy:
-  #     mode: "forward_single"
-  #     externalHost: *url
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
   #     skipPathRegex: "^/api([/?].*)?$"
   gatus:
     - group: "Applications"
