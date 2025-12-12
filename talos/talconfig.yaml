@@ -9,6 +9,7 @@ additionalApiServerCertSans: &sans
   - "127.0.0.1"
   - "10.10.206.201"
   - "apiserver.equestria.driscoll.tech"
+  - "k8s-equestria.sgc.svc.cluster.local"
 additionalMachineCertSans: *sans
 
 clusterPodNets: ["10.206.0.0/16"]
