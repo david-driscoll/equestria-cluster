@@ -8,6 +8,7 @@ endpoint: https://10.10.206.201:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
   - "10.10.206.201"
+  - "apiserver.equestria.driscoll.tech"
 additionalMachineCertSans: *sans
 
 clusterPodNets: ["10.206.0.0/16"]
