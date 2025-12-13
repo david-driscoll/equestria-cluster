@@ -49,6 +49,7 @@ spec:
         GF_EXPLORE_ENABLED: true
         GF_FEATURE_TOGGLES_ENABLE: publicDashboards
         GF_SECURITY_COOKIE_SAMESITE: *app
+        GF_UNIFIED_ALERTING_ENABLED: "false"
         GF_SERVER_ROOT_URL: https://${APP}.${ROOT_DOMAIN}
       grafana.ini:
         analytics:
