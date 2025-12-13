@@ -54,7 +54,6 @@ spec:
           check_for_plugin_updates: false
           reporting_enabled: false
         auth:
-          signout_redirect_url: https://${OIDC_ISSUER}/application/o/grafana/end-session/
           oauth_auto_login: true
           oauth_allow_insecure_email_lookup: true
       admin:
