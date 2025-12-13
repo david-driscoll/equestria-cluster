@@ -3,9 +3,6 @@ kind: Grafana
 metadata:
   name: grafana
 spec:
-  instanceSelector:
-    matchLabels:
-      dashboards: "grafana"
   external:
     url: http://grafana.observability.svc.cluster.local
     adminUser:
