@@ -19,7 +19,6 @@ spec:
       namespace: kube-system
   path: ./kubernetes/apps/observability/grafana
   components:
-    - ../../../components/volsync
     - ../../../components/postgres
   prune: true
   wait: true

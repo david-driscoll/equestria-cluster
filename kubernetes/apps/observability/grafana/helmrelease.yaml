@@ -40,7 +40,6 @@ spec:
     grafana:
       annotations:
         reloader.stakater.com/auto: "true"
-      replicas: 1
       envFromSecrets:
         - name: grafana-secret
       env:
@@ -95,7 +94,9 @@ spec:
               enabled: true
       persistence:
         enabled: true
-        existingClaim: grafana
+        inMemory:
+          enabled: true
+          sizeLimit: 512Mi
       datasources:
         datasources.yaml:
           apiVersion: 1
