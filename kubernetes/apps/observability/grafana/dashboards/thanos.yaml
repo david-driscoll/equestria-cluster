@@ -1,0 +1,135 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: thanos
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  title: "Thanos"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-bucket-replicate
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/bucket-replicate.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-compact
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/compact.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-overview
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/overview.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-query-frontend
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/query-frontend.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-query
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/query.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-receive
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/receive.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-rule
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/rule.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-sidecar
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/sidecar.json
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: thanos-store
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "thanos"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/store.json

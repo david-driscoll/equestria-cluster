@@ -3,10 +3,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./helmrelease.yaml
-  - ./definition.yaml
-  - ./externalsecret.yaml
-  - ./operator.yaml
-  - ./dashboards/
+  - ./flux.yaml
+  - ./k8s.yaml
+  - ./kubernetes.yaml
+  - ./media.yaml
+  - ./network.yaml
+  - ./node-monitoring.yaml
+  - ./services.yaml
+  - ./thanos.yaml
+  - ./unifi.yaml
 generatorOptions:
   disableNameSuffixHash: true

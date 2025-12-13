@@ -1,0 +1,23 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: media
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  title: "Media"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: miniflux
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "media"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  url: https://raw.githubusercontent.com/miniflux/v2/main/contrib/grafana/dashboard.json

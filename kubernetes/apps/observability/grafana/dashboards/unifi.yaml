@@ -1,0 +1,69 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: unifi
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  title: "Unifi"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-client-insights
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "unifi"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  grafanaCom:
+    id: 11315
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-network-sites
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "unifi"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  grafanaCom:
+    id: 11311
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-uap-insights
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "unifi"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  grafanaCom:
+    id: 11314
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: unifi-usw-insights
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "unifi"
+  datasources:
+    - datasourceName: Prometheus
+      inputName: DS_PROMETHEUS
+  grafanaCom:
+    id: 11312
