@@ -56,6 +56,15 @@ spec:
         auth:
           oauth_auto_login: true
           oauth_allow_insecure_email_lookup: true
+        auth.anonymous:
+          enabled: true
+          org_name: "Main Org."
+          org_role: "Viewer"
+        security:
+          allow_embedding: true
+          cookie_samesite: "disabled"
+        public_dashboards:
+          enabled: true
       admin:
         existingSecret: grafana-admin-secret
       route:
@@ -377,6 +386,15 @@ spec:
             url: https://raw.githubusercontent.com/thanos-io/thanos/refs/heads/main/examples/dashboards/store.json
             datasource: [{name: datasource, value: Prometheus}]
       plugins:
+        - alertlist
+        - grafana-github-datasource
+        - grafana-advisor-app
+        - grafana-oncall-app
+        - grafana-lokioperational-app
+        - camptocamp-prometheus-alertmanager-datasource
+        - vonage-status-panel
+        - serrrios-statusoverview-panel
+        - marcusolsson-treemap-panel
         - grafana-clock-panel
         - grafana-piechart-panel
         - grafana-worldmap-panel
