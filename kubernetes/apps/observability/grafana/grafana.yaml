@@ -1,0 +1,16 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  external:
+    url: http://grafana.observability.svc.cluster.local
+    adminUser:
+      name: grafana-admin-secret
+      key: admin-user
+    adminPassword:
+      name: grafana-admin-secret
+      key: admin-password
