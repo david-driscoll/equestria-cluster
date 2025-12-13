@@ -1,5 +1,5 @@
 apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDataSource
+kind: GrafanaDatasource
 metadata:
   name: prometheus
 spec:
@@ -16,7 +16,7 @@ spec:
       timeInterval: 1m
 ---
 apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDataSource
+kind: GrafanaDatasource
 metadata:
   name: loki
 spec:
@@ -34,7 +34,7 @@ spec:
       maxLines: 250
 ---
 apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDataSource
+kind: GrafanaDatasource
 metadata:
   name: alertmanager
 spec:
