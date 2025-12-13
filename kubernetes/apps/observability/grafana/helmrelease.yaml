@@ -38,6 +38,8 @@ spec:
       - IPv4
     cleanPrometheusOperatorObjectNames: true
     grafana:
+      replicas: 2
+      headlessService: true
       annotations:
         reloader.stakater.com/auto: "true"
       envFromSecrets:
@@ -56,10 +58,10 @@ spec:
         auth:
           oauth_auto_login: true
           oauth_allow_insecure_email_lookup: true
-        # auth.anonymous:
-        #   enabled: true
-        #   org_name: "Main Org."
-        #   org_role: "Viewer"
+        auth.anonymous:
+          enabled: true
+          org_name: "Equestria"
+          org_role: "Viewer"
         security:
           allow_embedding: true
           cookie_samesite: "disabled"
