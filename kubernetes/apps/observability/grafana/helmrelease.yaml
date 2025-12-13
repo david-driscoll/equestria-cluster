@@ -88,7 +88,7 @@ spec:
       operator:
         dashboardsConfigMapRefEnabled: true
         matchLabels:
-          app: grafana
+          dashboards: grafana
 
       # defaultDashboardsEnabled: false
       defaultDashboardsTimezone: ${TIMEZONE}
