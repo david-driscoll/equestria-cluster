@@ -7,7 +7,6 @@ resources:
   - ./definition.yaml
   - ./externalsecret.yaml
   - ./operator.yaml
-  - ./datasources.yaml
   - ./grafana.yaml
   - ./dashboards/
 generatorOptions:
