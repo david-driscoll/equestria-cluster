@@ -8,7 +8,7 @@ resources:
   - ./externalsecret.yaml
   - ./operator.yaml
   - ./grafana.yaml
-  - ./datasources.yaml
+  # - ./datasources.yaml
   - ./dashboards/
 generatorOptions:
   disableNameSuffixHash: true
