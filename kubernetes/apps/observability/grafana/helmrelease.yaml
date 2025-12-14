@@ -87,6 +87,7 @@ spec:
                 name: local-user
       operator:
         dashboardsConfigMapRefEnabled: true
+        folder: Default
         matchLabels:
           dashboards: grafana
 
