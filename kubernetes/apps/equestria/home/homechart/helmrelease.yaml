@@ -42,7 +42,7 @@ spec:
           config:
             image:
               repository: ghcr.io/candiddev/homechart
-              tag: v2025.11.30@sha256:c79a06f4897f960746c91a6f16ac40c825d78a6148d5a6636f1001db49243f80
+              tag: v2025.12.14@sha256:c3a0050431ad9bd961299350b7682e340c00de2f25ecfa754c7c7ec1b46d0025
             env:
               TZ: "${TIMEZONE}"
               homechart_cli_configPath: /config/config.json
@@ -63,7 +63,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/candiddev/homechart
-              tag: v2025.11.30@sha256:c79a06f4897f960746c91a6f16ac40c825d78a6148d5a6636f1001db49243f80
+              tag: v2025.12.14@sha256:c3a0050431ad9bd961299350b7682e340c00de2f25ecfa754c7c7ec1b46d0025
             env:
               TZ: "${TIMEZONE}"
               homechart_cli_configPath: /config/config.json
