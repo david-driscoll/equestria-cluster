@@ -128,14 +128,12 @@ spec:
             - name: "Loki"
               type: loki
               uid: loki
-              isDefault: false
               access: proxy
               url: http://loki-headless.observability.svc.cluster.local:3100
               jsonData:
                 maxLines: 250
             - name: "Alertmanager"
               type: alertmanager
-              isDefault: false
               access: proxy
               url: http://alertmanager-operated.observability.svc.cluster.local:9093
               jsonData:
