@@ -114,7 +114,10 @@ spec:
       datasources:
         datasources.yaml:
           apiVersion: 1
-
+          deleteDatasources:
+            - name: Prometheus
+            - name: Loki
+            - name: Alertmanager
           prune: true
           datasources:
             - name: "Prometheus"
