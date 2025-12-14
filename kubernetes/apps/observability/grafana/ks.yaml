@@ -10,6 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+      kustomize.toolkit.fluxcd.io/force: enabled
   dependsOn:
     - name: volsync
       namespace: volsync-system
@@ -22,7 +23,7 @@ spec:
     - ../../../components/postgres
   prune: true
   wait: true
-  force: false # true
+  force: true
   interval: 1h
   retryInterval: 2m
   timeout: 10m
