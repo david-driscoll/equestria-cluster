@@ -114,6 +114,7 @@ spec:
         datasources.yaml:
           apiVersion: 1
 
+          prune: true
           datasources:
             - name: "Prometheus"
               type: prometheus
@@ -138,10 +139,6 @@ spec:
               url: http://alertmanager-operated.observability.svc.cluster.local:9093
               jsonData:
                 implementation: prometheus
-          deleteDatasources:
-            - name: Prometheus
-            - name: Loki
-            - name: Alertmanager
       plugins:
         - alertlist
         - grafana-github-datasource
