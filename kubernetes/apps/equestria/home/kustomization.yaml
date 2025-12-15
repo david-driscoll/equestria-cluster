@@ -12,3 +12,4 @@ resources:
   # - ./trilium/ks.yaml
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
+  - ./opencloud/ks.yaml
