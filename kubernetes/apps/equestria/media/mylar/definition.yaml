@@ -9,7 +9,7 @@ spec:
   category: Media Management
   description: Mylar is a software to build and manage a comic book library, fitting in the *arr suite of software.
   url: &url https://${APP}.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/mylar.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mylar.png
   access_policy:
     groups:
       - media-managers
