@@ -35,5 +35,5 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      VOLSYNC_ACCESSMODES: ReadWriteMany
+      VOLSYNC_ACCESSMODES: ReadWriteOnce
       VOLSYNC_CAPACITY: 40Gi
