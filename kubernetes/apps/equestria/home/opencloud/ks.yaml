@@ -3,36 +3,37 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app grafana
-  namespace: &namespace observability
+  name: &app opencloud
+  namespace: &namespace equestria
 spec:
   targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-      kustomize.toolkit.fluxcd.io/force: enabled
-  dependsOn:
-    - name: volsync
-      namespace: volsync-system
-    - name: onepassword-connect
-      namespace: kube-system
-    - name: external-secrets
-      namespace: kube-system
-  path: ./kubernetes/apps/observability/grafana
-  components:
-    - ../../../components/postgres
+  path: ./kubernetes/apps/equestria/home/opencloud
   prune: true
   wait: true
   force: true
   interval: 1h
   retryInterval: 2m
   timeout: 10m
+  dependsOn:
+    - name: volsync
+      namespace: volsync-system
+    - name: postgres
+      namespace: database
+    - name: valkey
+      namespace: database
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  components:
+    - ../../../../components/tailscale
+    - ../../../../components/volsync
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_ACCESSMODES: ReadWriteMany
+      VOLSYNC_CAPACITY: 40Gi
