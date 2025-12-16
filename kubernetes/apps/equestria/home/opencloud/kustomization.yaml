@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
+  - ./definition.yaml
 generatorOptions:
   disableNameSuffixHash: true
