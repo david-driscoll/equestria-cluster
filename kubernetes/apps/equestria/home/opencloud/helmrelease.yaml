@@ -102,7 +102,7 @@ spec:
                   name: ${APP}-secret
             securityContext: &sec
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             probes:
               liveness: &probes
@@ -316,8 +316,6 @@ spec:
                 subPath: data
               - path: /etc/opencloud
                 subPath: config
-              - path: /data
-                subPath: data
           wopi:
             wopi:
               - path: /etc/opencloud
