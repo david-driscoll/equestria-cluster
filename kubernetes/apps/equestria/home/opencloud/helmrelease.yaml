@@ -10,7 +10,7 @@ spec:
     name: app-template
   maxHistory: 3
   interval: 15m
-  timeout: 20m
+  timeout: 10m
   install:
     createNamespace: true
     replace: true
@@ -30,101 +30,389 @@ spec:
     keepHistory: false
   values:
     controllers:
-      *app :
-        annotations:
-          reloader.stakater.com/auto: "true"
-        pod:
-          securityContext:
-            fsGroup: 2000
-            fsGroupChangePolicy: OnRootMismatch
-            runAsNonRoot: true
-        initContainers:
-          init-config:
-            image:
-              repository: docker.io/opencloudeu/opencloud
-              tag: 4.0.0
-            command:
-              - /bin/sh
-              - -c
-              - test -f /etc/opencloud/opencloud.yaml || opencloud init --insecure=true
-            envFrom:
-              - secretRef:
-                  name: opencloud-secret
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
+      opencloud:
+        forceRename: opencloud
         containers:
-          *app :
-            image:
-              repository: docker.io/opencloudeu/opencloud
-              tag: 4.0.0
+          opencloud:
+            image: &img
+              repository: docker.io/opencloudeu/opencloud-rolling
+              tag: 4.1.0@sha256:6e36a7be89e6ce121167c2633ac03fae54962d59efa1837e69720296041b8d87
             command:
-              - opencloud
-              - server
-            envFrom:
-              - secretRef:
-                  name: ${APP}-secret
+              - "/bin/sh"
+              - "-c"
+              - "opencloud init || true; opencloud server"
             env:
-              IDM_CREATE_DEMO_USERS: false
+              OC_ADMIN_USER_ID: a15f91db-50ff-4b61-aafa-ad5276a4c21e
               OC_ENABLE_OCM: false
               OC_INSECURE: false
               OC_LOG_LEVEL: info
-              OC_URL: https://${APP}.${ROOT_DOMAIN}
+              OC_URL: &url https://cloud.${ROOT_DOMAIN}
+              OC_EXCLUDE_RUN_SERVICES: idp,ocm
+              # OC_ADD_RUN_SERVICES: notifications
+              OC_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD: true
+
+              FRONTEND_APP_HANDLER_SECURE_VIEW_APP_ADDR: eu.opencloud.api.collaboration.CollaboraOnline
+              GRAPH_AVAILABLE_ROLES: "b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5,a8d5fe5e-96e3-418d-825b-534dbdf22b99,fb6c3e19-e378-47e5-b277-9732f9de6e21,58c63c02-1d89-4572-916a-870abc5a1b7d,2d00ce52-1fc2-4dbc-8b95-a73b73395f5a,1c996275-f1c9-4e71-abdf-a42f6495e960,312c0871-5ef7-4b3a-85b6-0e4074c64049,aa97fe03-7980-45ac-9e50-b325749fd7e6"
+
               PROXY_TLS: false
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-            resources:
-              requests:
-                cpu: 100m
-                memory: 256Mi
-              limits:
-                cpu: 400m
-                memory: 2Gi
-            securityContext:
+              PROXY_AUTOPROVISION_ACCOUNTS: true
+              PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
+              PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: oc_groups
+              PROXY_USER_OIDC_CLAIM: sub
+              WEB_OIDC_SCOPE: "openid profile email"
+              # PROXY_CSP_CONFIG_FILE_LOCATION: &cspPath /etc/opencloud/csp.yaml
+              PROXY_OIDC_REWRITE_WELLKNOWN: true # mobile apps try to re-register via internal idp
+              PROXY_HTTP_ADDR: 0.0.0.0:9200
+              # metrics
+              PROXY_DEBUG_ADDR: 0.0.0.0:9205
+
+              # For collaboration to connect
+              GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+              NATS_NATS_HOST: 0.0.0.0
+              NATS_NATS_PORT: 9233
+
+              OC_CACHE_STORE: nats-js-kv
+              MICRO_REGISTRY_ADDRESS: 127.0.0.1:9233
+              MICRO_REGISTRY: nats-js-kv
+              OC_CACHE_STORE_NODES: 127.0.0.1:9233
+              OC_PERSISTENT_STORE_NODES: 127.0.0.1:9233
+              OC_EVENTS_ENDPOINT: 127.0.0.1:9233
+
+              SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: false
+
+              GRAPH_ASSIGN_DEFAULT_USER_ROLE: false
+              GRAPH_USERNAME_MATCH: "none"
+
+              WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: https://${OIDC_ISSUER}/settings/apps
+              # prevent nested mounts
+              WEB_ASSET_APPS_PATH: /opt/extensions/usr/share/nginx/html/apps
+
+              NOTIFICATIONS_SMTP_HOST: smtp-relay.cluster-infra
+              NOTIFICATIONS_SMTP_PORT: 25
+              NOTIFICATIONS_SMTP_SENDER: bot@${ROOT_DOMAIN}
+              NOTIFICATIONS_SMTP_INSECURE: true
+
+              STORAGE_USERS_DRIVER: posix
+              STORAGE_USERS_ID_CACHE_STORE: nats-js-kv
+              STORAGE_USERS_POSIX_ROOT: &path /data
+              THUMBNAILS_FILESYSTEMSTORAGE_ROOT: /data/thumbs
+
+              SEARCH_EXTRACTOR_TYPE: tika
+              SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://opencloud-tika:9998
+              FRONTEND_FULL_TEXT_SEARCH_ENABLED: "true"
+            securityContext: &sec
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    port: &port 9200
+                    path: /health
+              readiness: *probes
+      wopi:
+        strategy: RollingUpdate
+        containers:
+          wopi:
+            image: *img
+            command:
+              - "/bin/sh"
+              - "-c"
+              - "opencloud collaboration server"
+            env:
+              COLLABORATION_WOPI_SRC: http://opencloud-wopi:9300
+              COLLABORATION_APP_NAME: CollaboraOnline
+              COLLABORATION_APP_PRODUCT: Collabora
+              COLLABORATION_APP_INSECURE: true
+              COLLABORATION_CS3API_DATAGATEWAY_INSECURE: true
+              COLLABORATION_APP_ADDR: https://collabora.${ROOT_DOMAIN}
+              COLLABORATION_APP_ICON: https://collabora.${ROOT_DOMAIN}/favicon.ico
+              COLLABORATION_APP_PROOF_DISABLE: true
+              COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
+              COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
+              MICRO_REGISTRY_ADDRESS: opencloud:9233
+              OC_PERSISTENT_STORE_NODES: opencloud:9233
+              OC_CACHE_STORE: nats-js-kv
+              MICRO_REGISTRY: nats-js-kv
+              OC_URL: *url
+            securityContext: *sec
+      collabora:
+        strategy: RollingUpdate
+        pod:
+          hostUsers: false
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile:
+              type: Unconfined # This seems necessary
+        containers:
+          collabora:
+            image:
+              repository: docker.io/collabora/code
+              tag: 25.04.7.3.1@sha256:9a6eb1042fa38f80127ae4b0e9c6f0ac549b267ecc8433bc7bb906eeee0ae176
+            env:
+              aliasgroup1: http://opencloud-wopi:9300
+              DONT_GEN_SSL_CERT: "YES"
+              extra_params: |
+                --o:ssl.enable=false \
+                --o:ssl.ssl_verification=false \
+                --o:ssl.termination=true \
+                --o:welcome.enable=false \
+                --o:net.frame_ancestors=cloud.${ROOT_DOMAIN}
+              username:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-secret
+                    key: COLLABORA_ADMIN_USER
+              password:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-secret
+                    key: COLLABORA_ADMIN_PASS
+            securityContext:
+              <<: *sec
               capabilities:
+                add:
+                  - MKNOD
                 drop:
                   - ALL
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    port: 9980
+                    path: /hosting/discovery
+              readiness: *probes
+      tika:
+        strategy: RollingUpdate
+        pod:
+          hostUsers: false
+        containers:
+          tika:
+            image:
+              repository: docker.io/apache/tika
+              tag: 3.2.3.0-full@sha256:21d8052de04e491ccf66e8680ade4da6f3d453a56d59f740b4167e54167219b7
+            env:
+              JAVA_OPTS: "-Xmx3g"
+            securityContext: *sec
+            resources:
+              requests:
+                cpu: 200m
+                memory: 500Mi
+              limits:
+                memory: 5Gi
+    defaultPodOptionsStrategy: merge
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
     service:
-      app:
+      opencloud:
+        forceRename: opencloud
+        controller: opencloud
         ports:
           http:
-            port: &port 9200
-    persistence:
-      data:
-        existingClaim: opencloud
-        globalMounts:
-          - path: /var/lib/opencloud
-            subPath: data
-          - path: /etc/opencloud
-            subPath: config
-      config:
-        existingClaim: opencloud-config
-        globalMounts:
-          - path: /etc/opencloud/proxy.yaml
-            subPath: proxy.yaml
-      tmpfs:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
+            port: *port
+          nats:
+            port: 9233
+          grpc:
+            port: 9142
+          debug:
+            port: 9205
+      tika:
+        controller: tika
+        ports:
+          http:
+            port: 9998
+      wopi:
+        controller: wopi
+        ports:
+          http:
+            port: 9300
+          grpc:
+            port: 9301
+      collabora:
+        controller: collabora
+        ports:
+          http:
+            port: 9980
+    serviceMonitor:
+      opencloud:
+        serviceName: opencloud
+        endpoints:
+          - port: debug
     route:
-      internal:
+      opencloud:
+        forceRename: opencloud
+        hostnames:
+          - cloud.${ROOT_DOMAIN}
         parentRefs:
           - name: internal
             namespace: network
             kind: Gateway
-        hostnames:
-          - ${APP}.${ROOT_DOMAIN}
-        kind: HTTPRoute
         rules:
           - backendRefs:
-              - identifier: app
-                port: *port
+            - identifier: opencloud
+              port: *port
+            filters: &filters
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+      wopi:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 404"]
+        hostnames:
+          - wopi.${ROOT_DOMAIN}
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        rules:
+          - backendRefs:
+            - identifier: wopi
+              port: 9300
+            filters: *filters
+      collabora:
+        hostnames:
+          - collabora.${ROOT_DOMAIN}
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        rules:
+          - backendRefs:
+            - identifier: collabora
+              port: 9980
+            filters: *filters
+    persistence:
+      config:
+        type: configMap
+        name: opencloud
+        advancedMounts:
+          opencloud:
+            opencloud:
+              # - path: *cspPath
+              #   subPath: csp.yaml
+              - path: /etc/opencloud/proxy.yaml
+                subPath: proxy.yaml
+      data:
+        existingClaim: opencloud
+        advancedMounts:
+          opencloud:
+            opencloud:
+              - path: /var/lib/opencloud
+                subPath: data
+              - path: /etc/opencloud
+                subPath: config
+          wopi:
+            wopi:
+              - path: /etc/opencloud
+                subPath: config
+      files-opencloud:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/data/opencloud/
+        advancedMounts:
+          opencloud:
+            opencloud:
+              - path: /stash/opencloud/
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          tika:
+            tika:
+              - path: /tmp
+          collabora:
+            collabora:
+              - path: /tmp
+                subPath: tmp
+              - path: /opt/cool/cache
+                subPath: cache
+              - path: /opt/cool/child-roots
+                subPath: roots
+      # Web extensions
+      unzip:
+        type: image
+        image: docker.io/opencloudeu/web-extensions:unzip-1.0.4
+        advancedMounts:
+          opencloud:
+            opencloud:
+              - path: /opt/extensions
+    configMaps:
+      config:
+        data:
+          # csp.yaml: |
+          #   directives:
+          #     child-src:
+          #       - '''self'''
+          #     connect-src:
+          #       - '''self'''
+          #       - 'blob:'
+          #       - 'https://wopi.${ROOT_DOMAIN}/'
+          #       - 'wss://wopi.${ROOT_DOMAIN}/'
+          #       - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
+          #       - 'https://${OIDC_ISSUER}/'
+          #     default-src:
+          #       - '''none'''
+          #     font-src:
+          #       - '''self'''
+          #     frame-ancestors:
+          #       - '''self'''
+          #     frame-src:
+          #       - '''self'''
+          #       - 'blob:'
+          #       - 'https://embed.diagrams.net/'
+          #       - 'https://collabora.${ROOT_DOMAIN}/'
+          #       # This is needed for the external-sites web extension when embedding sites
+          #       - 'https://docs.opencloud.eu'
+          #     img-src:
+          #       - '''self'''
+          #       - 'data:'
+          #       - 'blob:'
+          #       - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
+          #       - 'https://collabora.${ROOT_DOMAIN}/'
+          #     manifest-src:
+          #       - '''self'''
+          #     media-src:
+          #       - '''self'''
+          #     object-src:
+          #       - '''self'''
+          #       - 'blob:'
+          #     script-src:
+          #       - '''self'''
+          #       - '''unsafe-inline'''
+          #       - 'https://${OIDC_ISSUER}/'
+          #     style-src:
+          #       - '''self'''
+          #       - '''unsafe-inline'''
+          proxy.yaml: |
+            role_assignment:
+            driver: oidc
+            oidc_role_mapper:
+              role_claim: groups
+              role_mapping:
+                - role_name: admin
+                  claim_value: admins
+                - role_name: spaceadmin
+                  claim_value: media-managers
+                - role_name: user
+                  claim_value: users
+
