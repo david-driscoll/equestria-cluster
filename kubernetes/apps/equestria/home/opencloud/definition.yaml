@@ -8,7 +8,7 @@ spec:
   name: OpenCloud
   category: Applications
   description: OpenCloud is a self-hosted cloud storage solution that offers file sharing, collaboration, and synchronization features, similar to services like Nextcloud or ownCloud.
-  url: &url https://photos.${ROOT_DOMAIN}
+  url: &url https://cloud.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/opencloud.svg
   access_policy:
     groups:
