@@ -56,10 +56,8 @@ spec:
 
               PROXY_TLS: false
               PROXY_AUTOPROVISION_ACCOUNTS: true
-              PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
-              PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: oc_groups
               PROXY_USER_OIDC_CLAIM: sub
-              WEB_OIDC_SCOPE: "openid profile email"
+              WEB_OIDC_SCOPE: "openid profile email groups"
               # PROXY_CSP_CONFIG_FILE_LOCATION: &cspPath /etc/opencloud/csp.yaml
               PROXY_OIDC_REWRITE_WELLKNOWN: true # mobile apps try to re-register via internal idp
               PROXY_HTTP_ADDR: 0.0.0.0:9200
@@ -100,6 +98,9 @@ spec:
               SEARCH_EXTRACTOR_TYPE: tika
               SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://opencloud-tika:9998
               FRONTEND_FULL_TEXT_SEARCH_ENABLED: "true"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
             securityContext: &sec
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
