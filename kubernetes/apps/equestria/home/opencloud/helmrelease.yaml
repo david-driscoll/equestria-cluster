@@ -317,6 +317,8 @@ spec:
                 subPath: data
               - path: /etc/opencloud
                 subPath: config
+              - path: /data
+                subPath: data
           wopi:
             wopi:
               - path: /etc/opencloud
