@@ -113,9 +113,6 @@ spec:
                     port: &port 9200
                     path: /health
               readiness: *probes
-      wopi:
-        strategy: RollingUpdate
-        containers:
           wopi:
             image: *img
             command:
@@ -139,16 +136,6 @@ spec:
               MICRO_REGISTRY: nats-js-kv
               OC_URL: *url
             securityContext: *sec
-      collabora:
-        strategy: RollingUpdate
-        pod:
-          hostUsers: false
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            seccompProfile:
-              type: Unconfined # This seems necessary
-        containers:
           collabora:
             image:
               repository: docker.io/collabora/code
@@ -188,11 +175,6 @@ spec:
                     port: 9980
                     path: /hosting/discovery
               readiness: *probes
-      tika:
-        strategy: RollingUpdate
-        pod:
-          hostUsers: false
-        containers:
           tika:
             image:
               repository: docker.io/apache/tika
@@ -229,19 +211,19 @@ spec:
           debug:
             port: 9205
       tika:
-        controller: tika
+        controller: opencloud
         ports:
           http:
             port: 9998
       wopi:
-        controller: wopi
+        controller: opencloud
         ports:
           http:
             port: 9300
           grpc:
             port: 9301
       collabora:
-        controller: collabora
+        controller: opencloud
         ports:
           http:
             port: 9980
@@ -316,7 +298,6 @@ spec:
                 subPath: data
               - path: /etc/opencloud
                 subPath: config
-          wopi:
             wopi:
               - path: /etc/opencloud
                 subPath: config
@@ -331,10 +312,9 @@ spec:
       tmpfs:
         type: emptyDir
         advancedMounts:
-          tika:
+          opencloud:
             tika:
               - path: /tmp
-          collabora:
             collabora:
               - path: /tmp
                 subPath: tmp
