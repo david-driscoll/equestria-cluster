@@ -3034,7 +3034,7 @@ services:
       # -- Configures the storage driver. Possible values are "oc" and "decomposeds3".
       # The OC driver stores all data in the persistent volume if persistence is enabled.
       # The DECOMPOSEDS3 driver stores all metadata in the persistent volume and uploads blobs to s3 if persistence is enabled.
-      driver: oc
+      driver: decomposed
 
     maintenance:
       # Expired uploads can be cleaned up automatically by enabling the clean up job.
