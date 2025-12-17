@@ -113,6 +113,9 @@ spec:
                     port: &port 9200
                     path: /health
               readiness: *probes
+      wopi:
+        strategy: RollingUpdate
+        containers:
           wopi:
             image: *img
             command:
@@ -136,6 +139,9 @@ spec:
               MICRO_REGISTRY: nats-js-kv
               OC_URL: *url
             securityContext: *sec
+      collabora:
+        strategy: RollingUpdate
+        containers:
           collabora:
             image:
               repository: docker.io/collabora/code
@@ -175,6 +181,9 @@ spec:
                     port: 9980
                     path: /hosting/discovery
               readiness: *probes
+      tika:
+        strategy: RollingUpdate
+        containers:
           tika:
             image:
               repository: docker.io/apache/tika
@@ -211,19 +220,19 @@ spec:
           debug:
             port: 9205
       tika:
-        controller: opencloud
+        controller: tika
         ports:
           http:
             port: 9998
       wopi:
-        controller: opencloud
+        controller: wopi
         ports:
           http:
             port: 9300
           grpc:
             port: 9301
       collabora:
-        controller: opencloud
+        controller: collabora
         ports:
           http:
             port: 9980
@@ -298,6 +307,7 @@ spec:
                 subPath: data
               - path: /etc/opencloud
                 subPath: config
+          wopi:
             wopi:
               - path: /etc/opencloud
                 subPath: config
@@ -312,9 +322,10 @@ spec:
       tmpfs:
         type: emptyDir
         advancedMounts:
-          opencloud:
+          tika:
             tika:
               - path: /tmp
+          collabora:
             collabora:
               - path: /tmp
                 subPath: tmp
