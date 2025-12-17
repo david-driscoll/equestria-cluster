@@ -101,21 +101,6 @@ deploymentStrategy:
 
 externalDomain: cloud.${ROOT_DOMAIN}
 
-cache:
-  type: redis-sentinel
-  nodes:
-    - "valkey.database.svc.cluster.local:6379"
-
-store:
-  type: redis-sentinel
-  nodes:
-    - "valkey.database.svc.cluster.local:6379"
-
-registry:
-  type: redis-sentinel
-  nodes:
-    - "valkey.database.svc.cluster.local:6379"
-
 messagingSystem:
   external:
     # @schema
