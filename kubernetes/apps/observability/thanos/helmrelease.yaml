@@ -142,7 +142,7 @@ spec:
           cpu: 100m
           memory: 128Mi
         limits:
-          cpu: 500m
+          # cpu: 500m
           memory: 512Mi
 
     receive:
@@ -166,7 +166,7 @@ spec:
           cpu: 200m
           memory: 2Gi
         limits:
-          cpu: 1000m
+          # cpu: 1000m
           memory: 8Gi
     # receiveDistributor:
     #   enabled: true

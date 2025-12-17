@@ -74,7 +74,7 @@ spec:
                 memory: 500Mi
               limits:
                 memory: 4Gi
-                cpu: 4000m
+                # cpu: 4000m
 
     # tolerations:
     #   - key: nvidia.com/gpu

@@ -67,10 +67,10 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 100m
+                cpu: 200m
                 memory: 100Mi
               limits:
-                cpu: 1
+                # cpu: 1
                 memory: 2Gi
 
     # -- Configures service settings for the chart.

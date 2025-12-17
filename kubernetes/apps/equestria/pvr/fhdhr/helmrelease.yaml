@@ -116,7 +116,7 @@ spec:
               limits:
                 # amd.com/gpu: 1
                 memory: 2Gi
-                cpu: 2000m
+                # cpu: 2000m
 
     tolerations:
       # - key: amd.com/gpu

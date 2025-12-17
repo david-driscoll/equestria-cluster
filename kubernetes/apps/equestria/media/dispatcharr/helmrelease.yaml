@@ -75,7 +75,7 @@ spec:
                 gpu.intel.com/i915: 2
                 # amd.com/gpu: 1
                 memory: 4Gi
-                cpu: 8
+                # cpu: 8
           gcs:
             image:
               repository: jesmann/global-channel-search

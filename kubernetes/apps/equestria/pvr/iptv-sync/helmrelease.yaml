@@ -73,7 +73,7 @@ spec:
                 # these files are large, we GC immediately.
                 memory: 1Gi
               limits:
-                cpu: 8
+                # cpu: 8
                 # these files are large, we GC immediately.
                 memory: 8Gi
       # job:

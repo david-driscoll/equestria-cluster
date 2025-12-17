@@ -85,12 +85,12 @@ spec:
             #   capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 1000m
+                cpu: 1
                 memory: 500Mi
               limits:
                 # nvidia.com/gpu: 1
                 memory: 4Gi
-                cpu: 4000m
+                # cpu: 4000m
 
     # tolerations:
     #   - key: nvidia.com/gpu

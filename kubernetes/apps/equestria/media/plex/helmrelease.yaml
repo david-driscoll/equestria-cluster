@@ -82,12 +82,11 @@ spec:
             resources:
               requests:
                 gpu.intel.com/i915: 2
-                cpu: 1
+                cpu: 2
                 memory: 4Gi
               limits:
                 gpu.intel.com/i915: 2
                 memory: 8Gi
-                cpu: 8
     defaultPodOptions:
       securityContext:
         runAsUser: 568

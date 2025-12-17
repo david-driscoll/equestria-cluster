@@ -87,7 +87,7 @@ spec:
               limits:
                 # nvidia.com/gpu: 1
                 memory: 8Gi
-                cpu: 4000m
+                # cpu: 4000m
 
     # tolerations:
     #   - key: nvidia.com/gpu

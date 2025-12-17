@@ -1,0 +1,802 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/michaelstingl/opencloud-eu-helm/refs/heads/main/charts/opencloud-microservices/values.schema.json
+# OpenCloud Helm Chart Values
+# This is a YAML-formatted file with configuration values for the OpenCloud Helm chart.
+# The file is organized into logical sections for different components of the system.
+
+# =====================================================================
+# SECURITY WARNING
+# =====================================================================
+# IMPORTANT: The following default credentials MUST be changed in production environments.
+# Using these default values in production is a significant security risk.
+#
+# Credentials that need to be changed:
+# 1. Keycloak Admin: adminUser: admin, adminPassword: admin
+# 2. OpenCloud Admin: adminPassword: admin
+# 3. PostgreSQL: user: keycloak, password: keycloak
+# 4. MinIO: rootUser: opencloud, rootPassword: opencloud-secret-key
+# 5. OnlyOffice Secret Keys: secret.inbox/outbox/session: B8LjkNqGxn6gf8bkuBUiMwyuCFwFddnu
+# 6. RabbitMQ: url: amqp://guest:guest
+# 7. LDAP bind password and configuration password must be secure.
+#
+# Insecure settings for certificate validation:
+# If needed, ensure that insecure settings for certificate validation are enabled in production environments only after careful consideration of the security implications.
+#
+# =====================================================================
+# OpenCloud Core
+# =====================================================================
+
+image:
+  repository: opencloudeu/opencloud-rolling
+  tag: "4.1.0"
+  sha: ""
+  pullPolicy: IfNotPresent
+
+# Tracing settings for OC services
+tracing:
+  enabled: false
+  type: jaeger
+  # -- Endpoint of the tracing system, jaeger-agent.observability.svc.cluster.local:6831 or similar.
+  endpoint:
+  # -- The HTTP endpoint for sending spans directly to a collector, i.e. http://jaeger-collector.observability.svc.cluster.local:14268/api/traces. Only used if the tracing endpoint is unset.
+  collector:
+
+http:
+  # CORS settings for OC services.
+  cors:
+    allow_origins: ["*"]
+  # CSP settings for OC services.
+  csp:
+    directives:
+      childSrc:
+        - "'self'"
+      connectSrc:
+        - "'self'"
+        - "blob:"
+        - "https://companion.${CLUSTER_DOMAIN}/"
+        - "wss://companion.${CLUSTER_DOMAIN}/"
+        - "https://raw.githubusercontent.com/opencloud-eu/awesome-apps/"
+        - "https://${OIDC_ISSUER}/"
+        - "https://update.opencloud.eu/"
+      defaultSrc:
+        - "'none'"
+      fontSrc:
+        - "'self'"
+      frameAncestors:
+        - "'self'"
+      frameSrc:
+        - "'self'"
+        - "blob:"
+        - "https://embed.diagrams.net/"
+        # In contrary to bash and docker the default is given after the | character
+        - "https://collabora.${ROOT_DOMAIN}/"
+        # This is needed for the external-sites web extension when embedding sites
+        - "https://docs.opencloud.eu"
+      imgSrc:
+        - "'self'"
+        - "data:"
+        - "blob:"
+        - "https://raw.githubusercontent.com/opencloud-eu/awesome-apps/"
+        # In contrary to bash and docker the default is given after the | character
+        - "https://collabora.${ROOT_DOMAIN}/"
+      manifestSrc:
+        - "'self'"
+      mediaSrc:
+        - "'self'"
+      objectSrc:
+        - "'self'"
+        - "blob:"
+      scriptSrc:
+        - "'self'"
+        - "'unsafe-inline'"
+      styleSrc:
+        - "'self'"
+        - "'unsafe-inline'"
+
+deploymentStrategy:
+  type: Recreate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+
+externalDomain: cloud.${ROOT_DOMAIN}
+
+cache:
+  type: redis-sentinel
+  nodes:
+    - "valkey.database.svc.cluster.local:6379"
+
+store:
+  type: redis-sentinel
+  nodes:
+    - "valkey.database.svc.cluster.local:6379"
+
+registry:
+  type: redis-sentinel
+  nodes:
+    - "valkey.database.svc.cluster.local:6379"
+
+messagingSystem:
+  external:
+    # @schema
+    # type: boolean
+    # required: true
+    # @schema
+    # -- Use an external NATS messaging system instead of the internal one.
+    # Recommended for all production instances.
+    # Needs to be used if HighAvailability is needed.
+    # Needs to be used if OC shall be used by more than a 2-digit user count.
+    enabled: false
+    # @schema
+    # type: [string, null]
+    # required: false
+    # @schema
+    # -- Endpoint of the messaging system.
+    endpoint:
+    # @schema
+    # type: [string, null]
+    # required: false
+    # @schema
+    # -- Cluster name to use with the messaging system.
+    cluster:
+    tls:
+      # @schema
+      # type: boolean
+      # required: true
+      # @schema
+      # -- Enables TLS encrypted communication with the messaging system.
+      # Recommended for production installations.
+      enabled: true
+      # @schema
+      # type: boolean
+      # required: true
+      # @schema
+      # -- Set only to false, if the certificate of your messaging system service is not trusted.
+      # If set to false, you need to put the CA cert of the messaging system server into the secret referenced by "messagingSystemCaRef"
+      certTrusted: true
+      # @schema
+      # type: boolean
+      # required: true
+      # @schema
+      # -- Disables SSL certificate checking for connections to the messaging system server.
+      # -- For self signed certificates, consider to put the CA cert of the messaging system secure server into the secret referenced by "messagingSystemCaRef"
+      # Not recommended for production installations.
+      insecure: false
+
+# Feature options.
+# Enable or disable features of OC.
+features:
+  demoUsers: false
+  # Language related settings
+  language:
+    default: en
+  emailNotifications:
+    enabled: false
+    smtp:
+      host:
+      port:
+      sender:
+      authentication: auto
+      encryption: ssltls
+    summary:
+      daily:
+        enabled: false
+        schedule: "0 0 * * *"
+        timezone:
+        startingDeadlineSeconds: 600
+      weekly:
+        enabled: false
+        schedule: "0 0 * * 0"
+        timezone:
+        startingDeadlineSeconds: 600
+
+    branding:
+      enabled: false
+      # -- Reference to a ConfigMap containing the html mail template.
+      # The template file must be named "email.text.tmpl".
+      # The default template can be seen here: https://github.com/opencloud/opencloud/blob/master/services/notifications/pkg/email/templates/text/email.text.tmpl
+      textMailTemplatesConfigRef: text-mail-templates
+      # -- Reference to a ConfigMap containing the html mail template.
+      # The template file must be named "email.html.tmpl".
+      # The default template can be seen here: https://github.com/opencloud/opencloud/blob/master/services/notifications/pkg/email/templates/html/email.html.tmpl
+      htmlMailTemplatesConfigRef: html-mail-templates
+      # -- Reference to a ConfigMap containing images that can be referenced from the html mail template.
+      # This ConfigMap is optional and can be omitted when images are not used.
+      htmlMailImagesConfigRef: html-mail-images
+
+  # Sharing related settings
+  sharing:
+    # Sharing with users related settings
+    users:
+      search:
+        minLengthLimit: 3
+        showUserEmail: true
+    publiclink:
+      shareMustHavePassword: true
+      writeableShareMustHavePassword: true
+    autoAcceptShares: true
+    passwordPolicies:
+      minCharacters: 0
+      minLowerCharacters: 0
+      minUpperCharacters: 0
+      minSpecialCharacters: 0
+      minDigits: 0
+      bannedPasswords: []
+  appsIntegration:
+    # -- Enables the apps integration.
+    enabled: true
+    # WOPI (office suite integration) needs an https://github.com/cs3org/wopiserver[cs3org/wopiserver] and at least one office suite.
+    wopiIntegration:
+      officeSuites:
+      - name: Collabora
+        product: Collabora
+        enabled: true
+        uri: "https://collabora.${ROOT_DOMAIN}/"
+        iconURI: "https://collabora.${ROOT_DOMAIN}/favicon.ico"
+        secureViewEnabled: true
+
+    # @schema
+    # -- Mimetype configuration.
+    # Let's you configure a mimetypes' default application, if it is allowed to create a new file and more.
+    # @default -- default configuration of OC, see https://doc.opencloud.eu/opencloud/next/deployment/services/s-list/app-registry.html#yaml-example[doc.opencloud.eu]
+    mimetypes:
+      - mime_type: application/vnd.oasis.opendocument.text
+        extension: odt
+        name: OpenDocument
+        description: OpenDocument text document
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+      - mime_type: application/vnd.oasis.opendocument.spreadsheet
+        extension: ods
+        name: OpenSpreadsheet
+        description: OpenDocument spreadsheet document
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+      - mime_type: application/vnd.oasis.opendocument.presentation
+        extension: odp
+        name: OpenPresentation
+        description: OpenDocument presentation document
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+      - mime_type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+        extension: docx
+        name: Text document
+        description: Text document
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+      - mime_type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+        extension: xlsx
+        name: Spreadsheet
+        description: Spreadsheet
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+      - mime_type: application/vnd.openxmlformats-officedocument.presentationml.presentation
+        extension: pptx
+        name: Presentation
+        description: Presentation
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+      - mime_type: application/vnd.openxmlformats-officedocument.wordprocessingml.form
+        extension: docx
+        name: FormDocument
+        description: Form document
+        icon: image-edit
+        default_app: "Collabora"
+        allow_creation: true
+  # External user management
+  externalUserManagement:
+    # -- Enables external user management (and disables internal user management).
+    # Needs an external OpenID Connect Identity Provider and an external LDAP server.
+    enabled: true
+    # -- UUID of the initial admin user.
+    # If the given value matches a user's value from `features.externalUserManagement.oidc.userIDClaim`, the admin role will be assigned.
+    # Consider that the UUID can be encoded in some LDAP deployment configurations like in .ldif files. These need to be decoded beforehand.
+    # Note: Enabling `roleAssignment` will disable `adminUUID`.
+    # adminUUID: "0ab77e6d-23b4-4ba3-9843-a3b3efdcfc53"
+    # Autoprovisioning of user accounts via OIDC
+    autoprovisionAccounts:
+      enabled: true
+      claimEmail: email
+      claimDisplayname: nickname
+      claimGroups: groups
+      claimUserName: username
+    # OpenID Connect Identity provider related settings.
+    oidc:
+      domain: "${OIDC_ISSUER}"
+      # @schema
+      # type: [string, null]
+      # format: uri
+      # required: false
+      # @schema
+      # -- Issuer URI of the OpenID Connect Identity Provider.
+      # If the IDP doesn't have valid / trusted SSL certificates, certificate validation can be disabled with the `insecure.oidcIdpInsecure` option.
+      # The issuerURI will be automatically be added to http.csp.directives.connectSrc
+      issuerURI: "{{ .oidc_issuer }}"
+      # @schema
+      # type: [string, null]
+      # required: false
+      # @schema
+      # -- Link to the OIDC provider's user accessible session management. This will be shown to the user on the personal account page.
+      # When using Keycloak with the a realm named "oc" this could point to eg. https://keycloak.opencloud.test/realms/opencloud/account/
+      sessionManagementLink: 'https://${OIDC_ISSUER}/if/user/#/settings;%7B"page"%3A"page-sessions"%7D'
+      # @schema
+      # type: [string, null]
+      # required: false
+      # @schema
+      # -- Link to the OIDC provider's user accessible account editing page. This will be shown to the user on the personal account page.
+      # When using Keycloak with the a realm named "oc" this could point to eg. https://keycloak.opencloud.test/realms/opencloud/account/
+      editAccountLink: "https://${OIDC_ISSUER}/if/user/#/settings"
+      # @schema
+      # type: string
+      # required: true
+      # @schema
+      # -- Claim to take an unique user identifier from. It will be used to look up the user on the LDAP server.
+      userIDClaim: name
+      # @schema
+      # type: string
+      # required: true
+      # @schema
+      # -- Attribute mapping of for the userIDClaim.
+      # Set to `userid` if the claim specified in `...oidc.userIDClaim` holds the value of the ldap user attribute specified in `...ldap.user.schema.id`.
+      # Set to `mail` if the claim specified in `...oidc.userIDClaim` holds the value of the ldap user attribute specified in  `...ldap.user.schema.mail`.
+      # Set to `username` if the claim specified in `...oidc.userIDClaim` holds the value of the ldap user attribute specified in `...ldap.user.schema.userName`.
+      userIDClaimAttributeMapping: username
+
+      # @schema
+      # type: string
+      # required: true
+      # @schema
+      # -- OIDC Acces Token Verify Method
+      # Set to "jwt" or "none"
+      accessTokenVerifyMethod: jwt
+
+      # @schema
+      # type: boolean
+      # required: true
+      # @schema
+      # -- Do not look up user claims at the userinfo endpoint and directly read them from the access token.
+      # Incompatible with 'accessTokenVerifyMethod=none'
+      skipUserInfo: false
+
+      # Configure OIDC role assignment. If activated, OC will read the role assigment from the OIDC token, see
+      # xref:{s-path}/proxy.adoc#automatic-role-assignments[Automatic Role Assignments]
+      roleAssignment:
+        # @schema
+        # type: boolean
+        # required: true
+        # @schema
+        # -- enable OIDC role assignment.
+        enabled: true
+        # @schema
+        # type: string
+        # required: true
+        # @schema
+        # -- The name of the OIDC claim holding the role assignment
+        claim: groups
+        mapping:
+          - role_name: admin
+            claim_value: admins
+          - role_name: spaceadmin
+            claim_value: media-managers
+          - role_name: user
+            claim_value: users
+
+      # Configure OIDC space assignment. If activate, OC will read the space assignements from the oidc token
+      # @schema
+      # type: object
+      # required: false
+      # @schema
+      spaceAssignment:
+        # @schema
+        # type: boolean
+        # required: true
+        # @schema
+        # -- enable OIDC space assignment.
+        enabled: false
+        # @schema
+        # type: string
+        # required: true
+        # @schema
+        # -- The name of the OIDC claim holding the space assignment
+        claim: ""
+        # @schema
+        # type: string
+        # required: true
+        # @schema
+        # -- The regexp extracting the spaceid and the -role from the claim
+        regexp: (.*)
+        # @schema
+        # type: array
+        # required: false
+        # items:
+        #   type: string
+        # @schema
+        # -- Configure the mapping for the role assignment.
+        # Example configuration:
+        # - oidcRoleA:manager
+        # - oidcRoleB:editor
+        # - oidcRoleC:viewer
+        mapping: []
+
+  # @schema
+  # enum: [Community, Enterprise]
+  # required: true
+  # @schema
+  # -- Edition of openCloud .
+  edition: Community
+  # Archiver settings
+  archiver:
+    # @schema
+    # type: integer
+    # required: true
+    # minimum: 1
+    # @schema
+    # -- Max size in bytes of the zip archive the archiver can create.
+    maxSize: 1073741824
+    # @schema
+    # type: integer
+    # required: true
+    # minimum: 1
+    # @schema
+    # -- Max number of files that can be packed into an archive.
+    maxNumFiles: 10000
+  # OCM settings
+  ocm:
+    # @schema
+    # type: boolean
+    # required: true
+    # @schema
+    # -- Enables OCM service
+    enabled: false
+    # @schema
+    # type: string
+    # required: true
+    # @schema
+    # -- Expiry duration for invite tokens.
+    invitationExpiry: 24h0m0s
+    # @schema
+    # type: string
+    # required: true
+    # @schema
+    # -- Timeout specifies a time limit for requests made to OCM endpoints.
+    requestTimeout: 30s
+    # @schema
+    # type: [string, null]
+    # required: false
+    # @schema
+    # -- Required reference to an existing provider config.
+    # Will be mounted to /etc/opencloud
+    # Does not get autogenerated.
+    # Documentation can be found at https://doc.opencloud.eu/opencloud/next/deployment/services/s-list/opencloudm.html#trust-between-instances
+    providersConfigRef:
+
+# Gateway configuration
+gateway:
+  httproute:
+    enabled: true
+    gateway:
+      name: internal
+      namespace: network
+
+# References to ConfigMaps.
+# The ConfigMaps need to be manually created.
+# Leave these empty to have them autogenerated by the Helm chart.
+# Note that ConfigMaps generated by the helm chart will be removed once the helm chart is uninstalled.
+# Furthermore, if you already had ConfigMaps at the default locations, they will be NOT be overwritten,
+# but the helm chart will claim ownership of them. If this is a problem, fill in the configRefs below
+# with the names of your existing secrets.
+# See https://doc.opencloud.eu/opencloud/next/deployment/container/orchestration/orchestration.html#customize-the-generic-setup[doc.opencloud.eu] for how to generate them.
+configRefs:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing storage-users config.
+  storageusersConfigRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing graph config.
+  graphConfigRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Optional reference to an existing web theme config.
+  # Will be mounted to /var/lib/opencloud/web/assets/themes/opencloud for Web.
+  # Does not get autogenerated.
+  # Hint: if you set this, you'll no longer be able to change the instance logo via the Web UI.
+  webThemeConfigRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Optional reference to an existing web theme assets config.
+  # Will be mounted to /var/lib/opencloud/web/assets/themes/opencloud/assets for Web.
+  # Does not get autogenerated.
+  # Hint: if you set this, you'll no longer be able to change the instance logo via the Web UI.
+  webThemeAssetsConfigRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing authservice config.
+  authServiceConfigRef:
+
+# References to secrets.
+# Leave these empty to have them autogenerated by the Helm chart.
+# Note that secrets generated by the helm chart will be removed once the helm chart is uninstalled.
+# Furthermore, if you already had secrets at the default locations, they will be NOT be overwritten,
+# but the helm chart will claim ownership of them. If this is a problem, fill in the secretRefs below
+# with the names of your existing secrets.
+# TODO: Update documentation in https://github.com/opencloud-eu/helm for how to generate certificates.
+secretRefs:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing admin user secret (see ref:Secrets#secrets). Not used if `features.externalUserManagement.enabled` equals `true`.
+  adminUserSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing collaboration service WOPI secret (see ref:Secrets#secrets). Not used if `features.appsIntegration.enabled` equals `false`.
+  collaborationWopiSecret:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing IDP secret (see ref:Secrets#secrets). Not used if `features.externalUserManagement.enabled` equals `true`.
+  idpSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing JWT secret (see ref:Secrets#secrets).
+  jwtSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing keycloak client secret, used for the GDPR export. Only used if features.externalUserManagement.gdprExport.enabled equals true.
+  gdprExportClientSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing LDAP certificate authority secret (see ref:Secrets#secrets)
+  ldapCaRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing LDAP cert secret (see ref:Secrets#secrets). Not used if `features.externalUserManagement.enabled` equals `true`.
+  ldapCertRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing LDAP bind secret (see ref:Secrets#secrets).
+  ldapSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing machine auth api key secret (see ref:Secrets#secrets)
+  machineAuthApiKeySecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing messaging system certificate authority secret (see ref:Secrets#secrets)
+  messagingSystemCaRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing SMTP email server settings secret (see ref:Secrets#secrets).
+  # Not used if `features.emailNotifications.enabled` equals `false`.
+  # Not used if `features.emailNotifications.smtp.authentication` equals `none`.
+  notificationsSmtpSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing storage-system JWT secret (see ref:Secrets#secrets)
+  storagesystemJwtSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing storage-system secret (see ref:Secrets#secrets)
+  storagesystemSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing thumbnails transfer secret (see ref:Secrets#secrets)
+  thumbnailsSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing transfer secret (see ref:Secrets#secrets)
+  transferSecretSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing s3 secret (see ref:Secrets#secrets)
+  # If not filled in, will attempt to use values in `.storageusers.storageBackend.s3.driverConfig.decomposeds3` instead.
+  s3CredentialsSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing service account secret (see ref:Secrets#secrets)
+  serviceAccountSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- The secret to secure the global notifications endpoint. Only system admins and users knowing that secret can call the global notifications POST/DELETE endpoints.
+  globalNotificationsSecretRef:
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- Reference to an existing URL signing secret (see ref:Secrets#secrets).
+  urlSigningSecretRef:
+
+# @schema
+# type: boolean
+# required: true
+# @schema
+# -- ServiceAccount for Flux RBAC
+serviceAccount:
+  enabled: true
+
+# Backup related settings
+# Compare to https://doc.opencloud.eu/opencloud/next/maintenance/b-r/backup_considerations.html
+backup:
+  # @schema
+  # $ref: schema/templates.json#/labelsTemplate
+  # @schema
+  # -- Labels that are added to ConfigMaps that are manged by this Chart and must be included in a backup when backing up Kubernetes resources.
+  configMapLabels: {}
+  # @schema
+  # $ref: schema/templates.json#/labelsTemplate
+  # @schema
+  # -- Labels that are added to Secrets that are manged by this Chart and must be included in a backup when backing up Kubernetes resources.
+  secretLabels: {}
+  # @schema
+  # $ref: schema/templates.json#/labelsTemplate
+  # @schema
+  # -- Labels that are added to PVCs that are manged by this Chart and must be included in a backup when backing up Kubernetes resources.
+  pvcLabels: {}
+
+# @schema
+# $ref: schema/templates.json#/resourcesTemplate
+# @schema
+# -- Default resources to apply to all services, except per-service resources configuration in `services.<service-name>.resources` is set.
+# Best practice is to:
+# - set memory request == memory limit (compare to https://home.robusta.dev/blog/kubernetes-memory-limit)
+# - set cpu request and omit cpu limit (compare to https://home.robusta.dev/blog/stop-using-cpu-limits)
+resources:
+  limits:
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# @schema
+# $ref: schema/templates.json#/resourcesTemplate
+# @schema
+# -- Default resources to apply to all jobs in services, except per-service resources configuration in `services.<service-name>.jobResources` is set.
+# Best practice is to:
+# - set memory request == memory limit (compare to https://home.robusta.dev/blog/kubernetes-memory-limit)
+# - set cpu request and omit cpu limit (compare to https://home.robusta.dev/blog/stop-using-cpu-limits)
+jobResources:
+  limits:
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+monitoring:
+  # @schema
+  # type: boolean
+  # required: true
+  # @schema
+  # -- Enable service monitoring.
+  enabled: true
+  # @schema
+  # type: string
+  # required: true
+  # @schema
+  # -- Interval at which to scrape metrics.
+  interval: 60s
+  # @schema
+  # type: string
+  # required: true
+  # @schema
+  # -- Scrape timeout.
+  scrapeTimeout: 60s
+
+# @schema
+# type: object
+# required: false
+# additionalProperties: true
+# @schema
+# Needs to be added to the schema, so that this chart can be used as subchart when `global` is set.
+# see https://github.com/opencloud/opencloud-charts/issues/872
+global: {}
+
+#############################################################################################################################
+# External Services
+#############################################################################################################################
+
+# Collabora configuration
+collabora:
+  enabled: true
+  domain: "collabora.${ROOT_DOMAIN}"
+  repository: collabora/code
+  tag: "25.04.8.1.1"
+  # -- Resources allocation
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      # cpu: 500m
+      memory: 1Gi
+  # -- Collabora admin credentials
+  admin:
+    # -- Admin username
+    user: "{{ .opencloud_username }}"
+    # -- Admin password
+    password: "{{ .opencloud_password }}"
+
+# Tika Search
+tika:
+  # -- Enable Tika
+  enabled: true
+  # -- Number of Tika replicas
+  replicas: 1
+  image:
+    # -- Tika image registry
+    registry: "apache" # Or the appropriate registry for official Tika images
+    # -- Tika image repository
+    repository: "tika"
+    # -- Tika image tag
+    tag: "latest-full"
+    # -- Image pull policy
+    pullPolicy: "IfNotPresent"
+  service:
+    # -- Tika service port
+    port: 9000
+  # -- Resources allocation for Tika
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      # cpu: "500m"
+      memory: "1Gi"
+
+# Internal Test Minio
+minio:
+  # -- Enable MinIO
+  enabled: false
+# Internal Test Keycloak
+keycloak:
+  # -- Enable Keycloak
+  enabled: false

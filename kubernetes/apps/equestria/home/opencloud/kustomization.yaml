@@ -5,5 +5,9 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./definition.yaml
+configMapGenerator:
+  - name: opencloud-values
+    files:
+      - values.yaml=./values.yaml
 generatorOptions:
   disableNameSuffixHash: true

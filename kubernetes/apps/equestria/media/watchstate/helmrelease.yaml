@@ -50,11 +50,10 @@ spec:
               # capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 50m
+                cpu: 100m
                 memory: 1Gi
               limits:
                 memory: 1Gi
-                cpu: 400m
 
     # tolerations:
     #   - key: amd.com/gpu

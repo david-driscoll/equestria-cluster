@@ -86,6 +86,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: vikunja-postgres
+  - name: opencloud
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: opencloud-postgres
   - name: n8n
     ensure: present
     login: true
