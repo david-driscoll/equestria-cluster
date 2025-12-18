@@ -11,8 +11,6 @@ resources:
   - immich.sops.yaml
   - n8n.yaml
   - n8n.sops.yaml
-  - opencloud.yaml
-  - opencloud.sops.yaml
   - romm.yaml
   - romm.sops.yaml
   - vikunja.yaml

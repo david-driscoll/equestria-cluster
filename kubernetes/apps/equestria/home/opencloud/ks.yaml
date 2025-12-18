@@ -20,21 +20,16 @@ spec:
   dependsOn:
     - name: volsync
       namespace: volsync-system
-    - name: postgres
-      namespace: database
-    - name: valkey
-      namespace: database
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   components:
     - ../../../../components/volsync
-    # - ../../../../components/tailscale
-    # - ../../../../components/postgres
+    - ../../../../components/tailscale
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      VOLSYNC_ACCESSMODES: ReadWriteOnce
-      VOLSYNC_CAPACITY: 40Gi
+      VOLSYNC_ACCESSMODES: ReadWriteMany
+      VOLSYNC_CAPACITY: 60Gi

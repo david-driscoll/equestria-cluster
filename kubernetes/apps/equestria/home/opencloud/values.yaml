@@ -64,8 +64,13 @@ controllers:
           # NOTIFICATIONS_SMTP_SENDER: bot@${ROOT_DOMAIN}
           # NOTIFICATIONS_SMTP_INSECURE: true
 
-          # STORAGE_USERS_DRIVER: posix
+          STORAGE_USERS_DRIVER: posix
           # STORAGE_USERS_ID_CACHE_STORE: nats-js-kv
+
+          # Enable Radicale (CalDAV/CardDAV) behind Opencloud proxy
+          RADICALE_ENABLED: "true"
+          RADICALE_HTTP_ADDR: 0.0.0.0:5232
+          RADICALE_FILESYSTEM_FOLDER: /var/lib/opencloud/radicale
 
           SEARCH_EXTRACTOR_TYPE: tika
           SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://opencloud-tika:9998
@@ -89,6 +94,31 @@ controllers:
                 port: &port 9200
                 path: /health
           readiness: *probes
+      taildrive:
+        image:
+          repository: docker.io/tailscale/tailscale
+          tag: latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            tailscaled --state=/var/lib/tailscale/tailscaled.state --socket=/tmp/tailscaled.sock &
+            sleep 2
+            tailscale --socket=/tmp/tailscaled.sock up --authkey "$TS_AUTHKEY" --hostname "opencloud-taildrive" --accept-dns=false --tun=userspace-networking --reset --advertise-tags=tag:shared-drive
+            tailscale --socket=/tmp/tailscaled.sock serve --json /etc/tailscale/taildrive.json
+            tail -f /dev/null
+        env:
+          TS_AUTHKEY:
+            valueFrom:
+              secretKeyRef:
+                name: tailscale-authkey
+                key: authkey
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 256Mi
   wopi:
     strategy: RollingUpdate
     containers:
@@ -142,12 +172,12 @@ controllers:
           username:
             valueFrom:
               secretKeyRef:
-                name: opencloud
+                name: opencloud-secret
                 key: COLLABORA_ADMIN_USER
           password:
             valueFrom:
               secretKeyRef:
-                name: opencloud
+                name: opencloud-secret
                 key: COLLABORA_ADMIN_PASS
         securityContext:
           <<: *sec
@@ -205,6 +235,8 @@ service:
         port: 9142
       debug:
         port: 9205
+      caldav:
+        port: 5232
   tika:
     controller: tika
     ports:
@@ -283,7 +315,7 @@ route:
 persistence:
   config:
     type: configMap
-    name: opencloud
+    name: opencloud-config
     advancedMounts:
       opencloud:
         opencloud:
@@ -292,7 +324,7 @@ persistence:
           - path: /etc/opencloud/proxy.yaml
             subPath: proxy.yaml
   data:
-    existingClaim: opencloud
+    existingClaim: ${APP}
     advancedMounts:
       opencloud:
         opencloud:
@@ -300,18 +332,34 @@ persistence:
             subPath: data
           - path: /etc/opencloud
             subPath: config
+        taildrive:
+          - path: /data
+            subPath: data
       wopi:
         wopi:
           - path: /etc/opencloud
             subPath: config
   files:
     type: nfs
-    server: 10.0.30.25
-    path: /files/opencloud
+    server: ${SPIKE_IP}
+    path: /mnt/stash/data/opencloud
     advancedMounts:
       opencloud:
         opencloud:
-          - path: *path
+          - path: /stash
+  taildrive-config:
+    type: configMap
+    name: opencloud-taildrive
+    advancedMounts:
+      opencloud:
+        taildrive:
+          - path: /etc/tailscale
+  taildrive-state:
+    type: emptyDir
+    advancedMounts:
+      opencloud:
+        taildrive:
+          - path: /var/lib/tailscale
   tmpfs:
     type: emptyDir
     advancedMounts:
@@ -334,8 +382,17 @@ persistence:
       opencloud:
         opencloud:
           - path: /opt/extensions
+secrets:
+  authkey:
+    forceRename: tailscale-authkey
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflects: "tailscale/authkey"
+      reloader.stakater.com/auto: "true"
+    stringData:
+      authkey: ""
 configMaps:
   config:
+    forceRename: opencloud-config
     data:
       csp.yaml: |
         directives:
@@ -391,3 +448,17 @@ configMaps:
                 claim_value: admins
               - role_name: user
                 claim_value: users
+  taildrive:
+    forceRename: opencloud-taildrive
+    data:
+      taildrive.json: |
+        {
+          "Drive": {
+            "Shares": {
+              "opencloud": {
+                "Path": "/data",
+                "As": "opencloud"
+              }
+            }
+          }
+        }
