@@ -29,9 +29,9 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/tailscale
     - ../../../../components/volsync
-    - ../../../../components/postgres
+    # - ../../../../components/tailscale
+    # - ../../../../components/postgres
   postBuild:
     substitute:
       APP: *app

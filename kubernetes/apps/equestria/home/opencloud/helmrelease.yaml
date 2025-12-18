@@ -1,18 +1,4 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/ocirepository-source-v1.json
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
-metadata:
-  name: opencloud
-spec:
-  interval: 1h
-  layerSelector:
-    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
-    operation: copy
-  ref:
-    tag: "0.3.10"
-  url: oci://ghcr.io/michaelstingl/helm-charts/opencloud-microservices
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -21,9 +7,9 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: opencloud
+    name: app-template
   maxHistory: 3
-  interval: 1h
+  interval: 15m
   timeout: 10m
   install:
     createNamespace: true
@@ -37,7 +23,7 @@ spec:
       retries: 7
       strategy: rollback
   rollback:
-    force: false # true
+    force: true
     cleanupOnFail: true
     recreate: true
   uninstall:
