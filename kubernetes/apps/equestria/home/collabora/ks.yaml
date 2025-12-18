@@ -17,24 +17,13 @@ spec:
   interval: 1h
   retryInterval: 2m
   timeout: 10m
-  dependsOn:
-    - name: volsync
-      namespace: volsync-system
-    - name: postgres
-      namespace: database
-    - name: valkey
-      namespace: database
+  dependsOn: []
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   components: []
-    # - ../../../../components/tailscale
-    # - ../../../../components/volsync
-    # - ../../../../components/postgres
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      # VOLSYNC_ACCESSMODES: ReadWriteOnce
-      # VOLSYNC_CAPACITY: 40Gi

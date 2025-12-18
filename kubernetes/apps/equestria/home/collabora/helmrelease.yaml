@@ -47,41 +47,13 @@ spec:
             env:
               extra_params: --o:ssl.termination=true --o:ssl.enable=false
 
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /api/health/ready
-                    port: &port 3000
-                  initialDelaySeconds: 10
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: false
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: { type: RuntimeDefault }
-
-    persistence:
-      appdata:
-        existingClaim: *app
-
     service:
       app:
         controller: *app
         type: ClusterIP
         ports:
           http:
-            port: *port
+            port: &port 9980
 
     route:
       internal:
@@ -96,41 +68,3 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
-    serviceAccount:
-      *app : {}
-    secrets:
-      *app :
-        type: kubernetes.io/service-account-token
-        annotations:
-          kubernetes.io/service-account.name: *app
-        stringData:
-          token: ""
-          certificate: ""
-    rbac:
-      roles:
-        homarr:
-          type: ClusterRole
-          rules:
-            - apiGroups: [ "" ]
-              resources: [ "pods", "services", "secrets", "configmaps", "persistentvolumeclaims", "namespaces", "persistentvolumes", "nodes" ]
-              verbs: [ "get", "list", "watch", "use" ]
-            - apiGroups: [ "apps" ]
-              resources: [ "deployments" ]
-              verbs: [ "get", "list", "watch" ]
-            - apiGroups: [ "networking.k8s.io" ]
-              resources: [ "ingresses" ]
-              verbs: [ "get", "list", "watch" ]
-            - apiGroups: [ "metrics.k8s.io" ]
-              resources: [ "nodes", "pods" ]
-              verbs: [ "get", "list", "watch" ]
-      bindings:
-        homarr:
-          type: ClusterRoleBinding
-          roleRef:
-            apiGroup: rbac.authorization.k8s.io
-            kind: ClusterRole
-            name: homarr
-          subjects:
-            - kind: ServiceAccount
-              name: *app
-              namespace: ${NAMESPACE}
