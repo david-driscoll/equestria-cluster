@@ -25,7 +25,7 @@ spec:
               PUID: 1000
               PGID: 1000
               serverBindIP: true
-              serverIP: tdarr.${ROOT_DOMAIN}
+              serverIP: tdarr.server.${ROOT_DOMAIN}
               serverPort: &server-port 8266
               webUIPort: &web-port 8265
               internalNode: "false"
@@ -73,8 +73,8 @@ spec:
               tag: 2.58.02@sha256:62e14509bc19dea9b6f5dc85d0942163b6fa240d780a53eb590d894d46c9e1f2
             env:
               TZ: ${TIMEZONE}
-              serverIP: tdarr.${ROOT_DOMAIN}
-              serverPort: *server-port
+              serverIP: tdarr.server.${ROOT_DOMAIN}
+              serverPort: 443
               inContainer: true
               nodeName:
                 valueFrom:
@@ -105,17 +105,13 @@ spec:
         supplementalGroups: [568]
         # seccompProfile: { type: RuntimeDefault }
     service:
-      *app :
+      server:
         controller: *app
-        type: LoadBalancer
-        externalTrafficPolicy: Local
-        loadBalancerIP: "${INTERNAL_IP}"
         ports:
           http:
             port: *server-port
-      web:
+      *app :
         controller: *app
-        type: LoadBalancer
         ports:
           http:
             port: *web-port
@@ -132,6 +128,18 @@ spec:
           - backendRefs:
               - identifier: *app
                 port: *web-port
+      server:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.server.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: *server-port
     persistence:
       config:
         enabled: true
