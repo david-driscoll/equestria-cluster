@@ -1,0 +1,116 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app tdarr
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  dependsOn: []
+  interval: 15m
+  values:
+    controllers:
+      *app :
+        type: deployment
+        replicas: 1
+        containers:
+          app:
+            image:
+              repository: ghcr.io/haveagitgat/tdarr
+              tag: 2.58.02@sha256:20a5656c4af4854e1877046294f77113f949d27e35940a9a65f231423d063207
+            env:
+              TZ: ${TIMEZONE}
+              serverIP: tdarr.${ROOT_DOMAIN}
+              serverPort: &server-port 8266
+              inContainer: true
+              nodeName:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+            resources:
+              claims:
+                - name: gpu
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+      tdarr-node:
+        type: deployment
+        replicas: 2
+        containers:
+          app:
+            image:
+              repository: ghcr.io/haveagitgat/tdarr_node
+              tag: 2.58.02@sha256:62e14509bc19dea9b6f5dc85d0942163b6fa240d780a53eb590d894d46c9e1f2
+            env:
+              TZ: ${TIMEZONE}
+              serverIP: tdarr.${ROOT_DOMAIN}
+              serverPort: *server-port
+              inContainer: true
+              nodeName:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+            resources:
+              claims:
+                - name: gpu
+              requests:
+                cpu: 100m
+                memory: 512Mi
+                gpu.intel.com/i915: 1
+              limits:
+                memory: 2Gi
+        pod:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: intel.feature.node.kubernetes.io/gpu
+                    operator: In
+                    values:
+                    - "true"
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        supplementalGroups: [44, 109, 303, 568, 10000]
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      *app :
+        controller: *app
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        annotations:
+          io.cilium/lb-ipam-ips: "${INTERNAL_IP}"
+        loadBalancerIP: "${INTERNAL_IP}"
+        ports:
+          http:
+            port: *server-port
+      web:
+        controller: *app
+        type: LoadBalancer
+        ports:
+          http:
+            port: &web-port 8265
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: *web-port
+    persistence:
+      media:
+        existingClaim: truenas-media
+        globalMounts:
+          - path: /media/
