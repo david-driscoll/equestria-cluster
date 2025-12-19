@@ -134,6 +134,16 @@ spec:
               - identifier: *app
                 port: *web-port
     persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        advancedMounts:
+          tdarr:
+            app:
+              - path: /app/configs
+                subPath: config
+              - path: /app/server
+                subPath: server
       media:
         existingClaim: truenas-media
         globalMounts:
