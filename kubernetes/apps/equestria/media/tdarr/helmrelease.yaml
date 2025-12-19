@@ -22,9 +22,14 @@ spec:
               tag: 2.58.02@sha256:20a5656c4af4854e1877046294f77113f949d27e35940a9a65f231423d063207
             env:
               TZ: ${TIMEZONE}
+              PUID: 568
+              PGID: 568
+              serverBindIP: true
               serverIP: tdarr.${ROOT_DOMAIN}
               serverPort: &server-port 8266
-              inContainer: true
+              webUIPort: &web-port 8265
+              internalNode: "false"
+              inContainer: "true"
               nodeName:
                 valueFrom:
                   fieldRef:
@@ -77,7 +82,7 @@ spec:
       securityContext:
         runAsUser: 568
         runAsGroup: 568
-        supplementalGroups: [44, 109, 303, 568, 10000]
+        supplementalGroups: [44, 109, 303, 568, 1000, 10000]
         seccompProfile: { type: RuntimeDefault }
     service:
       *app :
@@ -95,7 +100,7 @@ spec:
         type: LoadBalancer
         ports:
           http:
-            port: &web-port 8265
+            port: *web-port
     route:
       internal:
         parentRefs:
