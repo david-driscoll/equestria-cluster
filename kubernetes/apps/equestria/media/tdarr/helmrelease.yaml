@@ -108,6 +108,10 @@ spec:
         ports:
           http:
             port: &server-port 8266
+        annotations:
+          tailscale.com/expose: "true"
+          tailscale.com/hostname: tdarr-server
+          tailscale.com/tags: "tag:observability"
       *app :
         controller: *app
         ports:
