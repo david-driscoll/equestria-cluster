@@ -9,5 +9,5 @@ resources:
   - ./glance/ks.yaml
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
-  - ./opencloud/ks.yaml
+  # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
