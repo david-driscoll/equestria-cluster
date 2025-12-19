@@ -37,6 +37,8 @@ spec:
             securityContext:
               capabilities:
                 add: ["SETGID", "SETUID"]
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
             probes:
               liveness: &probes
                 enabled: true
