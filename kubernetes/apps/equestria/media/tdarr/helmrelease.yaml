@@ -101,8 +101,8 @@ spec:
       securityContext:
         runAsUser: 568
         runAsGroup: 568
-        supplementalGroups: [44, 109, 303, 568, 1000, 10000]
-        seccompProfile: { type: RuntimeDefault }
+        # supplementalGroups: [44, 109, 303, 568, 1000, 10000]
+        # seccompProfile: { type: RuntimeDefault }
     service:
       *app :
         controller: *app
