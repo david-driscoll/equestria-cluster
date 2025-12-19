@@ -15,7 +15,7 @@ spec:
       - family
   gatus:
     - group: "Applications"
-      url: https://${APP}.${CLUSTER_DOMAIN}
+      url: https://${APP}.${CLUSTER_DOMAIN}/api/v2/status
       method: GET
       conditions:
         - "[STATUS] == 200"
