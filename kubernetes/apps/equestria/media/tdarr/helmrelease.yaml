@@ -34,6 +34,9 @@ spec:
                 valueFrom:
                   fieldRef:
                     fieldPath: spec.nodeName
+            securityContext:
+              capabilities:
+                add: ["SETGID", "SETUID"]
             probes:
               liveness: &probes
                 enabled: true
@@ -53,8 +56,6 @@ spec:
                   failureThreshold: 30
                   periodSeconds: 10
             resources:
-              claims:
-                - name: gpu
               requests:
                 cpu: 100m
                 memory: 512Mi
