@@ -7,4 +7,3 @@ resources:
   - ./internal/ks.yaml
   - ./shared/ks.yaml
   - ./whoami/ks.yaml
-  - ./me/ks.yaml
