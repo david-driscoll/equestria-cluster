@@ -63,6 +63,10 @@ ports:
     transport:
       respondingTimeouts:
         readTimeout: "0s"
+    http:
+      encodedCharacters:
+        allowEncodedSlash: true
+        allowEncodedQuestionMark: true
   mariadb:
     expose:
       default: true
