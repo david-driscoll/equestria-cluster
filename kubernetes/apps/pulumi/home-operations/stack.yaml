@@ -81,7 +81,7 @@ spec:
   workspaceTemplate:
     spec:
       # renovate: datasource=docker depName=pulumi/pulumi-nodejs
-      image: ghcr.io/pulumi/pulumi-nodejs:3.212.0@sha256:2400efc814f69059d922f109eb1a034e46e187486ce7ff6fca90a133be377173
+      image: ghcr.io/pulumi/pulumi-nodejs:3.213.0@sha256:7ec4faf237ee49d263dc1a34d29727cced7b85adfd91218cac6e1a28fe1e71c2
       env:
         - name: GITHUB_TOKEN
           valueFrom:
