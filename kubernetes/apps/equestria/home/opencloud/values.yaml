@@ -97,7 +97,7 @@ controllers:
       taildrive:
         image:
           repository: docker.io/tailscale/tailscale
-          tag: latest
+          tag: latest@sha256:d6734d69fd7d31b1861589e347463954aa6097f9a61aa4f8f763ba94bfe0e5b9
         command:
           - /bin/sh
           - -c
@@ -377,7 +377,7 @@ persistence:
   # Web extensions
   unzip:
     type: image
-    image: docker.io/opencloudeu/web-extensions:unzip-1.0.4
+    image: docker.io/opencloudeu/web-extensions:unzip-1.0.4@sha256:217e325154a8f5a1732a2cbde4532600b532450e93b85d53522f1df6c84fd173
     advancedMounts:
       opencloud:
         opencloud:
