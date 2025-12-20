@@ -42,7 +42,7 @@ spec:
           *app :
             image:
               repository: docker.io/collabora/code
-              tag: 24.04.7.2.1
+              tag: 24.04.13.3.1@sha256:c918662331cbd13b28ef2f7d2d7d91055948adfcadaff21c687cbbbe08258729
               pullPolicy: IfNotPresent
             env:
               extra_params: --o:ssl.termination=true --o:ssl.enable=false
