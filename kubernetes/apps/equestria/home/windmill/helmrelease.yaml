@@ -42,15 +42,6 @@ spec:
       app:
         annotations:
           reloader.stakater.com/auto: "true"
-        volumes:
-          - name: config
-            configMap:
-              name: ${APP}-config
-              defaultMode: 420
-        volumeMounts:
-          - name: config
-            mountPath: /etc/windmill/config.json
-            subPath: config.json
       workerGroups:
         - name: default
           replicas: 3
