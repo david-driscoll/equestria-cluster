@@ -25,7 +25,6 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/ingress/internal
     - ../../../../components/postgres
   postBuild:
     substitute:

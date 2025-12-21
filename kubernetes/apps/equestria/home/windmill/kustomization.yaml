@@ -6,6 +6,7 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./definition.yaml
+  - ./httproute.yaml
 configMapGenerator:
   - name: ${APP}-config
     files:
