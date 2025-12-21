@@ -7,9 +7,3 @@ resources:
   - ./externalsecret.yaml
   - ./definition.yaml
   - ./httproute.yaml
-configMapGenerator:
-  - name: ${APP}-config
-    files:
-      - config.json=./resources/config.json
-    options:
-      disableNameSuffixHash: true
