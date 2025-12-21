@@ -9,6 +9,6 @@ resources:
   - ./glance/ks.yaml
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
-  # - ./windmill/ks.yaml
+  - ./windmill/ks.yaml
   # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
