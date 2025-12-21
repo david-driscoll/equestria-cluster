@@ -141,7 +141,7 @@ spec:
         kind: HTTPRoute
         rules:
           - backendRefs:
-              - identifier: *app
+              - identifier: tdarr-server
                 port: *server-port
     persistence:
       config:
