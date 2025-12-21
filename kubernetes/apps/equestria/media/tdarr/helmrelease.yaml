@@ -103,7 +103,8 @@ spec:
         supplementalGroups: [568]
         # seccompProfile: { type: RuntimeDefault }
     service:
-      server:
+      tdarr-server:
+        forceRename: tdarr-server
         controller: *app
         ports:
           http:
