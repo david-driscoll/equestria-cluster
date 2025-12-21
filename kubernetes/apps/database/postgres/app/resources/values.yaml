@@ -86,6 +86,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: vikunja-postgres
+  - name: windmill
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: windmill-postgres
   - name: n8n
     ensure: present
     login: true

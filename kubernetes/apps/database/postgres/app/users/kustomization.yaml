@@ -15,3 +15,5 @@ resources:
   - romm.sops.yaml
   - vikunja.yaml
   - vikunja.sops.yaml
+  - windmill.yaml
+  - windmill.sops.yaml
