@@ -14,4 +14,4 @@ resources:
   - ./1password
   - ./controller/ks.yaml
   - ./repositories/ks.yaml
-  - ./runners
+  # - ./runners
