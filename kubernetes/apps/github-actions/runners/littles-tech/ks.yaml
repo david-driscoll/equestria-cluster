@@ -1,0 +1,25 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app littles-tech
+  namespace: &namespace github-actions
+spec:
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: gha-arc-controller
+      namespace: *namespace
+  path: ./kubernetes/apps/github-actions/runners/littles-tech
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  force: true
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m

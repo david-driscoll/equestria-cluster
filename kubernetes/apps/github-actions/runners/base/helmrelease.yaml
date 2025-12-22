@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app generic-runner
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: gha-runner-scale-set
+      version: 0.13.0
+      sourceRef:
+        kind: HelmRepository
+        name: actions-runner-controller
+        namespace: flux-system
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: gha-arc-controller
+  values:
+    fullnameOverride: *app
+    runnerScaleSetName: *app
+    containerMode:
+      type: kubernetes
+    kubernetesModeWorkVolumeClaim:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: longhorn-local
+      resources:
+        requests:
+          storage: 2Gi
+    kubernetesModeAdditionalRoleRules: []
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: daviddriscoll/github-arc-runner-az-dotnet:latest@sha256:7fd428ced7bed02183bf1886e53619c0de3197f6f7023e785440034d4bed3469

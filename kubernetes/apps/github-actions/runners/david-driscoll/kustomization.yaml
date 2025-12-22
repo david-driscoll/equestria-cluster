@@ -1,0 +1,24 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: david-driscoll-runners
+      - op: replace
+        path: /spec/values/fullnameOverride
+        value: david-driscoll-runners
+      - op: replace
+        path: /spec/values/runnerScaleSetName
+        value: david-driscoll-runners
+      - op: replace
+        path: /spec/values/maxRunners
+        value: 2
+      - op: replace
+        path: /spec/values/minRunners
+        value: 1

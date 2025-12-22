@@ -1,0 +1,42 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: littles-tech-runners
+      - op: replace
+        path: /spec/values/fullnameOverride
+        value: littles-tech-runners
+      - op: replace
+        path: /spec/values/runnerScaleSetName
+        value: littles-tech-runners
+      - op: replace
+        path: /spec/values/maxRunners
+        value: 4
+      - op: replace
+        path: /spec/values/minRunners
+        value: 1
+      - op: add
+        path: /spec/values/template/spec/nodeSelector
+        value: {}
+      - op: add
+        path: /spec/values/template/spec/nodeSelector/eris.cluster~1role
+        value: builder
+      - op: add
+        path: /spec/values/template/spec/containers/0/resources/limits/cpu
+        value: "3.0"
+      - op: add
+        path: /spec/values/template/spec/containers/0/resources/limits/memory
+        value: "9Gi"
+      - op: add
+        path: /spec/values/template/spec/containers/0/resources/requests/cpu
+        value: "2.0"
+      - op: add
+        path: /spec/values/template/spec/containers/0/resources/requests/memory
+        value: "3Gi"
