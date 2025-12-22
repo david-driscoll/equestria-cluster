@@ -1,0 +1,27 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - path: ../littles-tech/patch.yaml
+    target:
+      kind: HelmRelease
+  - target:
+      kind: HelmRelease
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: littles-tech-release-runners
+      - op: replace
+        path: /spec/values/fullnameOverride
+        value: littles-tech-release-runners
+      - op: replace
+        path: /spec/values/runnerScaleSetName
+        value: littles-tech-release-runners
+      - op: replace
+        path: /spec/values/maxRunners
+        value: 3
+      - op: replace
+        path: /spec/values/minRunners
+        value: 1

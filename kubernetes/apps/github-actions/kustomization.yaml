@@ -2,14 +2,16 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: pulumi
+namespace: github-actions
+metadata:
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
 components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
   - ./secret-store.yaml
-  # - ./secrets/ks.yaml
-  # - ./applications/ks.yaml
-  # - ./authentik/ks.yaml
-  # - ./home-operations/ks.yaml
-  # - ./pulumi-operator/ks.yaml
+  - ./1password
+  - ./controller/ks.yaml
+  - ./repositories/ks.yaml
+  - ./runners
