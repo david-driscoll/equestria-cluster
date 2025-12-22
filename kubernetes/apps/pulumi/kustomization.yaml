@@ -8,8 +8,8 @@ components:
   - ../../components/repos/app-template
 resources:
   - ./secret-store.yaml
-  # - ./secrets/ks.yaml
-  # - ./applications/ks.yaml
-  # - ./authentik/ks.yaml
-  # - ./home-operations/ks.yaml
-  # - ./pulumi-operator/ks.yaml
+  - ./secrets/ks.yaml
+  - ./applications/ks.yaml
+  - ./authentik/ks.yaml
+  - ./home-operations/ks.yaml
+  - ./pulumi-operator/ks.yaml
