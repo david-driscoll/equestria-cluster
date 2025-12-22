@@ -21,3 +21,26 @@ spec:
   values:
     fullnameOverride: *app
     replicaCount: 1
+    metrics:
+      controllerManagerAddr: ":8080"
+      listenerAddr: ":8080"
+      listenerEndpoint: "/metrics"
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/servicemonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: &app gha-arc-controller
+  namespace: github-actions
+  labels: &labels
+    app.kubernetes.io/instance: *app
+    app.kubernetes.io/name: *app
+spec:
+  selector:
+    matchLabels:
+      <<: *labels
+  endpoints:
+    - port: "8080"
+      interval: 30m
+      scrapeTimeout: 30s
+      path: /metrics
