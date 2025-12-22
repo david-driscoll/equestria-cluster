@@ -1,8 +1,17 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: github-actions
+metadata:
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+components:
+  - ../../components/common
+  - ../../components/repos/app-template
 resources:
-  - ./namespace.yaml
-  - ./1password/ks.yaml
+  - ./secret-store.yaml
+  - ./1password
   - ./controller/ks.yaml
-  - ./runners/ks.yaml
+  - ./repositories/ks.yaml
+  - ./runners

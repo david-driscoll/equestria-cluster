@@ -1,4 +1,5 @@
 
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: patch
@@ -6,7 +7,7 @@ spec:
   valuesFrom:
 
     - kind: Secret
-      name: &name david-driscoll-github-app
+      name: &name littles-tech-github-app
       targetPath: githubConfigUrl
       valuesKey: githubConfigUrl
 

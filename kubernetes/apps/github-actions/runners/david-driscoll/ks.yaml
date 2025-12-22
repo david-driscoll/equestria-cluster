@@ -12,6 +12,8 @@ spec:
   dependsOn:
     - name: gha-arc-controller
       namespace: *namespace
+    - name: gha-repositories
+      namespace: *namespace
   path: ./kubernetes/apps/github-actions/runners/david-driscoll
   prune: true
   sourceRef:

@@ -3,7 +3,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
+  - ./secret.yaml
 patches:
+  - path: ./patch.yaml
+    target:
+      kind: HelmRelease
   - target:
       kind: HelmRelease
     patch: |-
@@ -29,14 +33,11 @@ patches:
         path: /spec/values/template/spec/nodeSelector/eris.cluster~1role
         value: builder
       - op: add
-        path: /spec/values/template/spec/containers/0/resources/limits/cpu
-        value: "3.0"
-      - op: add
         path: /spec/values/template/spec/containers/0/resources/limits/memory
         value: "9Gi"
       - op: add
         path: /spec/values/template/spec/containers/0/resources/requests/cpu
-        value: "2.0"
+        value: "2"
       - op: add
         path: /spec/values/template/spec/containers/0/resources/requests/memory
         value: "3Gi"

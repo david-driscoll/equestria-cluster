@@ -5,14 +5,9 @@ metadata:
   name: &app generic-runner
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: gha-runner-scale-set
-      version: 0.13.0
-      sourceRef:
-        kind: HelmRepository
-        name: actions-runner-controller
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: gha-runner-scale-set
   install:
     crds: CreateReplace
     remediation:
@@ -42,3 +37,9 @@ spec:
         containers:
           - name: runner
             image: daviddriscoll/github-arc-runner-az-dotnet:latest@sha256:7fd428ced7bed02183bf1886e53619c0de3197f6f7023e785440034d4bed3469
+            resources:
+              requests:
+                cpu: 500m
+                memory: 512Mi
+              limits:
+                memory: 2Gi

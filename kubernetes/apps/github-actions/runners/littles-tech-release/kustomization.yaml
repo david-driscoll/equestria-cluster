@@ -4,6 +4,9 @@ kind: Kustomization
 resources:
   - ../base
 patches:
+  - path: ../littles-tech/patch.yaml
+    target:
+      kind: HelmRelease
   - target:
       kind: HelmRelease
     patch: |-

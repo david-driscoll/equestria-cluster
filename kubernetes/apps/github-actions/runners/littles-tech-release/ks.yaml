@@ -12,6 +12,8 @@ spec:
   dependsOn:
     - name: gha-arc-controller
       namespace: *namespace
+    - name: littles-tech
+      namespace: *namespace
   path: ./kubernetes/apps/github-actions/runners/littles-tech-release
   prune: true
   sourceRef:
