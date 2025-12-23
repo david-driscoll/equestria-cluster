@@ -93,7 +93,7 @@ spec:
         size: 60Gi
       service:
         annotations:
-          # tailscale.com/expose: "true"
+          tailscale.com/expose: "true"
           tailscale.com/hostname: loki
           tailscale.com/tags: "tag:observability"
     gateway:
