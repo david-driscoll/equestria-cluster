@@ -12,8 +12,8 @@ resources:
   - ./plex/ks.yaml
   - ./tautulli/ks.yaml
   - ./lidarr/ks.yaml
-  - ./mylar/ks.yaml
-  - ./dispatcharr/ks.yaml
+  # - ./mylar/ks.yaml
+  # - ./dispatcharr/ks.yaml
   - ./watchstate/ks.yaml
   # - ./streammaster/ks.yaml
-  - ./tdarr/ks.yaml
+  # - ./tdarr/ks.yaml
