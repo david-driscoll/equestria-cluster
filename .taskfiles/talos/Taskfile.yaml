@@ -43,13 +43,11 @@ tasks:
     desc: Reboot the cluster without downtime
     dir: '{{.TALOS_DIR}}'
     cmd: |
-      talosctl upgrade -n 10.10.206.14 --wait
-      sleep 20
-      talosctl upgrade -n 10.10.206.16 --wait
-      sleep 20
-      talosctl upgrade -n 10.10.206.17 --wait
-      sleep 20
-      talosctl upgrade -n 10.10.206.10 --wait
+      talosctl reboot -n 10.10.209.10 --wait
+      sleep 10s
+      talosctl reboot -n 10.10.209.11 --wait
+      sleep 10s
+      talosctl reboot -n 10.10.209.12 --wait
     vars:
       MODE: '{{.MODE | default "auto"}}'
     deps:
@@ -81,6 +79,7 @@ tasks:
     deps:
       - generate-config
     preconditions:
+      - talosctl --nodes {{.IP}} get machineconfig
       - talosctl config info
       - test -f {{.TALOSCONFIG}}
       - which talhelper talosctl yq
@@ -120,6 +119,8 @@ tasks:
     vars:
       KUBERNETES_VERSION:
         sh: yq '.kubernetesVersion' {{.TALOS_DIR}}/talenv.yaml
+    deps:
+      - generate-config
     preconditions:
       - talosctl config info
       - test -f {{.TALOSCONFIG}}
@@ -129,6 +130,20 @@ tasks:
     desc: Resets nodes back to maintenance mode
     dir: '{{.TALOS_DIR}}'
     prompt: This will destroy your cluster and reset the nodes back to maintenance mode... continue?
-    cmd: talhelper gencommand reset --extra-flags="--reboot {{- if eq .CLI_FORCE false }} --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL{{ end }} --graceful=false --wait=false" | bash
+    cmd: talhelper gencommand reset --extra-flags="--reboot --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --graceful=false --wait=false" | bash
+    deps:
+      - generate-config
+    preconditions:
+      - which talhelper
+
+  reset-node:
+    desc: Resets a node back to maintenance mode [IP=required]
+    dir: '{{.TALOS_DIR}}'
+    prompt: This will reset the node back to maintenance mode... continue?
+    cmd: talhelper gencommand reset --node {{.IP}} --extra-flags="--reboot --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --graceful=false --wait=false" | bash
+    requires:
+      vars: [IP]
+    deps:
+      - generate-config
     preconditions:
       - which talhelper
