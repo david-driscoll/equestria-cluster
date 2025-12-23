@@ -159,7 +159,7 @@ spec:
       service:
         annotations:
           tailscale.com/expose: "true"
-          tailscale.com/hostname: thanos-write
+          tailscale.com/hostname: thanos-receive
           tailscale.com/tags: "tag:observability"
       resources:
         requests:
