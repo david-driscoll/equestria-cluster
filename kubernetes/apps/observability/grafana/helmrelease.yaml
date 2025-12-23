@@ -30,6 +30,8 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+  dependsOn:
+    - name: grafana-operator
   values:
     nameOverride: *app
     fullnameOverride: *app
