@@ -3,6 +3,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./retrom/ks.yaml
-  - ./romm/ks.yaml
-  - ./ggrequestz/ks.yaml
+  - ./helmrelease.yaml
+  - ./definition.yaml
+  - ./externalsecret.yaml
