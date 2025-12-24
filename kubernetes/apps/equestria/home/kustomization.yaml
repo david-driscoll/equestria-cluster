@@ -10,5 +10,6 @@ resources:
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
   - ./windmill/ks.yaml
+  - ./donetick/ks.yaml
   # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
