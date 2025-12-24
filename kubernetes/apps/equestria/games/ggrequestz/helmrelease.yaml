@@ -48,57 +48,9 @@ spec:
               PORT: &port "3000"
               PUBLIC_SITE_URL: "https://${APP}.${ROOT_DOMAIN}"
               AUTH_METHOD: "authentik"
-              POSTGRES_HOST:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: postgres_host
-              POSTGRES_PORT: "5432"
-              POSTGRES_DB:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: postgres_database
-              POSTGRES_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: postgres_user
-              POSTGRES_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: postgres_password
-              IGDB_CLIENT_ID:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: igdb_client_id
-              IGDB_CLIENT_SECRET:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: igdb_client_secret
-              AUTHENTIK_CLIENT_ID:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: authentik_client_id
-              AUTHENTIK_CLIENT_SECRET:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: authentik_client_secret
-              AUTHENTIK_ISSUER:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: authentik_issuer
-              SESSION_SECRET:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-secrets
-                    key: session_secret
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secrets
             resources:
               requests:
                 cpu: 100m
