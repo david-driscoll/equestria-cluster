@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: ghcr.io/rommapp/romm
-              tag: 4.5.0-beta.3
+              tag: 4.5.0-beta.3@sha256:dc3ecc73445d6258ceaea621881544dd6aa98dd5853f8f39dac967e3a70fcb78
             env:
               ROMM_PORT: &port 80
             envFrom:
