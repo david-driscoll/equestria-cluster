@@ -123,6 +123,8 @@ spec:
             subPath: downloads
           - path: /romm/library
             subPath: roms
+          - path: /media/roms
+            subPath: roms
 
     route:
       internal:
