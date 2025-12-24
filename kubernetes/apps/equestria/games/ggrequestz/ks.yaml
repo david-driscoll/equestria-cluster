@@ -27,9 +27,7 @@ spec:
   components:
     - ../../../../components/gateway/internal
     - ../../../../components/postgres
-    - ../../../../components/tailscale
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      TAILSCALE_HOST: ggrequestz
