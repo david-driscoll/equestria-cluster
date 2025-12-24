@@ -23,7 +23,7 @@ spec:
         - email
         - openid
         - profile
-        - ggrequestz-role
+        - ggrequestz_role
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:
