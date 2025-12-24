@@ -1,28 +1,15 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/helmrepository_v1.json
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: retrom
-spec:
-  type: oci
-  url: oci://ghcr.io/jmberesford/charts
-  interval: 24h
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# Use the shared `app-template` OCIRepository and map Retrom into a controller
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app retrom
 spec:
-  chart:
-    spec:
-      chart: retrom
-      version: 0.1.7
-      sourceRef:
-        kind: HelmRepository
-        name: retrom
   interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   timeout: 10m
   maxHistory: 3
   install:
@@ -43,44 +30,66 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    server:
-      image:
-        repository: ghcr.io/jmberesford/retrom-server
-        tag: 0.14.0
-      ingress:
+    controllers:
+      *app :
+        type: deployment
+        containers:
+          *app :
+            image:
+              repository: ghcr.io/jmberesford/retrom-server
+              tag: 0.14.0
+            env:
+              - name: PORT
+                value: "5101"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+            workingDir: /app
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+
+    service:
+      retrom:
+        controller: retrom
+        ports:
+          server:
+            port: 5101
+          web:
+            port: &port 3000
+
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: *port
+
+    persistence:
+      config:
         enabled: true
-        ingressClassName: internal
-        hosts:
-          - host: &host "${APP}.${ROOT_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-      env:
-        - name: SERVER_PORT
-          value: "5101"
-      envFrom:
-        - secretRef:
-            name: ${APP}-env
-      resources:
-        requests:
-          cpu: 50m
-          memory: 100Mi
-        limits:
-          cpu: 1000m
-          memory: 1Gi
-      persistence:
-        config:
-          enabled: true
-          existingClaim: ${APP}
-          mountPath: /config
-        library:
-          enabled: true
-          existingClaim: truenas-media
-          mountPath: /library
-          subPath: roms
-
-    client:
-      enabled: false
-
-    postgresql:
-      enabled: false
+        existingClaim: ${APP}
+        globalMounts:
+        - path: /app/config
+      truenas-media:
+        existingClaim: truenas-media
+        globalMounts:
+          - path: /media/downloads
+            subPath: downloads
+          - path: /media/roms
+            subPath: roms

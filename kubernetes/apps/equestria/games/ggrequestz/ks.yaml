@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/equestria/media/ggrequestz
+  path: ./kubernetes/apps/equestria/games/ggrequestz
   prune: true
   wait: true
   force: true

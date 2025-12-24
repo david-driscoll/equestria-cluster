@@ -26,7 +26,6 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/gateway/internal
-    - ../../../../components/tailscale
     - ../../../../components/postgres
     - ../../../../components/volsync
   postBuild:

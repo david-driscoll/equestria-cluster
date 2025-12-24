@@ -7,12 +7,16 @@ resources:
   - postgres-superuser.sops.yaml
   - donetick.yaml
   - donetick.sops.yaml
+  - ggrequestz.yaml
+  - ggrequestz.sops.yaml
   - grafana.yaml
   - grafana.sops.yaml
   - immich.yaml
   - immich.sops.yaml
   - n8n.yaml
   - n8n.sops.yaml
+  - retrom.yaml
+  - retrom.sops.yaml
   - romm.yaml
   - romm.sops.yaml
   - vikunja.yaml

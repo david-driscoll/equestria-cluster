@@ -4,13 +4,13 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app retrom
-  namespace: flux-system
+  namespace: &namespace equestria
 spec:
-  targetNamespace: ${NAMESPACE}
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/${NAMESPACE}/games/retrom
+  path: ./kubernetes/apps/equestria/games/retrom
   prune: true
   sourceRef:
     kind: GitRepository
@@ -28,4 +28,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      NAMESPACE: ${NAMESPACE}
+      NAMESPACE: *namespace
