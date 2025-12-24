@@ -58,7 +58,6 @@ spec:
                 cpu: 100m
                 memory: 512Mi
               limits:
-                cpu: 2
                 memory: 2Gi
             probes:
               liveness: &probes
@@ -95,6 +94,10 @@ spec:
         globalMounts:
           - path: /config/selfhosted.yaml
             subPath: config.yaml
+      assets:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /app/assets
 
     service:
       app:
