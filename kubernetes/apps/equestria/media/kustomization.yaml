@@ -16,4 +16,4 @@ resources:
   - ./dispatcharr/ks.yaml
   - ./watchstate/ks.yaml
   # - ./streammaster/ks.yaml
-  - ./tdarr/ks.yaml
+  # - ./tdarr/ks.yaml

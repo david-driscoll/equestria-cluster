@@ -11,7 +11,7 @@ resources:
   - ./idp
   # - ./books
   - ./downloads
-  - ./games
+  # - ./games
   - ./home
   - ./media
   # - ./pvr
