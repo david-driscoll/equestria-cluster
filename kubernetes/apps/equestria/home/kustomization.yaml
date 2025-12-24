@@ -4,12 +4,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./immich/ks.yaml
-  # - ./n8n/ks.yaml
+  - ./n8n/ks.yaml
   # - ./homarr/ks.yaml
-  # - ./glance/ks.yaml
+  - ./glance/ks.yaml
   - ./obsidian-sync/ks.yaml
-  # - ./vikunja/ks.yaml
+  - ./vikunja/ks.yaml
   - ./windmill/ks.yaml
-  # - ./donetick/ks.yaml
+  - ./donetick/ks.yaml
   # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
