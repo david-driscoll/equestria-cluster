@@ -7,13 +7,13 @@ resources:
   # - ./emby/ks.yaml
   # - ./jellyfin/ks.yaml
   - ./jellyseerr/ks.yaml
-  - ./radarr/ks.yaml
-  - ./sonarr/ks.yaml
+  # - ./radarr/ks.yaml
+  # - ./sonarr/ks.yaml
   - ./plex/ks.yaml
   - ./tautulli/ks.yaml
-  - ./lidarr/ks.yaml
-  - ./mylar/ks.yaml
-  - ./dispatcharr/ks.yaml
+  # - ./lidarr/ks.yaml
+  # - ./mylar/ks.yaml
+  # - ./dispatcharr/ks.yaml
   - ./watchstate/ks.yaml
   # - ./streammaster/ks.yaml
-  - ./tdarr/ks.yaml
+  # - ./tdarr/ks.yaml

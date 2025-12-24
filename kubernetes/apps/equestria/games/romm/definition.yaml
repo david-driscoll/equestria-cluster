@@ -26,7 +26,7 @@ spec:
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:
-    - group: *category
+    - group: Applications
       url: *url
       method: GET
       conditions:
