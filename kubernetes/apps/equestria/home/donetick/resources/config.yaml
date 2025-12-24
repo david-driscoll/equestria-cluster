@@ -60,16 +60,7 @@ scheduler_jobs:
 #   rate_limit_attempts: 5
 #   rate_limit_window: 15m
 storage:
-  storage_type: "remote"
-  bucket_name: "${APP}"
-  # region: "us-east-1"
-  # base_path: ""
-  access_key: "{{ .s3_username }}"
-  secret_key: "{{ .s3_password }}"
-  endpoint: "{{ .s3_endpoint }}"
-  # public_host: "https://your-cdn.com"  # Optional
-  # max_user_storage: 104857600  # 100MB
-  # max_file_size: 2097152       # 2MB
+  storage_type: "local"
 realtime:
   enabled: true
   sse_enabled: true
