@@ -67,6 +67,7 @@ david-driscoll/stargate-command-cluster:
       kustomization.yaml
       alertmanager/
       grafana/
+      grafana-operator/
       prometheus/
       thanos/
       loki/
