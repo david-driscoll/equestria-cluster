@@ -5,6 +5,8 @@ resources:
   - postgres-user.sops.yaml
   - postgres-superuser.yaml
   - postgres-superuser.sops.yaml
+  - donetick.yaml
+  - donetick.sops.yaml
   - grafana.yaml
   - grafana.sops.yaml
   - immich.yaml
