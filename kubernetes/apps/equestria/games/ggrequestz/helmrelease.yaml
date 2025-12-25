@@ -45,7 +45,7 @@ spec:
               tag: latest
             env:
               TZ: "${TIMEZONE}"
-              PORT: &port "3000"
+              PORT: &port 3000
               PUBLIC_SITE_URL: "https://${APP}.${ROOT_DOMAIN}"
               AUTH_METHOD: "authentik"
             envFrom:
@@ -64,7 +64,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/health
-                    port: http
+                    port: *port
                   initialDelaySeconds: 10
                   periodSeconds: 10
                   timeoutSeconds: 1
