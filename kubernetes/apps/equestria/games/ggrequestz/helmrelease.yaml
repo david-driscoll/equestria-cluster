@@ -90,6 +90,8 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+          - path: /home/node/
+            subPath: home
           - path: /app/logs
             subPath: logs
       truenas-media:
