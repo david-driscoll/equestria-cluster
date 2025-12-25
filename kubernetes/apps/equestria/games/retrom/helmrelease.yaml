@@ -89,6 +89,11 @@ spec:
           subPath: config
         - path: /app/data
           subPath: data
+      empty:
+        type: emptyDir
+        globalMounts:
+          - path: /app/psql
+            subPath: psql
       truenas-media:
         existingClaim: truenas-media
         globalMounts:
