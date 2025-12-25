@@ -1,0 +1,129 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app mylar
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: -1
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: mrcas/kapowarr
+              tag: v1.2.0@sha256:484f7decc7cc7af77542aba5516f48a62b17f72116ac7309d1709b72bb7d0ba2
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: ${PUID}
+              PGID: ${PGID}
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec: &spec
+                  httpGet:
+                    path: /
+                    port: &port 5656
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              startup:
+                <<: *probes
+                spec:
+                  <<: *spec
+                  initialDelaySeconds: 60
+                  periodSeconds: 10
+                  failureThreshold: 20
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                # cpu: 1
+                memory: 1Gi
+
+    # -- Configures service settings for the chart.
+    service:
+      app:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /app/db
+      truenas-media:
+        existingClaim: truenas-media
+        globalMounts:
+          - path: /downloads
+            subPath: downloads
+          - path: /comics
+            subPath: comics
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ${APP}-internal
+  annotations:
+    reloader.stakater.com/auto: "true"
+    external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+    kubernetes.io/ingress.class: internal
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.*`)
+      kind: Rule
+      priority: -1
+      services:
+        - name: ${APP}
+          port: http
+          passHostHeader: true
+      middlewares:
+        - name: local-user
+          namespace: network
+    - match: Host(`${APP}.${ROOT_DOMAIN}`)
+      kind: Rule
+      priority: -2
+      services:
+        - name: ${APP}
+          port: http
+          passHostHeader: true
+      middlewares:
+        - name: authenticated-user
+          namespace: network

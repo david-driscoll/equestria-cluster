@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: GGRequestz
-  category: Media
+  category: Games
   description: Game request management system for Plex
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/plex.png
@@ -27,7 +27,7 @@ spec:
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:
-    - group: "Media"
+    - group: Applications
       url: *url
       method: GET
       conditions:

@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Romm
-  category: &category Media Management
+  category: &category Games
   description: Romm is a media management tool for organizing and managing your game library.
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/romm.svg
@@ -26,7 +26,7 @@ spec:
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:
-    - group: *category
+    - group: Applications
       url: *url
       method: GET
       conditions:

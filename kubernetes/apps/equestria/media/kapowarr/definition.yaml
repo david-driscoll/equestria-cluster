@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Kapowarr
+  category: Media Management
+  description: Kapowarr is a software for managing and organizing your comic book collection.
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kapowarr.svg
+  access_policy:
+    groups:
+      - media-managers
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
+  #     skipPathRegex: "^/api([/?].*)?$"
+  gatus:
+    - group: "Applications"
+      url: https://${APP}.${ROOT_DOMAIN}/
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
