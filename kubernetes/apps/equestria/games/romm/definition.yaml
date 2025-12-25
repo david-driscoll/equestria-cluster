@@ -23,6 +23,7 @@ spec:
         - email
         - openid
         - profile
+        - romm
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:
