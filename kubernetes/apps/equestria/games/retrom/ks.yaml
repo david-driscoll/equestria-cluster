@@ -22,6 +22,7 @@ spec:
   timeout: 10m
   components:
     - ../../../../components/postgres
+    - ../../../../components/volsync
   dependsOn:
     - name: postgres
       namespace: database
