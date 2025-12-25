@@ -22,8 +22,8 @@ spec:
               tag: 2.58.02@sha256:20a5656c4af4854e1877046294f77113f949d27e35940a9a65f231423d063207
             env:
               TZ: ${TIMEZONE}
-              PUID: 1000
-              PGID: 1000
+              PUID: 568
+              PGID: 568
               serverURL: http://tdarr-server.${CLUSTER_CNAME}.svc.cluster.local:8266
               webUIPort: &web-port 8265
               internalNode: "false"
@@ -97,6 +97,8 @@ spec:
                     - "true"
     defaultPodOptions:
       securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
         # Let the image entrypoint (s6) run as root and drop to PUID/PGID itself; forcing
         # runAsUser prevented it from setting supplemental groups and triggered
         # "s6-applyuidgid: fatal: unable to set supplementary group list: Operation not permitted".
