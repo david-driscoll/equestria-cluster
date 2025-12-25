@@ -71,8 +71,6 @@ spec:
               runAsNonRoot: true
               runAsUser: 568
               runAsGroup: 568
-              fsGroup: 568
-              fsGroupChangePolicy: "OnRootMismatch"
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
@@ -89,8 +87,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 568
         runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [100, 1000]
 
     # -- Configures service settings for the chart.

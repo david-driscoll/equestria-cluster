@@ -37,7 +37,6 @@ spec:
         pod:
           securityContext:
             runAsNonRoot: false
-            fsGroupChangePolicy: "OnRootMismatch"
         containers:
           *app :
             image:
@@ -80,8 +79,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     persistence:
