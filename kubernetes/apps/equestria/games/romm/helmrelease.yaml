@@ -78,12 +78,10 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsUser: 1000
+        runAsGroup: 100
+        fsGroup: 100
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
-        seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.
     service:
@@ -98,8 +96,6 @@ spec:
       data:
         existingClaim: ${APP}
         globalMounts:
-          - path: /romm/config
-            subPath: config
           - path: /romm/assets/
             subPath: assets
           - path: /romm/resources/
@@ -112,10 +108,13 @@ spec:
           - path: /romm/config/config.yml
             subPath: config.yaml
             readOnly: true
-      redis-data:
+      tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /redis-data
+          - path: /romm/config
+            subPath: config
+          - path: /tmp
+            subPath: tmp
       truenas-media:
         existingClaim: truenas-media
         globalMounts:
