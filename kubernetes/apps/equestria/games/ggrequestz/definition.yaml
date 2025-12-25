@@ -18,7 +18,7 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/api/auth/callback/authentik"
+        - url: "https://${APP}.${ROOT_DOMAIN}/api/auth/callback"
       propertyMappings:
         - email
         - openid
