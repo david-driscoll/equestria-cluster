@@ -33,3 +33,5 @@ spec:
       NAMESPACE: *namespace
       VOLSYNC_ACCESSMODES: ReadWriteMany
       VOLSYNC_CAPACITY: 60Gi
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"

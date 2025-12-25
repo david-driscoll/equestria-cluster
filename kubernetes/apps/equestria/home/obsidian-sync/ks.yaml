@@ -33,3 +33,5 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 8Gi
+      VOLSYNC_PUID: "5984"
+      VOLSYNC_PGID: "5984"

@@ -37,6 +37,6 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      PUID: "1000"
-      PGID: "1000"
       VOLSYNC_ACCESSMODES: ReadWriteMany
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"

@@ -38,3 +38,5 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       TAILSCALE_HOST: tasks
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"
