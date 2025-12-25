@@ -52,10 +52,15 @@ spec:
                 cpu: 1000m
                 memory: 1Gi
             workingDir: /app
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       retrom:
