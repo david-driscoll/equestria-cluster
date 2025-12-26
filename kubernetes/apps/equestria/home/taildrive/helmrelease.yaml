@@ -77,8 +77,8 @@ spec:
                   secretKeyRef:
                     name: authkey
                     key: authkey
-              TS_EXTRA_ARGS: --advertise-tags=tag:container
-              TS_USERSPACE: true
+              # TS_EXTRA_ARGS: --advertise-tags=tag:container
+              # TS_USERSPACE: true
             securityContext:
               privileged: true
 
