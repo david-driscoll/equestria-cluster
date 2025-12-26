@@ -11,6 +11,6 @@ resources:
   - ./vikunja/ks.yaml
   - ./windmill/ks.yaml
   - ./donetick/ks.yaml
-  - ./taildrive/ks.yaml
+  # - ./taildrive/ks.yaml
   # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
