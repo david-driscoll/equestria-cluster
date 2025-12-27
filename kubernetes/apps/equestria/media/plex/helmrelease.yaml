@@ -141,7 +141,14 @@ spec:
         type: emptyDir
       transcode:
         type: emptyDir
-      volsync:
+      nfs-data:
         type: nfs
         server: ${SPIKE_IP}
-        path: /mnt/stash/backup/volsync
+        path: /mnt/stash/data/plex
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server/Metadata
+            subPath: metadata
+          - path: /config/Library/Application Support/Plex Media Server/Media
+            subPath: media
+          - path: /config/Library/Application Support/Plex Media Server/Scanners
+            subPath: scanners
