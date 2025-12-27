@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./immich/ks.yaml
   - ./n8n/ks.yaml
-  # - ./homarr/ks.yaml
+  - ./homarr/ks.yaml
   - ./glance/ks.yaml
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
@@ -14,3 +14,4 @@ resources:
   # - ./taildrive/ks.yaml
   # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
+  
