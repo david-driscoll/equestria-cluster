@@ -38,13 +38,13 @@ spec:
           set-ownership:
             image:
               repository: busybox
-              tag: latest
+              tag: latest@sha256:d80cd694d3e9467884fcb94b8ca1e20437d8a501096cdf367a5a1918a34fc2fd
             command: ['sh', '-c', 'chown -R 568:568 /shared && chown -R 999:999 /mysql']
         containers:
           seafile:
             image:
               repository: seafileltd/seafile-mc
-              tag: 13.0-latest
+              tag: 13.0-latest@sha256:29ce625c5bedc9b42cf1f012ef157dd11e2d28529842c36c6007ab77ec060988
             envFrom:
               - secretRef:
                   name: ${APP}-env
@@ -57,7 +57,7 @@ spec:
           mariadb:
             image:
               repository: mariadb
-              tag: lts
+              tag: lts@sha256:1cac8492bd78b1ec693238dc600be173397efd7b55eabc725abc281dc855b482
             env:
               MYSQL_ROOT_PASSWORD:
                 valueFrom:
