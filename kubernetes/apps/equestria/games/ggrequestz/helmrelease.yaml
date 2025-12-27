@@ -41,7 +41,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/xtreemmak/ggrequestz
-              tag: latest
+              tag: latest@sha256:ff5adae9de25018f7827fb5857d974f31ac212c51a52937efdcdcdb95cd3feb8
             env:
               TZ: "${TIMEZONE}"
               PORT: &port 3000
