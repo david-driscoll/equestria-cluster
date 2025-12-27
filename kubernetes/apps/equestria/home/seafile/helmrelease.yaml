@@ -1,28 +1,13 @@
 ---
-# yaml-language-server: $schema=https://lds-schemas.pages.dev/source.toolkit.fluxcd.io/helmrepository_v1.json
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: seafile
-spec:
-  interval: 30m
-  url: https://manual.seafile.com/charts
-  timeout: 3m
-
----
-# yaml-language-server: $schema=https://lds-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app seafile
 spec:
-  chart:
-    spec:
-      chart: seafile
-      version: 1.0.0
-      sourceRef:
-        kind: HelmRepository
-        name: seafile
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   maxHistory: 3
   interval: 1h
   timeout: 10m
@@ -43,20 +28,92 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  dependsOn: []
   values:
-    service:
-      type: ClusterIP
-      port: 80
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        initContainers:
+          set-ownership:
+            image:
+              repository: busybox
+              tag: latest
+            command: ['sh', '-c', 'chown -R 568:568 /shared && chown -R 999:999 /mysql']
+        containers:
+          seafile:
+            image:
+              repository: seafileltd/seafile-mc
+              tag: 13.0-latest
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+          mariadb:
+            image:
+              repository: mariadb
+              tag: lts
+            env:
+              MYSQL_ROOT_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-env
+                    key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+              MYSQL_USER: seafile
+              MYSQL_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-env
+                    key: SEAFILE_MYSQL_DB_PASSWORD
+              MYSQL_DATABASE: seafile_db
+              MYSQL_LOG_CONSOLE: "true"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
 
     persistence:
-      enabled: true
-      storageClass: longhorn
-      size: 50Gi
+      data:
+        existingClaim: *app
+        advancedMounts:
+          *app :
+            set-ownership:
+              - path: /shared
+                subPath: seafile
+              - path: /mysql
+                subPath: mysql
+            seafile:
+              - path: /shared
+                subPath: seafile
+            mariadb:
+              - path: /var/lib/mysql
+                subPath: mysql
 
-    ingress:
-      enabled: false
+    service:
+      *app :
+        controller: *app
+        type: ClusterIP
+        ports:
+          http:
+            port: &port 80
 
-    envFrom:
-      - secretRef:
-          name: ${APP}-env
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: *port
