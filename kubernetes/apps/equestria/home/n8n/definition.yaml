@@ -18,7 +18,6 @@ spec:
     proxy:
       mode: "forward_single"
       externalHost: *url
-
   gatus:
     - group: "Applications"
       url: *url

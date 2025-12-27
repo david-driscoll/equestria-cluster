@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ${APP}-tasks-mover
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: false
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: external-secrets
+      namespace: kube-system
+  values:
+    controllers:
+      *app :
+        annotations:
+          reloader.stakater.com/auto: "true"
+        cronjob:
+          backoffLimit: 6
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 3
+          schedule: "*/10 * * * *"
+          startingDeadlineSeconds: 30
+          successfulJobsHistory: 3
+          suspend: false
+        type: cronjob
+        containers:
+          main:
+            image:
+              repository: mcr.microsoft.com/dotnet/sdk
+              tag: '10.0-noble@sha256:d1823fecac3689a2eb959e02ee3bfe1c2142392808240039097ad70644566190'
+              pullPolicy: IfNotPresent
+            env:
+              TZ: "${TIMEZONE}"
+              VIKUNJA_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-secrets
+                    key: VIKUNJA_TOKEN
+            command:
+              - dotnet
+              - run
+              - /scripts/Tasks.cs
+            resources:
+              requests:
+                memory: 256Mi
+                cpu: 100m
+              limits:
+                memory: 512Mi
+                cpu: 500m
+
+    persistence:
+      script:
+        type: configMap
+        name: ${APP}-tasks-mover
+        defaultMode: 493
+        globalMounts:
+          - path: /scripts/Tasks.cs
+            subPath: Tasks.cs
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /.dotnet
+            subPath: dotnet

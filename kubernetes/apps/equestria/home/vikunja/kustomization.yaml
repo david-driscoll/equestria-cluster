@@ -6,9 +6,13 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret-config.yaml
   - ./definition.yaml
+  - ./cronjob.yaml
 configMapGenerator:
 - name: ${APP}-config
   files:
   - config.yaml=./resources/config.yaml
-  options:
-    disableNameSuffixHash: true
+- name: ${APP}-tasks-mover
+  files:
+    - Tasks.cs=./resources/Tasks.cs
+generatorOptions:
+  disableNameSuffixHash: true
