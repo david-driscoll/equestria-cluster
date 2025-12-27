@@ -17,3 +17,4 @@ resources:
   - ./watchstate/ks.yaml
   # - ./streammaster/ks.yaml
   - ./tdarr/ks.yaml
+  - ./kometa/ks.yaml
