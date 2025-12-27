@@ -39,6 +39,8 @@ spec:
         memory: 256Mi
     serviceMonitor:
       enabled: true
-      scheme: http
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true  # controller-runtime metrics endpoint uses self-signed TLS
     nameOverride: "pulumi-operator"
     fullnameOverride: "pulumi-operator"
