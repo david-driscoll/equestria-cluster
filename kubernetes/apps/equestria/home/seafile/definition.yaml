@@ -15,9 +15,17 @@ spec:
       - family
       - friends
   authentik:
-    proxy:
-      mode: "forward_single"
-      externalHost: *url
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+        - url: "https://${APP}.${ROOT_DOMAIN}/oauth/callback/"
+        - url: "https://${APP}.${TAILSCALE_DOMAIN}/oauth/callback/"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+      includeClaimsInIdToken: true
+      subMode: user_email
   gatus:
     - group: "Applications"
       url: *url
