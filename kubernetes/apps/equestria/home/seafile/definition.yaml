@@ -18,8 +18,8 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/oauth/callback"
-        - url: "https://${APP}.${TAILSCALE_DOMAIN}/oauth/callback"
+        - url: "https://${APP}.${ROOT_DOMAIN}/oauth/callback/"
+        - url: "https://${APP}.${TAILSCALE_DOMAIN}/oauth/callback/"
       propertyMappings:
         - email
         - openid
