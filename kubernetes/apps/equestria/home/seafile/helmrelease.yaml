@@ -45,17 +45,6 @@ spec:
             image:
               repository: seafileltd/seafile-mc
               tag: 13.0-latest@sha256:29ce625c5bedc9b42cf1f012ef157dd11e2d28529842c36c6007ab77ec060988
-            env:
-              ENABLE_REMOTE_USER_AUTHENTICATION: "True"
-              REMOTE_USER_HEADER: 'X-Authentik-Email'
-              REMOTE_USER_DOMAIN: '${ROOT_DOMAIN}'
-              REMOTE_USER_CREATE_UNKNOWN_USER: "True"
-              REMOTE_USER_ACTIVATE_USER_AFTER_CREATION: "True"
-              REMOTE_USER_ATTRIBUTE_MAP: |
-                {
-                  'X-Authentik-Name': 'name',
-                  'X-Authentik-Email': 'contact_email',
-                }
             envFrom:
               - secretRef:
                   name: ${APP}-env
