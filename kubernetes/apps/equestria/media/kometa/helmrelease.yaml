@@ -102,13 +102,8 @@ spec:
         type: nfs
         server: ${SPIKE_IP}
         path: /mnt/stash/data/plex
-        globalMounts:
-          - path: /plex/Metadata
-            subPath: metadata
-          # - path: /plex/Media
-          #   subPath: media
-          # - path: /plex/Scanners
-          #   subPath: scanners
+      media:
+        existingClaim: truenas-media
 
       config:
         existingClaim: *app
