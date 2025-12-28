@@ -10,6 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+      driscoll.dev/name: *app
   path: ./kubernetes/apps/tailscale-system/golink/app
   prune: true
   wait: true

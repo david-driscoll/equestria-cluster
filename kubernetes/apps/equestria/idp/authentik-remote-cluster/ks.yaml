@@ -9,6 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+      driscoll.dev/name: *app
   dependsOn: []
   path: ./kubernetes/apps/equestria/idp/authentik-remote-cluster
   prune: true
