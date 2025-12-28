@@ -58,20 +58,9 @@ spec:
             image:
               repository: mariadb
               tag: lts@sha256:1cac8492bd78b1ec693238dc600be173397efd7b55eabc725abc281dc855b482
-            env:
-              MYSQL_ROOT_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-env
-                    key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
-              MYSQL_USER: seafile
-              MYSQL_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: ${APP}-env
-                    key: SEAFILE_MYSQL_DB_PASSWORD
-              MYSQL_DATABASE: seafile_db
-              MYSQL_LOG_CONSOLE: "true"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
             resources:
               requests:
                 cpu: 100m
