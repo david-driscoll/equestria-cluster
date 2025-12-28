@@ -74,7 +74,7 @@ settings:
 
 plex:
   url: http://plex.equestria.svc.cluster.local:32400
-  token: "{{ .plex_token }}"
+  token: <<PLEX_APIKEY>>
   timeout: 120
   clean_bundles: true
   empty_trash: true
@@ -83,24 +83,24 @@ plex:
 
 tautulli:
   url: http://tautulli.equestria.svc.cluster.local:8181
-  apikey: "{{ .tautulli_equestria_token }}"
+  apikey: <<TAUTULLI_APIKEY>>
 
 tmdb:
-  apikey: "{{ .tmdb_apikey }}"
+  apikey: <<TMDB_APIKEY>>
   language: en
   cache_expiration: 60
 
 # omdb:
-#   apikey: "{{ .omdb_apikey }}"
+#   apikey: <<OMDB_APIKEY>>
 #   cache_expiration: 60
 
 mdblist:
-  apikey: "{{ .mdblist_apikey }}"
+  apikey: <<MDBLIST_APIKEY>>
   cache_expiration: 60
 
 radarr:
   url: http://radarr.equestria.svc.cluster.local:7878
-  token: "{{ .radarr_apikey }}"
+  token: <<RADARR_APIKEY>>
   add_missing: false
   add_existing: false
   root_folder_path: /data/movies
@@ -112,7 +112,7 @@ radarr:
 
 sonarr:
   url: http://sonarr.equestria.svc.cluster.local:8989
-  token: "{{ .sonarr_apikey }}"
+  token: <<SONARR_APIKEY>>
   add_missing: false
   add_existing: false
   root_folder_path: /data/tv
