@@ -34,5 +34,4 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      TAILSCALE_HOST: seafile
       VOLSYNC_CAPACITY: 50Gi
