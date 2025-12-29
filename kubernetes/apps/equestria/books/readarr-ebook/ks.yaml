@@ -10,6 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+      driscoll.dev/name: *app
   dependsOn:
     - name: truenas-volumes
   path: ./kubernetes/apps/equestria/books/readarr-ebook

@@ -35,6 +35,7 @@ metadata:
   labels: &labels
     app.kubernetes.io/instance: *app
     app.kubernetes.io/name: *app
+    driscoll.dev/name: *app
 spec:
   selector:
     matchLabels:
