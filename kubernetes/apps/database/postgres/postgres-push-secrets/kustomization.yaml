@@ -6,6 +6,7 @@ resources:
   - donetick-postgres-push-secret.yaml
   - ggrequestz-postgres-push-secret.yaml
   - grafana-postgres-push-secret.yaml
+  - homarr-postgres-push-secret.yaml
   - immich-postgres-push-secret.yaml
   - n8n-postgres-push-secret.yaml
   - retrom-postgres-push-secret.yaml

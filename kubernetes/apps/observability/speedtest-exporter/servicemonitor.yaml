@@ -4,14 +4,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: &app speedtest-exporter
-  labels: &labels
-    app.kubernetes.io/instance: *app
-    app.kubernetes.io/name: *app
-    driscoll.dev/name: *app
 spec:
   selector:
     matchLabels:
-      <<: *labels
+      app.kubernetes.io/instance: *app
+      app.kubernetes.io/name: *app
   endpoints:
     - port: metrics
       interval: 60m

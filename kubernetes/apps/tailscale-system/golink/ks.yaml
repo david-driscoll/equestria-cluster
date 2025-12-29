@@ -29,7 +29,6 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/volsync
-    - ../../../../components/volsync/backblaze
   postBuild:
     substitute:
       APP: *app
