@@ -1,0 +1,104 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app rustdesk
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 15m
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      *app :
+        replicas: 1
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          *app :
+            image:
+              repository: rustdesk/rustdesk-server
+              tag: "1.1.10-3"
+            command: ["hbbs", "-r ${RUSTDESK_IP}:21117"]
+            env:
+              TZ: ${TIMEZONE}
+              RELAY: "${RUSTDESK_IP}:21117"
+              ENCRYPTED_ONLY: "1"
+              DB_URL: /db/db_v2.sqlite3
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+
+          relay:
+            image:
+              repository: rustdesk/rustdesk-server
+              tag: "1.1.10-3"
+            command: ["hbbr"]
+
+    persistence:
+      db:
+        existingClaim: *app
+        globalMounts:
+          - path: /db
+            subPath: hbbs
+          - path: /root
+            subPath: root
+
+    probes:
+      startup:
+        enabled: false
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+
+    service:
+      *app :
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: "${RUSTDESK_IP}"
+          external-dns.alpha.kubernetes.io/hostname: ${APP}.${ROOT_DOMAIN}
+          gatus.home-operations.com/enabled: "false"
+          gatus.home-operations.com/endpoint: |-
+            group: services
+        ports:
+          web:
+            port: 21114
+          nat:
+            port: 21115
+          rustdesk-3:
+            port: &port 21116
+          rustdesk-4:
+            port: *port
+            protocol: UDP
+          rustdesk-5-relay:
+            port: 21117
+          rustdesk-6:
+            port: 21118
+          rustdesk-7-relay:
+            port: 21119
