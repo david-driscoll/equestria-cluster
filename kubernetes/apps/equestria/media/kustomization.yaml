@@ -18,5 +18,5 @@ resources:
   # - ./streammaster/ks.yaml
   - ./tdarr/ks.yaml
   - ./kometa/ks.yaml
-  # - ./kapowarr/ks.yaml
-  # - ./pulsarr/ks.yaml
+  - ./kapowarr/ks.yaml
+  - ./pulsarr/ks.yaml
