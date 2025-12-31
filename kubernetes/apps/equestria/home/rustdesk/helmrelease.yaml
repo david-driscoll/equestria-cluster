@@ -40,7 +40,7 @@ spec:
           *app :
             image:
               repository: rustdesk/rustdesk-server
-              tag: "1.1.10-3"
+              tag: "1.1.10-3@sha256:d9d3b36554819d855950788c197ff0abd6cba3838d1ce3a0782fce59fd412337"
             command: ["hbbs", "-r ${RUSTDESK_IP}:21117"]
             env:
               TZ: ${TIMEZONE}
@@ -56,7 +56,7 @@ spec:
           relay:
             image:
               repository: rustdesk/rustdesk-server
-              tag: "1.1.10-3"
+              tag: "1.1.10-3@sha256:d9d3b36554819d855950788c197ff0abd6cba3838d1ce3a0782fce59fd412337"
             command: ["hbbr"]
 
     persistence:
