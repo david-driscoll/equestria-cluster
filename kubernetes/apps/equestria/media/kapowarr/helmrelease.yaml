@@ -75,7 +75,7 @@ spec:
     # -- Configures service settings for the chart.
     service:
       *app :
-        controller: *app 
+        controller: *app
         type: ClusterIP
         ports:
           http:
