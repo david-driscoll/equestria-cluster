@@ -17,7 +17,6 @@ spec:
     proxy:
       mode: "forward_single"
       externalHost: *url
-  #     skipPathRegex: "^/api([/?].*)?$"
   gatus:
     - group: "Applications"
       url: https://${APP}.${ROOT_DOMAIN}/

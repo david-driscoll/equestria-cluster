@@ -17,13 +17,13 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-      - url: https://autobrr.${ROOT_DOMAIN}/api/auth/oidc/callback
+      - url: https://${APP}.${ROOT_DOMAIN}/api/auth/oidc/callback
       propertyMappings:
         - email
         - openid
         - profile
-      includeClaimsInIdToken: true
       subMode: user_email
+      includeClaimsInIdToken: true
   gatus:
     - group: "Applications"
       url: https://${APP}.${ROOT_DOMAIN}/api/healthz/liveness
