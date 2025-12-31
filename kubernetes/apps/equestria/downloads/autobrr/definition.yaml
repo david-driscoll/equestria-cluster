@@ -9,7 +9,7 @@ spec:
   category: Media Management
   description: Modern download automation tool for torrents and usenet
   url: &url https://${APP}.${ROOT_DOMAIN}
-  icon: https://raw.githubusercontent.com/autobrr/autobrr/develop/web/public/logo.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/autobrr.svg
   access_policy:
     groups:
       - media-managers

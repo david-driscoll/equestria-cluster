@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: qBittorrent
-  category: Downloads
+  category: Applications
   description: qBittorrent is a free and open-source torrent client
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg
