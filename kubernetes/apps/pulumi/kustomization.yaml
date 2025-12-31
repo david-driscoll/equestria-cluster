@@ -9,7 +9,7 @@ components:
   - ../../components/repos/app-template
 resources:
   - ./secrets/ks.yaml
+  - ./applications/ks.yaml
+  - ./authentik/ks.yaml
+  - ./home-operations/ks.yaml
   - ./pulumi-operator/ks.yaml
-  # - ./applications/ks.yaml
-  # - ./authentik/ks.yaml
-  # - ./home-operations/ks.yaml
