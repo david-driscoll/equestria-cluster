@@ -31,12 +31,12 @@ spec:
   values:
     fullnameOverride: *app
     controllers:
-      app:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
         containers:
-          app:
+          *app :
             image:
               repository: ghcr.io/hotio/qbittorrent
               tag: release-5.1.4
@@ -82,21 +82,21 @@ spec:
         seccompProfile: { type: RuntimeDefault }
 
     service:
-      app:
-        controller: app
+      *app :
+        controller: *app
         type: ClusterIP
         ports:
           http:
             port: *port
       bittorrent-tcp:
-        controller: app
+        controller: *app
         type: ClusterIP
         ports:
           bittorrent-tcp:
             port: 6881
             protocol: TCP
       bittorrent-udp:
-        controller: app
+        controller: *app
         type: ClusterIP
         ports:
           bittorrent-udp:
@@ -124,5 +124,5 @@ spec:
           - "${APP}.${CLUSTER_DOMAIN}"
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: *port

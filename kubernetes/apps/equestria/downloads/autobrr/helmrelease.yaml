@@ -31,12 +31,12 @@ spec:
   values:
     fullnameOverride: *app
     controllers:
-      app:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
         containers:
-          app:
+          *app :
             image:
               repository: ghcr.io/autobrr/autobrr
               tag: v1.71.0@sha256:db9794958a0f9db93059c1e9f06193a063ce3846d346d7a7c9eca607c6617c51
@@ -83,8 +83,8 @@ spec:
 
     # -- Configures service settings for the chart.
     service:
-      app:
-        controller: app
+      *app :
+        controller: *app
         type: ClusterIP
         ports:
           http:
@@ -101,7 +101,7 @@ spec:
           - "${APP}.${CLUSTER_DOMAIN}"
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: *app
                 port: *port
 
     persistence:

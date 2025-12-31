@@ -74,12 +74,6 @@ cluster:
     superuser: false
     passwordSecret:
       name: grafana-postgres
-  - name: donetick
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: donetick-postgres
   - name: immich
     ensure: present
     login: true
