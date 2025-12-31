@@ -50,19 +50,19 @@ spec:
             envFrom:
               - secretRef:
                   name: ${APP}-env
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: *port
-                  initialDelaySeconds: 30
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
+            # probes:
+            #   liveness: &probes
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /health
+            #         port: *port
+            #       initialDelaySeconds: 30
+            #       periodSeconds: 60
+            #       timeoutSeconds: 10
+            #       failureThreshold: 5
+            #   readiness: *probes
             securityContext:
               runAsNonRoot: true
               runAsUser: 568

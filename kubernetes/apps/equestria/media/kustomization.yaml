@@ -19,4 +19,4 @@ resources:
   - ./tdarr/ks.yaml
   - ./kometa/ks.yaml
   # - ./kapowarr/ks.yaml
-  # - ./pulsarr/ks.yaml
+  - ./pulsarr/ks.yaml
