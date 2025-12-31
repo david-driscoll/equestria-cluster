@@ -38,14 +38,14 @@ spec:
         containers:
           *app :
             image:
-              repository: ghcr.io/hotio/qbittorrent
-              tag: release-5.1.4
+              repository: ghcr.io/home-operations/qbittorrent
+              tag: 5.1.4
               pullPolicy: IfNotPresent
             env:
               TZ: ${TIMEZONE}
-              # PUID: 568
-              # PGID: 568
-              # UMASK: "0022"
+              PUID: 568
+              PGID: 568
+              UMASK: "0022"
               WEBUI_PORT: &port 8080
             probes:
               liveness: &probes
@@ -61,9 +61,9 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              # runAsNonRoot: true
-              # runAsUser: 568
-              # runAsGroup: 568
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
 
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
