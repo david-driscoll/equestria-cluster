@@ -14,10 +14,16 @@ spec:
     groups:
       - media-managers
   authentik:
-    proxy:
-      mode: forward_single
-      externalHost: *url
-      skipPathRegex: "^/api([/?].*)?$"
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+      - url: https://autobrr.${ROOT_DOMAIN}/api/auth/oidc/callback
+      propertyMappings:
+        - email
+        - openid
+        - profile
+      includeClaimsInIdToken: true
+      subMode: user_email
   gatus:
     - group: "Applications"
       url: https://${APP}.${ROOT_DOMAIN}/api/healthz/liveness

@@ -17,6 +17,8 @@ resources:
   - immich.sops.yaml
   - n8n.yaml
   - n8n.sops.yaml
+  - pulsarr.yaml
+  - pulsarr.sops.yaml
   - retrom.yaml
   - retrom.sops.yaml
   - romm.yaml

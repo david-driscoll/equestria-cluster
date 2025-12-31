@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: lakker/pulsarr
-              tag: latest@sha256:0b34f51287d3b8e4cb9f9c0c48616a4b2f8148706f81753873d97da63ae14ddd
+              tag: 0.8.5
               pullPolicy: Always
             env:
               PUID: ${PUID}
@@ -47,6 +47,9 @@ spec:
               TZ: ${TIMEZONE}
               baseUrl: https://${APP}.${ROOT_DOMAIN}
               port: &port 3003
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
             probes:
               liveness: &probes
                 enabled: true
@@ -89,13 +92,13 @@ spec:
 
     route:
       internal:
+        kind: HTTPRoute
         parentRefs:
           - name: internal
             namespace: network
             kind: Gateway
         hostnames:
           - "${APP}.${CLUSTER_DOMAIN}"
-        kind: HTTPRoute
         rules:
           - backendRefs:
               - identifier: app
