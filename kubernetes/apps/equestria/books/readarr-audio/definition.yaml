@@ -8,7 +8,7 @@ spec:
   name: Readarr Audio
   category: Media Management
   description: Readarr Audio
-  url: &url https://${APP}.${CLUSTER_DOMAIN}
+  url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg
   access_policy:
     groups:

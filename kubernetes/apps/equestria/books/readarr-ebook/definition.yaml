@@ -8,7 +8,7 @@ spec:
   name: Readarr Ebook
   category: Media Management
   description: Readarr Ebook
-  url: &url https://${APP}.${CLUSTER_DOMAIN}
+  url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg
   access_policy:
     groups:

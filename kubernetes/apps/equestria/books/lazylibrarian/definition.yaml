@@ -8,7 +8,7 @@ spec:
   name: LazyLibrarian
   category: Media Management
   description: LazyLibrarian
-  url: &url https://${APP}.${CLUSTER_DOMAIN}
+  url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lazylibrarian.png
   access_policy:
     groups:
