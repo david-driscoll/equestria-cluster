@@ -8,7 +8,7 @@ spec:
   name: Tdarr
   category: Media Management
   url: https://${APP}.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tdarr.png
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tdarr.png
   access_policy:
     groups:
       - friends
