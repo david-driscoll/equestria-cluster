@@ -28,7 +28,7 @@ patches:
         value: 1
       - op: add
         path: /spec/values/template/spec/containers/0/resources/limits/memory
-        value: "9Gi"
+        value: "8Gi"
       - op: add
         path: /spec/values/template/spec/containers/0/resources/requests/cpu
         value: "2"
