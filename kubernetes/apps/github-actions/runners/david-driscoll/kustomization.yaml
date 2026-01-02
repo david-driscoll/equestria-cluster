@@ -25,4 +25,4 @@ patches:
         value: 2
       - op: replace
         path: /spec/values/minRunners
-        value: 1
+        value: 0
