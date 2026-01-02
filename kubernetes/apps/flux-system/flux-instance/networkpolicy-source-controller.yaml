@@ -15,12 +15,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: pulumi
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: flux-system
+        - namespaceSelector: {}
       ports:
         - protocol: TCP
           port: 80
