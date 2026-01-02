@@ -1,10 +1,10 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app pulumi-operator
-  namespace: &namespace pulumi
+  name: &app applications
+  namespace: &namespace flux-system
   labels:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
@@ -14,15 +14,18 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  dependsOn: []
-  path: ./kubernetes/apps/pulumi/pulumi-operator
+  dependsOn:
+    - name: home-operations
+      namespace: *namespace
+    - name: authentik
+      namespace: *namespace
+  path: ./kubernetes/apps/flux-system/pulumi/applications
   prune: true
   wait: true
   force: false # true
   interval: 1h
   retryInterval: 2m
   timeout: 10m
-  components: []
   sourceRef:
     kind: GitRepository
     name: flux-system
