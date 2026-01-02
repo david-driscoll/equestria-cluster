@@ -86,8 +86,7 @@ spec:
         type: emptyDir
 
     serviceAccount:
-      github-token-secret-manager:
-        forceRename: github-token-secret-manager
+      *app : {}
     rbac:
       roles:
         github-token-secret-manager:
@@ -113,5 +112,5 @@ spec:
             name: github-token-secret-manager
           subjects:
             - kind: ServiceAccount
-              name: github-token-secret-manager
+              name: *app
               namespace: ${NAMESPACE}
