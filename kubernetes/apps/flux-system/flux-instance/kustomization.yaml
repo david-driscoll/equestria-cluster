@@ -7,7 +7,6 @@ resources:
   - ./secret.sops.yaml
   - ./ingress.yaml
   - ./receiver.yaml
-  # - ./networkpolicy-source-controller.yaml
 configMapGenerator:
   - name: flux-instance-values
     files:
