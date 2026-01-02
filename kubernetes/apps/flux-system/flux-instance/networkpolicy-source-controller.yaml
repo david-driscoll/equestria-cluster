@@ -10,7 +10,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: source-controller
+      app.kubernetes.io/instance: source-controller
   policyTypes:
     - Ingress
   ingress:
