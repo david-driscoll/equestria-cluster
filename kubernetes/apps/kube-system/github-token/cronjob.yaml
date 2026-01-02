@@ -46,29 +46,24 @@ spec:
         containers:
           app:
             image:
-              repository: node
-              tag: "20-alpine"
+              repository: golang
+              tag: 1.25.5-bookworm@sha256:2c7c65601b020ee79db4c1a32ebee0bf3d6b298969ec683e24fcbea29305f10e
+              pullPolicy: IfNotPresent
             command:
               - /bin/sh
-              - -c
-            args:
-              - npm_config_cache=/tmp/npm-cache npm install octokit --no-progress --prefer-offline --no-fund --loglevel=error && node /scripts/refresh-token.js
+              - /scripts/refresh-token.sh
+            args: []
             env:
               GITHUB_APP_ID:
                 valueFrom:
                   secretKeyRef:
                     name: github-app
                     key: github_app_id
-              GITHUB_INSTALLATION_ID:
+              GITHUB_APP_INSTALLATION_ID:
                 valueFrom:
                   secretKeyRef:
                     name: github-app
                     key: github_app_installation_id
-              GITHUB_PRIVATE_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: github-app
-                    key: github_app_private_key
               NAMESPACE:
                 valueFrom:
                   fieldRef:
@@ -80,30 +75,43 @@ spec:
         globalMounts:
           - path: /scripts
             readOnly: true
+      secrets:
+        type: secret
+        name: github-app
+        globalMounts:
+          - path: /secrets/private-key.pem
+            subPath: github_app_private_key
+            readOnly: true
       tmp:
         type: emptyDir
+
+    serviceAccount:
+      github-token-secret-manager:
+        forceRename: github-token-secret-manager
     rbac:
       roles:
-        &github-token-role github-token-role:
-          forceRename: *github-token-role
+        github-token-secret-manager:
+          forceRename: github-token-secret-manager
           type: Role
           rules:
             - apiGroups: [""]
+              resources: ["pods"]
+              verbs: ["get", "list", "watch"]
+            - apiGroups: [""]
               resources: ["secrets"]
-              resourceNames: ["github-status-token-secret"]
-              verbs: ["get", "patch", "update"]
+              verbs: ["get", "create", "update", "patch"]
+            - apiGroups: [""]
+              resources: ["configmaps"]
+              verbs: ["get", "create", "update", "patch"]
       bindings:
-        &github-token-rolebinding github-token-rolebinding:
-          forceRename: *github-token-rolebinding
+        github-token-secret-manager:
           type: RoleBinding
+          forceRename: github-token-secret-manager
           roleRef:
             apiGroup: rbac.authorization.k8s.io
             kind: Role
-            name: *github-token-role
+            name: github-token-secret-manager
           subjects:
             - kind: ServiceAccount
-              name: *app
+              name: github-token-secret-manager
               namespace: ${NAMESPACE}
-    serviceAccount:
-      *app : {}
-
