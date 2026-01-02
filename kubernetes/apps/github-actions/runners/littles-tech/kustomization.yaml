@@ -27,12 +27,6 @@ patches:
         path: /spec/values/minRunners
         value: 1
       - op: add
-        path: /spec/values/template/spec/nodeSelector
-        value: {}
-      - op: add
-        path: /spec/values/template/spec/nodeSelector/eris.cluster~1role
-        value: builder
-      - op: add
         path: /spec/values/template/spec/containers/0/resources/limits/memory
         value: "9Gi"
       - op: add

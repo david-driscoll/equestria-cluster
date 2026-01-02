@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   # - ./david-driscoll/ks.yaml
   - ./littles-tech/ks.yaml
-  # - ./littles-tech-release/ks.yaml
+  - ./littles-tech-release/ks.yaml
