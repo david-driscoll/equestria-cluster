@@ -97,13 +97,7 @@ spec:
                     - "true"
     defaultPodOptions:
       securityContext:
-        fsGroup: 568
-
-        # Let the image entrypoint (s6) run as root and drop to PUID/PGID itself; forcing
-        # runAsUser prevented it from setting supplemental groups and triggered
-        # "s6-applyuidgid: fatal: unable to set supplementary group list: Operation not permitted".
         supplementalGroups: [568]
-        # seccompProfile: { type: RuntimeDefault }
     service:
       tdarr-server:
         forceRename: tdarr-server
