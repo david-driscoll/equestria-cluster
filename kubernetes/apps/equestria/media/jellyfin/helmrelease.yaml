@@ -157,5 +157,10 @@ spec:
         globalMounts:
           - path: /logs
 
+      metadata:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/data/jellyfin
+
       media:
         existingClaim: truenas-media
