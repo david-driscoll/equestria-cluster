@@ -5,7 +5,7 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Plex (Equestria)
+  name: Plex
   category: &category Applications
   url: https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg
