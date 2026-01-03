@@ -46,6 +46,7 @@ spec:
               PGID: ${PGID}
               TZ: ${TIMEZONE}
               CACHE_DIR: /cache
+              TMPDIR: /cache
               baseUrl: https://${APP}.${ROOT_DOMAIN}
               port: &port 3003
             envFrom:
