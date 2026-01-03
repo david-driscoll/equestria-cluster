@@ -96,7 +96,7 @@ spec:
         runAsGroup: 0
         runAsNonRoot: false # Must be run as root user
         fsGroup: 0
-        fsGroupChangePolicy: "None"
+
         supplementalGroups:
           - 34
       dnsPolicy: ClusterFirstWithHostNet

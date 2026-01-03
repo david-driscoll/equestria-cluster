@@ -37,7 +37,7 @@ spec:
         pod:
           securityContext:
             runAsNonRoot: false
-            fsGroupChangePolicy: "None"
+
         containers:
           *app :
             image:
@@ -63,7 +63,7 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-        fsGroupChangePolicy: None
+
         seccompProfile: { type: RuntimeDefault }
 
     persistence:

@@ -35,7 +35,7 @@ spec:
         runAsUser: 5984
         runAsGroup: 5984
         fsGroup: 5984
-        fsGroupChangePolicy: None
+
     controllers:
       *app :
         annotations:

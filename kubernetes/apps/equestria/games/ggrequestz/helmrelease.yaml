@@ -79,7 +79,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-        fsGroupChangePolicy: None
+
         seccompProfile: { type: RuntimeDefault }
 
     persistence:

@@ -44,7 +44,7 @@ spec:
               runAsUser: 0
               runAsGroup: 0
               fsGroup: 0
-              fsGroupChangePolicy: "None"
+
               supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               capabilities: { drop: ["ALL"] }
             image:
@@ -93,7 +93,7 @@ spec:
               runAsUser: 568
               runAsGroup: 568
               fsGroup: 568
-              fsGroupChangePolicy: "None"
+
               supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
@@ -108,7 +108,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: None
+
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.

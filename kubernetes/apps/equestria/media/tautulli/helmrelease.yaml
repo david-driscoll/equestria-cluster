@@ -40,7 +40,7 @@ spec:
             runAsUser: 568
             runAsGroup: 568
             fsGroup: 568
-            fsGroupChangePolicy: "None"
+
         containers:
           *app :
             image:

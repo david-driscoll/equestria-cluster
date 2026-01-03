@@ -36,7 +36,7 @@ spec:
         pod:
           securityContext:
             runAsNonRoot: true
-            fsGroupChangePolicy: "None"
+
         containers:
           *app :
             image:
@@ -54,7 +54,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: "None"
+
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
