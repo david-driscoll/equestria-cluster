@@ -30,6 +30,8 @@ spec:
   dependsOn:
     - name: postgres
       namespace: database
+    - name: external-secrets
+      namespace: kube-system
   postBuild:
     substitute:
       APP: *app

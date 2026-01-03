@@ -27,6 +27,8 @@ spec:
       namespace: database
     - name: valkey
       namespace: database
+    - name: external-secrets
+      namespace: kube-system
   sourceRef:
     kind: GitRepository
     name: flux-system

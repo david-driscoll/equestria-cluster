@@ -17,6 +17,8 @@ spec:
   dependsOn:
     - name: truenas-volumes
       namespace: equestria
+    - name: external-secrets
+      namespace: kube-system
   path: ./kubernetes/apps/equestria/games/romm
   prune: true
   wait: true

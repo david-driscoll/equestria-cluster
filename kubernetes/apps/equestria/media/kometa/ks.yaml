@@ -16,6 +16,8 @@ spec:
   dependsOn:
     - name: plex
       namespace: *namespace
+    - name: external-secrets
+      namespace: kube-system
   path: ./kubernetes/apps/equestria/media/kometa
   prune: true
   wait: true

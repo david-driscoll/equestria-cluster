@@ -23,6 +23,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: volsync-system
+    - name: external-secrets
+      namespace: kube-system
   sourceRef:
     kind: GitRepository
     name: flux-system

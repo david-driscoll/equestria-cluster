@@ -15,6 +15,9 @@ spec:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
   path: ./kubernetes/apps/observability/unpoller
+  dependsOn:
+    - name: external-secrets
+      namespace: kube-system
   prune: true
   wait: true
   force: false # true

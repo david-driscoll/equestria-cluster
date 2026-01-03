@@ -26,6 +26,8 @@ spec:
       namespace: volsync-system
     - name: valkey
       namespace: database
+    - name: external-secrets
+      namespace: kube-system
   sourceRef:
     kind: GitRepository
     name: flux-system

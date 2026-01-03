@@ -17,6 +17,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: volsync-system
+    - name: external-secrets
+      namespace: kube-system
   path: ./kubernetes/apps/equestria/home/glance
   prune: true
   wait: true
