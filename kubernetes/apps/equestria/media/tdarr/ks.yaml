@@ -13,7 +13,9 @@ spec:
     labels:
       app.kubernetes.io/name: *name
       driscoll.dev/name: *name
-  dependsOn: []
+  dependsOn:
+    - name: volsync
+      namespace: volsync-system
   path: ./kubernetes/apps/equestria/media/tdarr
   prune: true
   wait: true

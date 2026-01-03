@@ -17,6 +17,10 @@ spec:
   dependsOn:
     - name: truenas-volumes
       namespace: equestria
+    - name: volsync
+      namespace: volsync-system
+    - name: tailscale-operator
+      namespace: tailscale-system
   path: ./kubernetes/apps/equestria/downloads/qbittorrent
   prune: true
   wait: true

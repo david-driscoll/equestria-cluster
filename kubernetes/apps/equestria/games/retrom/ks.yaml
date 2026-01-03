@@ -32,6 +32,8 @@ spec:
       namespace: database
     - name: external-secrets
       namespace: kube-system
+    - name: volsync
+      namespace: volsync-system
   postBuild:
     substitute:
       APP: *app

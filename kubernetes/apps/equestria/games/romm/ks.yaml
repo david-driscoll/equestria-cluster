@@ -19,6 +19,8 @@ spec:
       namespace: equestria
     - name: external-secrets
       namespace: kube-system
+    - name: volsync
+      namespace: volsync-system
   path: ./kubernetes/apps/equestria/games/romm
   prune: true
   wait: true

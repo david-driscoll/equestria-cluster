@@ -16,6 +16,10 @@ spec:
       driscoll.dev/name: *app
   dependsOn:
     - name: readarr
+    - name: volsync
+      namespace: volsync-system
+    - name: tailscale-operator
+      namespace: tailscale-system
   path: ./kubernetes/apps/equestria/books/readarr-audio
   prune: true
   wait: true

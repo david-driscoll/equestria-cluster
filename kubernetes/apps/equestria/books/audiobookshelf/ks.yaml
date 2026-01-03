@@ -14,6 +14,11 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
+  dependsOn:
+    - name: volsync
+      namespace: volsync-system
+    - name: tailscale-operator
+      namespace: tailscale-system
   path: ./kubernetes/apps/equestria/books/audiobookshelf
   prune: true
   wait: true

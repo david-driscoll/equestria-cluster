@@ -17,6 +17,8 @@ spec:
   dependsOn:
     - name: truenas-volumes
       namespace: equestria
+    - name: tailscale-operator
+      namespace: tailscale-system
   path: ./kubernetes/apps/equestria/pvr/iptv-sync
   prune: true
   wait: true

@@ -13,6 +13,8 @@ spec:
   dependsOn:
     - name: external-secrets
       namespace: *namespace
+    - name: volsync
+      namespace: volsync-system
   prune: true
   wait: true
   force: false # true

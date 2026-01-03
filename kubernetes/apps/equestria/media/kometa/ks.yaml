@@ -18,6 +18,8 @@ spec:
       namespace: *namespace
     - name: external-secrets
       namespace: kube-system
+    - name: volsync
+      namespace: volsync-system
   path: ./kubernetes/apps/equestria/media/kometa
   prune: true
   wait: true

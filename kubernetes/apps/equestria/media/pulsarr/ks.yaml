@@ -19,6 +19,10 @@ spec:
       namespace: database
     - name: external-secrets
       namespace: kube-system
+    - name: volsync
+      namespace: volsync-system
+    - name: tailscale-operator
+      namespace: tailscale-system
   path: ./kubernetes/apps/equestria/media/pulsarr
   prune: true
   wait: true
