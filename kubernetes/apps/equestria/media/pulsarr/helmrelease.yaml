@@ -45,6 +45,7 @@ spec:
               PUID: ${PUID}
               PGID: ${PGID}
               TZ: ${TIMEZONE}
+              CACHE_DIR: /cache
               baseUrl: https://${APP}.${ROOT_DOMAIN}
               port: &port 3003
             envFrom:
@@ -110,3 +111,5 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /app/data
+      cache:
+        type: emptyDir
