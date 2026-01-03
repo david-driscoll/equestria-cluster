@@ -44,7 +44,7 @@ spec:
               runAsUser: 0
               runAsGroup: 0
               fsGroup: 0
-              fsGroupChangePolicy: "OnRootMismatch"
+              fsGroupChangePolicy: "None"
               supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               capabilities: { drop: ["ALL"] }
             image:
@@ -81,7 +81,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: OnRootMismatch
+        fsGroupChangePolicy: None
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.

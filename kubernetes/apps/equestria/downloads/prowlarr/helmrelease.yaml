@@ -91,6 +91,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
+        fsGroupChangePolicy: None
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.

@@ -71,7 +71,6 @@ spec:
               runAsUser: 568
               runAsGroup: 568
               fsGroup: 568
-              fsGroupChangePolicy: "OnRootMismatch"
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
@@ -85,7 +84,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: OnRootMismatch
+        fsGroupChangePolicy: None
         supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 

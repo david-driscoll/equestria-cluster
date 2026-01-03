@@ -49,6 +49,7 @@ spec:
                 chmod 0750 /data/db
             securityContext:
               runAsUser: 0
+              fsGroupChangePolicy: None
         containers:
           app:
             image:
