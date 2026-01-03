@@ -39,6 +39,7 @@ spec:
           securityContext:
             runAsUser: 568
             runAsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
 
         containers:
           *app :
@@ -72,6 +73,7 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+              fsGroupChangePolicy: OnRootMismatch
             resources:
               requests:
                 cpu: 50m

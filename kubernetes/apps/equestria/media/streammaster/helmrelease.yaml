@@ -96,6 +96,7 @@ spec:
         runAsGroup: 0
         runAsNonRoot: false # Must be run as root user
         fsGroup: 0
+        fsGroupChangePolicy: OnRootMismatch
 
         supplementalGroups:
           - 34

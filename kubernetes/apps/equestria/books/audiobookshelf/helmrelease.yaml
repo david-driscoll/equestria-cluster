@@ -103,7 +103,7 @@ spec:
 
     defaultPodOptions:
       securityContext:
-
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     # -- Configures service settings for the chart.

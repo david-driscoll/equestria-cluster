@@ -37,7 +37,7 @@ spec:
         pod:
           securityContext:
             runAsNonRoot: false
-
+            fsGroupChangePolicy: OnRootMismatch
         containers:
           *app :
             image:

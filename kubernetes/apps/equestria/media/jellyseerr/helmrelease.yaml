@@ -72,7 +72,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 568
         runAsGroup: 568
-
+        fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: []
         seccompProfile: { type: RuntimeDefault }
 

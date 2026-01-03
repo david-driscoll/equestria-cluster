@@ -34,6 +34,7 @@ spec:
         runAsGroup: 568
         runAsNonRoot: true
         runAsUser: 568
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
       shareProcessNamespace: true
