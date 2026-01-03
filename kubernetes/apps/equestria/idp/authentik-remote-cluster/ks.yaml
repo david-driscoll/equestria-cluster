@@ -17,7 +17,6 @@ spec:
   path: ./kubernetes/apps/equestria/idp/authentik-remote-cluster
   prune: true
   wait: false
-  force: true
   interval: 1h
   retryInterval: 2m
   timeout: 10m

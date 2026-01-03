@@ -17,7 +17,6 @@ spec:
   path: ./kubernetes/apps/equestria/games/ggrequestz
   prune: true
   wait: true
-  force: true
   interval: 1h
   retryInterval: 2m
   timeout: 10m

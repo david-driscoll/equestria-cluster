@@ -20,7 +20,6 @@ spec:
   path: ./kubernetes/apps/equestria/media/emby
   prune: true
   wait: true
-  force: true
   interval: 1h
   timeout: 1h
   sourceRef:
