@@ -97,6 +97,7 @@ spec:
                     - "true"
     defaultPodOptions:
       securityContext:
+        fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [568]
     service:
       tdarr-server:
