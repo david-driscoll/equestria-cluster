@@ -13,7 +13,7 @@ resources:
   - ./prometheus/ks.yaml
   - ./loki/ks.yaml
   - ./alloy/ks.yaml
-  - ./grafana/ks.yaml
+  # - ./grafana/ks.yaml
   - ./grafana-operator/ks.yaml
   - ./thanos/ks.yaml
   - ./smartctl-exporter/ks.yaml
