@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Jellyfin
-  category: Media
+  category: Applications
   description: Jellyfin is a media server software
   url: https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg
@@ -15,8 +15,7 @@ spec:
       - friends
       - family
   gatus:
-    - group: "Applications"
-      url: https://${APP}.${ROOT_DOMAIN}
+    - url: https://${APP}.${ROOT_DOMAIN}
       method: GET
       conditions:
         - "[STATUS] == 200"
