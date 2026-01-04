@@ -10,7 +10,7 @@ alertmanager:
   priorityClassName: observability-critical
   service:
     annotations:
-      # tailscale.com/expose: "true"
+      tailscale.com/expose: "true"
       tailscale.com/hostname: alertmanager
       tailscale.com/tags: "tag:observability"
   route:
