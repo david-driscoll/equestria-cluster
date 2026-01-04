@@ -3,8 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app pulumi-secrets
-  namespace: &namespace flux-system
+  name: &app applications
+  namespace: &namespace pulumi
   labels:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
@@ -14,8 +14,12 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  dependsOn: []
-  path: ./kubernetes/apps/flux-system/pulumi/secrets
+  dependsOn:
+    - name: home-operations
+      namespace: *namespace
+    - name: authentik
+      namespace: *namespace
+  path: ./kubernetes/apps/pulumi/applications
   prune: true
   wait: true
   force: false # true
