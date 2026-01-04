@@ -11,7 +11,7 @@ resources:
   - ./sonarr/ks.yaml
   - ./plex/ks.yaml
   - ./tautulli/ks.yaml
-  - ./lidarr/ks.yaml
+  # - ./lidarr/ks.yaml
   - ./mylar/ks.yaml
   - ./dispatcharr/ks.yaml
   - ./watchstate/ks.yaml
@@ -19,4 +19,4 @@ resources:
   - ./tdarr/ks.yaml
   - ./kometa/ks.yaml
   - ./kapowarr/ks.yaml
-  - ./pulsarr/ks.yaml
+  # - ./pulsarr/ks.yaml
