@@ -22,4 +22,4 @@ spec:
       url: https://${APP}.${ROOT_DOMAIN}/login
       method: GET
       conditions:
-        - "[STATUS] == 200"
+        - "[STATUS] == 404"
