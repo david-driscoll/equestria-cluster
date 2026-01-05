@@ -46,9 +46,11 @@ spec:
               PUID: 568
               PGID: 568
               UMASK: "0022"
-              WEBUI_PORT: &port 8080
-              QBITTORRENT__PORT: *port
-              QBITTORRENT__BT_PORT: &port-bt 18289
+              QBT_LEGAL_NOTICE: confirm
+              QBT_WEBUI_PORT: &port 8080
+              QBT_TORRENTING_PORT: &port-bt 18289
+              QBT_CONFIG_PATH: /config
+              QBT_DOWNLOADS_PATH: /media/downloads/torrents
             probes:
               liveness: &probes
                 enabled: true
