@@ -47,6 +47,14 @@ spec:
               PGID: 568
               UMASK: "0022"
               WEBUI_PORT: &port 8080
+              QBITTORRENT__PORT: *port
+              QBITTORRENT__BT_PORT: &port-bt 18289
+              QBT_BitTorrent__Session__Interface: wg0
+              QBT_BitTorrent__Session__InterfaceName: wg0
+              QBT_BitTorrent__Session__InterfaceAddress:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
             probes:
               liveness: &probes
                 enabled: true
@@ -74,6 +82,73 @@ spec:
                 memory: 256Mi
               limits:
                 memory: 6Gi
+          gluetun:
+            image:
+              repository: ghcr.io/qdm12/gluetun
+              tag: v3.40.3
+            env:
+              VPN_SERVICE_PROVIDER: custom
+              VPN_TYPE: wireguard
+              VPN_INTERFACE: wg0
+              VPN_ENDPOINT_PORT: 51820
+              VPN_PORT_FORWARDING: on
+              VPN_PORT_FORWARDING_PROVIDER: protonvpn
+              DOT: off
+              DOT_IPV6: off
+              FIREWALL_INPUT_PORTS: 80,9000
+              FIREWALL_OUTBOUND_SUBNETS: ${CLUSTER_NETWORK},${SERVICE_NETWORK}
+            envFrom:
+              - secretRef:
+                  name: qbittorrent-secret
+            securityContext:
+              runAsUser: 0
+              runAsNonRoot: false
+              capabilities:
+                add:
+                  - NET_ADMIN
+              allowPrivilegeEscalation: false
+          port-forward:
+            image:
+              repository: ghcr.io/bjw-s-labs/gluetun-qb-port-sync
+              tag: 0.0.4@sha256:6060da1978c5ec8ea1cad56d8538f35b504b1dcb3fc9845f1f69b18d1b36020a
+            env:
+              GLUETUN_CONTROL_SERVER_HOST: localhost
+              GLUETUN_CONTROL_SERVER_PORT: 8000
+              QBITTORRENT_HOST: localhost
+              QBITTORRENT_WEBUI_PORT: *port
+              CRON_ENABLED: true
+              CRON_SCHEDULE: "*/5 * * * *"
+              LOG_TIMESTAMP: false
+            securityContext:
+              runAsUser: 568
+              runAsGroup: 568
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop:
+                  - ALL
+          seedboxapi:
+            image:
+              repository: ghcr.io/gavinmcfall/seedboxapi
+              tag: v1.0.3@sha256:352075e2b98854cd6a451404a12bd0c517eac4e1224243b6f4793de98b4f9a69
+            env:
+              interval: "1"
+              METRICS_PORT: "9000"
+              mam_id:
+                valueFrom:
+                  secretKeyRef:
+                    name: qbittorrent-secret
+                    key: MAM_ID
+            securityContext:
+              runAsUser: 568
+              runAsGroup: 568
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop:
+                  - ALL
 
     defaultPodOptions:
       securityContext:
@@ -88,20 +163,14 @@ spec:
         ports:
           http:
             port: *port
-      bittorrent-tcp:
+      bittorrent:
         controller: *app
         type: ClusterIP
         ports:
-          bittorrent-tcp:
-            port: 6881
+          bittorrent:
+            port: *port-bt
             protocol: TCP
-      bittorrent-udp:
-        controller: *app
-        type: ClusterIP
-        ports:
-          bittorrent-udp:
-            port: 6881
-            protocol: UDP
+            targetPort: *port-bt
 
     persistence:
       config:
