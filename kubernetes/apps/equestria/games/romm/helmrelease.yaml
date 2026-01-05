@@ -127,9 +127,9 @@ spec:
           - path: /media/downloads
             subPath: downloads
           - path: /romm/library
-            subPath: roms
-          - path: /media/roms
-            subPath: roms
+            subPath: games
+          - path: /media/games
+            subPath: games
 
     route:
       internal:

@@ -102,5 +102,5 @@ spec:
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-          - path: /media/roms
-            subPath: roms
+          - path: /media/games
+            subPath: games
