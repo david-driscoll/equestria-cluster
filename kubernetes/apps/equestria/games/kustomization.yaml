@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./romm/ks.yaml
   - ./retrom/ks.yaml
-  # - ./ggrequestz/ks.yaml
+  - ./ggrequestz/ks.yaml

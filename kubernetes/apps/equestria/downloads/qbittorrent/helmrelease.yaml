@@ -49,11 +49,11 @@ spec:
               QBT_LEGAL_NOTICE: confirm
               QBT_WEBUI_PORT: &port 8080
               QBT_TORRENTING_PORT: &port-bt 18289
-              QBT_CONFIG_PATH: /config
-              QBT_DOWNLOADS_PATH: /media/downloads/torrents
-              QBT_BitTorrent__Session__DefaultSavePath: /media/downloads/completed
-              QBT_BitTorrent__Session__TempPath: /media/downloads/torrents
-              QBT_BitTorrent__Session__TempPathEnabled: true
+              # QBT_CONFIG_PATH: /config
+              # QBT_DOWNLOADS_PATH: /media/downloads/torrents
+              # QBT_BitTorrent__Session__DefaultSavePath: /media/downloads/completed
+              # QBT_BitTorrent__Session__TempPath: /media/downloads/torrents
+              # QBT_BitTorrent__Session__TempPathEnabled: true
               QBT_Application__MemoryWorkingSetLimit:
                 valueFrom:
                   resourceFieldRef:
