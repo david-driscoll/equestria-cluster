@@ -113,11 +113,6 @@ spec:
         globalMounts:
           - path: /media/downloads
             subPath: downloads
-      custom-definition:
-        type: secret
-        name: custom-definitions
-        globalMounts:
-          - path: /config/Definitions/Custom
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
 apiVersion: traefik.io/v1alpha1
