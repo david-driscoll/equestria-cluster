@@ -23,6 +23,8 @@ spec:
       namespace: volsync-system
     - name: tailscale-operator
       namespace: tailscale-system
+    - name: postgres
+      namespace: database
   path: ./kubernetes/apps/equestria/downloads/autobrr
   prune: true
   wait: true
@@ -37,6 +39,7 @@ spec:
     - ../../../../components/tailscale
     - ../../../../components/volsync
     - ../../../../components/gateway/internal
+    - ../../../../components/postgres
   postBuild:
     substitute:
       APP: *app

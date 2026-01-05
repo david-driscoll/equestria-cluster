@@ -5,6 +5,8 @@ resources:
   - postgres-user.sops.yaml
   - postgres-superuser.yaml
   - postgres-superuser.sops.yaml
+  - autobrr.yaml
+  - autobrr.sops.yaml
   - ggrequestz.yaml
   - ggrequestz.sops.yaml
   - grafana.yaml
