@@ -112,11 +112,6 @@ spec:
         controller: *app
         type: LoadBalancer
         loadBalancerIP: "${QBITTORRENT_IP}"
-        annotations:
-          io.cilium/lb-ipam-ips: "${QBITTORRENT_IP}"
-        externalIPs:
-          - "${QBITTORRENT_IP}"
-        externalTrafficPolicy: Local
         ports:
           bittorrent-udp:
             port: *port-bt
