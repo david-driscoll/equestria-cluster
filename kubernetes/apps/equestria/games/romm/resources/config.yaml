@@ -2,21 +2,18 @@
 # Rename this file to `config.yml`, copy it to a `config` folder, and mount that folder as per the docker-compose.example.yml
 # Only uncomment the lines you want to use/modify, or add new ones where needed
 
-# exclude:
+exclude:
 #   # Exclude platforms to be scanned
 #   platforms:
 #     - excluded_folder_a
 #     - excluded_folder_b
 
-#   # Exclude roms or parts of roms to be scanned
-#   roms:
-#     # Single file games section.
-#     # Will not apply to files that are in sub-folders (multi-disc roms, games with updates, DLC, patches, etc.)
-#     single_file:
-#       # Exclude all files with certain extensions to be scanned
-#       extensions:
-#         - xml
-#         - txt
+  # Exclude roms or parts of roms to be scanned
+  roms:
+    single_file:
+      extensions:
+        - xml
+        - txt
 
 #       # Exclude matched file names to be scanned
 #       # Supports unix filename pattern matching
@@ -25,25 +22,25 @@
 #         - '._*'
 #         - '*.nfo'
 
-#     # Multi files games section
-#     # Will apply to files that are in sub-folders (multi-disc roms, games with updates, DLC, patches, etc.)
-#     multi_file:
-#       # Exclude matched 'folder' names to be scanned (RomM identifies folders as multi file games)
-#       # Common ES-DE media folders are listed below
-#       names:
-#         - 3dboxes
-#         - backcovers
-#         - covers
-#         - fanart
-#         - manuals
-#         - marquees
-#         - miximages
-#         - physicalmedia
-#         - screenshots
-#         - titlescreens
-#         - videos
-#         - downloaded_media
-#         - media
+    # Multi files games section
+    # Will apply to files that are in sub-folders (multi-disc roms, games with updates, DLC, patches, etc.)
+    multi_file:
+      # Exclude matched 'folder' names to be scanned (RomM identifies folders as multi file games)
+      # Common ES-DE media folders are listed below
+      names:
+        - 3dboxes
+        - backcovers
+        - covers
+        - fanart
+        - manuals
+        - marquees
+        - miximages
+        - physicalmedia
+        - screenshots
+        - titlescreens
+        - videos
+        - downloaded_media
+        - media
 
 #       # Exclude files within sub-folders.
 #       parts:
