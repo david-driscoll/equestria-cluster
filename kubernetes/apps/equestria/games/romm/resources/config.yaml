@@ -3,44 +3,87 @@
 # Only uncomment the lines you want to use/modify, or add new ones where needed
 
 exclude:
-#   # Exclude platforms to be scanned
-#   platforms:
-#     - excluded_folder_a
-#     - excluded_folder_b
+  # Exclude platforms to be scanned
+  platforms:
+  - _info.txt
+  - '@eaDir'
+  - video
+  - .Stfolder
+  - images
+  - videos
+  - '*.Stfolder'
+  - '*.txt'
+  - '*syncthing*'
 
   # Exclude roms or parts of roms to be scanned
   roms:
+    multi_file:
+      names:
+      - _hidden
+      - images
+      - '@eaDir'
+      - '!images'
+      - '!orphaned'
+      - '!downloading'
+      - txt
+      - manuals
+      - cfg
+      - stignore
+      - '*videos'
+      - '*manuals'
+      - .Stfolder
+      - '*syncthing*'
+      parts:
+        extensions:
+        - txt
+        - xml
+        - jpg
+        - jpeg
+        - images
+        - cfg
+        - stignore
+        - '*videos'
+        - .Stfolder
+        - '*syncthing*'
+        - syncthing
+        names:
+        - data.xml
+        - ._*
+        - multidisc
+        - manuals
+        - cfg
+        - '*manuals'
+        - syncthing
+        - '*syncthing*'
     single_file:
       extensions:
-        - xml
-        - txt
-
-#       # Exclude matched file names to be scanned
-#       # Supports unix filename pattern matching
-#       names:
-#         - 'info.txt'
-#         - '._*'
-#         - '*.nfo'
-
-    # Multi files games section
-    # Will apply to files that are in sub-folders (multi-disc roms, games with updates, DLC, patches, etc.)
-    multi_file:
-      # Exclude matched 'folder' names to be scanned (RomM identifies folders as multi file games)
-      # Common ES-DE media folders are listed below
+      - xml
+      - txt
+      - jpg
+      - jpeg
+      - pdf
+      - images
+      - manuals
+      - '*.cfg'
+      - stignore
+      - '*.Stfolder'
+      - '*syncthing*'
+      - syncthing
       names:
-        - 3dboxes
-        - backcovers
-        - covers
-        - fanart
-        - manuals
-        - marquees
-        - miximages
-        - physicalmedia
-        - screenshots
-        - titlescreens
-        - videos
-        - downloaded_media
-        - media
+      - info.txt
+      - ._*
+      - '*.nfo'
+      - '@eaDir'
+      - '*.xml'
+      - '!info.txt'
+      - mp4
+      - '*.mp4'
+      - '*.cfg'
+      - cfg
+      - stignore
+      - '*manuals'
+      - '*.Stfolder'
+      - syncthing
 
 #       # Exclude files within sub-folders.
 #       parts:
@@ -56,13 +99,38 @@ exclude:
 #           - xml
 #           - txt
 
-# system:
-#   # Asociate different platform names to your current file system platform names
-#   # [your custom platform folder name]: [RomM platform name]
-#   # In this example if you have a 'gc' folder, RomM will treat it like the 'ngc' folder
-#   platforms:
-#     gc: ngc
-#     ps1: psx
+system:
+  platforms:
+    # bbc: bbcmicro
+    dreamcast: dc
+    gamecube: ngc
+    gamegear: gamegear
+    gb: gb
+    gba: gba
+    gbc: gbc
+    # lynx: lynx
+    # mame: arcade
+    megadrive: megadrive
+    n64: n64
+    # neogeo: neogeoaes
+    nes: nes
+    # pcengine: turbografx16--1
+    ps2: ps2
+    ps3: ps3
+    psp: psp
+    psx: ps
+    saturn: saturn
+    sega32x: sega-32x
+    segacd: segacd
+    snes: snes
+    wii: wii
+    wiiu: wiiu
+    switch: switch
+    switch-2: switch-2
+    # wswan: wonderswan
+    # wswanc: wonderswan-color
+    # xbox: xbox
+    # zxspectrum: zxs
 
 #   # Asociate one platform to it's main version (IGDB only)
 #   versions:
