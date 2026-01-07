@@ -39,7 +39,7 @@ spec:
     - ../../../../components/tailscale
     - ../../../../components/volsync
     - ../../../../components/gateway/internal
-    - ../../../../components/postgres
+    # - ../../../../components/postgres
   postBuild:
     substitute:
       APP: *app

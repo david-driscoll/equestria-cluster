@@ -104,12 +104,6 @@ cluster:
     superuser: false
     passwordSecret:
       name: homarr-postgres
-  - name: autobrr
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: autobrr-postgres
   - name: retrom
     ensure: present
     login: true
