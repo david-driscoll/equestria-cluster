@@ -16,5 +16,3 @@ spec:
     - backendRefs:
         - name: postgres-rw
           port: 5432
----
-# Removed Traefik IngressRouteTCP in favor of Gateway API TCPRoute
