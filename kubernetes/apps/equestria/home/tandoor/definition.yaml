@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Tandoor Recipes
+  category: Applications
+  description: Recipe management application
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tandoor-recipes.svg
+  access_policy:
+    groups:
+      - friends
+      - family
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
+      propertyMappings:
+        - remote_user
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"

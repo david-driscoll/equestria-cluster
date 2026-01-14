@@ -157,3 +157,9 @@ spec:
           - backendRefs:
               - identifier: *app
                 port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user

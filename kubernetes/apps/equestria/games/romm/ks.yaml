@@ -32,7 +32,6 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/gateway/internal
     - ../../../../components/postgres
     - ../../../../components/volsync
   postBuild:

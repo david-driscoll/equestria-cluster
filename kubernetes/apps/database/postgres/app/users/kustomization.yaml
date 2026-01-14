@@ -5,6 +5,8 @@ resources:
   - postgres-user.sops.yaml
   - postgres-superuser.yaml
   - postgres-superuser.sops.yaml
+  - crowdsec.yaml
+  - crowdsec.sops.yaml
   - ggrequestz.yaml
   - ggrequestz.sops.yaml
   - grafana.yaml
@@ -21,6 +23,8 @@ resources:
   - retrom.sops.yaml
   - romm.yaml
   - romm.sops.yaml
+  - tandoor.yaml
+  - tandoor.sops.yaml
   - vikunja.yaml
   - vikunja.sops.yaml
   - windmill.yaml
