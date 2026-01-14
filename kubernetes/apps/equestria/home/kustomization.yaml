@@ -10,7 +10,7 @@ resources:
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
   - ./windmill/ks.yaml
-  # - ./seafile/ks.yaml
+  - ./seafile/ks.yaml
   - ./rustdesk/ks.yaml
   - ./taildrive/ks.yaml
   - ./tandoor/ks.yaml
