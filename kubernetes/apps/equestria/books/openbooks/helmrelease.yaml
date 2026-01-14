@@ -146,6 +146,12 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
         annotations:
           # gethomepage.dev/widget.url: "http://${APP}.${INTERNAL_CLUSTER_SERVICE}:80"
           # gethomepage.dev/widget.type: openbooks

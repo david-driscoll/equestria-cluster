@@ -34,8 +34,6 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
-    # has it's own ingress
-    # - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app

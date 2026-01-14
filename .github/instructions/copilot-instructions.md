@@ -37,11 +37,6 @@ Project-specific patterns (follow these exactly)
   - Usage: Add the component to an app's `ks.yaml` (e.g. `- ../../../../components/ingress/internal`) and set HelmRelease `route` or `ingress` values to select `internal`/`authenticated`/`external`.
   - Examples: `kubernetes/components/ingress/internal/kustomization.yaml`, `kubernetes/components/ingress/authenticated/kustomization.yaml`, `kubernetes/apps/observability/grafana/ks.yaml`.
 
-- gateway (internal / forwardauth)
-  - Purpose: Gateway API resources that act as parentRefs for HTTPRoute/Route blocks created by apps.
-  - Usage: Apps that use Gateway API reference a parent `Gateway` (e.g., `parentRefs.name: internal, namespace: network`) in their HelmRelease `route` values.
-  - Examples: `kubernetes/components/gateway/internal/kustomization.yaml`, `kubernetes/apps/observability/gatus/app/helmrelease.yaml` (route.parentRefs).
-
 - tailscale
   - Purpose: Tailscale operator, idp integration, and tailscale-managed ingress bits.
   - Usage: Include `components/tailscale` for apps that should be reachable over Tailscale or use Tailscale nameserver.

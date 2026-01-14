@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - postgres-user-push-secret.yaml
   - postgres-superuser-push-secret.yaml
+  - crowdsec-postgres-push-secret.yaml
   - ggrequestz-postgres-push-secret.yaml
   - grafana-postgres-push-secret.yaml
   - homarr-postgres-push-secret.yaml
@@ -11,5 +12,6 @@ resources:
   - pulsarr-postgres-push-secret.yaml
   - retrom-postgres-push-secret.yaml
   - romm-postgres-push-secret.yaml
+  - tandoor-postgres-push-secret.yaml
   - vikunja-postgres-push-secret.yaml
   - windmill-postgres-push-secret.yaml

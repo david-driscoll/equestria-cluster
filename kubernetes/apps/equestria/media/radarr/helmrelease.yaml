@@ -114,37 +114,36 @@ spec:
             subPath: downloads
           - path: /media/movies
             subPath: movies
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - matches:
+              - headers:
+                  - name: X-Api-Key
+                    value: ".*"
+            backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+          - backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: authenticated-user
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/traefik.io/ingressroute_v1alpha1.json
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: ${APP}-internal
-  annotations:
-    reloader.stakater.com/auto: "true"
-    external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
-    kubernetes.io/ingress.class: internal
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`${APP}.${ROOT_DOMAIN}`) && HeaderRegexp(`X-Api-Key`, `.*`)
-      kind: Rule
-      priority: -1
-      services:
-        - name: ${APP}
-          port: http
-          passHostHeader: true
-      middlewares:
-        - name: local-user
-          namespace: network
-    - match: Host(`${APP}.${ROOT_DOMAIN}`)
-      kind: Rule
-      priority: -2
-      services:
-        - name: ${APP}
-          port: http
-          passHostHeader: true
-      middlewares:
-        - name: authenticated-user
-          namespace: network

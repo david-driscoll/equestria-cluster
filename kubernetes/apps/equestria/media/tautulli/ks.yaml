@@ -34,7 +34,6 @@ spec:
   components:
     - ../../../../components/volsync
     - ../../../../components/tailscale
-    - ../../../../components/gateway/internal
   postBuild:
     substitute:
       APP: *app

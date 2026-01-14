@@ -128,6 +128,12 @@ spec:
           - backendRefs:
               - identifier: *app
                 port: *web-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
       server:
         parentRefs:
           - name: internal
@@ -140,6 +146,12 @@ spec:
           - backendRefs:
               - identifier: tdarr-server
                 port: *server-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
     persistence:
       config:
         enabled: true
