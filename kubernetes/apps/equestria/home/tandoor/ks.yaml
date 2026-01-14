@@ -23,6 +23,7 @@ spec:
       namespace: kube-system
   path: ./kubernetes/apps/equestria/home/tandoor
   prune: true
+  force: false
   wait: true
   interval: 1h
   timeout: 10m
