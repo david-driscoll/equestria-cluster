@@ -81,6 +81,7 @@ david-driscoll/stargate-command-cluster:
     exclude: |
       kustomization.yaml
       golink/
+      taildrive/
   - source: talos/talenv.yaml
     dest: talos/talenv.yaml
   - source: talos/patches/global/machine-kubelet.yaml

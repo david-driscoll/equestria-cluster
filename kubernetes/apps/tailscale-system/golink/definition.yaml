@@ -3,11 +3,11 @@
 apiVersion: driscoll.dev/v1
 kind: ApplicationDefinition
 metadata:
-  name: tailscale-golink
+  name: golink
 spec:
   name: Links
   category: Applications
-  description: Tailscale Go Link
+  description: Go Link
   url: &url https://go.${TAILSCALE_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale.svg
   access_policy:

@@ -12,7 +12,6 @@ resources:
   - ./windmill/ks.yaml
   - ./seafile/ks.yaml
   - ./rustdesk/ks.yaml
-  - ./taildrive/ks.yaml
   - ./tandoor/ks.yaml
   # - ./opencloud/ks.yaml
   # - ./collabora/ks.yaml
