@@ -84,8 +84,10 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /taildrive
-      truenas-media:
-        existingClaim: truenas-media
+      nfs-media:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/media
         globalMounts:
           - path: /media
       nfs-backup:
