@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Stremio
+  category: Applications
+  description: Stremio is a media center application
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/stremio.svg
+  access_policy:
+    groups:
+      - friends
+      - family
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
+  #     skipPathRegex: "^/api([/?].*)?$"
+  gatus:
+    - group: "Applications"
+      url: https://${APP}.${ROOT_DOMAIN}/ping
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
