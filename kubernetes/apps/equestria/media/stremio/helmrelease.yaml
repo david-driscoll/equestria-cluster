@@ -148,7 +148,7 @@ spec:
         kind: HTTPRoute
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: web
                 port: *web-port
             filters:
               - type: ExtensionRef
