@@ -61,8 +61,10 @@ spec:
               requests:
                 cpu: 100m
                 memory: 100Mi
+                gpu.intel.com/i915: 1
               limits:
                 memory: 2Gi
+                gpu.intel.com/i915: 1
           web:
             image:
               repository: tsaridas/stremio-docker
@@ -155,7 +157,7 @@ spec:
                 extensionRef:
                   group: traefik.io
                   kind: Middleware
-                  name: authenticated-user
+                  name: local-user
       web:
         parentRefs:
           - name: internal
@@ -173,4 +175,4 @@ spec:
                 extensionRef:
                   group: traefik.io
                   kind: Middleware
-                  name: authenticated-user
+                  name: local-user
