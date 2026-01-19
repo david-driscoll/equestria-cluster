@@ -20,4 +20,4 @@ resources:
   - ./kometa/ks.yaml
   - ./kapowarr/ks.yaml
   - ./pulsarr/ks.yaml
-  - ./stremio/ks.yaml
+  # - ./stremio/ks.yaml
