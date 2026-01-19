@@ -72,7 +72,7 @@ spec:
               TZ: ${TIMEZONE}
               AUTO_SERVER_URL: 1
               APP_PATH: /config
-              SERVER_URL: http://server-${APP}.equestria.cluster.local:11470
+              SERVER_URL: https://${APP}-server.${ROOT_DOMAIN}
               WEBUI_LOCATION: https://${APP}.${ROOT_DOMAIN}
               DOMAIN: ${APP}.${ROOT_DOMAIN}
 
@@ -138,7 +138,25 @@ spec:
           - path: /media/movies
             subPath: movies
     route:
-      internal:
+      server:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}-server.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: server
+                port: *http-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: authenticated-user
+      web:
         parentRefs:
           - name: internal
             namespace: network
