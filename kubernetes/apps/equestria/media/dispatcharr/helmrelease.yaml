@@ -144,19 +144,19 @@ spec:
               tag: "2.0.5"
             env:
               TZ: ${TIMEZONE}
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &teamarr-port 9195
-                  initialDelaySeconds: 10
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
+            # probes:
+            #   liveness: &probes
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /
+            #         port: &teamarr-port 9195
+            #       initialDelaySeconds: 10
+            #       periodSeconds: 60
+            #       timeoutSeconds: 10
+            #       failureThreshold: 5
+            #   readiness: *probes
             resources:
               requests:
                 cpu: 10m
@@ -168,14 +168,14 @@ spec:
               repository: sergeantpanda/streamwatchdog
               tag: v2.2.1
             env:
-              SERVER_URL: http://dispatcharr-app.equestria.svc.cluster.local:9191
+              SERVER_URL: http://${APP}-app.equestria.svc.cluster.local:9191
               USERNAME:
                 secretKeyRef:
-                  name: dispatcharr
+                  name: ${APP}
                   key: username
               PASSWORD:
                 secretKeyRef:
-                  name: dispatcharr
+                  name: ${APP}
                   key: password
               MODULE: Dispatcharr
               TZ: ${TIMEZONE}

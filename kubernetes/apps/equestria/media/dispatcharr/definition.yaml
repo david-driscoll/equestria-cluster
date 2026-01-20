@@ -40,3 +40,25 @@ spec:
       method: GET
       conditions:
         - "[STATUS] == 200"
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}-teamarr
+spec:
+  name: Dispatcharr Teamarr
+  category: Media Management
+  description: Teamarr for dispatcharr
+  url: &url https://${APP}-teamarr.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
+  access_policy:
+    groups:
+      - media-managers
+  gatus:
+    - group: "Applications"
+      url: https://${APP}-teamarr.${ROOT_DOMAIN}/
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
