@@ -97,18 +97,18 @@ spec:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
               tag: "0.8.2@sha256:e312910ef18e7c71c1ab932539613e12918628000a4f121ae128a143e31d9d9f"
             probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &ecm-port 6100
-                  initialDelaySeconds: 10
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
+              # liveness: &probes
+              #   enabled: true
+              #   custom: true
+              #   spec:
+              #     httpGet:
+              #       path: /
+              #       port: &ecm-port 6100
+              #     initialDelaySeconds: 10
+              #     periodSeconds: 60
+              #     timeoutSeconds: 10
+              #     failureThreshold: 5
+              # readiness: *probes
             resources:
               requests:
                 cpu: 100m
@@ -119,19 +119,19 @@ spec:
             image:
               repository: ghcr.io/sethwv/game-thumbs
               tag: v1.3.1
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &game-thumbs-port 3000
-                  initialDelaySeconds: 10
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
+            # probes:
+            #   liveness: &probes
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /
+            #         port: &game-thumbs-port 3000
+            #       initialDelaySeconds: 10
+            #       periodSeconds: 60
+            #       timeoutSeconds: 10
+            #       failureThreshold: 5
+            #   readiness: *probes
             resources:
               requests:
                 cpu: 10m
@@ -203,13 +203,13 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: *ecm-port
+            port: 6100
       game-thumbs:
         controller: app
         type: ClusterIP
         ports:
           http:
-            port: *game-thumbs-port
+            port: 3000
       teamarr:
         controller: app
         type: ClusterIP
@@ -272,7 +272,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: ecm
-                port: *ecm-port
+                port: 6100
             filters:
               - type: ExtensionRef
                 extensionRef:
