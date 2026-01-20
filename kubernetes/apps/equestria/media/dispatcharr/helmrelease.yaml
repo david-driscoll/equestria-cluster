@@ -96,6 +96,25 @@ spec:
             image:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
               tag: "0.8.2@sha256:e312910ef18e7c71c1ab932539613e12918628000a4f121ae128a143e31d9d9f"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &ecm-port 6100
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
 
     # -- Configures service settings for the chart.
     defaultPodOptions:
@@ -120,7 +139,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: 6100
+            port: *ecm-port
 
     persistence:
       config:
@@ -171,7 +190,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: ecm
-                port: *port
+                port: 6100
             filters:
               - type: ExtensionRef
                 extensionRef:
