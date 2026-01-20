@@ -31,7 +31,7 @@ spec:
   values:
     fullnameOverride: *app
     controllers:
-      *app :
+      app:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
@@ -193,25 +193,25 @@ spec:
                 - "true"
     service:
       app:
-        controller: *app
+        controller: app
         type: ClusterIP
         ports:
           http:
             port: *port
       ecm:
-        controller: *app
+        controller: app
         type: ClusterIP
         ports:
           http:
             port: *ecm-port
       game-thumbs:
-        controller: *app
+        controller: app
         type: ClusterIP
         ports:
           http:
             port: *game-thumbs-port
       teamarr:
-        controller: *app
+        controller: app
         type: ClusterIP
         ports:
           http:
@@ -221,7 +221,7 @@ spec:
       config:
         existingClaim: ${APP}
         advancedMounts:
-          *app :
+          app:
             app:
               - path: /data
             chown-dbdir:
@@ -243,7 +243,7 @@ spec:
             - path: /tmp
 
     route:
-      *app :
+      app:
         parentRefs:
           - name: internal
             namespace: network
