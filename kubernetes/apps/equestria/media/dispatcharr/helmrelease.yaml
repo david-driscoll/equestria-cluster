@@ -123,6 +123,8 @@ spec:
           app:
             app:
               - path: /data
+            chown-dbdir:
+              - path: /data
             ecm:
               - path: /config
                 subPath: ecm
