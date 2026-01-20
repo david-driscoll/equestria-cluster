@@ -29,14 +29,14 @@ spec:
   name: Dispatcharr Channel Manager
   category: Media Management
   description: Enhanced channel manager for dispatcharr
-  url: &url https://ecm.${APP}.${ROOT_DOMAIN}
+  url: &url https://${APP}-ecm.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
   access_policy:
     groups:
       - media-managers
   gatus:
     - group: "Applications"
-      url: https://ecm.${APP}.${ROOT_DOMAIN}/
+      url: https://${APP}-ecm.${ROOT_DOMAIN}/
       method: GET
       conditions:
         - "[STATUS] == 200"
