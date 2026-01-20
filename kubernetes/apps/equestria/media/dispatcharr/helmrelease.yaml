@@ -215,7 +215,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: *teamarr-port
+            port: 9195
 
     persistence:
       config:
