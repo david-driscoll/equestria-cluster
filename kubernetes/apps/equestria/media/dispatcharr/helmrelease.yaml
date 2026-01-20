@@ -115,6 +115,12 @@ spec:
         ports:
           http:
             port: *port
+      ecm:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: 6100
 
     persistence:
       config:
@@ -136,7 +142,7 @@ spec:
             - path: /tmp
 
     route:
-      internal:
+      app:
         parentRefs:
           - name: internal
             namespace: network
@@ -147,6 +153,24 @@ spec:
         rules:
           - backendRefs:
               - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+      ecm:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "ecm.${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: ecm
                 port: *port
             filters:
               - type: ExtensionRef
