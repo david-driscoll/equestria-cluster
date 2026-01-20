@@ -92,29 +92,6 @@ spec:
                 # amd.com/gpu: 1
                 memory: 4Gi
                 # cpu: 8
-          ecm:
-            image:
-              repository: ghcr.io/motwakorb/enhancedchannelmanager
-              tag: "0.8.2@sha256:e312910ef18e7c71c1ab932539613e12918628000a4f121ae128a143e31d9d9f"
-            # probes:
-              # liveness: &probes
-              #   enabled: true
-              #   custom: true
-              #   spec:
-              #     httpGet:
-              #       path: /
-              #       port: &ecm-port 6100
-              #     initialDelaySeconds: 10
-              #     periodSeconds: 60
-              #     timeoutSeconds: 10
-              #     failureThreshold: 5
-              # readiness: *probes
-            resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-              limits:
-                memory: 1Gi
           game-thumbs:
             image:
               repository: ghcr.io/sethwv/game-thumbs
@@ -199,12 +176,6 @@ spec:
         ports:
           http:
             port: *port
-      ecm:
-        controller: app
-        type: ClusterIP
-        ports:
-          http:
-            port: 6100
       game-thumbs:
         controller: app
         type: ClusterIP
@@ -227,9 +198,6 @@ spec:
               - path: /data
             chown-dbdir:
               - path: /data
-            ecm:
-              - path: /config
-                subPath: ecm
             game-thumbs:
               - path: /app/.cache
                 subPath: game-thumbs/cache
@@ -256,24 +224,6 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
-            filters:
-              - type: ExtensionRef
-                extensionRef:
-                  group: traefik.io
-                  kind: Middleware
-                  name: local-user
-      ecm:
-        parentRefs:
-          - name: internal
-            namespace: network
-            kind: Gateway
-        hostnames:
-          - "${APP}-ecm.${ROOT_DOMAIN}"
-        kind: HTTPRoute
-        rules:
-          - backendRefs:
-              - identifier: ecm
-                port: 6100
             filters:
               - type: ExtensionRef
                 extensionRef:
