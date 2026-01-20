@@ -23,7 +23,7 @@ spec:
       namespace: tailscale-system
   path: ./kubernetes/apps/equestria/media/dispatcharr
   prune: true
-  wait: true
+  # wait: true
   interval: 1h
   retryInterval: 2m
   timeout: 10m
