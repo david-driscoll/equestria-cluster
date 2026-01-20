@@ -178,6 +178,7 @@ spec:
                   name: ${APP}
                   key: password
               MODULE: Dispatcharr
+              ERROR_THRESHOLD: "2"
               TZ: ${TIMEZONE}
 
     # -- Configures service settings for the chart.
