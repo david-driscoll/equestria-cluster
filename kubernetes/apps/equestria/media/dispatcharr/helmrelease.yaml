@@ -31,7 +31,7 @@ spec:
   values:
     fullnameOverride: *app
     controllers:
-      app:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
@@ -92,6 +92,10 @@ spec:
                 # amd.com/gpu: 1
                 memory: 4Gi
                 # cpu: 8
+      addons:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
           ecm:
             image:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
@@ -115,6 +119,70 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 1Gi
+          game-thumbs:
+            image:
+              repository: ghcr.io/sethwv/game-thumbs
+              tag: v1.3.1
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &game-thumbs-port 3000
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+          teamarr:
+            image:
+              repository: ghcr.io/pharaoh-labs/teamarr
+              tag: "2.0.5"
+            env:
+              TZ: ${TIMEZONE}
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &teamarr-port 9195
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+          streamwatchdog:
+            image:
+              repository: sergeantpanda/streamwatchdog
+              tag: v2.2.1
+            env:
+              SERVER_URL: http://dispatcharr-app.equestria.svc.cluster.local:9191
+              USERNAME:
+                secretKeyRef:
+                  name: dispatcharr
+                  key: username
+              PASSWORD:
+                secretKeyRef:
+                  name: dispatcharr
+                  key: password
+              MODULE: Dispatcharr
+              TZ: ${TIMEZONE}
 
     # -- Configures service settings for the chart.
     defaultPodOptions:
@@ -129,30 +197,49 @@ spec:
                 - "true"
     service:
       app:
-        controller: app
+        controller: *app
         type: ClusterIP
         ports:
           http:
             port: *port
       ecm:
-        controller: app
+        controller: addons
         type: ClusterIP
         ports:
           http:
             port: *ecm-port
+      game-thumbs:
+        controller: addons
+        type: ClusterIP
+        ports:
+          http:
+            port: *game-thumbs-port
+      teamarr:
+        controller: addons
+        type: ClusterIP
+        ports:
+          http:
+            port: *teamarr-port
 
     persistence:
       config:
         existingClaim: ${APP}
         advancedMounts:
-          app:
+          *app :
             app:
               - path: /data
             chown-dbdir:
               - path: /data
+          addons:
             ecm:
               - path: /config
                 subPath: ecm
+            game-thumbs:
+              - path: /app/.cache
+                subPath: game-thumbs/cache
+            teamarr:
+              - path: /app/data
+                subPath: teamarr
       media:
         existingClaim: truenas-media
       tmpfs:
@@ -161,7 +248,7 @@ spec:
             - path: /tmp
 
     route:
-      app:
+      *app :
         parentRefs:
           - name: internal
             namespace: network
@@ -190,7 +277,25 @@ spec:
         rules:
           - backendRefs:
               - identifier: ecm
-                port: 6100
+                port: *ecm-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+      teamarr:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}-teamarr.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: teamarr
+                port: *teamarr-port
             filters:
               - type: ExtensionRef
                 extensionRef:
