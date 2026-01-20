@@ -92,10 +92,6 @@ spec:
                 # amd.com/gpu: 1
                 memory: 4Gi
                 # cpu: 8
-      addons:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        containers:
           ecm:
             image:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
@@ -203,19 +199,19 @@ spec:
           http:
             port: *port
       ecm:
-        controller: addons
+        controller: *app
         type: ClusterIP
         ports:
           http:
             port: *ecm-port
       game-thumbs:
-        controller: addons
+        controller: *app
         type: ClusterIP
         ports:
           http:
             port: *game-thumbs-port
       teamarr:
-        controller: addons
+        controller: *app
         type: ClusterIP
         ports:
           http:
@@ -230,7 +226,6 @@ spec:
               - path: /data
             chown-dbdir:
               - path: /data
-          addons:
             ecm:
               - path: /config
                 subPath: ecm
