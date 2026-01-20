@@ -92,11 +92,10 @@ spec:
                 # amd.com/gpu: 1
                 memory: 4Gi
                 # cpu: 8
-          gcs:
+          ecm:
             image:
-              repository: jesmann/global-channel-search
-              tag: 2.6.0@sha256:acee0c9fa5c7222a1f0763de518c0e4b176c84a9ab7f8f0b1404eaf037fd0568
-            command: ["/bin/sh", "-c", "sleep infinity"]
+              repository: ghcr.io/motwakorb/enhancedchannelmanager
+              tag: "0.8.2"
 
     # -- Configures service settings for the chart.
     defaultPodOptions:
@@ -120,14 +119,20 @@ spec:
     persistence:
       config:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /data
+        advancedMounts:
+          app:
+            app:
+              - path: /data
+            ecm:
+              - path: /config
+                subPath: ecm
       media:
         existingClaim: truenas-media
       tmpfs:
         type: emptyDir
         globalMounts:
             - path: /tmp
+
     route:
       internal:
         parentRefs:
