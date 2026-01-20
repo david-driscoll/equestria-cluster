@@ -92,35 +92,35 @@ spec:
                 # amd.com/gpu: 1
                 memory: 4Gi
                 # cpu: 8
-          # game-thumbs:
-          #   image:
-          #     repository: ghcr.io/sethwv/game-thumbs
-          #     tag: v1.3.1
-          #   resources:
-          #     requests:
-          #       cpu: 10m
-          #       memory: 128Mi
-          #     limits:
-          #       memory: 1Gi
+          game-thumbs:
+            image:
+              repository: ghcr.io/sethwv/game-thumbs
+              tag: v1.3.1
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
           teamarr:
             image:
               repository: ghcr.io/pharaoh-labs/teamarr
               tag: "2.0.5"
             env:
               TZ: ${TIMEZONE}
-            # probes:
-            #   liveness: &probes
-            #     enabled: true
-            #     custom: true
-            #     spec:
-            #       httpGet:
-            #         path: /
-            #         port: &teamarr-port 9195
-            #       initialDelaySeconds: 10
-            #       periodSeconds: 60
-            #       timeoutSeconds: 10
-            #       failureThreshold: 5
-            #   readiness: *probes
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &teamarr-port 9195
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
             resources:
               requests:
                 cpu: 10m
@@ -163,18 +163,18 @@ spec:
         ports:
           http:
             port: *port
-      # game-thumbs:
-      #   controller: app
-      #   type: ClusterIP
-      #   ports:
-      #     http:
-      #       port: 3000
+      game-thumbs:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: 3000
       teamarr:
         controller: app
         type: ClusterIP
         ports:
           http:
-            port: 9195
+            port: *teamarr-port
 
     persistence:
       config:
@@ -185,9 +185,9 @@ spec:
               - path: /data
             chown-dbdir:
               - path: /data
-            # game-thumbs:
-            #   - path: /app/.cache
-            #     subPath: game-thumbs/cache
+            game-thumbs:
+              - path: /app/.cache
+                subPath: game-thumbs/cache
             teamarr:
               - path: /app/data
                 subPath: teamarr
