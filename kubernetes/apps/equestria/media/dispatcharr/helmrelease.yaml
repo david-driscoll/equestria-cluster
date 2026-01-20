@@ -168,7 +168,7 @@ spec:
               repository: sergeantpanda/streamwatchdog
               tag: v2.2.1
             env:
-              SERVER_URL: http://${APP}-app.equestria.svc.cluster.local:9191
+              SERVER_URL: http://127.0.0.1:9191
               USERNAME:
                 secretKeyRef:
                   name: ${APP}
