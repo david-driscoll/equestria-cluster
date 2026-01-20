@@ -290,7 +290,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: teamarr
-                port: *teamarr-port
+                port: 9195
             filters:
               - type: ExtensionRef
                 extensionRef:
