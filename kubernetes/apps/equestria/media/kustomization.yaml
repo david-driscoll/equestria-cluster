@@ -14,7 +14,6 @@ resources:
   - ./lidarr/ks.yaml
   - ./mylar/ks.yaml
   - ./dispatcharr/ks.yaml
-  - ./enhancedchannelmanager/ks.yaml
   - ./watchstate/ks.yaml
   # - ./streammaster/ks.yaml
   - ./tdarr/ks.yaml
