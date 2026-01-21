@@ -168,7 +168,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: 3000
+            port: &game-thumbs-port 3000
       teamarr:
         controller: app
         type: ClusterIP
@@ -228,7 +228,26 @@ spec:
         rules:
           - backendRefs:
               - identifier: teamarr
-                port: 9195
+                port: *teamarr-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+
+      game-thumbs:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}-thumbs.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: game-thumbs
+                port: *game-thumbs-port
             filters:
               - type: ExtensionRef
                 extensionRef:
