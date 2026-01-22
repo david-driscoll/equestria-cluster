@@ -214,6 +214,9 @@ spec:
               - path: /data
             chown-dbdir:
               - path: /data
+            ecm:
+              - path: /config
+                subPath: ecm
             game-thumbs:
               - path: /app/.cache
                 subPath: game-thumbs/cache
