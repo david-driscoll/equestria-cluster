@@ -118,7 +118,7 @@ spec:
           game-thumbs:
             image:
               repository: ghcr.io/sethwv/game-thumbs
-              tag: v1.3.1
+              tag: v1.3.1@sha256:795e4c39b862ffc13b3b16bab8ff7d8f4b8e43b8cfa5cbe81ea7748b32ca12e5
             resources:
               requests:
                 cpu: 10m
@@ -153,7 +153,7 @@ spec:
           streamwatchdog:
             image:
               repository: sergeantpanda/streamwatchdog
-              tag: v2.2.1
+              tag: v2.2.1@sha256:0a778af10cbd11ebb38cbc280ebc77ef6d66799b285dcb66c7213ed1d7c55dbd
             env:
               SERVER_URL: http://127.0.0.1:9191
               USERNAME:
