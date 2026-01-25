@@ -43,17 +43,23 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    # Chart v5 enables webhook by default; disable to avoid TLS setup
+    webhook:
+      enabled: false
+    # Ensure CRDs are installed as part of the chart
+    installCRDs: true
     controller:
       replicaCount: 2
       serviceMonitor:
         create: true
-      volumeSnapshotClasses:
-        - name: longhorn-snapclass
-          annotations:
-            snapshot.storage.kubernetes.io/is-default-class: "true"
-          driver: driver.longhorn.io
-          deletionPolicy: Retain
-          parameters:
-            # needed for successful VolumeSnapshots
-            # see: https://github.com/longhorn/longhorn/issues/2534#issuecomment-1010508714
-            type: snap
+    # Chart v5 expects volumeSnapshotClasses at the top-level
+    volumeSnapshotClasses:
+      - name: longhorn-snapclass
+        annotations:
+          snapshot.storage.kubernetes.io/is-default-class: "true"
+        driver: driver.longhorn.io
+        deletionPolicy: Retain
+        parameters:
+          # needed for successful VolumeSnapshots
+          # see: https://github.com/longhorn/longhorn/issues/2534#issuecomment-1010508714
+          type: snap
