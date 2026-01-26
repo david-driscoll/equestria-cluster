@@ -5,6 +5,8 @@ kind: Kustomization
 resources:
   # - ./ersatztv/ks.yaml
   # - ./fhdhr/ks.yaml
-  - ./iptv-sync/ks.yaml
+  # - ./iptv-sync/ks.yaml
   # - ./nextpvr/ks.yaml
   # - ./threadfin/ks.yaml
+  - ./dispatcharr/ks.yaml
+  - ./dispatcharr-addons/ks.yaml

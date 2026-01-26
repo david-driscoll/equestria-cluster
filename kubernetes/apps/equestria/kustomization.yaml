@@ -15,4 +15,4 @@ resources:
   - ./games
   - ./home
   - ./media
-  # - ./pvr
+  - ./pvr

@@ -5,9 +5,9 @@ kind: ApplicationDefinition
 metadata:
   name: ${APP}
 spec:
-  name: Enhanced Channel Manager
+  name: Dispatcharr
   category: Media Management
-  description: Enhanced channel manager for dispatcharr
+  description: Dispatcharr is an open-source powerhouse for managing IPTV streams and EPG data with elegance and control.
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
   access_policy:

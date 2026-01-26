@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app dispatcharr
+  name: &app dispatcharr-addons
 spec:
   chartRef:
     kind: OCIRepository
@@ -52,46 +52,6 @@ spec:
               fsGroupChangePolicy: OnRootMismatch
 
         containers:
-          app:
-            image:
-              repository: ghcr.io/dispatcharr/dispatcharr
-              tag: 0.12.0-20251128180538@sha256:d8048d573fd6ec905fddeaf4cd4e0c4031c0b275eba1adbda65718ee86c3637d
-              pullPolicy: IfNotPresent
-            # -- environment variables.
-            # See Dispatcharr documentation for environment variable details.
-            env:
-              PUID: ${PUID}
-              PGID: ${PGID}
-              UMASK: 002
-              DISPATCHARR_ENV: aio
-              REDIS_HOST: valkey.database.svc.cluster.local
-              CELERY_BROKER_URL: redis://valkey.database.svc.cluster.local:6379/6
-              DISPATCHARR_LOG_LEVEL: info
-              TZ: ${TIMEZONE}
-              DISPATCHARR_PORT: &port 9191
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: *port
-                  initialDelaySeconds: 10
-                  periodSeconds: 60
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
-            resources:
-              requests:
-                gpu.intel.com/i915: 2
-                cpu: 2
-                memory: 2Gi
-              limits:
-                gpu.intel.com/i915: 2
-                # amd.com/gpu: 1
-                memory: 6Gi
-                # cpu: 8
           ecm:
             image:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
@@ -153,9 +113,9 @@ spec:
           streamwatchdog:
             image:
               repository: sergeantpanda/streamwatchdog
-              tag: v2.2.1@sha256:0a778af10cbd11ebb38cbc280ebc77ef6d66799b285dcb66c7213ed1d7c55dbd
+              tag: v2.2.1
             env:
-              SERVER_URL: http://127.0.0.1:9191
+              SERVER_URL: http://dispatcharr-app.equestria.svc.cluster.local:9191
               USERNAME:
                 secretKeyRef:
                   name: ${APP}
@@ -180,12 +140,6 @@ spec:
                 values:
                 - "true"
     service:
-      app:
-        controller: app
-        type: ClusterIP
-        ports:
-          http:
-            port: *port
       ecm:
         controller: app
         type: ClusterIP
@@ -210,8 +164,6 @@ spec:
         existingClaim: ${APP}
         advancedMounts:
           app:
-            app:
-              - path: /data
             chown-dbdir:
               - path: /data
             ecm:
@@ -231,31 +183,13 @@ spec:
             - path: /tmp
 
     route:
-      app:
-        parentRefs:
-          - name: internal
-            namespace: network
-            kind: Gateway
-        hostnames:
-          - "${APP}.${ROOT_DOMAIN}"
-        kind: HTTPRoute
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
-            filters:
-              - type: ExtensionRef
-                extensionRef:
-                  group: traefik.io
-                  kind: Middleware
-                  name: local-user
       ecm:
         parentRefs:
           - name: internal
             namespace: network
             kind: Gateway
         hostnames:
-          - "${APP}-ecm.${ROOT_DOMAIN}"
+          - "dispatcharr-ecm.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
@@ -273,7 +207,7 @@ spec:
             namespace: network
             kind: Gateway
         hostnames:
-          - "${APP}-teamarr.${ROOT_DOMAIN}"
+          - "dispatcharr-teamarr.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
@@ -292,7 +226,7 @@ spec:
             namespace: network
             kind: Gateway
         hostnames:
-          - "${APP}-thumbs.${ROOT_DOMAIN}"
+          - "dispatcharr-thumbs.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
