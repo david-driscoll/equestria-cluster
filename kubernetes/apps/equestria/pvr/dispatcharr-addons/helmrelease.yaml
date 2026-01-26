@@ -118,11 +118,11 @@ spec:
               SERVER_URL: http://dispatcharr-app.equestria.svc.cluster.local:9191
               USERNAME:
                 secretKeyRef:
-                  name: ${APP}
+                  name: dispatcharr
                   key: username
               PASSWORD:
                 secretKeyRef:
-                  name: ${APP}
+                  name: dispatcharr
                   key: password
               MODULE: Dispatcharr
               ERROR_THRESHOLD: "2"
