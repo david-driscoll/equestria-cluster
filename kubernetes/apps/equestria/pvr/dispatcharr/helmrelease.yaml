@@ -1,0 +1,149 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app dispatcharr
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: -1
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        initContainers:
+          chown-dbdir:
+            image:
+              repository: alpine
+              tag: 3.23.2@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62
+              pullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                chmod 0750 /data/db
+            securityContext:
+              runAsUser: 0
+              fsGroupChangePolicy: OnRootMismatch
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/dispatcharr/dispatcharr
+              tag: 0.12.0-20251128180538@sha256:d8048d573fd6ec905fddeaf4cd4e0c4031c0b275eba1adbda65718ee86c3637d
+              pullPolicy: IfNotPresent
+            # -- environment variables.
+            # See Dispatcharr documentation for environment variable details.
+            env:
+              PUID: ${PUID}
+              PGID: ${PGID}
+              UMASK: 002
+              DISPATCHARR_ENV: aio
+              REDIS_HOST: valkey.database.svc.cluster.local
+              CELERY_BROKER_URL: redis://valkey.database.svc.cluster.local:6379/6
+              DISPATCHARR_LOG_LEVEL: info
+              TZ: ${TIMEZONE}
+              DISPATCHARR_PORT: &port 9191
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 10
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            resources:
+              requests:
+                gpu.intel.com/i915: 2
+                cpu: 2
+                memory: 2Gi
+              limits:
+                gpu.intel.com/i915: 2
+                # amd.com/gpu: 1
+                memory: 6Gi
+                # cpu: 8
+
+    # -- Configures service settings for the chart.
+    defaultPodOptions:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: intel.feature.node.kubernetes.io/gpu
+                operator: In
+                values:
+                - "true"
+    service:
+      app:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        advancedMounts:
+          app:
+            app:
+              - path: /data
+            chown-dbdir:
+              - path: /data
+      media:
+        existingClaim: truenas-media
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+            - path: /tmp
+
+    route:
+      app:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
