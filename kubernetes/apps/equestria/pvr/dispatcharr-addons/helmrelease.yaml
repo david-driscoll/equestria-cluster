@@ -110,23 +110,6 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 2Gi
-          streamwatchdog:
-            image:
-              repository: sergeantpanda/streamwatchdog
-              tag: v2.2.1
-            env:
-              SERVER_URL: http://dispatcharr-app.equestria.svc.cluster.local:9191
-              USERNAME:
-                secretKeyRef:
-                  name: dispatcharr
-                  key: username
-              PASSWORD:
-                secretKeyRef:
-                  name: dispatcharr
-                  key: password
-              MODULE: Dispatcharr
-              ERROR_THRESHOLD: "2"
-              TZ: ${TIMEZONE}
 
     # -- Configures service settings for the chart.
     defaultPodOptions:

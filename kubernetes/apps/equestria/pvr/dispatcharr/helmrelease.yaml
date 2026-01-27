@@ -92,6 +92,23 @@ spec:
                 # amd.com/gpu: 1
                 memory: 6Gi
                 # cpu: 8
+          streamwatchdog:
+            image:
+              repository: sergeantpanda/streamwatchdog
+              tag: v2.2.1
+            env:
+              SERVER_URL: http://127.0.0.1:9191
+              USERNAME:
+                secretKeyRef:
+                  name: ${APP}
+                  key: username
+              PASSWORD:
+                secretKeyRef:
+                  name: ${APP}
+                  key: password
+              MODULE: Dispatcharr
+              ERROR_THRESHOLD: "3"
+              TZ: ${TIMEZONE}
 
     # -- Configures service settings for the chart.
     defaultPodOptions:
