@@ -69,7 +69,7 @@ spec:
                     path: /ping
                     port: *port
                   initialDelaySeconds: 30
-                  periodSeconds: 60
+                  periodSeconds: 20
                   timeoutSeconds: 10
                   failureThreshold: 5
               startup:
@@ -78,7 +78,7 @@ spec:
                   <<: *spec
                   initialDelaySeconds: 60
                   periodSeconds: 10
-                  failureThreshold: 20
+                  failureThreshold: 3
               readiness: *probes
             securityContext:
               runAsNonRoot: true

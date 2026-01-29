@@ -65,7 +65,7 @@ spec:
                     path: /status
                     port: &port 8181
                   initialDelaySeconds: 10
-                  periodSeconds: 60
+                  periodSeconds: 20
                   timeoutSeconds: 10
                   failureThreshold: 5
               readiness: *probes

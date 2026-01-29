@@ -62,7 +62,7 @@ spec:
                   <<: *spec
                   initialDelaySeconds: 60
                   periodSeconds: 10
-                  failureThreshold: 20
+                  failureThreshold: 3
               readiness: *probes
             resources:
               requests:

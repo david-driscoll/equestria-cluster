@@ -53,7 +53,7 @@ spec:
                     path: /
                     port: &http-port 11470
                   initialDelaySeconds: 10
-                  periodSeconds: 60
+                  periodSeconds: 20
                   timeoutSeconds: 10
                   failureThreshold: 5
               readiness: *probes
@@ -87,7 +87,7 @@ spec:
                     path: /
                     port: &web-port 8080
                   initialDelaySeconds: 10
-                  periodSeconds: 60
+                  periodSeconds: 20
                   timeoutSeconds: 10
                   failureThreshold: 5
               readiness: *probes
