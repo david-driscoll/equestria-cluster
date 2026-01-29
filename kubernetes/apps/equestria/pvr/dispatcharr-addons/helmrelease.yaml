@@ -88,7 +88,7 @@ spec:
           identifiarr:
             image:
               repository: ghcr.io/egyptiangio/channelidentifiarr
-              tag: "0.6.5"
+              tag: "0.6.5@sha256:d883c0eb43e369fd78d59f11aaf1dcef8783ae663d92a088c7c07050b48adc23"
             env:
               TZ: ${TIMEZONE}
             probes:
