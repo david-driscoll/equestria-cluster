@@ -52,8 +52,8 @@ spec:
               fsGroupChangePolicy: OnRootMismatch
           identifiarr-db:
             image:
-              repository: curlimages/curl
-              tag: 8.10.1@sha256:11738abff97879d1d1879574a0224367b22b5c2d3ef02d267dadbab01a485d31
+              repository: golang
+              tag: 1.25.6-bookworm@sha256:2f768d462dbffbb0f0b3a5171009f162945b086f326e0b2a8fd5d29c3219ff14
               pullPolicy: IfNotPresent
             command:
               - /bin/sh
