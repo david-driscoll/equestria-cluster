@@ -10,7 +10,7 @@ spec:
     name: app-template
   maxHistory: 3
   interval: 1h
-  timeout: 4m
+  timeout: 10m
   install:
     createNamespace: true
     replace: true
@@ -98,19 +98,6 @@ spec:
               tag: "0.6.5@sha256:d883c0eb43e369fd78d59f11aaf1dcef8783ae663d92a088c7c07050b48adc23"
             env:
               TZ: ${TIMEZONE}
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &identifiarr-port 9192
-                  initialDelaySeconds: 10
-                  periodSeconds: 20
-                  timeoutSeconds: 10
-                  failureThreshold: 5
-              readiness: *probes
             resources:
               requests:
                 cpu: 10m
@@ -172,7 +159,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: *identifiarr-port
+            port: &identifiarr-port 9192
       teamarr:
         controller: app
         type: ClusterIP
