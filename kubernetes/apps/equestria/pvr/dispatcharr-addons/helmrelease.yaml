@@ -60,25 +60,6 @@ spec:
               - -c
             args:
               - |
-                set -euo pipefail
-                mkdir -p /data
-                db_file="/data/channelidentifiarr.db"
-                etag_file="/data/.channelidentifiarr.db.etag"
-                tmpfile="/data/channelidentifiarr.db.new"
-                rm -f "$tmpfile"
-
-                # Get server ETag
-                server_etag=$(curl -fsSL -I https://epg.jesmann.com/channelidentifiarr.db | grep -i etag | cut -d' ' -f2 | tr -d '\r\n' || echo "")
-
-                # Compare with stored ETag
-                if [ -f "$etag_file" ] && [ -f "$db_file" ]; then
-                  local_etag=$(cat "$etag_file")
-                  if [ "$server_etag" = "$local_etag" ]; then
-                    echo "Database is up to date (ETag: $server_etag)"
-                    exit 0
-                  fi
-                fi
-
                 # Download new version
                 echo "Downloading database (ETag: $server_etag)"
                 curl -fsSL -o "$tmpfile" https://epg.jesmann.com/channelidentifiarr.db
