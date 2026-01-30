@@ -186,7 +186,6 @@ spec:
         data:
           init-identifiarr-db.sh: |
             #!/bin/sh
-            set -euo pipefail
             db_file="/data/channelidentifiarr.db"
             etag_file="/data/.channelidentifiarr.db.etag"
             tmpfile="/tmp/channelidentifiarr.db"
