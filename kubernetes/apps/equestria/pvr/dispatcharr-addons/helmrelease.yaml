@@ -61,11 +61,9 @@ spec:
             args:
               - |
                 set -euo pipefail
-                mkdir -p /data
                 db_file="/data/channelidentifiarr.db"
                 etag_file="/data/.channelidentifiarr.db.etag"
-                tmpfile="/data/channelidentifiarr.db.new"
-                rm -f "$tmpfile"
+                tmpfile="/tmp/channelidentifiarr.db"
 
                 # Get server ETag
                 server_etag=$(curl -fsSL -I https://epg.jesmann.com/channelidentifiarr.db | grep -i etag | cut -d' ' -f2 | tr -d '\r\n' || echo "")
