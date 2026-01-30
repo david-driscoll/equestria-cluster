@@ -56,39 +56,7 @@ spec:
               tag: 1.25.6-bookworm@sha256:2f768d462dbffbb0f0b3a5171009f162945b086f326e0b2a8fd5d29c3219ff14
               pullPolicy: IfNotPresent
             command:
-              - /bin/sh
-              - -c
-            args:
-              - |
-                set -euo pipefail
-                db_file="/data/channelidentifiarr.db"
-                etag_file="/data/.channelidentifiarr.db.etag"
-                tmpfile="/tmp/channelidentifiarr.db"
-
-                # Get server ETag
-                server_etag=$(curl -fsSL -I https://epg.jesmann.com/channelidentifiarr.db | grep -i etag | cut -d' ' -f2 | tr -d '\r\n' || echo "")
-
-                # Compare with stored ETag
-                if [ -f "$etag_file" ] && [ -f "$db_file" ]; then
-                  local_etag=$(cat "$etag_file")
-                  if [ "$server_etag" = "$local_etag" ]; then
-                    echo "Database is up to date (ETag: $server_etag)"
-                    exit 0
-                  fi
-                fi
-
-                # Download new version
-                echo "Downloading database (ETag: $server_etag)"
-                curl -fsSL -o "$tmpfile" https://epg.jesmann.com/channelidentifiarr.db
-                if [ -s "$tmpfile" ]; then
-                  mv -f "$tmpfile" "$db_file"
-                  echo "$server_etag" > "$etag_file"
-                  echo "Database updated successfully"
-                else
-                  rm -f "$tmpfile"
-                  echo "Download failed"
-                  exit 1
-                fi
+              - /scripts/init-identifiarr-db.sh
 
         containers:
           ecm:
@@ -212,6 +180,42 @@ spec:
           http:
             port: *teamarr-port
 
+    configMaps:
+      init-identifiarr:
+        forceRename: init-identifiarr
+        data:
+          init-identifiarr-db.sh: |
+            #!/bin/sh
+            set -euo pipefail
+            db_file="/data/channelidentifiarr.db"
+            etag_file="/data/.channelidentifiarr.db.etag"
+            tmpfile="/tmp/channelidentifiarr.db"
+
+            # Get server ETag
+            server_etag=$(curl -fsSL -I https://epg.jesmann.com/channelidentifiarr.db | grep -i etag | cut -d' ' -f2 | tr -d '\r\n' || echo "")
+
+            # Compare with stored ETag
+            if [ -f "$etag_file" ] && [ -f "$db_file" ]; then
+              local_etag=$(cat "$etag_file")
+              if [ "$server_etag" = "$local_etag" ]; then
+                echo "Database is up to date (ETag: $server_etag)"
+                exit 0
+              fi
+            fi
+
+            # Download new version
+            echo "Downloading database (ETag: $server_etag)"
+            curl -fsSL -o "$tmpfile" https://epg.jesmann.com/channelidentifiarr.db
+            if [ -s "$tmpfile" ]; then
+              mv -f "$tmpfile" "$db_file"
+              echo "$server_etag" > "$etag_file"
+              echo "Database updated successfully"
+            else
+              rm -f "$tmpfile"
+              echo "Download failed"
+              exit 1
+            fi
+
     persistence:
       config:
         existingClaim: ${APP}
@@ -236,6 +240,14 @@ spec:
                 subPath: identifiarr
       media:
         existingClaim: truenas-media
+      scripts:
+        type: configMap
+        name: init-identifiarr
+        defaultMode: 493
+        globalMounts:
+          - path: /scripts/init-identifiarr-db.sh
+            subPath: init-identifiarr-db.sh
+
       tmpfs:
         type: emptyDir
         globalMounts:
