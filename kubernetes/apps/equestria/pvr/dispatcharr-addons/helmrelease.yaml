@@ -129,6 +129,18 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 2Gi
+          xtream-strm:
+            image:
+              repository: mourabena2ui/xtream-to-strm-web
+              tag: "2.5.0@sha256:49e8db29c75f1096bb6557856bf870f54ceadedb44c2179cecbe81d63d996a72"
+            env:
+              TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
 
     # -- Configures service settings for the chart.
     defaultPodOptions:
@@ -166,6 +178,12 @@ spec:
         ports:
           http:
             port: *teamarr-port
+      xtream-strm:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: &xtream-strm-port 8000
 
     configMaps:
       init-identifiarr:
@@ -224,6 +242,9 @@ spec:
             identifiarr-db:
               - path: /data
                 subPath: identifiarr
+            xtream-strm:
+              - path: /db
+                subPath: xtream-strm
       media:
         existingClaim: truenas-media
       scripts:
@@ -307,6 +328,25 @@ spec:
           - backendRefs:
               - identifier: game-thumbs
                 port: *game-thumbs-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+
+      xtream-strm:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "dispatcharr-xtream-strm.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: xtream-strm
+                port: *xtream-strm-port
             filters:
               - type: ExtensionRef
                 extensionRef:
