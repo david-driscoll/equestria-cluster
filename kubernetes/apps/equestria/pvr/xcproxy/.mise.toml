@@ -1,0 +1,31 @@
+[env]
+XC_USER="op://Eris/XCProxy/username" # you create this and enter in Xtreme Code
+XC_PASS="op://Eris/XCProxy/password" # you create this and enter in Xtreme Code
+
+# --- Your IPTV provider M3U playlist URLs ---
+MOVIE_M3U_URL="op://Eris/XCProxy/vod_movies"
+SERIES_M3U_URL="op://Eris/XCProxy/vod_tv"
+
+# --- TMDb (for posters/plots) ---
+TMDB_API_KEY="op://Eris/TMDB API Key/password"
+POSTER_PREFERENCE="tmdb" # tmdb | m3u (Only an option if your m3u has images)
+TMDB_ON_LIST="false" # reduces timeouts & load
+XC_ENRICH_DETAILS="1" # 1 is details on, 0 is details off
+
+# --- Behavior ---
+CACHE_TTL="14400" # refresh every 14400s (4 hours)
+STREAM_MODE="redirect" # redirect (default) | proxy
+SERIES_GROUPING="smart" # smart | flat
+HOST_IP="127.0.0.1" # used only for /get.php links
+
+# --- Metadata cache file inside container ---
+META_CACHE_FILE="./tmdb_cache.db"
+
+# --- Categories in TiviMate (TMDb-driven) ---
+CATEGORY_MODE="genre" # default(no categories) | genre (adds categories based on genre like Action, Comedy, etc.)
+CATEGORY_PICK_FIRST="true" # if a title has multiple TMDb genres, pick the alphabetical first
+
+# --- De-duplication (one variant per title/episode) ---
+DEDUPE="true" # true=keep one; false=keep all
+PREF_QUALITY="2160p,1080p,720p,480p"
+PREF_SOURCE="remux,bluray,web,webrip,other" # You can also optionally append: ,dvd,ts,tc,cam
