@@ -52,6 +52,7 @@ builder.Services.AddSingleton(config);
 builder.Services.AddSingleton<TmdbEnricher>();
 builder.Services.AddSingleton<M3uParser>();
 builder.Services.AddSingleton<PlaylistData>();
+builder.Services.AddHostedService<CacheHostedService>();
 builder.Services.AddSingleton(sp => new TMDbClient(config.TmdbApiKey));
 builder.Services.AddMemoryCache();
 builder.Services.AddOutputCache();
@@ -74,6 +75,7 @@ var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 var m3uParser = app.Services.GetRequiredService<M3uParser>();
 var tmdbClient = app.Services.GetRequiredService<TmdbEnricher>();
+
 
 // ============================================
 // HELPER FUNCTIONS
@@ -629,6 +631,29 @@ public record XcProxyConfiguration
               .Where(x => !string.IsNullOrEmpty(x))
               .ToList()
               .AsReadOnly();
+    }
+  }
+}
+
+class CacheHostedService(IFusionCache cache, PlaylistData playlistData, TmdbEnricher tmdbEnricher) : BackgroundService
+{
+  protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+  {
+    while (!stoppingToken.IsCancellationRequested)
+    {
+      foreach (var item in await playlistData.LoadMoviesAsync())
+      {
+        await tmdbEnricher.SearchMovieAsync(item.Title, item.Year);
+        await Task.Delay(100, stoppingToken);
+      }
+      foreach (var item in await playlistData.LoadSeriesAsync())
+      {
+        await tmdbEnricher.SearchSeriesAsync(item.Info.SeriesName);
+        await Task.Delay(100, stoppingToken);
+      }
+
+      // Wait for a specified interval before the next maintenance cycle
+      await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
     }
   }
 }
