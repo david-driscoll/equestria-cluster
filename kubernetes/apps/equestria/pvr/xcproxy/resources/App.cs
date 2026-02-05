@@ -197,77 +197,67 @@ app.MapGet("/panel_api.php", ([FromServices] XcProxyConfiguration cfg) =>
 app.MapGet("/player_api.php", async (string? action, string? category_id, long? vod_id, long? series_id, int? limit, HttpContext ctx) =>
 {
   var playlistData = app.Services.GetRequiredService<PlaylistData>();
-  var movies = await playlistData.LoadMoviesAsync();
-  var series = await playlistData.LoadSeriesAsync();
   var cfg = app.Services.GetRequiredService<XcProxyConfiguration>();
+  var cache = app.Services.GetRequiredService<IFusionCache>();
 
   // Local action handlers
 
   async Task<Ok<IEnumerable<XtreamCategory>>> HandleGetVodCategories()
   {
-    var cats = new Dictionary<string, long>();
-    foreach (var it in movies)
+    if (await cache.TryGetAsync<List<XtreamCategory>>("movies_categories") is { HasValue: true, Value: var cached })
     {
-      var md = await tmdbClient.SearchMovieAsync(it.Title, it.Year);
-      var genres = md?.Genres ?? [];
-
-      if (genres.Count == 0)
-      {
-        cats.TryAdd("Uncategorized", cfg.MovieCategoryId);
-      }
-      else
-      {
-        foreach (var g in genres)
-        {
-          if (g.Name is null || cats.ContainsKey(g.Name)) continue;
-          cats[g.Name] = g.Id;
-        }
-      }
+      return TypedResults.Ok(cached.AsEnumerable());
     }
 
-    return TypedResults.Ok(cats
-    .Select(z => new XtreamCategory(z.Value.ToString(), z.Key, "0"))
+    var movies = await playlistData.LoadMoviesAsync();
+    var results = await movies.ToObservable()
+    .Select((it, index) => tmdbClient.SearchMovieAsync(it.Title, it.Year).ToObservable())
+    .Merge(3)
+    .SelectMany(z => z?.Genres ?? [])
+    .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0"))
+    .Distinct(z => z.CategoryId)
+    .StartWith(new XtreamCategory(cfg.MovieCategoryId.ToString(), "Uncategorized", "0"))
+    .ToAsyncEnumerable()
     .OrderBy(z => z.CategoryName)
-    .AsEnumerable()
-    );
+    .ToListAsync();
+
+    cache.Set("movies_categories", results, TimeSpan.FromHours(1));
+
+    return TypedResults.Ok(results.AsEnumerable());
   }
 
   async Task<Ok<IEnumerable<XtreamCategory>>> HandleGetSeriesCategories()
   {
-    var cats = new Dictionary<string, long>();
-    foreach (var s in series)
+    if (await cache.TryGetAsync<List<XtreamCategory>>("series_categories") is { HasValue: true, Value: var cached })
     {
-      var md = await tmdbClient.SearchSeriesAsync(s.Info.SeriesName);
-      var genres = md?.Genres ?? [];
-
-      if (genres.Count == 0)
-      {
-        cats.TryAdd("Uncategorized", cfg.SeriesCategoryId);
-      }
-      else
-      {
-        foreach (var g in genres)
-        {
-          if (g.Name is null || cats.ContainsKey(g.Name)) continue;
-          cats[g.Name] = g.Id;
-        }
-      }
+      return TypedResults.Ok(cached.AsEnumerable());
     }
 
-    return TypedResults.Ok(cats
-      .Select(z => new XtreamCategory(z.Value.ToString(), z.Key, "0"))
-      .OrderBy(z => z.CategoryName)
-      .AsEnumerable()
-    );
+    var series = await playlistData.LoadSeriesAsync();
+    var results = await series.ToObservable()
+    .Select((it, index) => tmdbClient.SearchSeriesAsync(it.Info.SeriesName).ToObservable())
+    .Merge(3)
+    .SelectMany(z => z?.Genres ?? [])
+    .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0"))
+    .Distinct(z => z.CategoryId)
+    .StartWith(new XtreamCategory(cfg.SeriesCategoryId.ToString(), "Uncategorized", "0"))
+    .ToAsyncEnumerable()
+    .OrderBy(z => z.CategoryName)
+    .ToListAsync();
+
+    cache.Set("series_categories", results, TimeSpan.FromHours(1));
+
+    return TypedResults.Ok(results.AsEnumerable());
   }
 
   async Task<Ok<IEnumerable<XtreamVodStream>>> HandleGetVodStreams()
   {
+    var movies = await playlistData.LoadMoviesAsync();
     IEnumerable<MovieItem> m = limit.HasValue && limit > 0 ? movies.Take(limit.Value).ToList() : movies;
 
     var results = await m.ToObservable()
     .Select((it, index) => GetVodStream(tmdbClient, cfg, it, index).ToObservable())
-    .Merge(2)
+    .Merge(3)
     .ToAsyncEnumerable()
     .ToListAsync();
 
@@ -305,6 +295,7 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
 
   async Task<IResult> HandleGetVodInfo(long vodId)
   {
+    var movies = await playlistData.LoadMoviesAsync();
     var it = movies.FirstOrDefault(x => x.StreamId == vodId);
     if (it == null)
       return Results.NotFound(new { error = "not found" });
@@ -348,13 +339,14 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
 
   async Task<IResult> HandleGetSeries()
   {
+    var series = await playlistData.LoadSeriesAsync();
     IEnumerable<SeriesItem> src = series;
     if (limit.HasValue && limit > 0)
       src = src.Take(limit.Value).ToList();
 
     var results = await src.ToObservable()
     .Select((it) => GetSeriesItemAsync(tmdbClient, cfg, it).ToObservable())
-    .Merge(2)
+    .Merge(3)
     .ToAsyncEnumerable()
     .ToListAsync();
 
@@ -396,6 +388,7 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
 
   async Task<IResult> HandleGetSeriesInfo(long seriesId)
   {
+    var series = await playlistData.LoadSeriesAsync();
     var s = series.FirstOrDefault(x => x.Info.SeriesId == seriesId);
     if (s == null)
       return Results.NotFound(new { error = "not found" });
