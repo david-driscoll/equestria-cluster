@@ -127,7 +127,7 @@ string? PickTvBackdrop(string? feedLogo, TvShow? md)
     return feedLogo;
   return null;
 }
-long GetTvCategoryId(string defaultCatId, TvShow? md)
+int GetTvCategoryId(int defaultCatId, TvShow? md)
 {
   if (md is { GenreIds: { Count: > 0 } genreIds })
   {
@@ -157,7 +157,7 @@ string? PickMovieBackdrop(string? feedLogo, Movie? md)
     return feedLogo;
   return null;
 }
-long GetMovieCategoryId(string defaultCatId, Movie? md)
+int GetMovieCategoryId(string defaultCatId, Movie? md)
 {
   if (md is { Genres: { Count: > 0 } genreIds })
   {
@@ -194,7 +194,7 @@ app.MapGet("/panel_api.php", ([FromServices] XcProxyConfiguration cfg) =>
   return Results.Ok(new { user_info = userInfo, server_info = serverInfo });
 });
 
-app.MapGet("/player_api.php", async (string? action, string? category_id, long? vod_id, long? series_id, int? limit, HttpContext ctx) =>
+app.MapGet("/player_api.php", async (string? action, string? category_id, int? vod_id, int? series_id, int? limit, HttpContext ctx) =>
 {
   var playlistData = app.Services.GetRequiredService<PlaylistData>();
   var cfg = app.Services.GetRequiredService<XcProxyConfiguration>();
@@ -279,14 +279,14 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     }
 
     return new XtreamVodStream(
-      it.StreamId.ToString(),
+      it.StreamId,
       md?.Title ?? it.Title,
       "movie",
-      it.StreamId.ToString(),
+      it.StreamId,
       posterFinal ?? backdropFinal ?? "",
       md?.VoteAverage.ToString() ?? "0.0",
       (md?.ReleaseDate ?? DateTimeOffset.Now).ToUnixTimeSeconds(),
-      catId.ToString(),
+      catId,
       it.ContainerExtension,
 "",
 "",
@@ -304,7 +304,7 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     );
   }
 
-  async Task<IResult> HandleGetVodInfo(long vodId)
+  async Task<IResult> HandleGetVodInfo(int vodId)
   {
     var movies = await playlistData.LoadMoviesAsync();
     var it = movies.FirstOrDefault(x => x.StreamId == vodId);
@@ -316,7 +316,7 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     var info = new XtreamVodDetail(
   item,
       new XtreamVodData(
-      it.StreamId.ToString(),
+      it.StreamId,
       item.Name,
       item.Added,
       item.CategoryId,
@@ -350,16 +350,16 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
 
     var posterFinal = PickTvPoster(s.Info.Poster, md);
     var backdropFinal = PickTvBackdrop(s.Info.Poster, md);
-    var catId = GetTvCategoryId(cfg.SeriesCategoryId.ToString(), md);
+    var catId = GetTvCategoryId(cfg.SeriesCategoryId, md);
 
     var seasonCount = s.Seasons.Count;
     var episodeCount = s.Seasons.Values.Sum(v => v.Count);
 
     return new XtreamSeriesStream(
-      s.Info.SeriesId.ToString(),
+      s.Info.SeriesId,
       md?.Name ?? seriesTitle,
-      s.Info.SeriesId.ToString(),
-      catId.ToString(),
+      s.Info.SeriesId,
+      catId,
       posterFinal ?? "",
       GetPlot(md?.Overview),
 string.Join(", ", md?.Credits?.Cast?.Select(z => z.Name) ?? []),
@@ -376,7 +376,7 @@ backdropFinal is { } ? [backdropFinal] : [],
     );
   }
 
-  async Task<IResult> HandleGetSeriesInfo(long seriesId)
+  async Task<IResult> HandleGetSeriesInfo(int seriesId)
   {
     var series = await playlistData.LoadSeriesAsync();
     var s = series.FirstOrDefault(x => x.Info.SeriesId == seriesId);
@@ -413,7 +413,7 @@ backdropFinal is { } ? [backdropFinal] : [],
       {
         var tmdbEpisode = episodeData.FirstOrDefault(z => z.SeasonNumber == ep.Season && z.EpisodeNumber == ep.Episode);
         epInfos.Add(new XtreamSeriesEpisode(
-          ep.Id.ToString(),
+          ep.Id,
           tmdbEpisode?.EpisodeNumber ?? ep.Episode,
           tmdbEpisode?.Name ?? ep.Title,
   ep.ContainerExtension,
@@ -487,12 +487,12 @@ app.MapMethods("/xmltv.php", new[] { "HEAD" }, () =>
   return Results.Ok();
 });
 
-app.MapMethods("/movie/{username}/{password}/{stream_id}.{ext}", new[] { "HEAD" }, (string username, string password, long stream_id) =>
+app.MapMethods("/movie/{username}/{password}/{stream_id}.{ext}", new[] { "HEAD" }, (string username, string password, int stream_id) =>
 {
   return Results.Ok();
 });
 
-app.MapGet("/movie/{username}/{password}/{stream_id}.{ext}", async (string username, string password, long stream_id, [FromServices] PlaylistData playlistData) =>
+app.MapGet("/movie/{username}/{password}/{stream_id}.{ext}", async (string username, string password, int stream_id, [FromServices] PlaylistData playlistData) =>
 {
   var movies = await playlistData.LoadMoviesAsync();
   var it = movies.FirstOrDefault(x => x.StreamId == stream_id);
@@ -503,12 +503,12 @@ app.MapGet("/movie/{username}/{password}/{stream_id}.{ext}", async (string usern
   return Results.Redirect(it.DirectSource);
 });
 
-app.MapMethods("/series/{username}/{password}/{episode_id}.{ext}", new[] { "HEAD" }, (string username, string password, long episode_id) =>
+app.MapMethods("/series/{username}/{password}/{episode_id}.{ext}", new[] { "HEAD" }, (string username, string password, int episode_id) =>
 {
   return Results.Ok();
 });
 
-app.MapGet("/series/{username}/{password}/{episode_id}.{ext}", async (string username, string password, long episode_id, [FromServices] PlaylistData playlistData) =>
+app.MapGet("/series/{username}/{password}/{episode_id}.{ext}", async (string username, string password, int episode_id, [FromServices] PlaylistData playlistData) =>
 {
   var episodes = await playlistData.LoadEpisodesAsync();
   var ep = episodes.GetValueOrDefault(episode_id);
@@ -570,8 +570,8 @@ public record XcProxyConfiguration
   public required string Username { get; init; }
   public required string Password { get; init; }
   public required int CacheTtlSeconds { get; init; }
-  public required long MovieCategoryId { get; init; }
-  public required long SeriesCategoryId { get; init; }
+  public required int MovieCategoryId { get; init; }
+  public required int SeriesCategoryId { get; init; }
   public required string TmdbApiKey { get; init; }
   public required string TmdbLanguage { get; init; }
   public required string TmdbImageBase { get; init; }
@@ -596,8 +596,8 @@ public record XcProxyConfiguration
       Username = envConfig["XC_USER"] ?? "U",
       Password = envConfig["XC_PASS"] ?? "P",
       CacheTtlSeconds = int.TryParse(envConfig["CACHE_TTL"], out var ttl) ? ttl : 900,
-      MovieCategoryId = long.TryParse(envConfig["MOVIE_CAT_ID"], out var movieCatId) ? movieCatId : 4292684328,
-      SeriesCategoryId = long.TryParse(envConfig["SERIES_CAT_ID"], out var seriesCatId) ? seriesCatId : 4292684329,
+      MovieCategoryId = int.TryParse(envConfig["MOVIE_CAT_ID"], out var movieCatId) ? movieCatId : 42926828,
+      SeriesCategoryId = int.TryParse(envConfig["SERIES_CAT_ID"], out var seriesCatId) ? seriesCatId : 42984329,
       TmdbApiKey = (envConfig["TMDB_API_KEY"] ?? "").Trim(),
       TmdbLanguage = envConfig["TMDB_LANG"] ?? "en-US",
       TmdbImageBase = envConfig["TMDB_IMG_BASE"] ?? "https://image.tmdb.org/t/p/w500",
@@ -642,7 +642,7 @@ public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfig
 
   private FrozenSet<MovieItem>? movieItems;
   private FrozenSet<SeriesItem>? seriesItems;
-  private FrozenDictionary<long, EpisodeItem>? episodeItems;
+  private FrozenDictionary<int, EpisodeItem>? episodeItems;
 
   public async Task<FrozenSet<MovieItem>> LoadMoviesAsync()
   {
@@ -654,7 +654,7 @@ public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfig
     return seriesItems ??= (await cache.GetOrSetAsync("series", ct => LoadSeriesInternalAsync(), TimeSpan.FromHours(3))).ToFrozenSet();
   }
 
-  public async Task<FrozenDictionary<long, EpisodeItem>> LoadEpisodesAsync()
+  public async Task<FrozenDictionary<int, EpisodeItem>> LoadEpisodesAsync()
   {
     var series = await LoadSeriesAsync();
     return episodeItems ??= series.SelectMany(s => s.Seasons.Values).SelectMany(eps => eps).ToFrozenDictionary(z => z.Id);
@@ -687,8 +687,8 @@ public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfig
 }
 
 public record MovieItem(
-    long Number,
-    long StreamId,
+    int Number,
+    int StreamId,
     string Title,
     string? StreamIcon,
     int? Year,
@@ -697,23 +697,23 @@ public record MovieItem(
     string DirectSource);
 
 public record EpisodeItem(
-    long Id,
+    int Id,
     string Title,
-    long Season,
-    long Episode,
-    long SeriesId,
+    int Season,
+    int Episode,
+    int SeriesId,
     string? Poster,
     string ContainerExtension,
     string DirectSource);
 
 public record SeriesInfo(
-    long SeriesId,
+    int SeriesId,
     string SeriesName,
     string? Poster);
 
 public record SeriesItem(
     SeriesInfo Info,
-    IReadOnlyDictionary<long, IReadOnlyList<EpisodeItem>> Seasons);
+    IReadOnlyDictionary<int, IReadOnlyList<EpisodeItem>> Seasons);
 
 public record XtreamCategory(
     [property: JsonPropertyName("category_id")] string CategoryId,
@@ -721,14 +721,14 @@ public record XtreamCategory(
     [property: JsonPropertyName("parent_id")] string ParentId);
 
 public record XtreamVodStream(
-    [property: JsonPropertyName("num")] string Num,
+    [property: JsonPropertyName("num")] int Num,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("stream_type")] string StreamType,
-    [property: JsonPropertyName("stream_id")] string StreamId,
+    [property: JsonPropertyName("stream_id")] int StreamId,
     [property: JsonPropertyName("stream_icon")] string StreamIcon,
     [property: JsonPropertyName("rating")] string Rating,
     [property: JsonPropertyName("added")] long Added,
-    [property: JsonPropertyName("category_id")] string CategoryId,
+    [property: JsonPropertyName("category_id")] int CategoryId,
     [property: JsonPropertyName("container_extension")] string ContainerExtension,
     [property: JsonPropertyName("custom_sid")] string CustomSid,
     [property: JsonPropertyName("direct_source")] string DirectSource,
@@ -755,17 +755,17 @@ public record XtreamVodDetail(
     [property: JsonPropertyName("movie_data")] XtreamVodData MovieData);
 
 public record XtreamVodData(
-    [property: JsonPropertyName("stream_id")] string StreamId,
+    [property: JsonPropertyName("stream_id")] int StreamId,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("added")] long Added,
-    [property: JsonPropertyName("category_id")] string CategoryId,
+    [property: JsonPropertyName("category_id")] int CategoryId,
     [property: JsonPropertyName("container_extension")] string ContainerExtension);
 
 public record XtreamSeriesStream(
-    [property: JsonPropertyName("num")] string Num,
+    [property: JsonPropertyName("num")] int Num,
     [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("series_id")] string SeriesId,
-    [property: JsonPropertyName("category_id")] string CategoryId,
+    [property: JsonPropertyName("series_id")] int SeriesId,
+    [property: JsonPropertyName("category_id")] int CategoryId,
     [property: JsonPropertyName("cover")] string Cover,
     [property: JsonPropertyName("plot")] string Plot,
     [property: JsonPropertyName("cast")] string Cast,
@@ -791,16 +791,16 @@ public record XtreamSeriesDetail(
 public record XtreamSeriesSeason(
   [property: JsonPropertyName("air_date")] string AirDate,
   [property: JsonPropertyName("episode_count")] int EpisodeCount,
-  [property: JsonPropertyName("id")] long Id,
+  [property: JsonPropertyName("id")] int Id,
   [property: JsonPropertyName("name")] string Name,
   [property: JsonPropertyName("overview")] string Overview,
-  [property: JsonPropertyName("season_number")] long SeasonNumber,
+  [property: JsonPropertyName("season_number")] int SeasonNumber,
   [property: JsonPropertyName("cover")] string Cover,
   [property: JsonPropertyName("cover_big")] string CoverBig
 );
 
 public record XtreamSeriesEpisode(
-  [property: JsonPropertyName("id")] string Id,
+  [property: JsonPropertyName("id")] int Id,
   [property: JsonPropertyName("episode_num")] long EpisodeNum,
   [property: JsonPropertyName("title")] string Title,
   [property: JsonPropertyName("container_extension")] string ContainerExtension,
@@ -1065,7 +1065,7 @@ public class M3uParser
         var poster = meta.ContainsKey("tvg-logo") ? meta["tvg-logo"] : null;
         var raw = title;
 
-        long season = 1, episode = 1;
+        int season = 1, episode = 1;
         string showName = raw, epTitle = raw;
 
         if (RegexPatterns.DailyRegex().Match(raw) is { Success: true } dMatch)
@@ -1073,22 +1073,22 @@ public class M3uParser
           var year = dMatch.Groups[1].Value;
           var month = dMatch.Groups[2].Value;
           var day = dMatch.Groups[3].Value;
-          season = long.Parse(year) * 10000 + long.Parse(month) * 100 + long.Parse(day);
-          episode = 1L;
+          season = int.Parse(year) * 10000 + int.Parse(month) * 100 + int.Parse(day);
+          episode = 1;
           showName = raw.Substring(0, raw.IndexOf(dMatch.Value) - 1).Trim(" -:_".ToCharArray());
           epTitle = raw;
         }
         else if (RegexPatterns.SeasonEpisodeRegex().Match(raw) is { Success: true } seMatch)
         {
-          season = long.Parse(seMatch.Groups[1].Value);
-          episode = long.Parse(seMatch.Groups[2].Value);
+          season = int.Parse(seMatch.Groups[1].Value);
+          episode = int.Parse(seMatch.Groups[2].Value);
           showName = RegexPatterns.SeasonEpisodeRegex().Replace(raw, "").Trim(" -:_".ToCharArray());
           epTitle = raw;
         }
         else if (RegexPatterns.SeasonOnlyRegex().Match(raw) is { Success: true } sMatch)
         {
-          season = long.Parse(sMatch.Groups[1].Value);
-          episode = 1L;
+          season = int.Parse(sMatch.Groups[1].Value);
+          episode = 1;
           showName = RegexPatterns.SeasonOnlyRegex().Replace(raw, "").Trim(" -:_".ToCharArray());
           epTitle = raw;
         }
@@ -1205,10 +1205,10 @@ public static partial class StringHelpers
   [GeneratedRegex(@"\[.*?\]")]
   public static partial Regex CleanTitleRegex();
 
-  public static long HashId(this string s)
+  public static int HashId(this string s)
   {
-    var hash = SHA256.HashData(Encoding.UTF8.GetBytes(s));
-    return BitConverter.ToInt64(hash.Take(8).ToArray());
+    var hash = MD5.HashData(Encoding.UTF8.GetBytes(s));
+    return BitConverter.ToInt32(hash.TakeLast(4).ToArray());
   }
   public static string CleanTitle(string s)
   {
