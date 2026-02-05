@@ -262,35 +262,46 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     .ToListAsync();
 
     return TypedResults.Ok(results.AsEnumerable());
+  }
 
-    async Task<XtreamVodStream> GetVodStream(TmdbEnricher tmdbClient, XcProxyConfiguration cfg, MovieItem it, int index)
+  async Task<XtreamVodStream> GetVodStream(TmdbEnricher tmdbClient, XcProxyConfiguration cfg, MovieItem it, int index)
+  {
+    var md = await tmdbClient.SearchMovieAsync(it.Title, it.Year);
+
+    var posterFinal = PickMoviePoster(it.StreamIcon, md);
+    var backdropFinal = PickMovieBackdrop(it.StreamIcon, md);
+    var plot = GetPlot(md?.Overview);
+
+    var catId = cfg.MovieCategoryId;
+    if (md is { Genres: { Count: > 0 } genreIds })
     {
-      var md = await tmdbClient.SearchMovieAsync(it.Title, it.Year);
-
-      var posterFinal = PickMoviePoster(it.StreamIcon, md);
-      var backdropFinal = PickMovieBackdrop(it.StreamIcon, md);
-      var plot = GetPlot(md?.Overview);
-
-      var catId = cfg.MovieCategoryId;
-      if (md is { Genres: { Count: > 0 } genreIds })
-      {
-        catId = genreIds[0].Id;
-      }
-
-      return new XtreamVodStream(
-        it.StreamId.ToString(),
-        md?.Title ?? it.Title,
-        "movie",
-        it.StreamId.ToString(),
-        posterFinal ?? backdropFinal ?? "",
-        md?.VoteAverage.ToString() ?? "0.0",
-        (md?.ReleaseDate ?? DateTimeOffset.Now).ToUnixTimeSeconds(),
-        catId.ToString(),
-        it.ContainerExtension,
-  "",
-  ""
-      );
+      catId = genreIds[0].Id;
     }
+
+    return new XtreamVodStream(
+      it.StreamId.ToString(),
+      md?.Title ?? it.Title,
+      "movie",
+      it.StreamId.ToString(),
+      posterFinal ?? backdropFinal ?? "",
+      md?.VoteAverage.ToString() ?? "0.0",
+      (md?.ReleaseDate ?? DateTimeOffset.Now).ToUnixTimeSeconds(),
+      catId.ToString(),
+      it.ContainerExtension,
+"",
+"",
+      posterFinal ?? "",
+      md?.Id.ToString() ?? "",
+      backdropFinal is { } ? [backdropFinal] : [],
+      "",
+       string.Join(", ", md?.Genres?.Select(g => g.Name) ?? []),
+      GetPlot(md?.Overview),
+      string.Join(", ", md?.Credits?.Cast?.Select(z => z.Name) ?? []),
+      md?.VoteAverage.ToString() ?? "0.0",
+      md?.ReleaseDate?.ToString("yyyy-MM-dd") ?? DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+      (md?.Runtime ?? 0) * 60,
+      TimeSpan.FromMinutes(md?.Runtime ?? 0).ToString(@"hh\:mm\:ss")
+    );
   }
 
   async Task<IResult> HandleGetVodInfo(long vodId)
@@ -299,40 +310,18 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     var it = movies.FirstOrDefault(x => x.StreamId == vodId);
     if (it == null)
       return Results.NotFound(new { error = "not found" });
-    var md = await tmdbClient.SearchMovieAsync(it.Title, it.Year);
 
-    var posterFinal = PickMoviePoster(it.StreamIcon, md);
-    var backdropFinal = PickMovieBackdrop(it.StreamIcon, md);
-
-    var catId = cfg.MovieCategoryId;
-    if (md is { Genres: { Count: > 0 } genreIds })
-    {
-      catId = genreIds[0].Id;
-    }
+    var item = await GetVodStream(tmdbClient, cfg, it, 0);
 
     var info = new XtreamVodDetail(
-  new XtreamVodStreamInfo(
-        posterFinal ?? "",
-        md?.Id.ToString() ?? "",
-        backdropFinal is { } ? [backdropFinal] : [],
-        "",
-         string.Join(", ", md?.Genres?.Select(g => g.Name) ?? []),
-        GetPlot(md?.Overview),
-        string.Join(", ", md?.Credits?.Cast?.Select(z => z.Name) ?? []),
-        md?.VoteAverage.ToString() ?? "0.0",
-        "",
-        md?.ReleaseDate?.ToString("yyyy-MM-dd") ?? DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
-        (md?.Runtime ?? 0) * 60,
-        TimeSpan.FromMinutes(md?.Runtime ?? 0).ToString(@"hh\:mm\:ss")
-    ),
-
-  new XtreamVodData(
-  it.StreamId.ToString(),
-  md?.Title ?? it.Title,
-  DateTimeOffset.Now.ToUnixTimeSeconds(),
-  catId.ToString(),
-  it.ContainerExtension
-  )
+  item,
+      new XtreamVodData(
+      it.StreamId.ToString(),
+      item.Name,
+      item.Added,
+      item.CategoryId,
+      it.ContainerExtension
+      )
     );
     return Results.Ok(info);
   }
@@ -351,39 +340,40 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     .ToListAsync();
 
     return Results.Ok(results);
+  }
 
-    async Task<XtreamSeriesStream> GetSeriesItemAsync(TmdbEnricher tmdbClient, XcProxyConfiguration cfg, SeriesItem s)
-    {
-      var seriesTitle = s.Info.SeriesName;
-      var md = await tmdbClient.SearchSeriesAsync(seriesTitle);
 
-      var posterFinal = PickTvPoster(s.Info.Poster, md);
-      var backdropFinal = PickTvBackdrop(s.Info.Poster, md);
-      var catId = GetTvCategoryId(cfg.SeriesCategoryId.ToString(), md);
+  async Task<XtreamSeriesStream> GetSeriesItemAsync(TmdbEnricher tmdbClient, XcProxyConfiguration cfg, SeriesItem s)
+  {
+    var seriesTitle = s.Info.SeriesName;
+    var md = await tmdbClient.SearchSeriesAsync(seriesTitle);
 
-      var seasonCount = s.Seasons.Count;
-      var episodeCount = s.Seasons.Values.Sum(v => v.Count);
+    var posterFinal = PickTvPoster(s.Info.Poster, md);
+    var backdropFinal = PickTvBackdrop(s.Info.Poster, md);
+    var catId = GetTvCategoryId(cfg.SeriesCategoryId.ToString(), md);
 
-      return new XtreamSeriesStream(
-        s.Info.SeriesId.ToString(),
-        md?.Name ?? seriesTitle,
-        s.Info.SeriesId.ToString(),
-        catId.ToString(),
-        posterFinal ?? "",
-        GetPlot(md?.Overview),
-  string.Join(", ", md?.Credits?.Cast?.Select(z => z.Name) ?? []),
-  "",
-  string.Join(", ", md?.Genres?.Select(g => g.Name) ?? []),
-            md?.FirstAirDate?.ToString("yyyy-MM-dd") ?? DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
-            DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+    var seasonCount = s.Seasons.Count;
+    var episodeCount = s.Seasons.Values.Sum(v => v.Count);
 
-        md?.VoteAverage.ToString() ?? "0.0",
-        (md?.VoteAverage ?? 0.0) / 2.0,
-  backdropFinal is { } ? [backdropFinal] : [],
-        "",
-          (md?.EpisodeRunTime ?? []).FirstOrDefault().ToString()
-      );
-    }
+    return new XtreamSeriesStream(
+      s.Info.SeriesId.ToString(),
+      md?.Name ?? seriesTitle,
+      s.Info.SeriesId.ToString(),
+      catId.ToString(),
+      posterFinal ?? "",
+      GetPlot(md?.Overview),
+string.Join(", ", md?.Credits?.Cast?.Select(z => z.Name) ?? []),
+"",
+string.Join(", ", md?.Genres?.Select(g => g.Name) ?? []),
+          md?.FirstAirDate?.ToString("yyyy-MM-dd") ?? DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+          DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+
+      md?.VoteAverage.ToString() ?? "0.0",
+      (md?.VoteAverage ?? 0.0) / 2.0,
+backdropFinal is { } ? [backdropFinal] : [],
+      "",
+        (md?.EpisodeRunTime ?? []).FirstOrDefault().ToString()
+    );
   }
 
   async Task<IResult> HandleGetSeriesInfo(long seriesId)
@@ -392,13 +382,9 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
     var s = series.FirstOrDefault(x => x.Info.SeriesId == seriesId);
     if (s == null)
       return Results.NotFound(new { error = "not found" });
-    var seriesTitle = s.Info.SeriesName;
-    var md = await tmdbClient.SearchSeriesAsync(seriesTitle);
 
-    var posterFinal = PickTvPoster(s.Info.Poster, md);
-    var backdropFinal = PickTvBackdrop(s.Info.Poster, md);
-    var plot = md?.Overview ?? "";
-    plot = plot[..Math.Min(plot.Length, 1000)]; // Trim to 1000 chars
+    var streamInfo = await GetSeriesItemAsync(tmdbClient, cfg, s);
+    var md = await tmdbClient.SearchSeriesAsync(streamInfo.Name);
 
     var episodesOut = new Dictionary<string, IReadOnlyList<XtreamSeriesEpisode>>();
     var seasons = new List<XtreamSeriesSeason>();
@@ -413,8 +399,8 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
   tmdbSeason?.Name ?? $"Season {season}",
   GetPlot(tmdbSeason?.Overview),
   tmdbSeason?.SeasonNumber ?? season,
-  PosterPath(tmdbSeason?.PosterPath) ?? posterFinal ?? "",
-  PosterPath(tmdbSeason?.PosterPath) ?? posterFinal ?? ""
+  PosterPath(tmdbSeason?.PosterPath) ?? streamInfo.Cover ?? "",
+  PosterPath(tmdbSeason?.PosterPath) ?? streamInfo.Cover ?? ""
       ));
       var epInfos = new List<XtreamSeriesEpisode>();
 
@@ -432,7 +418,7 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
           tmdbEpisode?.Name ?? ep.Title,
   ep.ContainerExtension,
   new XtreamSeriesEpisodeInfo(
-  PosterPath(tmdbSeason?.PosterPath ?? tmdbEpisode?.StillPath) ?? posterFinal ?? "",
+  PosterPath(tmdbSeason?.PosterPath ?? tmdbEpisode?.StillPath) ?? streamInfo.Cover ?? "",
   GetPlot(tmdbEpisode?.Overview),
   tmdbEpisode?.AirDate?.ToString("yyyy-MM-dd") ?? "",
   tmdbEpisode?.VoteAverage.ToString() ?? "0.0",
@@ -444,27 +430,8 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
       episodesOut[$"{season}"] = epInfos;
     }
 
-    var info = new XtreamSeriesDetail(episodesOut, new XtreamSeriesInfo(
- md?.Name ?? seriesTitle,
-s.Info.SeriesId.ToString(),
-GetTvCategoryId(cfg.SeriesCategoryId.ToString(), md).ToString(),
-posterFinal ?? "",
-GetPlot(md?.Overview),
-string.Join(", ", md?.Credits?.Cast?.Select(z => z.Name) ?? []),
-"",
-string.Join(", ", md?.Genres?.Select(g => g.Name) ?? []),
-      md?.FirstAirDate?.ToString("yyyy-MM-dd") ?? DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
-      DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
 
-      md?.VoteAverage.ToString() ?? "0.0",
-      (md?.VoteAverage ?? 0.0) / 2.0,
-
-backdropFinal is { } ? [backdropFinal] : [],
-"",
-      (md?.EpisodeRunTime ?? []).FirstOrDefault().ToString()
-    ),
-    seasons
-    );
+    var info = new XtreamSeriesDetail(episodesOut, streamInfo, seasons);
 
     return Results.Ok(info);
   }
@@ -764,13 +731,7 @@ public record XtreamVodStream(
     [property: JsonPropertyName("category_id")] string CategoryId,
     [property: JsonPropertyName("container_extension")] string ContainerExtension,
     [property: JsonPropertyName("custom_sid")] string CustomSid,
-    [property: JsonPropertyName("direct_source")] string DirectSource);
-
-public record XtreamVodDetail(
-    [property: JsonPropertyName("info")] XtreamVodStreamInfo Info,
-    [property: JsonPropertyName("movie_data")] XtreamVodData MovieData);
-
-public record XtreamVodStreamInfo(
+    [property: JsonPropertyName("direct_source")] string DirectSource,
     [property: JsonPropertyName("movie_image")] string MovieImage,
     [property: JsonPropertyName("tmdb_id")] string TmdbId,
     [property: JsonPropertyName("backdrop_path")] IReadOnlyList<string> BackdropPath,
@@ -778,11 +739,20 @@ public record XtreamVodStreamInfo(
     [property: JsonPropertyName("genre")] string Genre,
     [property: JsonPropertyName("plot")] string Plot,
     [property: JsonPropertyName("cast")] string Cast,
-    [property: JsonPropertyName("rating")] string Rating,
     [property: JsonPropertyName("director")] string Director,
     [property: JsonPropertyName("releasedate")] string Releasedate,
     [property: JsonPropertyName("duration_secs")] int DurationSecs,
-    [property: JsonPropertyName("duration")] string Duration);
+    [property: JsonPropertyName("duration")] string Duration)
+{
+  public string Logo => StreamIcon;
+  public int Rating5Based => (int)(double.Parse(Rating) / 2.0);
+  public string Description => Plot;
+
+}
+
+public record XtreamVodDetail(
+    [property: JsonPropertyName("info")] XtreamVodStream Info,
+    [property: JsonPropertyName("movie_data")] XtreamVodData MovieData);
 
 public record XtreamVodData(
     [property: JsonPropertyName("stream_id")] string StreamId,
@@ -807,28 +777,15 @@ public record XtreamSeriesStream(
     [property: JsonPropertyName("rating_5based")] double Rating5Based,
     [property: JsonPropertyName("backdrop_path")] IReadOnlyList<string> BackdropPath,
     [property: JsonPropertyName("youtube_trailer")] string YoutubeTrailer,
-    [property: JsonPropertyName("episode_run_time")] string EpisodeRunTime);
-public record XtreamSeriesInfo(
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("series_id")] string SeriesId,
-    [property: JsonPropertyName("category_id")] string CategoryId,
-    [property: JsonPropertyName("cover")] string Cover,
-    [property: JsonPropertyName("plot")] string Plot,
-    [property: JsonPropertyName("cast")] string Cast,
-    [property: JsonPropertyName("director")] string Director,
-    [property: JsonPropertyName("genre")] string Genre,
-    [property: JsonPropertyName("releaseDate")] string ReleaseDate,
-    [property: JsonPropertyName("last_modified")] string LastModified,
-    [property: JsonPropertyName("rating")] string Rating,
-    [property: JsonPropertyName("rating_5based")] double Rating5Based,
-    [property: JsonPropertyName("backdrop_path")] IReadOnlyList<string> BackdropPath,
-    [property: JsonPropertyName("youtube_trailer")] string YoutubeTrailer,
-    [property: JsonPropertyName("episode_run_time")] string EpisodeRunTime
-);
+    [property: JsonPropertyName("episode_run_time")] string EpisodeRunTime)
+{
+  public string Logo => Cover;
+  public string Description => Plot;
+}
 
 public record XtreamSeriesDetail(
     [property: JsonPropertyName("episodes")] Dictionary<string, IReadOnlyList<XtreamSeriesEpisode>> Episodes,
-    [property: JsonPropertyName("info")] XtreamSeriesInfo Info,
+    [property: JsonPropertyName("info")] XtreamSeriesStream Info,
     [property: JsonPropertyName("seasons")] IReadOnlyList<XtreamSeriesSeason> Seasons);
 
 public record XtreamSeriesSeason(
