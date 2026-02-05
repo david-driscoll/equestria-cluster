@@ -415,7 +415,7 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, long? 
       var tmdbSeason = md?.Seasons?.Find(x => x.SeasonNumber == season);
       seasons.Add(new XtreamSeriesSeason(
   tmdbSeason?.AirDate?.ToString("yyyy-MM-dd") ?? "",
-  tmdbSeason?.EpisodeCount ?? episodesOut.Count,
+  tmdbSeason?.EpisodeCount ?? epList.Count,
   tmdbSeason?.Id ?? season,
   tmdbSeason?.Name ?? $"Season {season}",
   GetPlot(tmdbSeason?.Overview),

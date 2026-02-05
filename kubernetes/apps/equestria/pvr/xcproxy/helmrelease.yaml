@@ -72,13 +72,25 @@ spec:
               - -c
               - >-
                 dotnet run /scripts/App.cs
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 20
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
             resources:
               requests:
                 memory: 256Mi
                 cpu: 100m
               limits:
-                memory: 512Mi
-                cpu: 500m
+                memory: 2Gi
 
     service:
       app:
@@ -86,7 +98,7 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: &port 5000
+            port: *port
 
     route:
       app:
@@ -111,7 +123,7 @@ spec:
     persistence:
       script:
         type: configMap
-        name: postgres-backup-script
+        name: xcproxy-app-script
         defaultMode: 493
         globalMounts:
           - path: /scripts/App.cs
