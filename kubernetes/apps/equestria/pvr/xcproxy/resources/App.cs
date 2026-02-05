@@ -214,9 +214,9 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, int? v
     .Select((it, index) => tmdbClient.SearchMovieAsync(it.Title, it.Year).ToObservable())
     .Merge(3)
     .SelectMany(z => z?.Genres ?? [])
-    .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0"))
+    .Select(z => new XtreamCategory(z.Id, z.Name ?? "Unknown", "0"))
     .Distinct(z => z.CategoryId)
-    .StartWith(new XtreamCategory(cfg.MovieCategoryId.ToString(), "Uncategorized", "0"))
+    .StartWith(new XtreamCategory(cfg.MovieCategoryId, "Uncategorized", "0"))
     .ToAsyncEnumerable()
     .OrderBy(z => z.CategoryName)
     .ToListAsync();
@@ -238,9 +238,9 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, int? v
     .Select((it, index) => tmdbClient.SearchSeriesAsync(it.Info.SeriesName).ToObservable())
     .Merge(3)
     .SelectMany(z => z?.Genres ?? [])
-    .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0"))
+    .Select(z => new XtreamCategory(z.Id, z.Name ?? "Unknown", "0"))
     .Distinct(z => z.CategoryId)
-    .StartWith(new XtreamCategory(cfg.SeriesCategoryId.ToString(), "Uncategorized", "0"))
+    .StartWith(new XtreamCategory(cfg.SeriesCategoryId, "Uncategorized", "0"))
     .ToAsyncEnumerable()
     .OrderBy(z => z.CategoryName)
     .ToListAsync();
@@ -716,7 +716,7 @@ public record SeriesItem(
     IReadOnlyDictionary<int, IReadOnlyList<EpisodeItem>> Seasons);
 
 public record XtreamCategory(
-    [property: JsonPropertyName("category_id")] string CategoryId,
+    [property: JsonPropertyName("category_id")] int CategoryId,
     [property: JsonPropertyName("category_name")] string CategoryName,
     [property: JsonPropertyName("parent_id")] string ParentId);
 
