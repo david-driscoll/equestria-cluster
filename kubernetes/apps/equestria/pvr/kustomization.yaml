@@ -10,3 +10,4 @@ resources:
   # - ./threadfin/ks.yaml
   - ./dispatcharr/ks.yaml
   - ./dispatcharr-addons/ks.yaml
+  - ./xcproxy/ks.yaml

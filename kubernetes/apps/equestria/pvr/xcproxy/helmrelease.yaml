@@ -82,7 +82,7 @@ spec:
 
     service:
       app:
-        controller: app
+        controller: *app
         type: ClusterIP
         ports:
           http:
