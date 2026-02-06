@@ -541,12 +541,12 @@ app.MapGet("/xmltv.php", async ([FromServices] PlaylistData playlistData) =>
 
   foreach (var it in movies)
   {
-    sb.AppendLine($"  <channel id=\"movie-{it.StreamId}\"><display-name>{System.Net.WebUtility.HtmlEncode(it.Title)}</display-name></channel>");
+    sb.AppendLine($"  <channel id=\"movie-{it.StreamId:D}\"><display-name>{System.Net.WebUtility.HtmlEncode(it.Title)}</display-name></channel>");
   }
 
   foreach (var s in series)
   {
-    sb.AppendLine($"  <channel id=\"series-{s.Info.SeriesId}\"><display-name>{System.Net.WebUtility.HtmlEncode(s.Info.SeriesName)}</display-name></channel>");
+    sb.AppendLine($"  <channel id=\"series-{s.Info.SeriesId:D}\"><display-name>{System.Net.WebUtility.HtmlEncode(s.Info.SeriesName)}</display-name></channel>");
   }
 
   sb.AppendLine("</tv>");
@@ -602,7 +602,7 @@ app.MapGet("/get.php", async ([FromServices] PlaylistData playlistData) =>
   foreach (var it in movies)
   {
     var name = it.Title;
-    var url = $"{host}/movie/user/pass/{it.StreamId}.{it.ContainerExtension}";
+    var url = $"{host}/movie/user/pass/{it.StreamId:D}.{it.ContainerExtension}";
     lines.Add($"#EXTINF:-1 tvg-id=\"\" tvg-name=\"{name}\" tvg-logo=\"{it.StreamIcon}\" group-title=\"Movie VOD\",{name}");
     lines.Add(url);
   }
@@ -616,7 +616,7 @@ app.MapGet("/get.php", async ([FromServices] PlaylistData playlistData) =>
       foreach (var ep in season.Value)
       {
         var name = $"{seriesName} - {ep.Title}";
-        var url = $"{host}/series/user/pass/{ep.Id}.{ep.ContainerExtension}";
+        var url = $"{host}/series/user/pass/{ep.Id:D}.{ep.ContainerExtension}";
         lines.Add($"#EXTINF:-1 tvg-id=\"\" tvg-name=\"{name}\" tvg-logo=\"{ep.Poster}\" group-title=\"{seriesName}\",{name}");
         lines.Add(url);
       }
@@ -840,7 +840,7 @@ public record XtreamVodStream(
     [property: JsonPropertyName("custom_sid")] string CustomSid)
 {
   [property: JsonPropertyName("releasedate")]
-  public string Releasedate => ReleaseDate;
+  public string OtherReleasedate => ReleaseDate;
   [property: JsonPropertyName("num")]
   public int Num => StreamId;
   [property: JsonPropertyName("rating_5based")]
@@ -874,7 +874,7 @@ public record XtreamVodInfo(
     [property: JsonPropertyName("youtube_trailer")] string? YoutubeTrailer)
 {
   [property: JsonPropertyName("releasedate")]
-  public string Releasedate => ReleaseDate;
+  public string OtherReleasedate => ReleaseDate;
 }
 
 public record XtreamVodDetail(
@@ -899,7 +899,7 @@ public record XtreamSeriesStream(
     [property: JsonPropertyName("youtube_trailer")] string YoutubeTrailer)
 {
   [property: JsonPropertyName("releasedate")]
-  public string Releasedate => ReleaseDate;
+  public string OtherReleasedate => ReleaseDate;
   [property: JsonPropertyName("num")]
   public int Num => SeriesId;
   [property: JsonPropertyName("rating_5based")]
