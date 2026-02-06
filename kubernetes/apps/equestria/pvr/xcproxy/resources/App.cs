@@ -264,7 +264,6 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, int? v
 
     var posterFinal = PickMoviePoster(it.StreamIcon, md);
     var backdropFinal = PickMovieBackdrop(it.StreamIcon, md);
-    var plot = GetPlot(md?.Overview);
 
     var catIds = GetCategoryIds(cfg.MovieCategoryId, md?.Genres).ToList();
     var catId = catIds.First();
@@ -285,7 +284,7 @@ catIds,
 GetDirector(md?.Credits?.Crew),
       catId,
 "",
-      (md?.Runtime ?? 0) * 60,
+      GetRuntime(md?.Runtime),
       GetDate(md?.ReleaseDate),
       it.ContainerExtension,
       GetPlot(md?.Overview),
@@ -299,7 +298,6 @@ GetDirector(md?.Credits?.Crew),
 
     var posterFinal = PickMoviePoster(it.StreamIcon, md);
     var backdropFinal = PickMovieBackdrop(it.StreamIcon, md);
-    var plot = GetPlot(md?.Overview);
 
     var catIds = GetCategoryIds(cfg.MovieCategoryId, md?.Genres).ToList();
     var catId = catIds.First();
@@ -325,8 +323,7 @@ GetDirector(md?.Credits?.Crew),
       md?.OriginalTitle ?? it.Title,
       it.ContainerExtension,
       GetPlot(md?.Overview),
-      GetMovieActors(md?.Credits?.Cast),
-
+      GetDate(md?.ReleaseDate),
 md?.Id ?? 0,
 ""
     );
