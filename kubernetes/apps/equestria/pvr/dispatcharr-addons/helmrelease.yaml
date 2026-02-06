@@ -62,7 +62,7 @@ spec:
           ecm:
             image:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
-              tag: "0.10@sha256:ac8af72ac92f1947757315f4261bc86985b1be20e1fcce0baf35376f11673d3e"
+              tag: "0.11@sha256:7b156b3c7493cd224b2014a70316e1ef7d0d06dc44e36c23eea14bf1e35a2665"
             probes:
               liveness: &probes
                 enabled: true
