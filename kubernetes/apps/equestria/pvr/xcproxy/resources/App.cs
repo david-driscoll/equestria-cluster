@@ -270,8 +270,8 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, int? v
 
     return new XtreamVodStream(
       it.StreamId,
-catId,
-catIds,
+      catId,
+      catIds,
       md?.Title ?? it.Title,
       md?.Title ?? it.Title,
       md?.ReleaseDate?.Year ?? 0,
@@ -281,9 +281,9 @@ catIds,
       GetDate(md?.ReleaseDate),
       GetPlot(md?.Overview),
       GetMovieActors(md?.Credits?.Cast),
-GetDirector(md?.Credits?.Crew),
+      GetDirector(md?.Credits?.Crew),
       catId,
-"",
+      "",
       GetRuntime(md?.Runtime),
       GetDate(md?.ReleaseDate),
       it.ContainerExtension,
@@ -324,8 +324,8 @@ GetDirector(md?.Credits?.Crew),
       it.ContainerExtension,
       GetPlot(md?.Overview),
       GetDate(md?.ReleaseDate),
-md?.Id ?? 0,
-""
+      md?.Id ?? 0,
+      ""
     );
 
   }
