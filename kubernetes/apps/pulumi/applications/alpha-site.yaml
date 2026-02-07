@@ -5,15 +5,12 @@ kind: Stack
 metadata:
   name: &stack alpha-site
 spec:
-  fluxSource:
-    sourceRef:
-      apiVersion: source.toolkit.fluxcd.io/v1
-      kind: GitRepository
-      name: home-operations
-    dir: stacks/applications
+  projectRepo: https://github.com/david-driscoll/home-operations.git
+  repoDir: stacks/applications
+  branch: main
   serviceAccountName: ${APP}
   stack: *stack
-  resyncFrequencySeconds: 300
+  resyncFrequencySeconds: 600
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/applications?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: true
