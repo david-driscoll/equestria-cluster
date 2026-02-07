@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Questarr
+  category: Games
+  description: Questarr is a video game collection manager inspired by Sonarr and Radarr
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://raw.githubusercontent.com/Doezer/Questarr/main/images/Questarr_icon.png
+  access_policy:
+    groups:
+      - media-managers
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
+  gatus:
+    - group: "Applications"
+      url: https://${APP}.${ROOT_DOMAIN}/ping
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
+

@@ -7,8 +7,6 @@ resources:
   - postgres-superuser.sops.yaml
   - crowdsec.yaml
   - crowdsec.sops.yaml
-  - ggrequestz.yaml
-  - ggrequestz.sops.yaml
   - grafana.yaml
   - grafana.sops.yaml
   - homarr.yaml
@@ -19,6 +17,8 @@ resources:
   - n8n.sops.yaml
   - pulsarr.yaml
   - pulsarr.sops.yaml
+  - questarr.yaml
+  - questarr.sops.yaml
   - retrom.yaml
   - retrom.sops.yaml
   - romm.yaml

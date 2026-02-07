@@ -3,24 +3,24 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app ggrequestz
+  name: &app questarr
 spec:
   chartRef:
     kind: OCIRepository
     name: app-template
   maxHistory: 3
-  interval: 15m
+  interval: 1h
   timeout: 10m
   install:
     createNamespace: true
     replace: true
     remediation:
-      retries: 7
+      retries: -1
   upgrade:
     crds: CreateReplace
     cleanupOnFail: true
     remediation:
-      retries: 7
+      retries: -1
       strategy: rollback
   rollback:
     force: true
@@ -29,84 +29,80 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    fullnameOverride: *app
     controllers:
-      *app :
+      app:
         annotations:
           reloader.stakater.com/auto: "true"
-        replicas: 1
-        pod:
-          securityContext:
-            runAsNonRoot: false
+        strategy: Recreate
         containers:
-          *app :
+          app:
             image:
-              repository: ghcr.io/xtreemmak/ggrequestz
-              tag: latest@sha256:ff5adae9de25018f7827fb5857d974f31ac212c51a52937efdcdcdb95cd3feb8
+              repository: ghcr.io/doezer/questarr
+              tag: dev
+              pullPolicy: IfNotPresent
             env:
-              TZ: "${TIMEZONE}"
-              PORT: &port 3000
-              PUBLIC_SITE_URL: "https://${APP}.${ROOT_DOMAIN}"
-              AUTH_METHOD: "authentik"
+              PUID: ${PUID}
+              PGID: ${PGID}
+              UMASK: 002
+              PORT: &port 5000
+              TZ: ${TIMEZONE}
             envFrom:
               - secretRef:
-                  name: ${APP}-secrets
-            resources:
-              requests:
-                cpu: 100m
-                memory: 256Mi
-              limits:
-                memory: 2Gi
+                  name: ${APP}-env
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/health
+                    path: /ping
                     port: *port
-                  initialDelaySeconds: 10
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 5
               readiness: *probes
             securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
 
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
         seccompProfile: { type: RuntimeDefault }
 
+    service:
+      app:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
     persistence:
-      tmp:
-        type: emptyDir
+      config:
+        existingClaim: ${APP}
         globalMounts:
-          - path: /tmp
-            subPath: tmp
-          - path: /home/node/
-            subPath: home
-          - path: /app/logs
-            subPath: logs
-      truenas-media:
+          - path: /app/data
+      media:
         existingClaim: truenas-media
         globalMounts:
           - path: /media/downloads
             subPath: downloads
           - path: /media/games
             subPath: games
-
-    service:
-      app:
-        controller: *app
-        type: ClusterIP
-        ports:
-          http:
-            port: *port
 
     route:
       internal:
@@ -118,7 +114,11 @@ spec:
           - "${APP}.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
-          - backendRefs:
+          - matches:
+              - headers:
+                  - name: X-Api-Key
+                    value: ".*"
+            backendRefs:
               - identifier: app
                 port: *port
             filters:
@@ -127,3 +127,13 @@ spec:
                   group: traefik.io
                   kind: Middleware
                   name: local-user
+          - backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: authenticated-user
+

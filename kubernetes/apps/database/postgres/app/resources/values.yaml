@@ -122,12 +122,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: retrom-postgres
-  - name: ggrequestz
+  - name: questarr
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: ggrequestz-postgres
+      name: questarr-postgres
   - name: romm
     ensure: present
     login: true

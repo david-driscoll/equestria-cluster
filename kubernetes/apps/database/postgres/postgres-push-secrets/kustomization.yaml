@@ -4,12 +4,12 @@ resources:
   - postgres-user-push-secret.yaml
   - postgres-superuser-push-secret.yaml
   - crowdsec-postgres-push-secret.yaml
-  - ggrequestz-postgres-push-secret.yaml
   - grafana-postgres-push-secret.yaml
   - homarr-postgres-push-secret.yaml
   - immich-postgres-push-secret.yaml
   - n8n-postgres-push-secret.yaml
   - pulsarr-postgres-push-secret.yaml
+  - questarr-postgres-push-secret.yaml
   - retrom-postgres-push-secret.yaml
   - romm-postgres-push-secret.yaml
   - tandoor-postgres-push-secret.yaml
