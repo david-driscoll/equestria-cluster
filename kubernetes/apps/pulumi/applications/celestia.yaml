@@ -5,12 +5,16 @@ kind: Stack
 metadata:
   name: &stack celestia
 spec:
-  projectRepo: https://github.com/david-driscoll/home-operations.git
-  repoDir: stacks/applications
-  branch: main
+  fluxSource:
+    sourceRef:
+      apiVersion: source.toolkit.fluxcd.io/v1
+      kind: GitRepository
+      name: home-operations
+    dir: stacks/applications
   serviceAccountName: ${APP}
   stack: *stack
-  resyncFrequencySeconds: 600
+  resyncFrequencySeconds: 300
+  retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/applications?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
