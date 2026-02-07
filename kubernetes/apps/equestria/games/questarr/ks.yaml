@@ -21,7 +21,7 @@ spec:
       namespace: kube-system
     - name: volsync
       namespace: volsync-system
-    - name: database
+    - name: postgres
       namespace: database
   path: ./kubernetes/apps/equestria/games/questarr
   prune: true
