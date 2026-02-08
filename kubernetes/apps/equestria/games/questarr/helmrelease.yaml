@@ -42,8 +42,6 @@ spec:
               readOnlyRootFilesystem: true
               runAsUser: 0
               runAsGroup: 0
-              fsGroup: 0
-              supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
@@ -88,6 +86,8 @@ spec:
               runAsNonRoot: true
               runAsUser: 568
               runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: OnRootMismatch
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
@@ -97,16 +97,6 @@ spec:
                 memory: 256Mi
               limits:
                 memory: 2Gi
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [0, 1, 44, 109, 303, 568, 10000]
-        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:
