@@ -58,4 +58,4 @@ spec:
       enabled: false
     securityContext:
       allowPrivilegeEscalation: true
-    node_selector_enabled: false
+    node_selector_enabled: true
