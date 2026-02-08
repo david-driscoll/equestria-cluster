@@ -103,6 +103,11 @@ spec:
             subPath: downloads
           - path: /media/games
             subPath: games
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /app/server.log
+            subPath: server.log
 
     route:
       internal:
