@@ -54,6 +54,7 @@ controller:
     healthPort: 29652
   logLevel: 5
   workingMountDir: "/tmp"
+  enableSnapshotter: false
   dnsPolicy: ClusterFirstWithHostNet
   affinity: {}
   nodeSelector: {}
