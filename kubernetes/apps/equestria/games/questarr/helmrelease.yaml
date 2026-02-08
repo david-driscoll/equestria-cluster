@@ -53,7 +53,6 @@ spec:
             args: |-
                 chown -R 568:568 /app/data
                 chmod -R 775 /app/data
-                ln -sf /tmp/server.log /app/server.log
                 echo "Done.";
         containers:
           app:
@@ -61,6 +60,13 @@ spec:
               repository: ghcr.io/doezer/questarr
               tag: dev@sha256:c42b8bcbe8b60f815a0c5f739a666edf394b6a15318727b30b3ac592249bebd1
               pullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+            args:
+              - |
+                ln -sf /tmp/server.log /app/server.log || true
+                exec npm start
             env:
               PUID: ${PUID}
               PGID: ${PGID}
@@ -99,6 +105,10 @@ spec:
                 memory: 256Mi
               limits:
                 memory: 2Gi
+
+    defaultPodOptions:
+      securityContext:
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:
