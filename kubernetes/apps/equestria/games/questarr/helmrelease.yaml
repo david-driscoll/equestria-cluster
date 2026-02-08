@@ -57,24 +57,6 @@ spec:
                 else
                   echo "App already exists in writable volume."
                 fi
-          restore:
-            securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: true
-              runAsUser: 0
-              runAsGroup: 0
-              capabilities: { drop: ["ALL"] }
-            image:
-              repository: busybox
-              tag: 1.37.0@sha256:b3255e7dfbcd10cb367af0d409747d511aeb66dfac98cf30e97e87e4207dd76f
-              pullPolicy: IfNotPresent
-            command:
-              - "/bin/sh"
-              - "-c"
-            args: |-
-                chown -R 568:568 /app-writable/data
-                chmod -R 775 /app-writable/data
-                echo "Done.";
         containers:
           app:
             image:
@@ -141,7 +123,7 @@ spec:
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /app-writable/data
+          - path: /app/data
       media:
         existingClaim: truenas-media
         globalMounts:
