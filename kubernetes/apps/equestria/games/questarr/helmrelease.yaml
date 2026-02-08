@@ -36,6 +36,27 @@ spec:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
         initContainers:
+          copy-app:
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              runAsUser: 568
+              runAsGroup: 568
+              capabilities: { drop: ["ALL"] }
+            image:
+              repository: ghcr.io/doezer/questarr
+              tag: dev@sha256:c42b8bcbe8b60f815a0c5f739a666edf394b6a15318727b30b3ac592249bebd1
+              pullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+            args: |-
+                if [ ! -f /app-writable/package.json ]; then
+                  echo "Copying app to writable volume..."
+                  cp -a /app/. /app-writable/
+                else
+                  echo "App already exists in writable volume."
+                fi
           restore:
             securityContext:
               allowPrivilegeEscalation: true
@@ -51,8 +72,8 @@ spec:
               - "/bin/sh"
               - "-c"
             args: |-
-                chown -R 568:568 /app/data
-                chmod -R 775 /app/data
+                chown -R 568:568 /app-writable/data
+                chmod -R 775 /app-writable/data
                 echo "Done.";
         containers:
           app:
@@ -60,20 +81,13 @@ spec:
               repository: ghcr.io/doezer/questarr
               tag: dev@sha256:c42b8bcbe8b60f815a0c5f739a666edf394b6a15318727b30b3ac592249bebd1
               pullPolicy: IfNotPresent
-            command:
-              - "/bin/sh"
-              - "-c"
-            args:
-              - |
-                ln -sf /tmp/server.log /app/server.log || true
-                exec npm start
             env:
               PUID: ${PUID}
               PGID: ${PGID}
               UMASK: 002
               PORT: &port 5000
               TZ: ${TIMEZONE}
-            workingDir: /app
+            workingDir: /app-writable
             envFrom:
               - secretRef:
                   name: ${APP}-env
@@ -119,10 +133,15 @@ spec:
             port: *port
 
     persistence:
+      app-writable:
+        type: emptyDir
+        sizeLimit: 2Gi
+        globalMounts:
+          - path: /app-writable
       config:
         existingClaim: ${APP}
         globalMounts:
-          - path: /app/data
+          - path: /app-writable/data
       media:
         existingClaim: truenas-media
         globalMounts:
