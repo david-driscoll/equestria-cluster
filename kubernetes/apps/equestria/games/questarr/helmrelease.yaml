@@ -52,6 +52,7 @@ spec:
               - "-c"
             args: |-
                 chown -R 568:568 /app
+                chmod -R 775 /app
                 echo "Done.";
         containers:
           app:
@@ -65,7 +66,6 @@ spec:
               UMASK: 002
               PORT: &port 5000
               TZ: ${TIMEZONE}
-            workingDir: /app
             envFrom:
               - secretRef:
                   name: ${APP}-env
