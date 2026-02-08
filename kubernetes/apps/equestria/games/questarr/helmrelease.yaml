@@ -51,8 +51,9 @@ spec:
               - "/bin/sh"
               - "-c"
             args: |-
-                chown -R 568:568 /app
-                chmod -R 775 /app
+                chown -R 568:568 /app/data
+                chmod -R 775 /app/data
+                ln -sf /tmp/server.log /app/server.log
                 echo "Done.";
         containers:
           app:
@@ -119,6 +120,10 @@ spec:
             subPath: downloads
           - path: /media/games
             subPath: games
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
 
     route:
       internal:
