@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: maikboarder/playerr
-              tag: v0.4.8
+              tag: v0.4.8@sha256:908a903ae6602bcdd915a95c026b816ae8c8ab5538cc074ba3308431a3d2d1a7
               pullPolicy: IfNotPresent
             env:
               PUID: ${PUID}
