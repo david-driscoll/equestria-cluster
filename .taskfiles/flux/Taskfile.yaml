@@ -15,7 +15,7 @@ tasks:
       - |
         echo "Removing finalizer from Kustomization {{.NAMESPACE}}/{{.NAME}}"
         kubectl -n "{{.NAMESPACE}}" patch kustomization "{{.NAME}}" --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]'
-        flux -n "{{.NAMESPACE}}" delete kustomization "{{.NAME}}"
+        flux -n "{{.NAMESPACE}}" delete kustomization "{{.NAME}}" --silent
       - |
         echo "Reconciling flux-system Kustomization to apply changes"
         flux -n flux-system reconcile kustomization cluster-apps
