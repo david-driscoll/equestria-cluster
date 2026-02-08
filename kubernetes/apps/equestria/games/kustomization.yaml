@@ -6,4 +6,4 @@ resources:
   - ./romm/ks.yaml
   - ./retrom/ks.yaml
   - ./questarr/ks.yaml
-  - ./playerr/ks.yaml
+  # - ./playerr/ks.yaml
