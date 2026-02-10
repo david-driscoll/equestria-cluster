@@ -23,3 +23,7 @@ tasks:
     cmds:
       - kubectl get all -l app.kubernetes.io/name={{.NAME}} -n {{.NAMESPACE}} -o name | xargs kubectl patch -p '{"metadata":{"finalizers":[]}}' --type=merge -n {{.NAMESPACE}}
       - kubectl delete all -l app.kubernetes.io/name={{.NAME}} -n {{.NAMESPACE}}
+  restart-flux:
+    cmd: kubectl rollout restart deployment,statefulset,daemonset -n flux-system
+  restart-kube:
+    cmd: kubectl rollout restart deployment,statefulset,daemonset -n kube-system
