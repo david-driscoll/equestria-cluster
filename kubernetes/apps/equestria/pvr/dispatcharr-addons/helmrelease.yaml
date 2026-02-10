@@ -132,7 +132,7 @@ spec:
           xtream-strm:
             image:
               repository: mourabena2ui/xtream-to-strm-web
-              tag: "2.6.1@sha256:8af953d2941618e8f9bae5835e8c93aae231dd46ac107c7f050381401870aaf5"
+              tag: "v3.1.0@sha256:eb722cf936af885facbf70be52abea622b1a643dcb6e558ffcf0927e2e305e0a"
             env:
               TZ: ${TIMEZONE}
             resources:
