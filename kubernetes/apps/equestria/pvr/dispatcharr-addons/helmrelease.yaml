@@ -107,7 +107,7 @@ spec:
           teamarr:
             image:
               repository: ghcr.io/pharaoh-labs/teamarr
-              tag: "2.1.2@sha256:8eed208fdffca26f2cdf5e9face2acea866147ab5302e241b081a901595a58e8"
+              tag: "2.2.0@sha256:9f6ba80c6bb6bbedc5d4259844554405a4461c80877189d938659d8981dceac7"
             env:
               TZ: ${TIMEZONE}
             probes:
