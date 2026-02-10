@@ -44,8 +44,8 @@ prometheus:
     ruleSelectorNilUsesHelmValues: false
     scrapeConfigSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
-    retention: 3d
-    retentionSize: 20GB
+    retention: 1d
+    retentionSize: 16GB
     enableFeatures:
       - promql-experimental-functions
       - otlp-deltatocumulative
