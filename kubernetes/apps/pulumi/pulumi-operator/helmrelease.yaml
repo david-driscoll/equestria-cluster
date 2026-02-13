@@ -36,7 +36,10 @@ spec:
   values:
     resources:
       limits:
+        memory: 1Gi
+      requests:
         memory: 256Mi
+        cpu: 100m
     serviceMonitor:
       enabled: true
       scheme: https
