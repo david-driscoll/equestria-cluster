@@ -7,14 +7,6 @@ spec:
   kubernetes:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
     version: v1.33.4
-
-  policy:
-    debug: true
-    force: false
-    rebootMode: powercycle
-    placement: soft
-    stage: false
-    timeout: 30m
   healthChecks:
     - apiVersion: volsync.backube/v1alpha1
       kind: ReplicationSource
