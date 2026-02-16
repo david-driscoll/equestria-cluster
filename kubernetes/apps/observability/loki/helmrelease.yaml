@@ -62,10 +62,8 @@ spec:
         log_level: info
       storage:
         type: filesystem
-        bucketNames:
-          chunks: FIXME
-          ruler: FIXME
-          admin: FIXME
+        filesystem:
+          directory: /loki/storage
       schemaConfig:
         configs:
           - from: "2024-04-01" # quote
