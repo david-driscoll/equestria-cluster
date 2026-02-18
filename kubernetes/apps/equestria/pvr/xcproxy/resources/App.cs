@@ -18,9 +18,11 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -46,6 +48,7 @@ using Xtream.Client;
 using ZiggyCreatures.Caching.Fusion;
 using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
 var builder = WebApplication.CreateBuilder(args);
+var startTime = DateTimeOffset.UtcNow;
 
 // Configuration
 var config = XcProxyConfiguration.LoadFromEnvironment(builder.Configuration);
@@ -92,11 +95,10 @@ Func<XcProxyConfiguration, ServerInfo> CreateServerInfo = (config) =>
       ServerProtocol: "https",
       RtmpPort: "0",
       Timezone: "UTC",
-      TimestampNow: DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-      TimeNow: DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+      TimestampNow: startTime.ToUnixTimeSeconds(),
+      TimeNow: startTime.ToString("yyyy-MM-dd HH:mm:ss"),
       Process: true,
-      ApiVersion: 2,
-      AllowedOutputFormats: ["m3u8", "ts", "mp4", "mkv"]
+      ApiVersion: 2
   );
 };
 
@@ -178,69 +180,24 @@ app.MapGet("/health", async ([FromServices] PlaylistData playlistData) =>
 
 app.MapGet("/", () => Results.Ok("OK"));
 
-app.MapGet("/panel_api.php", ([FromServices] XcProxyConfiguration cfg) =>
+app.MapGet("/panel_api.php", async ([FromServices] XcProxyConfiguration cfg, [FromServices] PlaylistData playlistData, [FromServices] TmdbEnricher tmdbClient) =>
 {
-  var userInfo = new UserInfo(1, "Active", cfg.Username, cfg.Password, 0, 1, 0, "2147483647", "");
-  var serverInfo = CreateServerInfo(cfg);
-  return Results.Ok(new { user_info = userInfo, server_info = serverInfo });
+  return await GetDefaultResponse(cfg, playlistData, tmdbClient);
 });
 
-app.MapGet("/player_api.php", async (string? action, string? category_id, int? vod_id, int? series_id, int? limit, HttpContext ctx) =>
+app.MapGet("/player_api.php", async (string? action, string? category_id, int? vod_id, int? series_id, int? limit, [FromServices] XcProxyConfiguration cfg, [FromServices] PlaylistData playlistData, [FromServices] TmdbEnricher tmdbClient) =>
 {
-  var playlistData = app.Services.GetRequiredService<PlaylistData>();
-  var cfg = app.Services.GetRequiredService<XcProxyConfiguration>();
-  var cache = app.Services.GetRequiredService<IFusionCache>();
-
   // Local action handlers
 
   async Task<Ok<IEnumerable<XtreamCategory>>> HandleGetVodCategories()
   {
-    if (await cache.TryGetAsync<List<XtreamCategory>>("movies_categories") is { HasValue: true, Value: var cached })
-    {
-      return TypedResults.Ok(cached.AsEnumerable());
-    }
-
-    var movies = await playlistData.LoadMoviesAsync();
-    var results = await movies
-      .ToObservable()
-      .Select((it, index) => tmdbClient.SearchMovieAsync(it.Title, it.Year).ToObservable())
-      .Merge(3)
-      .SelectMany(z => z?.Genres ?? [])
-      .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0", "movie"))
-      .Distinct(z => z.CategoryId)
-      .StartWith(new XtreamCategory(cfg.MovieCategoryId, "Uncategorized", "0", "movie"))
-      .ToAsyncEnumerable()
-      .OrderBy(z => z.CategoryName)
-      .ToListAsync();
-
-    cache.Set("movies_categories", results, TimeSpan.FromHours(1));
-
-    return TypedResults.Ok(results.AsEnumerable());
+    return TypedResults.Ok(await playlistData.GetMovieCategories());
   }
 
   async Task<Ok<IEnumerable<XtreamCategory>>> HandleGetSeriesCategories()
   {
-    if (await cache.TryGetAsync<List<XtreamCategory>>("series_categories") is { HasValue: true, Value: var cached })
-    {
-      return TypedResults.Ok(cached.AsEnumerable());
-    }
 
-    var series = await playlistData.LoadSeriesAsync();
-    var results = await series
-      .ToObservable()
-      .Select((it, index) => tmdbClient.SearchSeriesAsync(it.Info.SeriesName).ToObservable())
-      .Merge(3)
-      .SelectMany(z => z?.Genres ?? [])
-      .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0", "series"))
-      .Distinct(z => z.CategoryId)
-      .StartWith(new XtreamCategory(cfg.SeriesCategoryId, "Uncategorized", "0", "series"))
-      .ToAsyncEnumerable()
-      .OrderBy(z => z.CategoryName)
-      .ToListAsync();
-
-    cache.Set("series_categories", results, TimeSpan.FromHours(1));
-
-    return TypedResults.Ok(results.AsEnumerable());
+    return TypedResults.Ok(await playlistData.GetSeriesCategories());
   }
 
   async Task<Ok<IEnumerable<XtreamVodStream>>> HandleGetVodStreams()
@@ -515,16 +472,42 @@ app.MapGet("/player_api.php", async (string? action, string? category_id, int? v
     "get_vod_info" => await HandleGetVodInfo(vod_id ?? 0),
     "get_series" => await HandleGetSeries(),
     "get_series_info" => await HandleGetSeriesInfo(series_id ?? 0),
-    _ => GetDefaultResponse()
+    _ => await GetDefaultResponse(cfg, playlistData, tmdbClient)
   };
-
-  IResult GetDefaultResponse()
-  {
-    var userInfo = new UserInfo(1, "Active", cfg.Username, cfg.Password, 0, 1, 0, "2147483647", "");
-    var serverInfo = CreateServerInfo(cfg);
-    return Results.Json(new { user_info = userInfo, server_info = serverInfo });
-  }
 });
+
+async Task<IResult> GetDefaultResponse([FromServices] XcProxyConfiguration cfg, [FromServices] PlaylistData playlistData, [FromServices] TmdbEnricher tmdbClient)
+{
+  var userInfo = new UserInfo(
+    1,
+     "Active",
+      cfg.Username,
+       cfg.Password,
+        0,
+         1,
+          0,
+           startTime.ToUnixTimeSeconds().ToString(),
+           startTime.AddYears(10).ToUnixTimeSeconds().ToString(),
+            "hello from k8s",
+            ["m3u8", "ts", "mp4", "mkv"]
+            );
+  var serverInfo = CreateServerInfo(cfg);
+
+  var movieCategories = await playlistData.GetMovieCategories();
+  var seriesCategories = await playlistData.GetSeriesCategories();
+  return Results.Ok(new
+  {
+    user_info = userInfo,
+    server_info = serverInfo,
+    categories = new
+    {
+      live = Array.Empty<XtreamCategory>(),
+      movie = movieCategories,
+      series = seriesCategories,
+    },
+    available_channels = Array.Empty<string>()
+  });
+}
 
 app.MapGet("/xmltv.php", async ([FromServices] PlaylistData playlistData) =>
 {
@@ -702,25 +685,50 @@ public record XcProxyConfiguration
   }
 }
 
-class CacheHostedService(IFusionCache cache, PlaylistData playlistData, TmdbEnricher tmdbEnricher) : BackgroundService
+class CacheHostedService(PlaylistData playlistData, TmdbEnricher tmdbEnricher, ILogger<CacheHostedService> logger) : BackgroundService
 {
   protected override async Task ExecuteAsync(CancellationToken stoppingToken)
   {
     while (!stoppingToken.IsCancellationRequested)
     {
-      foreach (var item in await playlistData.LoadMoviesAsync())
+      await foreach (var (movieItems, seriesItems) in AsyncEnumerable.Zip(
+        Infinite<MovieItem>(() => playlistData.LoadMoviesAsync(), 100, stoppingToken),
+        Infinite<SeriesItem>(() => playlistData.LoadSeriesAsync(), 20, stoppingToken),
+        (movieItems, seriesItems) => (movieItems, seriesItems)))
       {
-        await tmdbEnricher.SearchMovieAsync(item.Title, item.Year);
-        await Task.Delay(100, stoppingToken);
-      }
-      foreach (var item in await playlistData.LoadSeriesAsync())
-      {
-        await tmdbEnricher.SearchSeriesAsync(item.Info.SeriesName);
-        await Task.Delay(100, stoppingToken);
-      }
+        logger.LogInformation(
+          "Starting enrichment cycle for {Movies} movies and {Series} series",
+          string.Join(", ", movieItems.Select(z => z.Title)),
+          string.Join(", ", seriesItems.Select(z => z.Info.SeriesName)));
+        foreach (var item in movieItems)
+        {
+          await tmdbEnricher.SearchMovieAsync(item.Title, item.Year);
+        }
+        foreach (var item in seriesItems)
+        {
+          await tmdbEnricher.SearchSeriesAsync(item.Info.SeriesName);
+        }
+        logger.LogInformation("Completed enrichment cycle for {Movies} movies and {Series} series", movieItems.Count, seriesItems.Count);
 
-      // Wait for a specified interval before the next maintenance cycle
-      await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+        // Wait for a specified interval before the next maintenance cycle
+        await Task.Delay(TimeSpan.FromSeconds(20), stoppingToken);
+      }
+    }
+
+    static async IAsyncEnumerable<ImmutableList<T>> Infinite<T>(Func<Task<FrozenSet<T>>> itemsFunc, int chunkSize, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+    infinite:
+      var chunks = new Queue<IEnumerable<T>>((await itemsFunc()).Chunk(chunkSize));
+      while (chunks.Count > 0)
+      {
+        var chunk = chunks.Dequeue();
+        yield return chunk.ToImmutableList();
+      }
+      if (!cancellationToken.IsCancellationRequested)
+      {
+        await Task.Delay(TimeSpan.FromMinutes(2), cancellationToken);
+        goto infinite;
+      }
     }
   }
 }
@@ -729,7 +737,7 @@ class CacheHostedService(IFusionCache cache, PlaylistData playlistData, TmdbEnri
 // DATA MODELS
 // ============================================
 
-public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfiguration config)
+public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfiguration config, TmdbEnricher tmdbClient)
 {
 
   private FrozenSet<MovieItem>? movieItems;
@@ -774,6 +782,55 @@ public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfig
       results.Add(new SeriesItem(item.First().series, seasons));
     }
     return results.ToHashSet();
+  }
+
+  public async Task<IEnumerable<XtreamCategory>> GetMovieCategories()
+  {
+    if (await cache.TryGetAsync<List<XtreamCategory>>("movies_categories") is { HasValue: true, Value: var cached })
+    {
+      return cached.AsEnumerable();
+    }
+
+    var items = await LoadMoviesAsync();
+    var results = await items
+          .ToObservable()
+          .Select((it, index) => tmdbClient.SearchMovieAsync(it.Title, it.Year).ToObservable())
+          .Merge(3)
+          .SelectMany(z => z?.Genres ?? [])
+          .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0", "movie"))
+          .Distinct(z => z.CategoryId)
+          .StartWith(new XtreamCategory(config.MovieCategoryId, "Uncategorized", "0", "movie"))
+          .ToAsyncEnumerable()
+          .OrderBy(z => z.CategoryName)
+          .ToListAsync();
+
+    cache.Set("movies_categories", results, TimeSpan.FromHours(1));
+
+    return results;
+  }
+  public async Task<IEnumerable<XtreamCategory>> GetSeriesCategories()
+  {
+    if (await cache.TryGetAsync<List<XtreamCategory>>("series_categories") is { HasValue: true, Value: var cached })
+    {
+      return cached.AsEnumerable();
+    }
+
+    var items = await LoadSeriesAsync();
+    var results = await items
+          .ToObservable()
+          .Select((it, index) => tmdbClient.SearchSeriesAsync(it.Info.SeriesName).ToObservable())
+          .Merge(3)
+          .SelectMany(z => z?.Genres ?? [])
+          .Select(z => new XtreamCategory(z.Id.ToString(), z.Name ?? "Unknown", "0", "series"))
+          .Distinct(z => z.CategoryId)
+          .StartWith(new XtreamCategory(config.SeriesCategoryId, "Uncategorized", "0", "series"))
+          .ToAsyncEnumerable()
+          .OrderBy(z => z.CategoryName)
+          .ToListAsync();
+
+    cache.Set("series_categories", results, TimeSpan.FromHours(1));
+
+    return results;
   }
 
 }
@@ -941,8 +998,10 @@ public record UserInfo(
     [property: JsonPropertyName("active_cons")] int ActiveConnections,
     [property: JsonPropertyName("max_connections")] int MaxConnections,
     [property: JsonPropertyName("is_trial")] int IsTrial,
+    [property: JsonPropertyName("created_at")] string CreatedAt,
     [property: JsonPropertyName("exp_date")] string ExpiryDate,
-    [property: JsonPropertyName("message")] string Message);
+    [property: JsonPropertyName("message")] string Message,
+    [property: JsonPropertyName("allowed_output_formats")] IReadOnlyList<string> AllowedOutputFormats);
 
 public record ServerInfo(
     [property: JsonPropertyName("url")] string Url,
@@ -954,8 +1013,7 @@ public record ServerInfo(
     [property: JsonPropertyName("timestamp_now")] long TimestampNow,
     [property: JsonPropertyName("time_now")] string TimeNow,
     [property: JsonPropertyName("process")] bool Process,
-    [property: JsonPropertyName("api_version")] int ApiVersion,
-    [property: JsonPropertyName("allowed_output_formats")] IReadOnlyList<string> AllowedOutputFormats);
+    [property: JsonPropertyName("api_version")] int ApiVersion);
 
 // ============================================
 // REGEX PATTERNS - SOURCE GENERATORS
@@ -1048,6 +1106,9 @@ public class TmdbEnricher(
        | MovieMethods.Images
        | MovieMethods.ReleaseDates
        | MovieMethods.ExternalIds
+       | MovieMethods.Keywords
+       | MovieMethods.Releases
+       | MovieMethods.Changes
        );
 
       await cache.SetAsync($"search-movie-{title}-{yearHint}", detail, TimeSpan.FromDays(7));
@@ -1078,6 +1139,10 @@ public class TmdbEnricher(
        | TvShowMethods.Images
        | TvShowMethods.EpisodeGroups
        | TvShowMethods.ExternalIds
+    | TvShowMethods.Keywords
+       | TvShowMethods.ContentRatings
+       | TvShowMethods.CreditsAggregate
+       | TvShowMethods.Changes
        );
 
       await cache.SetAsync($"search-series-{title}", detail, TimeSpan.FromDays(7));
