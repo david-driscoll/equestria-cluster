@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
@@ -739,19 +740,16 @@ class CacheHostedService(PlaylistData playlistData, TmdbEnricher tmdbEnricher, I
 
 public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfiguration config, TmdbEnricher tmdbClient)
 {
-
-  private FrozenSet<MovieItem>? movieItems;
-  private FrozenSet<SeriesItem>? seriesItems;
   private FrozenDictionary<int, EpisodeItem>? episodeItems;
 
   public async Task<FrozenSet<MovieItem>> LoadMoviesAsync()
   {
-    return movieItems ??= (await cache.GetOrSetAsync("movies", ct => LoadMoviesInternalAsync(), TimeSpan.FromHours(3))).ToFrozenSet();
+    return (await cache.GetOrSetAsync("movies", ct => LoadMoviesInternalAsync(), TimeSpan.FromHours(3))).ToFrozenSet();
   }
 
   public async Task<FrozenSet<SeriesItem>> LoadSeriesAsync()
   {
-    return seriesItems ??= (await cache.GetOrSetAsync("series", ct => LoadSeriesInternalAsync(), TimeSpan.FromHours(3))).ToFrozenSet();
+    return (await cache.GetOrSetAsync("series", ct => LoadSeriesInternalAsync(), TimeSpan.FromHours(3))).ToFrozenSet();
   }
 
   public async Task<FrozenDictionary<int, EpisodeItem>> LoadEpisodesAsync()
@@ -786,9 +784,16 @@ public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfig
 
   public async Task<IEnumerable<XtreamCategory>> GetMovieCategories()
   {
-    if (await cache.TryGetAsync<List<XtreamCategory>>("movies_categories") is { HasValue: true, Value: var cached })
+    try
     {
-      return cached.AsEnumerable();
+      if (await cache.TryGetAsync<List<XtreamCategory>>("movies_categories") is { HasValue: true, Value: var cached })
+      {
+        return cached.AsEnumerable();
+      }
+    }
+    catch (FusionCacheSerializationException)
+    {
+      // Cache is corrupted, ignore and rebuild
     }
 
     var items = await LoadMoviesAsync();
@@ -810,9 +815,16 @@ public class PlaylistData(M3uParser m3uParser, IFusionCache cache, XcProxyConfig
   }
   public async Task<IEnumerable<XtreamCategory>> GetSeriesCategories()
   {
-    if (await cache.TryGetAsync<List<XtreamCategory>>("series_categories") is { HasValue: true, Value: var cached })
+    try
     {
-      return cached.AsEnumerable();
+      if (await cache.TryGetAsync<List<XtreamCategory>>("series_categories") is { HasValue: true, Value: var cached })
+      {
+        return cached.AsEnumerable();
+      }
+    }
+    catch (FusionCacheSerializationException)
+    {
+      // Cache is corrupted, ignore and rebuild
     }
 
     var items = await LoadSeriesAsync();
@@ -1094,8 +1106,15 @@ public class TmdbEnricher(
       if (tmdbClient.ApiKey is not { Length: > 0 })
         return null;
 
-      if (await cache.TryGetAsync<Movie>($"search-movie-{title}-{yearHint}") is { HasValue: true } cached)
-        return cached.Value;
+      try
+      {
+        if (await cache.TryGetAsync<Movie>($"search-movie-{title}-{yearHint}") is { HasValue: true } cached)
+          return cached.Value;
+      }
+      catch (FusionCacheSerializationException)
+      {
+        // Cache is corrupted, ignore and rebuild
+      }
 
       if (await tmdbClient.SearchMovieAsync(StringHelpers.CleanQueryTitle(title), year: yearHint ?? 0) is not { Results: [{ } result] })
         return null;
@@ -1127,8 +1146,15 @@ public class TmdbEnricher(
       if (tmdbClient.ApiKey is not { Length: > 0 })
         return null;
 
-      if (await cache.TryGetAsync<TvShow>($"search-series-{title}") is { HasValue: true } cached)
-        return cached.Value;
+      try
+      {
+        if (await cache.TryGetAsync<TvShow>($"search-series-{title}") is { HasValue: true } cached)
+          return cached.Value;
+      }
+      catch (FusionCacheSerializationException)
+      {
+        // Cache is corrupted, ignore and rebuild
+      }
 
       if (await tmdbClient.SearchTvShowAsync(StringHelpers.CleanQueryTitle(title)) is not { Results: [{ } result] })
         return null;
@@ -1139,7 +1165,7 @@ public class TmdbEnricher(
        | TvShowMethods.Images
        | TvShowMethods.EpisodeGroups
        | TvShowMethods.ExternalIds
-    | TvShowMethods.Keywords
+       | TvShowMethods.Keywords
        | TvShowMethods.ContentRatings
        | TvShowMethods.CreditsAggregate
        | TvShowMethods.Changes
