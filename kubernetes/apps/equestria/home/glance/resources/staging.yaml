@@ -183,6 +183,8 @@
             show-if: glance.hide != "true"
           allow-insecure: true
 
+- name: Staging Media
+  columns:
     - size: small
       widgets:
         # Epic Games Free Games
@@ -623,6 +625,8 @@
               <p class="color-negative">Failed to connect to Grafana</p>
             {{ end }}
 
+- name: Staging Infra
+  columns:
     # Media & Arr Stack
     - size: small
       widgets:

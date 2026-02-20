@@ -24,6 +24,7 @@ spec:
   path: ./kubernetes/apps/equestria/home/glance
   prune: true
   wait: true
+  force: false
   interval: 1h
   retryInterval: 2m
   timeout: 10m
