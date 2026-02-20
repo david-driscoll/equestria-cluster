@@ -404,97 +404,97 @@
               <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: var(--color-subdue);">{{ .JSON.String "alt" }}</p>
             </div>
 
-    - size: small
-      widgets:
-        # Proxmox Backup Server Stats
-        - type: custom-api
-          title: PBS Stats
-          cache: 5m
-          allow-insecure: true
-          url: https://${pbs_host}/api2/json/nodes/localhost/status
-          headers:
-            Authorization: ${pbs_token}
-          template: |
-            <style>
-              .pbs-stat { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--color-separator); }
-              .pbs-stat-label { font-weight: 500; }
-              .pbs-stat-value { color: var(--color-highlight); }
-            </style>
-            {{ if eq .Response.StatusCode 200 }}
-              {{ $data := .JSON.Get "data" }}
-              {{ $cpuUsage := mul ($data.Float "cpu") 100.0 }}
-              {{ $memPercent := mul (div ($data.Float "memory.used") ($data.Float "memory.total")) 100.0 }}
-              {{ $diskPercent := mul (div ($data.Float "root.used") ($data.Float "root.total")) 100.0 }}
-              <div class="pbs-stat">
-                <span class="pbs-stat-label">CPU</span>
-                <span class="pbs-stat-value">{{ printf "%.0f" $cpuUsage }}%</span>
-              </div>
-              <div class="pbs-stat">
-                <span class="pbs-stat-label">RAM</span>
-                <span class="pbs-stat-value">{{ printf "%.0f" $memPercent }}%</span>
-              </div>
-              <div class="pbs-stat">
-                <span class="pbs-stat-label">Disk</span>
-                <span class="pbs-stat-value">{{ printf "%.0f" $diskPercent }}%</span>
-              </div>
-            {{ else }}
-              <p class="color-negative">Failed to connect to PBS</p>
-            {{ end }}
+    # - size: small
+    #   widgets:
+    #     # Proxmox Backup Server Stats
+    #     - type: custom-api
+    #       title: PBS Stats
+    #       cache: 5m
+    #       allow-insecure: true
+    #       url: https://${pbs_host}/api2/json/nodes/localhost/status
+    #       headers:
+    #         Authorization: ${pbs_token}
+    #       template: |
+    #         <style>
+    #           .pbs-stat { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--color-separator); }
+    #           .pbs-stat-label { font-weight: 500; }
+    #           .pbs-stat-value { color: var(--color-highlight); }
+    #         </style>
+    #         {{ if eq .Response.StatusCode 200 }}
+    #           {{ $data := .JSON.Get "data" }}
+    #           {{ $cpuUsage := mul ($data.Float "cpu") 100.0 }}
+    #           {{ $memPercent := mul (div ($data.Float "memory.used") ($data.Float "memory.total")) 100.0 }}
+    #           {{ $diskPercent := mul (div ($data.Float "root.used") ($data.Float "root.total")) 100.0 }}
+    #           <div class="pbs-stat">
+    #             <span class="pbs-stat-label">CPU</span>
+    #             <span class="pbs-stat-value">{{ printf "%.0f" $cpuUsage }}%</span>
+    #           </div>
+    #           <div class="pbs-stat">
+    #             <span class="pbs-stat-label">RAM</span>
+    #             <span class="pbs-stat-value">{{ printf "%.0f" $memPercent }}%</span>
+    #           </div>
+    #           <div class="pbs-stat">
+    #             <span class="pbs-stat-label">Disk</span>
+    #             <span class="pbs-stat-value">{{ printf "%.0f" $diskPercent }}%</span>
+    #           </div>
+    #         {{ else }}
+    #           <p class="color-negative">Failed to connect to PBS</p>
+    #         {{ end }}
 
-        # Cloudflare Tunnels
-        - type: custom-api
-          title: Cloudflare Tunnels
-          cache: 4h
-          url: https://api.cloudflare.com/client/v4/accounts/${cf_accountId}/cfd_tunnel/${cf_username}/configurations
-          headers:
-            Authorization: Bearer ${cf_credential}
-          template: |
-            {{ if eq .Response.StatusCode 200 }}
-              <ul class="list list-gap-10">
-              {{ range .JSON.Array "result.config.ingress" }}
-                {{ if (.String "hostname") }}
-                  <li style="padding: 6px 0;">
-                    <a href="https://{{ .String "hostname" }}" class="color-highlight" target="_blank" style="text-decoration: none;">
-                      {{ .String "hostname" | trimSuffix ".${ROOT_DOMAIN}" }}
-                    </a>
-                    {{ if (.String "service") }}
-                      <div style="font-size: 0.85rem; color: var(--color-subdue); margin-top: 2px;">
-                        → {{ .String "service" }}
-                      </div>
-                    {{ end }}
-                  </li>
-                {{ end }}
-              {{ end }}
-              </ul>
-            {{ else }}
-              <p class="color-negative">Failed to load tunnels (Status: {{ .Response.StatusCode }})</p>
-            {{ end }}
+    #     # Cloudflare Tunnels
+    #     - type: custom-api
+    #       title: Cloudflare Tunnels
+    #       cache: 4h
+    #       url: https://api.cloudflare.com/client/v4/accounts/${cf_accountId}/cfd_tunnel/${cf_username}/configurations
+    #       headers:
+    #         Authorization: Bearer ${cf_credential}
+    #       template: |
+    #         {{ if eq .Response.StatusCode 200 }}
+    #           <ul class="list list-gap-10">
+    #           {{ range .JSON.Array "result.config.ingress" }}
+    #             {{ if (.String "hostname") }}
+    #               <li style="padding: 6px 0;">
+    #                 <a href="https://{{ .String "hostname" }}" class="color-highlight" target="_blank" style="text-decoration: none;">
+    #                   {{ .String "hostname" | trimSuffix ".${ROOT_DOMAIN}" }}
+    #                 </a>
+    #                 {{ if (.String "service") }}
+    #                   <div style="font-size: 0.85rem; color: var(--color-subdue); margin-top: 2px;">
+    #                     → {{ .String "service" }}
+    #                   </div>
+    #                 {{ end }}
+    #               </li>
+    #             {{ end }}
+    #           {{ end }}
+    #           </ul>
+    #         {{ else }}
+    #           <p class="color-negative">Failed to load tunnels (Status: {{ .Response.StatusCode }})</p>
+    #         {{ end }}
 
-        # Prowlarr Indexers
-        - type: custom-api
-          title: Prowlarr Indexers
-          cache: 1m
-          url: http://prowlarr.equestria.svc.cluster.local:9696/api/v1/indexer
-          headers:
-            Accept: application/json
-            X-Api-Key: ${prowlarr_apikey}
-          template: |
-            {{ if eq .Response.StatusCode 200 }}
-              <ul class="list list-gap-8">
-              {{ range .JSON.Array "" }}
-                <li style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--color-separator);">
-                  <a href="http://prowlarr.equestria.svc.cluster.local:9696" target="_blank" class="color-highlight" style="text-decoration: none; flex: 1;">{{ .String "name" }}</a>
-                  {{ if eq (.String "enable") "true" }}
-                    <span style="color: var(--color-positive); font-weight: bold;">✓</span>
-                  {{ else }}
-                    <span style="color: var(--color-negative); font-weight: bold;">✗</span>
-                  {{ end }}
-                </li>
-              {{ end }}
-              </ul>
-            {{ else }}
-              <p class="color-negative">Failed to load indexers</p>
-            {{ end }}
+    #     # Prowlarr Indexers
+    #     - type: custom-api
+    #       title: Prowlarr Indexers
+    #       cache: 1m
+    #       url: http://prowlarr.equestria.svc.cluster.local:9696/api/v1/indexer
+    #       headers:
+    #         Accept: application/json
+    #         X-Api-Key: ${prowlarr_apikey}
+    #       template: |
+    #         {{ if eq .Response.StatusCode 200 }}
+    #           <ul class="list list-gap-8">
+    #           {{ range .JSON.Array "" }}
+    #             <li style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--color-separator);">
+    #               <a href="http://prowlarr.equestria.svc.cluster.local:9696" target="_blank" class="color-highlight" style="text-decoration: none; flex: 1;">{{ .String "name" }}</a>
+    #               {{ if eq (.String "enable") "true" }}
+    #                 <span style="color: var(--color-positive); font-weight: bold;">✓</span>
+    #               {{ else }}
+    #                 <span style="color: var(--color-negative); font-weight: bold;">✗</span>
+    #               {{ end }}
+    #             </li>
+    #           {{ end }}
+    #           </ul>
+    #         {{ else }}
+    #           <p class="color-negative">Failed to load indexers</p>
+    #         {{ end }}
 
     # Media Servers
     - size: small
