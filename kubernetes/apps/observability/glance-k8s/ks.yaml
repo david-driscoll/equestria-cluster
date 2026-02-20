@@ -3,8 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app glance
-  namespace: &namespace equestria
+  name: &app glance-k8s
+  namespace: &namespace observability
   labels:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
@@ -14,16 +14,10 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  dependsOn:
-    - name: volsync
-      namespace: volsync-system
-    - name: external-secrets
-      namespace: kube-system
-    - name: github-token
-      namespace: kube-system
-  path: ./kubernetes/apps/equestria/home/glance
+  path: ./kubernetes/apps/observability/glance-k8s
   prune: true
   wait: true
+  force: false
   interval: 1h
   retryInterval: 2m
   timeout: 10m
@@ -31,16 +25,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  components:
-    - ../../../../components/tailscale
-    - ../../../../components/volsync
-  postBuild:
-    substitute:
-      APP: *app
-      NAMESPACE: *namespace
-      VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_PUID: "1000"
-      VOLSYNC_PGID: "1000"
-    substituteFrom:
-    - kind: Secret
-      name: github-token

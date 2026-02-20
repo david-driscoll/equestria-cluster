@@ -73,7 +73,7 @@ spec:
           - path: /home/user/glance-assets
             subPath: assets
       config:
-        type: secret
+        type: configMap
         name: ${APP}-config
         defaultMode: 493
         globalMounts:

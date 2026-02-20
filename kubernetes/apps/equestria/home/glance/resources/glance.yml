@@ -35,4 +35,5 @@ document:
 pages:
   - $include: home.yaml
   - $include: homelab.yaml
+  - $include: staging.yaml
   # - $include: videos.yaml

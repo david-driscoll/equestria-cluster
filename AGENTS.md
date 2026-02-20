@@ -72,6 +72,24 @@ All applications use standardized ks.yaml files with:
 - **SET EXPLICIT TIMEOUTS** (60+ minutes) for bootstrap commands
 - **This is a production config** - exercise extreme caution with changes
 
+# Glance Dashboard Configuration
+
+The Glance dashboard is deployed in the `equestria/home` namespace with:
+
+- **Main Config**: `resources/glance.yml` includes pages array with `- $include: staging.yaml`
+- **Staging Page**: `resources/staging.yaml` - test page for new widgets before promoting to production
+- **Widget Types**:
+    - `custom-api`: Direct API calls with Go templates for response parsing (supports gjson for JSON)
+    - `extension`: glance-k8s widgets served at `/extension/nodes` and `/extension/apps`
+    - Built-in monitors (Proxmox stats, Gatus health, GitHub notifications)
+- **Templating**: Uses `${ROOT_DOMAIN}` (from shared-secrets: `driscoll.tech`) and other postBuild substitution variables
+- **Credential Injection**: ExternalSecret extracts 1Password items with regexp key rewriting:
+    - `Authentik API Token` → `AUTHENTIK_API_TOKEN` (Bearer header for custom-api)
+    - `Proxmox VE` → `PROXMOXVE_URL` (self-signed certs: `allow-insecure: true`)
+    - `GitHub Personal Access Token` → `GITHUB_TOKEN` (Bearer header)
+- **Cross-Cluster glance-k8s**: stargate glance-k8s exposed via HTTPRoute at `glance-k8s.sgc.internal` with `allow-insecure: true`
+- **ConfigMap Pattern**: `kustomization.yaml` generates ConfigMap with `configMapGenerator.files`, `externalsecret.yaml` templates all files using `templateFrom.templateAs: Values`
+
 # Application definitions
 
 This system supports a custom kubernetes resource as defined by kubernetes/apps/observability/crds/application-crd.yaml

@@ -13,5 +13,8 @@ configMapGenerator:
   - glance.yml=./resources/glance.yml
   - home.yaml=./resources/home.yaml
   - homelab.yaml=./resources/homelab.yaml
+  - staging.yaml=./resources/staging.yaml
   options:
     disableNameSuffixHash: true
+    annotations:
+      kustomize.toolkit.fluxcd.io/substitute: disabled
