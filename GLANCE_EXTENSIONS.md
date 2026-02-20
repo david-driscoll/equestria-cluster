@@ -326,7 +326,7 @@ cache: 1m
 url: http://prowlarr.equestria.svc.cluster.local:9696/api/v1/indexer
 headers:
     Accept: application/json
-    X-Api-Key: ${media_prowlarr_apikey}
+    X-Api-Key: ${prowlarr_apikey}
 ```
 
 **Note:** Each indexer row shows the name (clickable link to Prowlarr) and either ✓ or ✗ status based on `enable` field.

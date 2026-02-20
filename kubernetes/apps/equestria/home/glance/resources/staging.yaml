@@ -445,7 +445,7 @@
         - type: custom-api
           title: Cloudflare Tunnels
           cache: 4h
-          url: https://api.cloudflare.com/client/v4/accounts/${cf_accountId}/cfd_tunnel/${cftunnel_username}/configurations
+          url: https://api.cloudflare.com/client/v4/accounts/${cf_accountId}/cfd_tunnel/${cf_username}/configurations
           headers:
             Authorization: Bearer ${cf_credential}
           template: |
@@ -455,7 +455,7 @@
                 {{ if (.String "hostname") }}
                   <li style="padding: 6px 0;">
                     <a href="https://{{ .String "hostname" }}" class="color-highlight" target="_blank" style="text-decoration: none;">
-                      {{ .String "hostname" | trimSuffix ".driscoll.tech" }}
+                      {{ .String "hostname" | trimSuffix ".${ROOT_DOMAIN}" }}
                     </a>
                     {{ if (.String "service") }}
                       <div style="font-size: 0.85rem; color: var(--color-subdue); margin-top: 2px;">
@@ -477,7 +477,7 @@
           url: http://prowlarr.equestria.svc.cluster.local:9696/api/v1/indexer
           headers:
             Accept: application/json
-            X-Api-Key: ${media_prowlarr_apikey}
+            X-Api-Key: ${prowlarr_apikey}
           template: |
             {{ if eq .Response.StatusCode 200 }}
               <ul class="list list-gap-8">
@@ -650,7 +650,7 @@
         # Unifi Network Widget
         - type: custom-api
           title: UniFi Network
-          url: https://${unifi_ip}:${unifi_port}/api/s/default/stat/uptime
+          url: https://discord.${ROOT_DOMAIN}/api/s/default/stat/uptime
           cache: 1m
           allow-insecure: true
           headers:
