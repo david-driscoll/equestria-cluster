@@ -8,7 +8,7 @@ resources:
   - ./externalsecret.yaml
   - ./definition.yaml
 configMapGenerator:
-- name: ${APP}-config
+- name: glance-config
   files:
   - glance.yml=./resources/glance.yml
   - home.yaml=./resources/home.yaml
