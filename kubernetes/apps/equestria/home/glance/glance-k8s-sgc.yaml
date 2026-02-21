@@ -4,13 +4,14 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    tailscale.com/tailnet-fqdn: "idp.${TAILSCALE_DOMAIN}"
-    tailscale.com/proxy-group: egress
-  name: tsidp
+    tailscale.com/tailnet-fqdn: "glance-k8s-sgc.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: "observability"
+  name: glance-k8s-sgc
 spec:
-  externalName: idp
+  externalName: unused
   type: ExternalName
   ports:
-    - port: 443
-      targetPort: 443
-      name: https
+    - port: 8080
+      targetPort: 8080
+      name: http
+
