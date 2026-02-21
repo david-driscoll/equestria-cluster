@@ -6,7 +6,7 @@
         # Authentik Applications - Custom API widget
         - type: custom-api
           title: Authentik Applications
-          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/?page_size=500
+          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/?page_size=500&superuser_full_list=true
           cache: 1h
           headers:
             Authorization: Bearer ${AUTHENTIK_API_TOKEN}
@@ -28,9 +28,12 @@
               .app-name { font-size: 0.95rem; }
               .app-group { font-size: 0.75rem; color: var(--color-subdue); }
             </style>
+            {{ range .JSON.Array "results" | sortByString "group" "asc" | unique "group" }}
+            {{ $group := .String "group" }}
             <div class="app-list">
-            {{ range .JSON.Array "results" }}
+            {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
               {{ $url := .String "meta_launch_url" }}
+              {{ if and (eq (.String "group") $group) (ne $url "") }}
                 <a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description" }}">
                   {{ if .String "meta_icon" }}
                     <img src="{{ .String "meta_icon" }}" alt="{{ .String "name" }}" class="app-icon">
@@ -40,8 +43,10 @@
                     {{ if .String "group" }}<br><span class="app-group">{{ .String "group" }}</span>{{ end }}
                   </span>
                 </a>
+              {{ end }}
             {{ end }}
             </div>
+            {{ end }}
 
     - size: small
       widgets:
@@ -66,10 +71,10 @@
         #       </div>
         #     {{ end }}
 
-        # Gatus Monitor
+        # Uptime Monitor
         - type: custom-api
           title: Service Status
-          url: https://gatus.${ROOT_DOMAIN}/api/v1/statuses
+          url: https://uptime.${ROOT_DOMAIN}/api/v1/statuses
           cache: 2m
           template: |
             <style>
@@ -124,14 +129,14 @@
       widgets:
         # glance-k8s Nodes (equestria)
         - type: extension
-          url: http://${glance_k8s_equestria_url}/extension/nodes
+          url: http://glance-k8s-equestria.opossum-yo.ts.net:8080/extension/nodes
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Equestria Nodes
 
         # glance-k8s Apps (equestria)
         - type: extension
-          url: http://${glance_k8s_equestria_url}/extension/apps
+          url: http://glance-k8s-equestria.opossum-yo.ts.net:8080/extension/apps
           allow-potentially-dangerous-html: true
           cache: 1m
           title: Equestria Apps
@@ -140,7 +145,7 @@
 
         # glance-k8s Apps (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: http://${glance_k8s_sgc_url}/extension/apps
+          url: http://glance-k8s-sgc.opossum-yo.ts.net:8080/extension/apps
           allow-potentially-dangerous-html: true
           cache: 1m
           title: Stargate Apps
@@ -150,7 +155,7 @@
 
         # glance-k8s Nodes (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: http://${glance_k8s_sgc_url}/extension/nodes
+          url: http://glance-k8s-sgc.opossum-yo.ts.net:8080/extension/nodes
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Stargate Nodes
