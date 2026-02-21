@@ -6,6 +6,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-fqdn: "glance-k8s-sgc.${TAILSCALE_DOMAIN}"
     tailscale.com/proxy-group: "observability"
+    # tailscale.com/tags: "tag:observability"
   name: glance-k8s-sgc
 spec:
   externalName: unused
@@ -14,4 +15,7 @@ spec:
     - port: 8080
       targetPort: 8080
       name: http
+    - port: 443
+      targetPort: 443
+      name: https
 

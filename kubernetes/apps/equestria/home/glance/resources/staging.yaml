@@ -129,14 +129,14 @@
       widgets:
         # glance-k8s Nodes (equestria)
         - type: extension
-          url: http://glance-k8s-equestria.opossum-yo.ts.net:8080/extension/nodes
+          url: http://glance-k8s.observability.svc.cluster.local:8080/extension/nodes
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Equestria Nodes
 
         # glance-k8s Apps (equestria)
         - type: extension
-          url: http://glance-k8s-equestria.opossum-yo.ts.net:8080/extension/apps
+          url: http://glance-k8s.observability.svc.cluster.local:8080/extension/apps
           allow-potentially-dangerous-html: true
           cache: 1m
           title: Equestria Apps
@@ -145,7 +145,7 @@
 
         # glance-k8s Apps (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: http://glance-k8s-sgc.opossum-yo.ts.net:8080/extension/apps
+          url: http://glance-k8s-sgc.equestria.svc.cluster.local:8080/extension/apps
           allow-potentially-dangerous-html: true
           cache: 1m
           title: Stargate Apps
@@ -155,7 +155,7 @@
 
         # glance-k8s Nodes (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: http://glance-k8s-sgc.opossum-yo.ts.net:8080/extension/nodes
+          url: http://glance-k8s-sgc.equestria.svc.cluster.local:8080/extension/nodes
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Stargate Nodes
