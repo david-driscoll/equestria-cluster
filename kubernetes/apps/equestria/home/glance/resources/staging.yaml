@@ -6,7 +6,7 @@
         # Authentik Applications - Custom API widget
         - type: custom-api
           title: Authentik Applications
-          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/
+          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/?page_size=500
           cache: 1h
           headers:
             Authorization: Bearer ${AUTHENTIK_API_TOKEN}
@@ -31,7 +31,6 @@
             <div class="app-list">
             {{ range .JSON.Array "results" }}
               {{ $url := .String "meta_launch_url" }}
-              {{ if $url }}
                 <a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description" }}">
                   {{ if .String "meta_icon" }}
                     <img src="{{ .String "meta_icon" }}" alt="{{ .String "name" }}" class="app-icon">
@@ -41,7 +40,6 @@
                     {{ if .String "group" }}<br><span class="app-group">{{ .String "group" }}</span>{{ end }}
                   </span>
                 </a>
-              {{ end }}
             {{ end }}
             </div>
 
@@ -126,14 +124,14 @@
       widgets:
         # glance-k8s Nodes (equestria)
         - type: extension
-          url: http://glance-k8s-sgc.observability.svc.cluster.local:8080/extension/nodes
+          url: http://${glance_k8s_equestria_url}/extension/nodes
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Equestria Nodes
 
         # glance-k8s Apps (equestria)
         - type: extension
-          url: http://glance-k8s.observability.svc.cluster.local:8080/extension/apps
+          url: http://${glance_k8s_equestria_url}/extension/apps
           allow-potentially-dangerous-html: true
           cache: 1m
           title: Equestria Apps
@@ -142,7 +140,7 @@
 
         # glance-k8s Apps (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: https://glance-k8s.sgc.internal/extension/apps
+          url: http://${glance_k8s_sgc_url}/extension/apps
           allow-potentially-dangerous-html: true
           cache: 1m
           title: Stargate Apps
@@ -152,7 +150,7 @@
 
         # glance-k8s Nodes (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: https://glance-k8s.sgc.internal/extension/nodes
+          url: http://${glance_k8s_sgc_url}/extension/nodes
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Stargate Nodes
