@@ -7,7 +7,6 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./definition.yaml
-  - ./glance-k8s-sgc.yaml
 configMapGenerator:
 - name: glance-config
   files:
