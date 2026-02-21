@@ -185,7 +185,7 @@
 
 - name: Staging Media
   columns:
-    - size: small
+    - size: full
       widgets:
         # Epic Games Free Games
         - type: custom-api
@@ -628,7 +628,7 @@
 - name: Staging Infra
   columns:
     # Media & Arr Stack
-    - size: small
+    - size: full
       widgets:
         # Arr Releases (Sonarr)
         - type: custom-api
