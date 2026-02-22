@@ -41,7 +41,7 @@ spec:
           *app :
             image:
               repository: vikunja/vikunja
-              tag: unstable@sha256:fa360992f587adad6a235f976bcf987b350196825ab85285512d2ccb9462fc52
+              tag: unstable@sha256:733bc19905daf46fe0954884cbe07a88e661a512fd6e1b20766394a32167afed
             env:
               TZ: "${TIMEZONE}"
             resources:
