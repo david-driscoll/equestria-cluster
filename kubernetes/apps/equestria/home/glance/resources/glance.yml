@@ -2,8 +2,8 @@
 server:
   proxied: true
 document:
-  head: |
-    <script src="/assets/custom.js"></script>
+  head: ""
+
 # branding:
 #   custom-footer: |
 #     <p>Powered by <a href="https://github.com/glanceapp/glance">Glance</a></p>

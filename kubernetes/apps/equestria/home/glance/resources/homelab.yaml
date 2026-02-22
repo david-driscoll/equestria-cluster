@@ -2,4 +2,89 @@
 - name: Homelab
   columns:
     - size: full
-      widgets: []
+      widgets:
+        # Authentik Applications - Custom API widget
+        - type: custom-api
+          title: Authentik Applications
+          hide-header: true
+          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/?page_size=500&superuser_full_list=true
+          cache: 1h
+          headers:
+            Authorization: Bearer ${AUTHENTIK_API_TOKEN}
+            Accept: application/json
+          template: |
+            <style>
+              .app-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                background: rgba(0,0,0,0.05);
+                border-radius: 8px;
+                text-decoration: none;
+                color: var(--color-primary);
+                transition: background 120ms ease-in-out;
+              }
+              .app-item:hover { background: rgba(0,0,0,0.08); }
+              .app-icon { width: 24px; height: 24px; object-fit: contain; }
+              .app-name { font-size: 0.95rem; font-weight: 600; }
+              .app-description { display: block; font-size: 0.8rem; color: var(--color-subdue); }
+              .app-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 10px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+              }
+              .app-grid-item { margin: 0; }
+              @media (max-width: 900px) {
+                .app-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+              }
+              @media (max-width: 600px) {
+                .app-grid { grid-template-columns: 1fr; }
+              }
+            </style>
+            <div class="widget widget-type-group">
+              <div class="widget-content widget-content-frameless">
+                <div class="widget-group-header">
+                  <div class="widget-header gap-20" role="tablist">
+                  {{ $groups := (.JSON.Array "results" | sortByString "group" "asc" | unique "group") }}
+                  {{ range $index, $item := $groups }}
+                    {{ $group := $item.String "group" }}
+                    {{ $tabId := printf "app-group-tab-%d" $index }}
+                    {{ if eq (findMatch "^System:" $group) "" }}
+                      <button class="widget-group-title {{ if eq $index 0 }}widget-group-title-current{{ end }}" aria-selected="{{ if eq $index 0 }}true{{ else }}false{{ end }}" role="tab" aria-controls="{{ $tabId }}-panel" id="{{ $tabId }}">{{ $group }}</button>
+                    {{ end }}
+                  {{ end }}
+                  </div>
+                </div>
+                <div class="widget-group-contents">
+                  {{ $groups := (.JSON.Array "results" | sortByString "group" "asc" | unique "group") }}
+                  {{ range $index, $item := $groups }}
+                    {{ $group := $item.String "group" }}
+                    {{ $tabId := printf "app-group-tab-%d" $index }}
+                    <div class="widget-group-content {{ if eq $index 0 }}widget-group-content-current{{ end }}" id="{{ $tabId }}-panel" role="tabpanel" aria-labelledby="{{ $tabId }}" aria-hidden="{{ if eq $index 0 }}false{{ else }}true{{ end }}">
+                      <ul class="app-grid">
+                        {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
+                          {{ $url := .String "meta_launch_url" }}
+                          {{ if and (eq (.String "group") $group) (ne $url "") (not (findMatch "System:" $group)) }}
+                            <li class="app-grid-item">
+                              <a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description" }}">
+                                {{ if .String "meta_icon" }}
+                                  <img src="{{ .String "meta_icon" }}" alt="{{ .String "name" }}" class="app-icon">
+                                {{ end }}
+                                <span>
+                                  <span class="app-name">{{ .String "name" }}</span>
+                                  <span class="app-description">{{ .String "description" }}</span>
+                                </span>
+                              </a>
+                            </li>
+                          {{ end }}
+                        {{ end }}
+                      </ul>
+                    </div>
+                  {{ end }}
+                </div>
+              </div>
+            </div>

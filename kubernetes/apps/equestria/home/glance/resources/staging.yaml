@@ -3,50 +3,8 @@
   columns:
     - size: full
       widgets:
-        # Authentik Applications - Custom API widget
-        - type: custom-api
-          title: Authentik Applications
-          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/?page_size=500&superuser_full_list=true
-          cache: 1h
-          headers:
-            Authorization: Bearer ${AUTHENTIK_API_TOKEN}
-            Accept: application/json
-          template: |
-            <style>
-              .app-list { display: flex; flex-wrap: wrap; gap: 10px; }
-              .app-item {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 8px 12px;
-                background: rgba(0,0,0,0.05);
-                border-radius: 6px;
-                text-decoration: none;
-                color: var(--color-primary);
-              }
-              .app-icon { width: 24px; height: 24px; object-fit: contain; }
-              .app-name { font-size: 0.95rem; }
-              .app-group { font-size: 0.75rem; color: var(--color-subdue); }
-            </style>
-            {{ range .JSON.Array "results" | sortByString "group" "asc" | unique "group" }}
-            {{ $group := .String "group" }}
-            <div class="app-list">
-            {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
-              {{ $url := .String "meta_launch_url" }}
-              {{ if and (eq (.String "group") $group) (ne $url "") }}
-                <a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description" }}">
-                  {{ if .String "meta_icon" }}
-                    <img src="{{ .String "meta_icon" }}" alt="{{ .String "name" }}" class="app-icon">
-                  {{ end }}
-                  <span>
-                    <span class="app-name">{{ .String "name" }}</span>
-                    {{ if .String "group" }}<br><span class="app-group">{{ .String "group" }}</span>{{ end }}
-                  </span>
-                </a>
-              {{ end }}
-            {{ end }}
-            </div>
-            {{ end }}
+
+
 
     - size: small
       widgets:
@@ -70,26 +28,6 @@
         #         <span class="stat-value">{{ if .Bool "status" | eq "online" }}🟢{{ else }}🔴{{ end }} {{ .String "status" }}</span>
         #       </div>
         #     {{ end }}
-
-        # Uptime Monitor
-        - type: custom-api
-          title: Service Status
-          url: https://uptime.${ROOT_DOMAIN}/api/v1/statuses
-          cache: 2m
-          template: |
-            <style>
-              .status-item { display: flex; justify-content: space-between; margin-bottom: 5px; padding: 5px 0; }
-              .status-up { color: var(--color-positive); }
-              .status-down { color: var(--color-negative); }
-            </style>
-            {{ range .JSON.Array "results" }}
-              <div class="status-item">
-                <span>{{ .String "name" }}</span>
-                <span class="{{ if .Bool "up" }}status-up{{ else }}status-down{{ end }}">
-                  {{ if .Bool "up" }}✓ Up{{ else }}✗ Down{{ end }}
-                </span>
-              </div>
-            {{ end }}
 
         # GitHub Notifications (Official Glance Widget)
         - type: custom-api
@@ -133,6 +71,7 @@
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Stargate Nodes
+          title-url: https://headlamp.sgc.driscoll.tech
           parameters:
             show-if: glance.hide != "true"
 
@@ -142,6 +81,7 @@
           allow-potentially-dangerous-html: true
           cache: 30s
           title: Equestria Nodes
+          title-url: https://headlamp.equestria.driscoll.tech
           parameters:
             show-if: glance.hide != "true"
 

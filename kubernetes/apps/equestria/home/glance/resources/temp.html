@@ -1,0 +1,45 @@
+<div class="widget widget-type-group">
+  <div class="widget-content widget-content-frameless">
+    <div class="widget-group-header">
+      <div class="widget-header gap-20" role="tablist">
+      {{ range .JSON.Array "results" | sortByString "group" "asc" | unique "group" }}
+      <button class="widget-group-title" role="tab">
+        {{ .String "group" }}
+      </button>
+      {{ end }}
+    </div>
+  </div>
+
+  {{ range .JSON.Array "results" | sortByString "group" "asc" | unique "group" }}
+  {{ $group := .String "group" }}
+  <div class="widget-group-contents">
+    <div class="widget-group-content" role="tabpanel">
+      <div class="widget">
+        <div class="widget-content">
+          <ul
+            class="list list-gap-14 collapsible-container"
+            data-collapse-after="6"
+          >
+          {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
+            {{ $url := .String "meta_launch_url" }}
+            {{ if and (eq (.String "group") $group) (ne $url "") }}
+            <li>
+              <a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description" }}">
+                {{ if .String "meta_icon" }}
+                  <img src="{{ .String "meta_icon" }}" alt="{{ .String "name" }}" class="app-icon">
+                {{ end }}
+                <span>
+                  <span class="app-name">{{ .String "name" }}</span>
+                  <span class="app-description">{{ .String "description" }}</span>
+                </span>
+              </a>
+            </li>
+            {{ end }}
+          </ul>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+</div>
