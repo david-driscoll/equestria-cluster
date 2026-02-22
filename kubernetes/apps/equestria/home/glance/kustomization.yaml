@@ -10,10 +10,20 @@ resources:
 configMapGenerator:
 - name: glance-config
   files:
-  - glance.yml=./resources/glance.yml
-  - home.yaml=./resources/home.yaml
-  - homelab.yaml=./resources/homelab.yaml
-  - staging.yaml=./resources/staging.yaml
+  - ./resources/glance.yml
+  - ./resources/home.yaml
+  - ./resources/homelab.yaml
+  - ./resources/staging.yaml
+  options:
+    disableNameSuffixHash: true
+    annotations:
+      kustomize.toolkit.fluxcd.io/substitute: disabled
+
+- name: glance-widgets
+  files:
+    - ./resources/widgets/nhl-today.yaml
+    - ./resources/widgets/nodes.yaml
+    - ./resources/widgets/service-status.yaml
   options:
     disableNameSuffixHash: true
     annotations:

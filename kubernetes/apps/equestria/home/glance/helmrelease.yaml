@@ -82,6 +82,13 @@ spec:
         globalMounts:
           - path: /app/config/
             readOnly: true
+      widgets-files:
+        type: configMap
+        name: glance-widgets
+        defaultMode: 493
+        globalMounts:
+          - path: /app/config/widgets/
+            readOnly: true
 
     service:
       app:

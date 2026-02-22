@@ -88,3 +88,8 @@
                 </div>
               </div>
             </div>
+
+
+    - size: small
+      widgets:
+        - $include: widgets/nodes.yaml

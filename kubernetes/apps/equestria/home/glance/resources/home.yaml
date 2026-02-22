@@ -25,6 +25,61 @@
           channels:
             - linustech
 
+        # NHL Scores (Official Glance Widget)
+        - $include: widgets/nhl-today.yaml
+        # Epic Games Free Games
+        - type: custom-api
+          title: Epic Games Free
+          cache: 1h
+          url: https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en&country=US&allowCountries=US
+          template: |
+            <div>
+              {{ if eq .Response.StatusCode 200 }}
+                <div class="horizontal-cards-2">
+                  {{ range .JSON.Array "data.Catalog.searchStore.elements" }}
+                    {{ $price := .String "price.totalPrice.discountPrice" }}
+                    {{ $hasPromo := gt (len (.Array "promotions.promotionalOffers")) 0 }}
+                    {{ if and $hasPromo (eq $price "0") }}
+                      {{ $gamePage := .String "productSlug" }}
+                      {{ if gt (len (.Array "offerMappings")) 0 }}
+                        {{ $gamePage = .String "offerMappings.0.pageSlug" }}
+                      {{ end }}
+                      <a href="https://store.epicgames.com/en-US/p/{{ $gamePage }}" target="_blank" class="card">
+                        {{ $title := .String "title" }}
+                        {{ range .Array "keyImages" }}
+                          {{ if eq (.String "type") "OfferImageWide" }}
+                            <img src="{{ .String "url" }}" alt="{{ $title }}" style="width: 100%; max-width: 300px; height: 150px; object-fit: cover; border-radius: var(--border-radius);">
+                          {{ end }}
+                        {{ end }}
+                        <div class="card-content">
+                          <span class="size-base color-primary">{{ $title }}</span><br>
+                          <span class="size-h5 color-subdue">
+                            {{ if $hasPromo }}
+                              {{ $promotions := .Array "promotions.promotionalOffers" }}
+                              {{ if gt (len $promotions) 0 }}
+                                {{ $firstPromo := index $promotions 0 }}
+                                {{ $offers := $firstPromo.Array "promotionalOffers" }}
+                                {{ if gt (len $offers) 0 }}
+                                  {{ $firstOffer := index $offers 0 }}
+                                  Free until {{ slice ($firstOffer.String "endDate") 0 10 }}
+                                {{ else }}
+                                  Free this week!
+                                {{ end }}
+                              {{ else }}
+                                Free this week!
+                              {{ end }}
+                            {{ end }}
+                          </span>
+                        </div>
+                      </a>
+                    {{ end }}
+                  {{ end }}
+                </div>
+              {{ else }}
+                <p class="color-negative">Error fetching Epic Games data.</p>
+              {{ end }}
+            </div>
+
     - size: full
       widgets:
         - type: hacker-news
@@ -34,6 +89,19 @@
             - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
             - UCv6J_jJa8GJqFwQNgNrMuww # ServeTheHome
             - UCOk-gHyjcWZNj3Br4oxwh0A # Techno Tim
+
+        # XKCD
+        - type: custom-api
+          title: XKCD
+          cache: 2m
+          url: https://xkcd.com/info.0.json
+          template: |
+            <div style="text-align: center;">
+              <h4 style="margin: 0 0 10px 0;">{{ .JSON.String "title" }}</h4>
+              <img src="{{ .JSON.String "img" }}" style="max-width: 100%; height: auto; border-radius: var(--border-radius);">
+              <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: var(--color-subdue);">{{ .JSON.String "alt" }}</p>
+            </div>
+
 
         - type: reddit
           subreddit: selfhosted
@@ -46,26 +114,4 @@
           units: imperial
 
         # Uptime Monitor
-        - type: custom-api
-          title: Service Status
-          url: https://uptime.${ROOT_DOMAIN}/api/v1/endpoints/statuses
-          cache: 2m
-          template: |
-            <style>
-              .status-item { display: flex; justify-content: space-between; margin-bottom: 5px; padding: 5px 0; }
-              .status-up { color: var(--color-positive); }
-              .status-down { color: var(--color-negative); }
-            </style>
-            {{ range .JSON.Array "" }}
-              {{ $results := .Array "results" }}
-              {{ if gt (len $results) 0 }}
-                {{ $latestIndex := sub (len $results) 1 }}
-                {{ $latest := index $results $latestIndex }}
-                {{ if not ($latest.Bool "success") }}
-                  <div class="status-item">
-                    <span>{{ .String "name" }}</span>
-                    <span class="status-down">✗ Down</span>
-                  </div>
-                {{ end }}
-              {{ end }}
-            {{ end }}
+        - $include: widgets/nodes.yaml

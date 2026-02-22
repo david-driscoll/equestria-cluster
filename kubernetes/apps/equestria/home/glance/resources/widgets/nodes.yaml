@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/definitions/widget
+# Uptime Monitor
+- $include: service-status.yaml
+
+# glance-k8s Nodes (stargate) - via Tailscale cross-cluster access
+- type: extension
+  url: https://glance-k8s.sgc.${ROOT_DOMAIN}/extension/nodes
+  allow-potentially-dangerous-html: true
+  cache: 30s
+  title: Stargate Nodes
+  title-url: https://headlamp.sgc.driscoll.tech
+  parameters:
+    show-if: glance.hide != "true"
+
+# glance-k8s Nodes (equestria)
+- type: extension
+  url: https://glance-k8s.equestria.${ROOT_DOMAIN}/extension/nodes
+  allow-potentially-dangerous-html: true
+  cache: 30s
+  title: Equestria Nodes
+  title-url: https://headlamp.equestria.driscoll.tech
+  parameters:
+    show-if: glance.hide != "true"
