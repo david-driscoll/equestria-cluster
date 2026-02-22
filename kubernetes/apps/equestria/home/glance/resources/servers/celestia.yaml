@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
+- name: Celestia
+  width: wide
+  desktop-navigation-width: default
+
+
+  columns:
+
+    - size: full
+      widgets:
+        - type: calendar
+
+    - size: full
+      widgets:
+        - type: calendar

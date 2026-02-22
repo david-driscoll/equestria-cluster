@@ -13,6 +13,7 @@ configMapGenerator:
   - ./resources/glance.yml
   - ./resources/home.yaml
   - ./resources/homelab.yaml
+  - ./resources/high-seas.yaml
   - ./resources/staging.yaml
   options:
     disableNameSuffixHash: true
@@ -24,6 +25,18 @@ configMapGenerator:
     - ./resources/widgets/nhl-today.yaml
     - ./resources/widgets/nodes.yaml
     - ./resources/widgets/service-status.yaml
+  options:
+    disableNameSuffixHash: true
+    annotations:
+      kustomize.toolkit.fluxcd.io/substitute: disabled
+
+- name: glance-servers
+  files:
+    - ./resources/servers/alpha-site.yaml
+    - ./resources/servers/celestia.yaml
+    - ./resources/servers/equestria.yaml
+    - ./resources/servers/luna.yaml
+    - ./resources/servers/sgc.yaml
   options:
     disableNameSuffixHash: true
     annotations:

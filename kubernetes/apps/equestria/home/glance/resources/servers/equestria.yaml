@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
+- name: Equestria
+  width: wide
+  desktop-navigation-width: default
+
+
+  columns:
+
+    - size: full
+      widgets:
+        - type: calendar
+
+    - size: full
+      widgets:
+        - type: calendar
+
+
+        # glance-k8s Apps (equestria)
+        - type: extension
+          url: https://glance-k8s.equestria.${ROOT_DOMAIN}/extension/apps
+          allow-potentially-dangerous-html: true
+          cache: 10m
+          title: Equestria Apps
+          parameters:
+            show-if: glance.hide != "true"

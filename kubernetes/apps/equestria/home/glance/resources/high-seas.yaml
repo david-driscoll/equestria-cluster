@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
+- name: High Seas
+  width: wide
+  desktop-navigation-width: default
+
+
+  columns:
+
+    - size: full
+      widgets:
+        - type: calendar
+
+    - size: full
+      widgets:
+        - type: calendar
+# https://github.com/glanceapp/community-widgets/blob/main/widgets/prowlarr-indexers/README.md
+# https://github.com/glanceapp/community-widgets/tree/main/widgets/sabnzbd-stats

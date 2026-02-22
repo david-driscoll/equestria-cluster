@@ -25,6 +25,29 @@
           channels:
             - linustech
 
+        - type: custom-api
+          title: Immich stats
+          cache: 10s
+          url: https://immich.${ROOT_DOMAIN}/api/server/statistics
+          headers:
+            x-api-key: ${immich_api_key}
+            Accept: application/json
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                  <div class="size-h6">PHOTOS</div>
+              </div>
+              <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                  <div class="size-h6">VIDEOS</div>
+              </div>
+              <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">USAGE</div>
+              </div>
+            </div>
+
         # NHL Scores (Official Glance Widget)
         - $include: widgets/nhl-today.yaml
         # Epic Games Free Games

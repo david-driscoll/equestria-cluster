@@ -89,6 +89,13 @@ spec:
         globalMounts:
           - path: /app/config/widgets/
             readOnly: true
+      servers-files:
+        type: configMap
+        name: glance-servers
+        defaultMode: 493
+        globalMounts:
+          - path: /app/config/servers/
+            readOnly: true
 
     service:
       app:

@@ -35,5 +35,11 @@ document:
 pages:
   - $include: home.yaml
   - $include: homelab.yaml
+  - $include: high-seas.yaml
+  - $include: servers/alpha-site.yaml
+  - $include: servers/celestia.yaml
+  - $include: servers/equestria.yaml
+  - $include: servers/luna.yaml
+  - $include: servers/sgc.yaml
   - $include: staging.yaml
   # - $include: videos.yaml

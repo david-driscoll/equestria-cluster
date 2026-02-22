@@ -1,109 +1,4 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
-- name: Staging
-  columns:
-    - size: full
-      widgets:
-
-
-
-    - size: small
-      widgets:
-        # # Proxmox VE Stats
-        # - type: custom-api
-        #   title: Proxmox Stats
-        #   url: https://${proxmox_endpoint}/api2/json/nodes
-        #   cache: 5m
-        #   allow-insecure: true
-        #   headers:
-        #     Authorization: PVEAPIToken=${proxmox_credential}
-        #   template: |
-        #     <style>
-        #       .stat-item { display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--color-separator); }
-        #       .stat-label { font-weight: 500; }
-        #       .stat-value { color: var(--color-primary); }
-        #     </style>
-        #     {{ range .JSON.Array "data" }}
-        #       <div class="stat-item">
-        #         <span class="stat-label">{{ .String "node" }}</span>
-        #         <span class="stat-value">{{ if .Bool "status" | eq "online" }}🟢{{ else }}🔴{{ end }} {{ .String "status" }}</span>
-        #       </div>
-        #     {{ end }}
-
-        # GitHub Notifications (Official Glance Widget)
-        - type: custom-api
-          title: GitHub Notifications
-          url: https://api.github.com/notifications?all=true&per_page=20
-          cache: 30m
-          headers:
-            Authorization: Bearer ${github_token}
-            Accept: application/vnd.github+json
-          template: |
-            <ul class="list list-gap-14 collapsible-container" data-collapse-after="6">
-            {{ range .JSON.Array "" }}
-              {{ $url := concat (.String "repository.html_url") "/actions" }}
-              {{ if ne (.String "subject.url") "" }}
-                {{
-                  $notification := newRequest (.String "subject.url")
-                    | withHeader "Authorization" "Bearer ${github_token}"
-                    | getResponse
-                }}
-                {{ if eq $notification.Response.StatusCode 200 }}
-                  {{ $url = $notification.JSON.String "html_url" }}
-                {{ else }}
-                  {{ $url = (.String "subject.url") | replaceMatches "repos\\/" "" | replaceMatches "api\\." "" | replaceAll "pulls" "pull" }}
-                {{ end }}
-              {{ end }}
-              <li>
-                <a href="{{ $url }}" class="size-title-dynamic {{ if .Bool "unread" }}color-primary-if-not-visited{{ else }}negative-color{{ end }}" target="_blank" rel="noreferrer">{{ .String "subject.title" }}</a>
-                <ul class="list-horizontal-text flex-nowrap">
-                  <li class="min-width-0" {{ .String "updated_at" | parseTime "rfc3339" | toRelativeTime }}></li>
-                  <li class="min-width-0"><a target="_blank" href="{{ $url }}">{{ .String "repository.full_name" }}</a></li>
-                </ul>
-              </li>
-            {{ end }}
-            </ul>
-
-    - size: small
-      widgets:
-        # glance-k8s Nodes (stargate) - via Tailscale cross-cluster access
-        - type: extension
-          url: https://glance-k8s.sgc.${ROOT_DOMAIN}/extension/nodes
-          allow-potentially-dangerous-html: true
-          cache: 30s
-          title: Stargate Nodes
-          title-url: https://headlamp.sgc.driscoll.tech
-          parameters:
-            show-if: glance.hide != "true"
-
-        # glance-k8s Nodes (equestria)
-        - type: extension
-          url: https://glance-k8s.equestria.${ROOT_DOMAIN}/extension/nodes
-          allow-potentially-dangerous-html: true
-          cache: 30s
-          title: Equestria Nodes
-          title-url: https://headlamp.equestria.driscoll.tech
-          parameters:
-            show-if: glance.hide != "true"
-
-        # glance-k8s Apps (stargate) - via Tailscale cross-cluster access
-        - type: extension
-          url: https://glance-k8s.sgc.${ROOT_DOMAIN}/extension/apps
-          allow-potentially-dangerous-html: true
-          cache: 10m
-          title: Stargate Apps
-          parameters:
-            show-if: glance.hide != "true"
-          allow-insecure: true
-
-        # glance-k8s Apps (equestria)
-        - type: extension
-          url: https://glance-k8s.equestria.${ROOT_DOMAIN}/extension/apps
-          allow-potentially-dangerous-html: true
-          cache: 10m
-          title: Equestria Apps
-          parameters:
-            show-if: glance.hide != "true"
-
 - name: Staging Media
   columns:
 
@@ -283,7 +178,7 @@
             {{ end }}
 
     # Infrastructure & Detailed Resources
-    - size: small
+    - size: full
       widgets:
         # # Proxmox Detailed Resources
         # - type: custom-api
