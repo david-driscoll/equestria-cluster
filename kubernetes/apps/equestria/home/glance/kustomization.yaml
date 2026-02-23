@@ -25,6 +25,7 @@ configMapGenerator:
     - ./resources/widgets/nhl-today.yaml
     - ./resources/widgets/nodes.yaml
     - ./resources/widgets/service-status.yaml
+    - ./resources/widgets/media-playing.yaml
   options:
     disableNameSuffixHash: true
     annotations:

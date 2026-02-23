@@ -24,13 +24,13 @@
         - type: twitch-channels
           channels:
             - linustech
-
+        - $include: ./widgets/media-playing.yaml
         - type: custom-api
           title: Immich stats
           cache: 10s
           url: https://immich.${ROOT_DOMAIN}/api/server/statistics
           headers:
-            x-api-key: ${immich_api_key}
+            x-api-key: ${IMMICH_API_KEY}
             Accept: application/json
           template: |
             <div class="flex justify-between text-center">

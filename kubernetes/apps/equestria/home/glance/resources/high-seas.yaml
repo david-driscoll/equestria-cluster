@@ -6,6 +6,10 @@
 
   columns:
 
+    - size: small
+      widgets:
+        - $include: ./widgets/media-playing.yaml  
+
     - size: full
       widgets:
         - type: calendar
@@ -15,3 +19,4 @@
         - type: calendar
 # https://github.com/glanceapp/community-widgets/blob/main/widgets/prowlarr-indexers/README.md
 # https://github.com/glanceapp/community-widgets/tree/main/widgets/sabnzbd-stats
+# https://github.com/glanceapp/community-widgets/tree/main/widgets/romm-stats

@@ -1,0 +1,461 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/widget
+- type: custom-api
+  title: Now Playing
+  cache: 1m
+  options:
+    jellyfin-url: https://jellyfin.${ROOT_DOMAIN}
+    jellyfin-api-key: "${JELLYFIN_API_KEY}"
+    tautulli-url: https://tautulli.${ROOT_DOMAIN}
+    tautulli-api-key: "${TAUTULLI_API_KEY}"
+    small-column: true
+    compact: true
+    play-state: "indicator"
+    show-thumbnail: true
+    full-thumbnail: true
+    show-paused: true
+    show-progress-bar: true
+    show-progress-info: true
+    time-format: "03:04pm"
+  template: |
+    {{ $jellyfinURL := .Options.StringOr "jellyfin-url" "" }}
+    {{ $jellyfinAPIKey := .Options.StringOr "jellyfin-api-key" "" }}
+    {{ $tautulliURL := .Options.StringOr "tautulli-url" "" }}
+    {{ $tautulliAPIKey := .Options.StringOr "tautulli-api-key" "" }}
+
+    {{ define "errorMsg" }}
+      <div class="widget-error-header">
+        <div class="color-negative size-h3">ERROR</div>
+        <svg class="widget-error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"></path>
+        </svg>
+      </div>
+      <p class="break-all">{{ . }}</p>
+    {{ end }}
+
+    {{ if or (eq $jellyfinURL "") (eq $jellyfinAPIKey "") (eq $tautulliURL "") (eq $tautulliAPIKey "") }}
+      {{ template "errorMsg" "Some required options are not set" }}
+    {{ else }}
+
+    {{ $isSmallColumn := .Options.BoolOr "small-column" false }}
+    {{ $isCompact := .Options.BoolOr "compact" true }}
+    {{ $playState := .Options.StringOr "play-state" "indicator" }}
+    {{ $showThumbnail := .Options.BoolOr "show-thumbnail" false }}
+    {{ $fullThumbnail := .Options.BoolOr "full-thumbnail" false }}
+    {{ $showPaused := .Options.BoolOr "show-paused" false }}
+    {{ $showProgressBar := .Options.BoolOr "show-progress-bar" false }}
+    {{ $showProgressInfo := .Options.BoolOr "show-progress-info" true }}
+    {{ $timeFormat := .Options.StringOr "time-format" "15:04" }}
+
+    {{ $jellyfinSessions := (.JSON.Array "nonexistent") }}
+    {{ $tautulliSessions := (.JSON.Array "nonexistent") }}
+    {{ $sessions := (.JSON.Array "nonexistent") }}
+    {{ $activeSessions := 0 }}
+    {{ $hasError := false }}
+
+    {{ $jellyfinCall := newRequest (concat $jellyfinURL "/Sessions")
+      | withParameter "apiKey" $jellyfinAPIKey
+      | withParameter "activeWithinSeconds" "300"
+      | withHeader "Accept" "application/json"
+      | getResponse }}
+
+    {{ if eq $jellyfinCall.Response.StatusCode 200 }}
+      {{ $jellyfinSessions = $jellyfinCall.JSON.Array "" }}
+    {{ end }}
+
+    {{ $tautulliCall := newRequest (concat $tautulliURL "/api/v2")
+      | withParameter "apikey" $tautulliAPIKey
+      | withParameter "cmd" "get_activity"
+      | withHeader "Accept" "application/json"
+      | getResponse }}
+
+    {{ if eq $tautulliCall.Response.StatusCode 200 }}
+      {{ $tautulliSessions = $tautulliCall.JSON.Array "response.data.sessions" }}
+    {{ end }}
+
+    {{ if and (eq (len $jellyfinSessions) 0) (eq (len $tautulliSessions) 0) }}
+      <p>Nothing is playing right now.</p>
+    {{ else }}
+
+      <style>
+        .media-server-session-container--grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+        }
+        @media (max-width: 768px) {
+          .media-server-session-container--grid {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+        .media-server-progress-container {
+          height: 1rem;
+          max-width: 32rem;
+          border: 1px solid var(--color-text-base);
+          border-radius: var(--border-radius);
+          overflow: hidden;
+        }
+        .media-server-progress-bar {
+          height: 100%;
+          background: var(--color-primary);
+          border-radius: 3px;
+          transition: width 1s linear;
+        }
+        @keyframes progress-animation { to { width: 100%; } }
+      </style>
+
+      <div class="gap-10 {{ if $isSmallColumn }}flex flex-column{{ else }}media-server-session-container--grid{{ end }}">
+      {{ range $jellyfinSessions }}
+        {{ $mediaServer := "jellyfin" }}
+        {{ $baseURL := $jellyfinURL }}
+        {{ $apiKey := $jellyfinAPIKey }}
+        {{ $session := . }}
+
+        {{ $isClient := true }}
+        {{ $isPlaying := false }}
+        {{ $state := "playing" }}
+        {{ $isMovie := false }}
+        {{ $isShows := false }}
+        {{ $isMusic := false }}
+        {{ $userName := "" }}
+        {{ $title := "" }}
+        {{ $showTitle := "" }}
+        {{ $showSeason := "" }}
+        {{ $showEpisode := "" }}
+        {{ $artist := "" }}
+        {{ $albumTitle := "" }}
+        {{ $thumbURL := "" }}
+        {{ $now := now | formatTime "15:04:05" | parseLocalTime "15:04:05" }}
+        {{ $duration := 0.0 }}
+        {{ $offset := 0.0 }}
+        {{ $remainingSeconds := 0 }}
+
+        {{ $isPlaying = and ($session.Exists "NowPlayingItem") (not ($session.Bool "PlayState.IsPaused")) }}
+        {{ if not $isPlaying }}
+          {{ $state = "paused"}}
+        {{ end }}
+
+        {{ $mediaType := $session.String "NowPlayingItem.Type" }}
+        {{ $isMovie = eq $mediaType "Movie" }}
+        {{ $isShows = eq $mediaType "Episode" }}
+        {{ $isMusic = eq $mediaType "Audio" }}
+
+        {{ $userName = $session.String "UserName" }}
+        {{ $title = $session.String "NowPlayingItem.Name" }}
+        {{ $showTitle = $session.String "NowPlayingItem.SeriesName" }}
+        {{ $showSeason = $session.String "NowPlayingItem.ParentIndexNumber" }}
+        {{ $showEpisode = $session.String "NowPlayingItem.IndexNumber" }}
+        {{ $artist = $session.String "NowPlayingItem.AlbumArtist" }}
+        {{ $albumTitle = $session.String "NowPlayingItem.Album" }}
+
+        {{ $thumbID := $session.String "NowPlayingItem.Id" }}
+        {{ if $isShows }}
+          {{ $thumbID = $session.String "NowPlayingItem.ParentId" }}
+        {{ end }}
+        {{ $thumbURL = concat $baseURL "/Items/" $thumbID "/Images/Primary?api_key=" $apiKey }}
+
+        {{ $duration := 0.0 }}
+        {{ if $session.Exists "NowPlayingItem.RunTimeTicks" }}
+          {{ $duration = $session.Float "NowPlayingItem.RunTimeTicks" }}
+        {{ end }}
+        {{ $offset := 0.0 }}
+        {{ if $session.Exists "PlayState.PositionTicks" }}
+          {{ $offset = $session.Float "PlayState.PositionTicks" }}
+        {{ end }}
+        {{ $remainingSeconds := 0 }}
+        {{ if gt $duration 0.0 }}
+          {{ $remainingSeconds = div (sub $duration $offset) 10000000 | toInt }}
+        {{ end }}
+
+        {{ $progress := 0 }}
+        {{ if gt $duration 0.0 }}
+          {{ $progress = mul 100 (div $offset $duration) | toInt }}
+        {{ end }}
+        {{ $endTimeStr := printf "~%d min remaining" (div $remainingSeconds 60) }}
+
+        {{ $showInfoFormat := concat "Season " $showSeason " Episode " $showEpisode}}
+        {{ if $isCompact }}
+          {{ $showInfoFormat = concat "S" $showSeason "E" $showEpisode}}
+        {{ end }}
+
+        {{ if and $isClient (or $isPlaying $showPaused) }}
+        <div class="card gap-5">
+          <div class="flex items-center gap-10 size-h3">
+            <span class="color-primary">{{ $userName }}</span>
+            {{ if eq $playState "text" }}
+              <span {{ if $isPlaying }}class="color-primary"{{ end }}>
+                [{{ $state }}]
+              </span>
+            {{ else if eq $playState "indicator" }}
+              <style>
+                .media-server-indicator {
+                  height: .7rem;
+                  width: .7rem;
+                  border-radius: 100%;
+                  {{ if $isPlaying }}
+                    animation: pulse 5s infinite;
+                    background: var(--color-primary);
+                  {{ else }}
+                    background: var(--color-text-base-muted);
+                  {{ end }}
+                }
+                @keyframes pulse {
+                  0% { box-shadow: 0 0 0 0 var(--color-text-base); }
+                  40% { box-shadow: 0 0 0 4px transparent; }
+                  100% { box-shadow: 0 0 0 4px transparent; }
+                }
+              </style>
+              <div class="media-server-indicator"></div>
+            {{ end }}
+          </div>
+
+          <hr class="margin-bottom-5" />
+
+          <div class="flex items-center gap-10" style="align-items: stretch;">
+            {{ if $showThumbnail }}
+              <img src="{{ $thumbURL | safeURL }}"
+                alt="{{ $title }} thumbnail"
+                class="shrink-0"
+                loading="lazy"
+                style="
+                  max-width: 7.5rem;
+                  border: 2px solid var(--color-primary);
+                  border-radius: var(--border-radius);
+                  object-fit: cover;
+                  {{ if and $isCompact (not $fullThumbnail) }} aspect-ratio: 1; {{ end }} "
+              />
+            {{ end }}
+            <ul class="flex flex-column grow justify-evenly" style="width: 0;">
+              {{ if $isCompact }}
+                {{ if $isShows }}
+                  <ul class="list-horizontal-text flex-nowrap">
+                    <li class="shrink-0">{{ concat "S" $showSeason "E" $showEpisode }}</li>
+                    <li class="text-truncate">{{ $showTitle }}</li>
+                  </ul>
+                {{ else if $isMusic }}
+                  <ul class="list-horizontal-text flex-nowrap">
+                    <li class="shrink-0">{{ $artist }}</li>
+                    <li class="text-truncate">{{ $albumTitle }}</li>
+                  </ul>
+                {{ end }}
+                <li class="text-truncate">{{ $title }}</li>
+              {{ else }}
+                {{ if $isShows }}
+                  <li>{{ $showTitle }}</li>
+                  <li>{{ concat "S" $showSeason "E" $showEpisode }}</li>
+                {{ else if $isMusic }}
+                  <li>{{ $artist }}</li>
+                  <li>{{ $albumTitle }}</li>
+                {{ end }}
+                <li>{{ $title }}</li>
+              {{ end }}
+
+              <li>
+                {{ if and $isPlaying $showProgressBar }}
+                  <div class="flex gap-10 items-center">
+                    <div class="media-server-progress-container grow">
+                      <div
+                        class ="media-server-progress-bar"
+                        data-progress="{{ $progress }}"
+                        data-remaining="{{ $remainingSeconds }}"
+                        style="
+                          width: {{ $progress }}%;
+                          animation: progress-animation {{ $remainingSeconds }}s linear forwards;"
+                      >
+                      </div>
+                    </div>
+                    {{ if $showProgressInfo }}
+                      <p>
+                        {{ if and (not $isCompact) (not $isSmallColumn) }}
+                          ends at
+                        {{ end }}
+                        {{ $endTimeStr }}
+                      </p>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        {{ end }}
+      {{ end }}
+      {{ range $tautulliSessions }}
+        {{ $mediaServer := "plex" }}
+        {{ $baseURL := $tautulliURL }}
+        {{ $apiKey := $tautulliAPIKey }}
+        {{ $session := . }}
+
+        {{ $isClient := true }}
+        {{ $isPlaying := false }}
+        {{ $state := "playing" }}
+        {{ $isMovie := false }}
+        {{ $isShows := false }}
+        {{ $isMusic := false }}
+        {{ $userName := "" }}
+        {{ $title := "" }}
+        {{ $showTitle := "" }}
+        {{ $showSeason := "" }}
+        {{ $showEpisode := "" }}
+        {{ $artist := "" }}
+        {{ $albumTitle := "" }}
+        {{ $thumbURL := "" }}
+        {{ $now := now | formatTime "15:04:05" | parseLocalTime "15:04:05" }}
+        {{ $duration := 0.0 }}
+        {{ $offset := 0.0 }}
+        {{ $remainingSeconds := 0 }}
+
+        {{ if eq $mediaServer "plex" }}
+          {{ $isPlaying = eq ($session.String "state") "playing" }}
+          {{ if not $isPlaying }}
+            {{ $state = "paused"}}
+          {{ end }}
+
+          {{ $mediaType := $session.String "media_type" }}
+          {{ $isMovie = eq $mediaType "movie" }}
+          {{ $isShows = eq $mediaType "episode" }}
+          {{ $isMusic = eq $mediaType "track" }}
+
+          {{ $userName = $session.String "user" }}
+          {{ $title = $session.String "title" }}
+          {{ $showTitle = $session.String "grandparent_title" }}
+          {{ $showSeason = $session.String "parent_media_index" }}
+          {{ $showEpisode = $session.String "media_index" }}
+          {{ $artist = $session.String "grandparent_title" }}
+          {{ $albumTitle = $session.String "parent_title" }}
+
+          {{ $thumbID := $session.String "thumb" }}
+          {{ if or $isShows $isMusic }}
+            {{ $thumbID = $session.String "parent_thumb" }}
+          {{ end }}
+          {{ $thumbURL = concat $baseURL "/api/v2?apikey=" $apiKey "&cmd=pms_image_proxy&img=" $thumbID }}
+
+          {{ $duration = 0.0 }}
+          {{ if $session.Exists "duration" }}
+            {{ $duration = $session.Float "duration" }}
+          {{ end }}
+          {{ $offset = 0.0 }}
+          {{ if $session.Exists "view_offset" }}
+            {{ $offset = $session.Float "view_offset" }}
+          {{ end }}
+          {{ $remainingSeconds = 0 }}
+          {{ if gt $duration 0.0 }}
+            {{ $remainingSeconds = div (sub $duration $offset) 1000 | toInt }}
+          {{ end }}
+        {{ end }}
+
+        {{ $progress := 0 }}
+        {{ if gt $duration 0.0 }}
+          {{ $progress = mul 100 (div $offset $duration) | toInt }}
+        {{ end }}
+        {{ $endTimeStr := printf "~%d min remaining" (div $remainingSeconds 60) }}
+
+        {{ $showInfoFormat := concat "Season " $showSeason " Episode " $showEpisode}}
+        {{ if $isCompact }}
+          {{ $showInfoFormat = concat "S" $showSeason "E" $showEpisode}}
+        {{ end }}
+
+        {{ if and $isClient (or $isPlaying $showPaused) }}
+        <div class="card gap-5">
+          <div class="flex items-center gap-10 size-h3">
+            <span class="color-primary">{{ $userName }}</span>
+            {{ if eq $playState "text" }}
+              <span {{ if $isPlaying }}class="color-primary"{{ end }}>
+                [{{ $state }}]
+              </span>
+            {{ else if eq $playState "indicator" }}
+              <style>
+                .media-server-indicator {
+                  height: .7rem;
+                  width: .7rem;
+                  border-radius: 100%;
+                  {{ if $isPlaying }}
+                    animation: pulse 5s infinite;
+                    background: var(--color-primary);
+                  {{ else }}
+                    background: var(--color-text-base-muted);
+                  {{ end }}
+                }
+                @keyframes pulse {
+                  0% { box-shadow: 0 0 0 0 var(--color-text-base); }
+                  40% { box-shadow: 0 0 0 4px transparent; }
+                  100% { box-shadow: 0 0 0 4px transparent; }
+                }
+              </style>
+              <div class="media-server-indicator"></div>
+            {{ end }}
+          </div>
+
+          <hr class="margin-bottom-5" />
+
+          <div class="flex items-center gap-10" style="align-items: stretch;">
+            {{ if $showThumbnail }}
+              <img src="{{ $thumbURL | safeURL }}"
+                alt="{{ $title }} thumbnail"
+                class="shrink-0"
+                loading="lazy"
+                style="
+                  max-width: 7.5rem;
+                  border: 2px solid var(--color-primary);
+                  border-radius: var(--border-radius);
+                  object-fit: cover;
+                  {{ if and $isCompact (not $fullThumbnail) }} aspect-ratio: 1; {{ end }} "
+              />
+            {{ end }}
+            <ul class="flex flex-column grow justify-evenly" style="width: 0;">
+              {{ if $isCompact }}
+                {{ if $isShows }}
+                  <ul class="list-horizontal-text flex-nowrap">
+                    <li class="shrink-0">{{ concat "S" $showSeason "E" $showEpisode }}</li>
+                    <li class="text-truncate">{{ $showTitle }}</li>
+                  </ul>
+                {{ else if $isMusic }}
+                  <ul class="list-horizontal-text flex-nowrap">
+                    <li class="shrink-0">{{ $artist }}</li>
+                    <li class="text-truncate">{{ $albumTitle }}</li>
+                  </ul>
+                {{ end }}
+                <li class="text-truncate">{{ $title }}</li>
+              {{ else }}
+                {{ if $isShows }}
+                  <li>{{ $showTitle }}</li>
+                  <li>{{ concat "S" $showSeason "E" $showEpisode }}</li>
+                {{ else if $isMusic }}
+                  <li>{{ $artist }}</li>
+                  <li>{{ $albumTitle }}</li>
+                {{ end }}
+                <li>{{ $title }}</li>
+              {{ end }}
+
+              <li>
+                {{ if and $isPlaying $showProgressBar }}
+                  <div class="flex gap-10 items-center">
+                    <div class="media-server-progress-container grow">
+                      <div
+                        class ="media-server-progress-bar"
+                        data-progress="{{ $progress }}"
+                        data-remaining="{{ $remainingSeconds }}"
+                        style="
+                          width: {{ $progress }}%;
+                          animation: progress-animation {{ $remainingSeconds }}s linear forwards;"
+                      >
+                      </div>
+                    </div>
+                    {{ if $showProgressInfo }}
+                      <p>
+                        {{ if and (not $isCompact) (not $isSmallColumn) }}
+                          ends at
+                        {{ end }}
+                        {{ $endTimeStr }}
+                      </p>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        {{ end }}
+      {{ end }}
+    </div>
+    {{ end }}
+    {{ end }}

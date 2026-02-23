@@ -43,9 +43,9 @@
     #     - type: custom-api
     #       title: Cloudflare Tunnels
     #       cache: 4h
-    #       url: https://api.cloudflare.com/client/v4/accounts/${cf_accountId}/cfd_tunnel/${cf_username}/configurations
+    #       url: https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNTID}/cfd_tunnel/${CF_USERNAME}/configurations
     #       headers:
-    #         Authorization: Bearer ${cf_credential}
+    #         Authorization: Bearer ${CF_CREDENTIAL}
     #       template: |
     #         {{ if eq .Response.StatusCode 200 }}
     #           <ul class="list list-gap-10">
@@ -75,7 +75,7 @@
     #       url: http://prowlarr.equestria.svc.cluster.local:9696/api/v1/indexer
     #       headers:
     #         Accept: application/json
-    #         X-Api-Key: ${prowlarr_apikey}
+    #         X-Api-Key: ${PROWLARR_APIKEY}
     #       template: |
     #         {{ if eq .Response.StatusCode 200 }}
     #           <ul class="list list-gap-8">
@@ -100,7 +100,7 @@
         # Tautulli Stats
         - type: custom-api
           title: Tautulli Stats
-          url: http://tautulli.equestria.svc.cluster.local:8181/api/v2?apikey=${tautulli_api_key}&cmd=get_activity
+          url: http://tautulli.equestria.svc.cluster.local:8181/api/v2?apikey=${TAUTULLI_API_KEY}&cmd=get_activity
           cache: 5m
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -119,7 +119,7 @@
         # Media Server History (Plex)
         - type: custom-api
           title: Recently Played
-          url: http://tautulli.equestria.svc.cluster.local:8181/api/v2?apikey=${tautulli_api_key}&cmd=get_history&length=10
+          url: http://tautulli.equestria.svc.cluster.local:8181/api/v2?apikey=${TAUTULLI_API_KEY}&cmd=get_history&length=10
           cache: 5m
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -138,7 +138,7 @@
         # Media Server Playing (Active Sessions)
         - type: custom-api
           title: Now Playing
-          url: http://tautulli.equestria.svc.cluster.local:8181/api/v2?apikey=${tautulli_api_key}&cmd=get_activity
+          url: http://tautulli.equestria.svc.cluster.local:8181/api/v2?apikey=${TAUTULLI_API_KEY}&cmd=get_activity
           cache: 30s
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -161,7 +161,7 @@
         # Jellyfin Latest
         - type: custom-api
           title: Jellyfin Latest
-          url: http://jellyfin.equestria.svc.cluster.local:8096/api/Users/${jellyfin_user_id}/Items/Latest?api_key=${jellyfin_api_key}&limit=10
+          url: http://jellyfin.equestria.svc.cluster.local:8096/api/Users/${JELLYFIN_USER_ID}/Items/Latest?api_key=${JELLYFIN_API_KEY}&limit=10
           cache: 1h
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -210,7 +210,7 @@
           url: http://grafana.observability.svc.cluster.local/api/health
           cache: 5m
           headers:
-            Authorization: Bearer ${grafana_token}
+            Authorization: Bearer ${GRAFANA_TOKEN}
           template: |
             {{ if eq .Response.StatusCode 200 }}
               <div style="padding: 10px; background: rgba(0,0,0,0.05); border-radius: 6px;">
@@ -232,7 +232,7 @@
           url: http://sonarr.equestria.svc.cluster.local:8989/api/v3/calendar?includeUnmonitored=false
           cache: 30m
           headers:
-            X-Api-Key: ${sonarr_api_key}
+            X-Api-Key: ${SONARR_API_KEY}
           template: |
             {{ if eq .Response.StatusCode 200 }}
               <ul class="list list-gap-8">
@@ -254,7 +254,7 @@
           cache: 1m
           allow-insecure: true
           headers:
-            Authorization: Bearer ${unifi_api_key}
+            Authorization: Bearer ${UNIFI_API_KEY}
           template: |
             {{ if eq .Response.StatusCode 200 }}
               <style>
@@ -356,7 +356,7 @@
           url: http://immich.equestria.svc.cluster.local:2283/api/statistics
           cache: 1h
           headers:
-            x-api-key: ${immich_api_key}
+            x-api-key: ${IMMICH_API_KEY}
           template: |
             {{ if eq .Response.StatusCode 200 }}
               <style>
@@ -389,7 +389,7 @@
           url: https://api.github.com/user/repos?sort=updated&per_page=15&affiliation=owner
           cache: 30m
           headers:
-            Authorization: Bearer ${github_token}
+            Authorization: Bearer ${GITHUB_TOKEN}
             Accept: application/vnd.github+json
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -411,7 +411,7 @@
         - type: custom-api
           title: SABnzbd Status
           cache: 30s
-          url: http://sabnzbd.equestria.svc.cluster.local:8080/api?output=json&apikey=${sabnzbd_api_key}&mode=queue
+          url: http://sabnzbd.equestria.svc.cluster.local:8080/api?output=json&apikey=${SABNZBD_API_KEY}&mode=queue
           headers:
             Accept: application/json
           template: |
