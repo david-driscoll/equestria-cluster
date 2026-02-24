@@ -12,6 +12,10 @@ op run --no-masking -- docker run \
   -e SGC_TUNNEL_CREDENTIAL \
   -e PROWLARR_APIKEY \
   -e UNIFI_API_KEY \
+  -e RADARR_API_KEY \
+  -e RADARR_URL \
+  -e LIDARR_API_KEY \
+  -e LIDARR_URL \
   -e GITHUB_TOKEN \
   -e GRAFANA_TOKEN \
   -e SONARR_API_KEY \
@@ -23,11 +27,13 @@ op run --no-masking -- docker run \
   -e IMMICH_API_KEY \
   -e IMMICH_URL \
   -e PROWLARR_URL \
+  -e UNIFI_URL \
   -e SABNZBD_URL \
   -e QBITTORRENT_URL \
   -e SONARR_URL \
   -e TAUTULLI_URL \
   -e JELLYFIN_URL \
+  -e PLEX_URL \
   -e ROMM_URL \
   -e DISCORD_URL \
   -e GRAFANA_URL \

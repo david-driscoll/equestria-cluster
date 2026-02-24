@@ -207,7 +207,7 @@
         # Grafana Metrics
         - type: custom-api
           title: Grafana
-          url: http://grafana.observability.svc.cluster.local/api/health
+          url: ${GRAFANA_URL}/api/health
           cache: 5m
           headers:
             Authorization: Bearer ${GRAFANA_TOKEN}
@@ -215,7 +215,7 @@
             {{ if eq .Response.StatusCode 200 }}
               <div style="padding: 10px; background: rgba(0,0,0,0.05); border-radius: 6px;">
                 <p style="margin: 0; color: var(--color-highlight);">Grafana Connected</p>
-                <a href="http://grafana.observability.svc.cluster.local/d/" target="_blank" class="color-primary" style="text-decoration: none; font-size: 0.85rem;">→ View Dashboards</a>
+                <a href="${GRAFANA_URL}/d/" target="_blank" class="color-primary" style="text-decoration: none; font-size: 0.85rem;">→ View Dashboards</a>
               </div>
             {{ else }}
               <p class="color-negative">Failed to connect to Grafana</p>
@@ -229,7 +229,7 @@
         # Arr Releases (Sonarr)
         - type: custom-api
           title: Sonarr Upcoming
-          url: http://sonarr.equestria.svc.cluster.local:8989/api/v3/calendar?includeUnmonitored=false
+          url: ${SONARR_URL}/api/v3/calendar?includeUnmonitored=false
           cache: 30m
           headers:
             X-Api-Key: ${SONARR_API_KEY}
@@ -250,7 +250,7 @@
         # Unifi Network Widget
         - type: custom-api
           title: UniFi Network
-          url: https://discord.${ROOT_DOMAIN}/api/s/default/stat/uptime
+          url: ${DISCORD_URL}/api/s/default/stat/uptime
           cache: 1m
           allow-insecure: true
           headers:
@@ -286,7 +286,7 @@
         - type: custom-api
           title: Backrest Backups
           method: POST
-          url: https://backrest.luna.${ROOT_DOMAIN}/api/stats
+          url: ${BACKREST_LUNA_URL}/api/stats
           cache: 5m
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -306,7 +306,7 @@
         - type: custom-api
           title: Backrest Backups (Celestia)
           method: POST
-          url: https://backrest.celestia.${ROOT_DOMAIN}/api/stats
+          url: ${BACKREST_CELESTIA_URL}/api/stats
           cache: 5m
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -325,7 +325,7 @@
         # RomM Stats
         - type: custom-api
           title: RomM Library
-          url: http://romm.equestria.svc.cluster.local/api/stats
+          url: ${ROMM_URL}/api/stats
           cache: 1d
           template: |
             {{ if eq .Response.StatusCode 200 }}
@@ -411,7 +411,7 @@
         - type: custom-api
           title: SABnzbd Status
           cache: 30s
-          url: http://sabnzbd.equestria.svc.cluster.local:8080/api?output=json&apikey=${SABNZBD_API_KEY}&mode=queue
+          url: ${SABNZBD_URL}/api?output=json&apikey=${SABNZBD_API_KEY}&mode=queue
           headers:
             Accept: application/json
           template: |

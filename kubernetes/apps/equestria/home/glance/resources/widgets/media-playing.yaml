@@ -3,9 +3,9 @@
   title: Now Playing
   cache: 1m
   options:
-    jellyfin-url: https://jellyfin.${ROOT_DOMAIN}
+    jellyfin-url: ${JELLYFIN_URL}
     jellyfin-api-key: "${JELLYFIN_API_KEY}"
-    tautulli-url: https://tautulli.${ROOT_DOMAIN}
+    tautulli-url: ${TAUTULLI_URL}
     tautulli-api-key: "${TAUTULLI_API_KEY}"
     small-column: true
     compact: true
