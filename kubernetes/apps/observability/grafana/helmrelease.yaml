@@ -20,6 +20,7 @@ metadata:
   name: &app grafana
 spec:
   interval: 1h
+  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: kube-prometheus-stack
@@ -113,36 +114,15 @@ spec:
         inMemory:
           enabled: true
           sizeLimit: 512Mi
-      # datasources:
-        # datasources.yaml:
-        #   apiVersion: 1
-        #   deleteDatasources:
-        #     - name: Prometheus
-        #     - name: Loki
-        #     - name: Alertmanager
-        #   prune: true
-          # datasources:
-          #   - name: "Prometheus"
-          #     type: prometheus
-          #     uid: prometheus
-          #     isDefault: true
-          #     access: proxy
-          #     url: http://thanos-query.observability.svc.cluster.local:9090
-          #     jsonData:
-          #       timeInterval: 1m
-          #   - name: "Loki"
-          #     type: loki
-          #     uid: loki
-          #     access: proxy
-          #     url: http://loki-headless.observability.svc.cluster.local:3100
-          #     jsonData:
-          #       maxLines: 250
-          #   - name: "Alertmanager"
-          #     type: alertmanager
-          #     access: proxy
-          #     url: http://alertmanager-operated.observability.svc.cluster.local:9093
-          #     jsonData:
-          #       implementation: prometheus
+      # Datasources are managed via GrafanaDatasource CRDs (datasources.yaml).
+      # Override the kube-prometheus-stack default ConfigMap to empty to prevent
+      # Grafana 12.4.0+ fatal startup errors from provisioning non-existent services
+      # (prometheus + alertmanager are disabled in this chart release).
+      datasources:
+        datasources.yaml:
+          apiVersion: 1
+          datasources: []
+          prune: true
       plugins:
         - alertlist
         - grafana-github-datasource
