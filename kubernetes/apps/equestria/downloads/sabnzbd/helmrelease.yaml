@@ -118,6 +118,7 @@ spec:
               - queryParams:
                   - name: apikey
                     value: ".*"
+                    type: RegularExpression
             backendRefs:
               - identifier: app
                 port: *port

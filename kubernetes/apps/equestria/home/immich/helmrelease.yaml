@@ -158,6 +158,7 @@ spec:
               - headers:
                   - name: X-Api-Key
                     value: ".*"
+                    type: RegularExpression
             backendRefs:
               - identifier: *app
                 port: *port
