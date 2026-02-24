@@ -114,6 +114,19 @@ spec:
           - "${APP}.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
+          - matches:
+              - queryParams:
+                  - name: apikey
+                    value: ".*"
+            backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
           - backendRefs:
               - identifier: app
                 port: *port
@@ -123,4 +136,3 @@ spec:
                   group: traefik.io
                   kind: Middleware
                   name: authenticated-user
----
