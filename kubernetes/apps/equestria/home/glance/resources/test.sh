@@ -45,6 +45,9 @@ op run --no-masking -- docker run \
   -e HEADLAMP_EQUESTRIA_URL \
   -e BACKREST_LUNA_URL \
   -e BACKREST_CELESTIA_URL \
+  -e DISPATCHARR_URL \
+  -e DISPATCHARR_USERNAME \
+  -e DISPATCHARR_PASSWORD \
   -p 8080:8080 \
   --rm \
   -v .:/app/config/ \

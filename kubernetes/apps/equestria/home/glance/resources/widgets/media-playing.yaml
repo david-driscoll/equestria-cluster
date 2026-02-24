@@ -7,6 +7,7 @@
     jellyfin-api-key: "${JELLYFIN_API_KEY}"
     tautulli-url: ${TAUTULLI_URL}
     tautulli-api-key: "${TAUTULLI_API_KEY}"
+    dispatcharr-url: ${DISPATCHARR_URL}
     small-column: true
     compact: true
     play-state: "indicator"
@@ -16,11 +17,21 @@
     show-progress-bar: true
     show-progress-info: true
     time-format: "03:04pm"
+  subrequests:
+    dispatcharr-token:
+      url: ${DISPATCHARR_URL}/api/accounts/token/
+      method: POST
+      body-type: json
+      body:
+        username: "${DISPATCHARR_USERNAME}"
+        password: "${DISPATCHARR_PASSWORD}"
   template: |
     {{ $jellyfinURL := .Options.StringOr "jellyfin-url" "" }}
     {{ $jellyfinAPIKey := .Options.StringOr "jellyfin-api-key" "" }}
     {{ $tautulliURL := .Options.StringOr "tautulli-url" "" }}
     {{ $tautulliAPIKey := .Options.StringOr "tautulli-api-key" "" }}
+    {{ $dispatcharrURL := .Options.StringOr "dispatcharr-url" "" }}
+    {{ $dispatcharrToken := (.Subrequest "dispatcharr-token").JSON.String "access" }}
 
     {{ define "errorMsg" }}
       <div class="widget-error-header">
@@ -48,6 +59,7 @@
 
     {{ $jellyfinSessions := (.JSON.Array "nonexistent") }}
     {{ $tautulliSessions := (.JSON.Array "nonexistent") }}
+    {{ $dispatcharrSessions := (.JSON.Array "nonexistent") }}
     {{ $sessions := (.JSON.Array "nonexistent") }}
     {{ $activeSessions := 0 }}
     {{ $hasError := false }}
@@ -72,7 +84,23 @@
       {{ $tautulliSessions = $tautulliCall.JSON.Array "response.data.sessions" }}
     {{ end }}
 
-    {{ if and (eq (len $jellyfinSessions) 0) (eq (len $tautulliSessions) 0) }}
+    {{ $dispatcharrEnabled := and (ne $dispatcharrURL "") (ne $dispatcharrToken "") }}
+    {{ if $dispatcharrEnabled }}
+      {{ $dispatcharrCall := newRequest (concat $dispatcharrURL "/proxy/ts/status")
+        | withHeader "Accept" "application/json"
+        | withHeader "Authorization" (concat "Bearer " $dispatcharrToken)
+        | getResponse }}
+
+      {{ if eq $dispatcharrCall.Response.StatusCode 200 }}
+        {{ $dispatcharrSessions = $dispatcharrCall.JSON.Array "channels" }}
+      {{ end }}
+    {{ end }}
+
+    {{ $hasJellyfinSessions := gt (len $jellyfinSessions) 0 }}
+    {{ $hasTautulliSessions := gt (len $tautulliSessions) 0 }}
+    {{ $hasDispatcharrSessions := and $dispatcharrEnabled (gt (len $dispatcharrSessions) 0) }}
+
+    {{ if and (not $hasJellyfinSessions) (not $hasTautulliSessions) (not $hasDispatcharrSessions) }}
       <p>Nothing is playing right now.</p>
     {{ else }}
 
@@ -454,6 +482,44 @@
             </ul>
           </div>
         </div>
+        {{ end }}
+      {{ end }}
+      {{ if $dispatcharrEnabled }}
+        {{ range $dispatcharrSessions }}
+          {{ $session := . }}
+          {{ $streamName := $session.String "stream_name" }}
+          {{ $state := $session.String "state" }}
+          {{ $clientCount := $session.Int "client_count" }}
+          {{ $resolution := $session.String "resolution" }}
+          {{ $videoCodec := $session.String "video_codec" }}
+          {{ $audioCodec := $session.String "audio_codec" }}
+          {{ $audioChannels := $session.String "audio_channels" }}
+          {{ $profile := $session.String "m3u_profile_name" }}
+          {{ $uptime := $session.Float "uptime" | toInt }}
+
+          <div class="card gap-5">
+            <div class="flex items-center gap-10 size-h3">
+              <span class="color-primary">{{ $streamName }}</span>
+              {{ if eq $state "active" }}
+                <style>
+                  .dispatcharr-indicator {
+                    height: .7rem;
+                    width: .7rem;
+                    border-radius: 100%;
+                    animation: pulse 5s infinite;
+                    background: var(--color-primary);
+                  }
+                </style>
+                <div class="dispatcharr-indicator"></div>
+              {{ end }}
+            </div>
+
+            <hr class="margin-bottom-5" />
+
+            <ul class="flex flex-column grow justify-evenly" style="width: 0;">
+              <li>{{ div $uptime 60 }}m</li>
+            </ul>
+          </div>
         {{ end }}
       {{ end }}
     </div>
