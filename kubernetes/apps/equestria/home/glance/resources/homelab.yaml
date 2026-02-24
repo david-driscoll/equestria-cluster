@@ -7,7 +7,7 @@
         - type: custom-api
           title: Authentik Applications
           hide-header: true
-          url: https://authentik.${ROOT_DOMAIN}/api/v3/core/applications/?page_size=500&superuser_full_list=true
+          url: ${AUTHENTIK_URL}/api/v3/core/applications/?page_size=500&superuser_full_list=true
           cache: 1h
           headers:
             Authorization: Bearer ${AUTHENTIK_API_TOKEN}

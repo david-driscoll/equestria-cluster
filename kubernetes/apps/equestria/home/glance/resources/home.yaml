@@ -28,7 +28,7 @@
         - type: custom-api
           title: Immich stats
           cache: 10s
-          url: https://immich.${ROOT_DOMAIN}/api/server/statistics
+          url: ${IMMICH_URL}/api/server/statistics
           headers:
             x-api-key: ${IMMICH_API_KEY}
             Accept: application/json

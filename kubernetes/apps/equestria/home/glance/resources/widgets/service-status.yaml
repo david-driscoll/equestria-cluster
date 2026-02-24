@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/definitions/widget
 - type: custom-api
   title: Service Status
-  url: https://uptime.${ROOT_DOMAIN}/api/v1/endpoints/statuses
+  url: ${UPTIME_URL}/api/v1/endpoints/statuses
   cache: 2m
   template: |
     <style>

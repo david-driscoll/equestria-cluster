@@ -17,7 +17,7 @@
 
         # glance-k8s Apps (stargate) - via Tailscale cross-cluster access
         - type: extension
-          url: https://glance-k8s.sgc.${ROOT_DOMAIN}/extension/apps
+          url: ${GLANCE_K8S_SGC_URL}/extension/apps
           allow-potentially-dangerous-html: true
           cache: 10m
           title: Stargate Apps
