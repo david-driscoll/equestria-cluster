@@ -35,7 +35,6 @@ spec:
       retries: 3
   values:
     deploymentMode: SingleBinary
-    priorityClassName: observability-critical
     loki:
       auth_enabled: false
       analytics:
@@ -64,7 +63,8 @@ spec:
       storage:
         type: filesystem
         filesystem:
-          directory: /loki/storage
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
       schemaConfig:
         configs:
           - from: "2024-04-01" # quote
@@ -86,6 +86,7 @@ spec:
           rule_path: /rules/fake
     singleBinary:
       replicas: 1
+      priorityClassName: observability-critical
       persistence:
         enabled: true
         storageClass: longhorn
