@@ -2,6 +2,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   name: prometheus
+  labels:
+    dashboards: "grafana"
 spec:
   instanceSelector:
     matchLabels:
@@ -19,6 +21,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   name: loki
+  labels:
+    dashboards: "grafana"
 spec:
   instanceSelector:
     matchLabels:
@@ -36,6 +40,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   name: alertmanager
+  labels:
+    dashboards: "grafana"
 spec:
   instanceSelector:
     matchLabels:
