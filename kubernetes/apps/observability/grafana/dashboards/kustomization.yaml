@@ -11,6 +11,5 @@ resources:
   - ./node-monitoring.yaml
   - ./services.yaml
   - ./thanos.yaml
-  - ./unifi.yaml
 generatorOptions:
   disableNameSuffixHash: true
