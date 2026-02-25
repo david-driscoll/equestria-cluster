@@ -6,7 +6,6 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  title: "Unifi"
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -20,7 +19,7 @@ spec:
   datasources:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "Prometheus"
-  folder: "Unifi"
+  folderRef: unifi
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -34,7 +33,7 @@ spec:
   datasources:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "Prometheus"
-  folder: "Unifi"
+  folderRef: unifi
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -48,7 +47,7 @@ spec:
   datasources:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "Prometheus"
-  folder: "Unifi"
+  folderRef: unifi
 
 ---
 apiVersion: grafana.integreatly.org/v1beta1
@@ -63,7 +62,7 @@ spec:
   datasources:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "Prometheus"
-  folder: "Unifi"
+  folderRef: unifi
 
 ---
 apiVersion: grafana.integreatly.org/v1beta1
@@ -78,5 +77,5 @@ spec:
   datasources:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "Prometheus"
-  folder: "Unifi"
+  folderRef: unifi
 
