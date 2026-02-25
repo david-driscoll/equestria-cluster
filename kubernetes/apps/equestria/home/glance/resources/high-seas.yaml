@@ -1371,8 +1371,8 @@
           title: Prowlarr Indexers
           cache: 1m
           options:
-            url: "${PROWLARR_URL}"
-            base-url: ${PROWLARR_URL}
+            url: https://prowlarr.${ROOT_DOMAIN}
+            base-url: https://prowlarr.${ROOT_DOMAIN}
             api-key: ${PROWLARR_APIKEY}
           template: |
             {{ $apiBaseUrl := .Options.StringOr "base-url" "" }}
