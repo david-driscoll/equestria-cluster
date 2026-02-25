@@ -3,6 +3,7 @@ kind: GrafanaFolder
 metadata:
   name: unifi
 spec:
+  title: UniFi
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
