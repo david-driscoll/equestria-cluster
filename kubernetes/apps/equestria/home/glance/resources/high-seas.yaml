@@ -26,8 +26,8 @@
           sort-time: asc          # optional, asc or desc (default)
           #cover-proxy: "https://proxy.example.com/radarrcover" # optional
           key: ${RADARR_API_KEY}
-          api-base-url: ${RADARR_URL}
-          url: https://radarr.${ROOT_DOMAIN}
+          api-base-url: https://radarr.${ROOT_DOMAIN}
+          url: ${RADARR_URL}
         template: &template |
           {{ $collapseAfter := .Options.IntOr "collapse-after" 5 }}
           {{ $showGrabbed := .Options.BoolOr "show-grabbed" false }}
@@ -476,8 +476,8 @@
           sort-time: asc          # optional, asc or desc (default)
           #cover-proxy: "https://proxy.example.com/sonarrcover" # optional
           key: ${SONARR_API_KEY}
-          api-base-url: ${SONARR_URL}
-          url: https://sonarr.${ROOT_DOMAIN}
+          api-base-url: https://sonarr.${ROOT_DOMAIN}
+          url: ${SONARR_URL}
         template: &template |
           {{ $collapseAfter := .Options.IntOr "collapse-after" 5 }}
           {{ $showGrabbed := .Options.BoolOr "show-grabbed" false }}
@@ -926,8 +926,8 @@
           sort-time: asc          # optional, asc or desc (default)
           #cover-proxy: "https://proxy.example.com/lidarrcover" # optional
           key: ${LIDARR_API_KEY}
-          api-base-url: ${LIDARR_URL}
-          url: https://lidarr.${ROOT_DOMAIN}
+          api-base-url: https://lidarr.${ROOT_DOMAIN}
+          url: ${LIDARR_URL}
 
         template: &template |
           {{ $collapseAfter := .Options.IntOr "collapse-after" 5 }}
