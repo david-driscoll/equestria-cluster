@@ -14,7 +14,7 @@
       widgets:
       - type: custom-api
         title: Movie Releases
-        title-url: ${RADARR_URL}
+        title-url: https://radarr.${ROOT_DOMAIN}
         cache: 5m
         options:
           service: radarr          # sonarr, radarr, or lidarr
@@ -464,7 +464,7 @@
           {{ end }}
       - type: custom-api
         title: TV Releases
-        title-url: ${SONARR_URL}
+        title-url: https://sonarr.${ROOT_DOMAIN}
         cache: 5m
         options:
           service: sonarr          # sonarr, radarr, or lidarr
@@ -914,7 +914,7 @@
           {{ end }}
       - type: custom-api
         title: Music Releases
-        title-url: ${LIDARR_URL}
+        title-url: https://lidarr.${ROOT_DOMAIN}
         cache: 5m
         options:
           service: lidarr          # sonarr, radarr, or lidarr
