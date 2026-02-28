@@ -11,8 +11,8 @@
         # Authentik Applications - Custom API widget
         - type: custom-api
           title: Cluster Applications
-          hide-header: true
-          url: ${AUTHENTIK_URL}/api/v3/core/applications/?meta_publisher=Stargate+Command&page_size=100&superuser_full_list=true
+          hide-header: false
+          url: ${AUTHENTIK_URL}/api/v3/core/applications/?group=System:+Stargate+Command&page_size=100&superuser_full_list=true
           cache: 1h
           headers:
             Authorization: Bearer ${AUTHENTIK_API_TOKEN}
