@@ -18,7 +18,7 @@ spec:
   backend: s3://home-operations/home?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
-  workspaceReclaimPolicy: Delete
+  workspaceReclaimPolicy: Retain
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:

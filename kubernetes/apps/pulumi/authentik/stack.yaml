@@ -18,7 +18,7 @@ spec:
   backend: s3://home-operations/authentik?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
-  workspaceReclaimPolicy: Delete
+  workspaceReclaimPolicy: Retain
   # refresh: true
   prerequisites:
     - name: home-operations
