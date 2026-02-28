@@ -85,7 +85,7 @@ spec:
           game-thumbs:
             image:
               repository: ghcr.io/sethwv/game-thumbs
-              tag: v1.5.2@sha256:0962b24ebb30394d634ec84e0ffb9563b1bfeb5c54fe8755ad33363d37534d4e
+              tag: v1.6.0@sha256:1d0cf5f0f42678df5b2e7714b4cb2bbacf66513d46b241b03ec7fd1e3d37e546
             resources:
               requests:
                 cpu: 10m
