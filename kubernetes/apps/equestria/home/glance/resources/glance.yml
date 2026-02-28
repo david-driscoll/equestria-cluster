@@ -2,7 +2,65 @@
 server:
   proxied: true
 document:
-  head: ""
+  head: |
+    <style>
+      /* Hide uptime text in head-widget server cards */
+      .head-widgets .server .server-details :nth-child(2) {
+        display: none;
+      }
+
+      /* Side-by-side layout for head-widgets */
+      .head-widgets {
+        display: flex;
+        flex-direction: row;
+        gap: var(--widget-gap);
+        align-items: stretch;
+      }
+      .head-widgets .widget {
+        flex: 1;
+        min-width: 0;
+        margin-top: 0 !important;
+      }
+
+      /* Condense head-widget server cards */
+      .head-widgets .widget-content:not(.widget-content-frameless) {
+        padding: 8px 12px;
+      }
+      .head-widgets .server {
+        gap: 0.4rem;
+      }
+      .head-widgets .server + .server {
+        margin-top: 0.5rem;
+      }
+      .head-widgets .server-name {
+        font-size: var(--font-size-h4);
+      }
+      .head-widgets .server-icon {
+        width: 2rem;
+        height: 2rem;
+      }
+      .head-widgets .server-stats {
+        gap: 0.8rem;
+        margin-top: 0;
+        padding-bottom: 0;
+      }
+      .head-widgets .progress-bar {
+        height: 1rem;
+      }
+      @container widget (min-width: 650px) {
+        .head-widgets .server-stats {
+          min-width: 280px;
+          padding-bottom: 0;
+          gap: 1rem;
+        }
+        .head-widgets .server-stats > * {
+          max-width: 150px;
+        }
+        .head-widgets .server + .server {
+          margin-top: 0.4rem;
+        }
+      }
+    </style>
 
 # branding:
 #   custom-footer: |

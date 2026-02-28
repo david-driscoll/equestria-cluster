@@ -6,6 +6,70 @@
 
   columns:
 
+    - size: small
+      widgets:
+        # Authentik Applications - Custom API widget
+        - type: custom-api
+          title: Cluster Applications
+          hide-header: true
+          url: ${AUTHENTIK_URL}/api/v3/core/applications/?meta_publisher=Stargate+Command&page_size=100&superuser_full_list=true
+          cache: 1h
+          headers:
+            Authorization: Bearer ${AUTHENTIK_API_TOKEN}
+            Accept: application/json
+          template: |
+            <style>
+              .app-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                background: rgba(0,0,0,0.05);
+                border-radius: 8px;
+                text-decoration: none;
+                color: var(--color-primary);
+                transition: background 120ms ease-in-out;
+              }
+              .app-item:hover { background: rgba(0,0,0,0.08); }
+              .app-icon { width: 24px; height: 24px; object-fit: contain; }
+              .app-name { font-size: 0.95rem; font-weight: 600; }
+              .app-description { display: block; font-size: 0.8rem; color: var(--color-subdue); }
+              .app-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 10px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+              }
+              .app-grid-item { margin: 0; }
+              @media (max-width: 900px) {
+                .app-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+              }
+              @media (max-width: 600px) {
+                .app-grid { grid-template-columns: 1fr; }
+              }
+            </style>
+            <ul class="app-grid">
+              {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
+                {{ $url := .String "meta_launch_url" }}
+                {{ if and (ne $url "") }}
+                  <li class="app-grid-item">
+                    <a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description" }}">
+                      {{ if .String "meta_icon" }}
+                        <img src="{{ .String "meta_icon" }}" alt="{{ .String "name" }}" class="app-icon">
+                      {{ end }}
+                      <span>
+                        <span class="app-name">{{ .String "name" }}</span>
+                        <span class="app-description">{{ .String "description" }}</span>
+                      </span>
+                    </a>
+                  </li>
+                {{ end }}
+              {{ end }}
+            </ul>
+
+
     - size: full
       widgets:
         - type: calendar

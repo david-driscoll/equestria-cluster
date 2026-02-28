@@ -1,5 +1,22 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
 - name: Homelab
+  head-widgets:
+    - type: extension
+      url: ${GLANCE_K8S_SGC_URL}/extension/nodes
+      allow-potentially-dangerous-html: true
+      cache: 30s
+      title: Stargate Nodes
+      title-url: ${HEADLAMP_SGC_URL}
+      parameters:
+        show-if: glance.hide != "true"
+    - type: extension
+      url: ${GLANCE_K8S_EQUESTRIA_URL}/extension/nodes
+      allow-potentially-dangerous-html: true
+      cache: 30s
+      title: Equestria Nodes
+      title-url: ${HEADLAMP_EQUESTRIA_URL}
+      parameters:
+        show-if: glance.hide != "true"
   columns:
     - size: full
       widgets:
