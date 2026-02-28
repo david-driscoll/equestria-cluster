@@ -44,7 +44,7 @@ spec:
             nameOverride: *app
             image:
               repository: ghcr.io/tailscale/golink
-              tag: main@sha256:3b59e47e7a051c3659ea8d15c471e8f99dab10cfd7693cedb4eba211d2493e52
+              tag: main@sha256:6faaa71ac71d9c8603782b70a97bc3ad63144174748db5bbf79cdaa9167ababb
               pullPolicy: IfNotPresent
             env:
               TS_AUTHKEY:
