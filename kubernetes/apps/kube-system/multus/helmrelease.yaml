@@ -44,8 +44,7 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: cilium
+  dependsOn: []
   values:
     cni-plugins:
       image:
