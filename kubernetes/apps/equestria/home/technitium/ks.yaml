@@ -15,8 +15,10 @@ spec:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
   dependsOn:
-    - name: network-secrets
-      namespace: network
+    - name: volsync
+      namespace: volsync-system
+    - name: external-secrets
+      namespace: kube-system
   path: ./kubernetes/apps/network/technitium
   prune: true
   wait: false
@@ -28,6 +30,8 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  components:
+    - ../../../../components/volsync
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease

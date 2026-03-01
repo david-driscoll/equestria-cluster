@@ -40,7 +40,7 @@ spec:
               tag: 14.3.0@sha256:322b236403ca25028032f28736e2270a860527b030b162c9f82451c6494c4698
             env:
               # These are applied on first start only (ignored if /etc/dns config already exists)
-              DNS_SERVER_DOMAIN: equestria.technitium.driscoll.tech
+              DNS_SERVER_DOMAIN: ${CLUSTER_CNAME}.technitium.driscoll.tech
               DNS_SERVER_WEB_SERVICE_ENABLE_HTTPS: "true"
               DNS_SERVER_WEB_SERVICE_USE_SELF_SIGNED_CERT: "true"
               DNS_SERVER_RECURSION: AllowOnlyForPrivateNetworks
@@ -99,12 +99,15 @@ spec:
       dns:
         controller: *app
         type: LoadBalancer
+        loadBalancerIP: "${TECHNITIUM_VIP}"
         annotations:
-          lbipam.cilium.io/ips: "${TECHNITIUM_VIP}"
           io.cilium/lb-ipam-ips: "${TECHNITIUM_VIP}"
           tailscale.com/expose: "true"
-          tailscale.com/hostname: ${APP}
+          tailscale.com/hostname: ${APP}-${CLUSTER_CNAME}
           tailscale.com/tailnet-ip: "${TECHNITIUM_TAILSCALE_VIP}"
+          external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+        externalIPs:
+          - "${TECHNITIUM_VIP}"
         externalTrafficPolicy: Cluster
         ports:
           dns-udp:
@@ -140,9 +143,6 @@ spec:
 
     persistence:
       config:
-        type: persistentVolumeClaim
-        storageClass: longhorn-local
-        accessMode: ReadWriteOnce
-        size: 3Gi
+        existingClaim: ${APP}
         globalMounts:
           - path: /etc/dns
