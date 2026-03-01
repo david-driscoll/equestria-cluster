@@ -146,3 +146,17 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /etc/dns
+
+    route:
+      admin:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - ${APP}.${CLUSTER_DOMAIN}
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: admin
+                port: admin
