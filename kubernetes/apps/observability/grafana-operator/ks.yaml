@@ -15,7 +15,9 @@ spec:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
       kustomize.toolkit.fluxcd.io/force: enabled
-  dependsOn: []
+  dependsOn:
+    - name: prometheus
+      namespace: observability
   path: ./kubernetes/apps/observability/grafana-operator
   prune: true
   wait: true

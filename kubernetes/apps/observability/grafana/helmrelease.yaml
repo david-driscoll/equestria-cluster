@@ -94,7 +94,7 @@ spec:
         matchLabels:
           dashboards: grafana
 
-      # defaultDashboardsEnabled: false
+      defaultDashboardsEnabled: false
       defaultDashboardsTimezone: ${TIMEZONE}
       imageRenderer:
         enabled: false

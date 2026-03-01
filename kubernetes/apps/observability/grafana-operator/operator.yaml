@@ -24,6 +24,8 @@ spec:
     name: grafana-operator
   interval: 1h
   values:
+    crds:
+      immutable: false
     dashboard:
       enabled: true
     serviceMonitor:
