@@ -101,6 +101,12 @@ spec:
       serviceMonitor:
         enabled: true
       sidecar:
+        datasources:
+          # Datasources are managed via grafana-operator GrafanaDatasource CRDs.
+          # Disabling prevents kube-prometheus-stack's auto-generated datasource
+          # ConfigMap (with disabled prometheus/alertmanager URLs) from causing
+          # Grafana 12.4.0+ fatal startup errors.
+          enabled: false
         dashboards:
           label: grafana_dashboard
           labelValue: "true"
@@ -114,15 +120,6 @@ spec:
         inMemory:
           enabled: true
           sizeLimit: 512Mi
-      # Datasources are managed via GrafanaDatasource CRDs (datasources.yaml).
-      # Override the kube-prometheus-stack default ConfigMap to empty to prevent
-      # Grafana 12.4.0+ fatal startup errors from provisioning non-existent services
-      # (prometheus + alertmanager are disabled in this chart release).
-      datasources:
-        datasources.yaml:
-          apiVersion: 1
-          datasources: []
-          prune: true
       plugins:
         - alertlist
         - grafana-github-datasource
