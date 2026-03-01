@@ -13,7 +13,6 @@ resources:
   - ./external-dns
   - ./k8s-gateway/ks.yaml
   - ./secrets/ks.yaml
-  - ./technitium/ks.yaml
   - ./traefik/ks.yaml
   - ./whoami/ks.yaml
   - ./openspeedtest/ks.yaml

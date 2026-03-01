@@ -14,4 +14,5 @@ resources:
   - ./windmill/ks.yaml
   - ./rustdesk/ks.yaml
   - ./tandoor/ks.yaml
+  # - ./technitium/ks.yaml
   # - ./collabora/ks.yaml
