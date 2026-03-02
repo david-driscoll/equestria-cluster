@@ -45,7 +45,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: ghcr.io/doezer/questarr
-              tag: dev@sha256:abb56468d38a9c8a6a4fee119cdc51c8e7b75bfa97d8f6590110800d11fa8c14
+              tag: dev@sha256:b92f0e859c285e464cb46347d936d2d759ea60f2220f302428d0076aba80ac19
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -61,7 +61,7 @@ spec:
           app:
             image:
               repository: ghcr.io/doezer/questarr
-              tag: dev@sha256:abb56468d38a9c8a6a4fee119cdc51c8e7b75bfa97d8f6590110800d11fa8c14
+              tag: dev@sha256:b92f0e859c285e464cb46347d936d2d759ea60f2220f302428d0076aba80ac19
               pullPolicy: IfNotPresent
             env:
               PUID: ${PUID}
@@ -90,6 +90,8 @@ spec:
               runAsNonRoot: true
               runAsUser: 568
               runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: OnRootMismatch
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
@@ -102,8 +104,6 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     service:
