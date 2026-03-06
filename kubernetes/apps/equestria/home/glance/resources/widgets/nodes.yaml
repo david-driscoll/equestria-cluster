@@ -1,23 +1,21 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/definitions/widget
 # Uptime Monitor
 - $include: service-status.yaml
-
-# glance-k8s Nodes (stargate) - via Tailscale cross-cluster access
-- type: extension
-  url: ${GLANCE_K8S_SGC_URL}/extension/nodes
-  allow-potentially-dangerous-html: true
-  cache: 30s
-  title: Stargate Nodes
-  title-url: ${HEADLAMP_SGC_URL}
-  parameters:
-    show-if: glance.hide != "true"
-
-# glance-k8s Nodes (equestria)
-- type: extension
-  url: ${GLANCE_K8S_EQUESTRIA_URL}/extension/nodes
-  allow-potentially-dangerous-html: true
-  cache: 30s
-  title: Equestria Nodes
-  title-url: ${HEADLAMP_EQUESTRIA_URL}
-  parameters:
-    show-if: glance.hide != "true"
+- type: repository
+  repository: david-driscoll/home-operations
+  token: ${GITHUB_TOKEN}
+  pull-requests-limit: 3
+  issues-limit: -1
+  commits-limit: 2
+- type: repository
+  repository: david-driscoll/stargate-command-cluster
+  token: ${GITHUB_TOKEN}
+  pull-requests-limit: 3
+  issues-limit: -1
+  commits-limit: 2
+- type: repository
+  repository: david-driscoll/equestria-cluster
+  token: ${GITHUB_TOKEN}
+  pull-requests-limit: 3
+  issues-limit: -1
+  commits-limit: 2
