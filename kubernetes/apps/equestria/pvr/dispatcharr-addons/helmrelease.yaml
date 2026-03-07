@@ -129,6 +129,42 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 2Gi
+          kptv-fast:
+            image:
+              repository: ghcr.io/kpirnie/kptv-fast
+              tag: latest
+            env:
+              CACHE_DURATION: 86400
+              WARM_CACHE_ON_STARTUP: true
+              STARTUP_CACHE_DELAY: 10
+              WARM_EPG_ON_STARTUP: true
+              MAX_WORKERS: 5
+              PROVIDER_TIMEOUT: 60
+              ENABLED_PROVIDERS: all
+              GIT_COUNTRY: us,ca,uk
+              LG_COUNTRY: us,ca,uk
+              WHALE_COUNTRY: us
+              DEBUG: false
+              TZ: ${TIMEZONE}
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /status
+                    port: &kptv-fast-port 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 20
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
           # xtream-strm:
           #   image:
           #     repository: mourabena2ui/xtream-to-strm-web
@@ -178,6 +214,12 @@ spec:
         ports:
           http:
             port: *teamarr-port
+      kptv-fast:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: *kptv-fast-port
       # xtream-strm:
       #   controller: app
       #   type: ClusterIP
@@ -328,6 +370,24 @@ spec:
           - backendRefs:
               - identifier: game-thumbs
                 port: *game-thumbs-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+      kptv-fast:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "kptv-fast.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: kptv-fast
+                port: *kptv-fast-port
             filters:
               - type: ExtensionRef
                 extensionRef:
