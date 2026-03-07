@@ -132,7 +132,7 @@ spec:
           kptv-fast:
             image:
               repository: ghcr.io/kpirnie/kptv-fast
-              tag: latest
+              tag: latest@sha256:93f5bf9e22deeeccd8f421a9d9ba119b18f50b7aac3c5248611de70e3daebbcd
             env:
               CACHE_DURATION: 86400
               WARM_CACHE_ON_STARTUP: true
