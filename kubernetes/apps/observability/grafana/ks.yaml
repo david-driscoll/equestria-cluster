@@ -14,7 +14,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-      kustomize.toolkit.fluxcd.io/force: enabled
   dependsOn:
     - name: volsync
       namespace: volsync-system
