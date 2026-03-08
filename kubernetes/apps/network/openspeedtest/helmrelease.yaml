@@ -25,6 +25,8 @@ spec:
     name: openspeedtest
   timeout: 10m
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     controllers:
       *app :
