@@ -45,7 +45,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: ghcr.io/doezer/questarr
-              tag: dev@sha256:114c0dae73ea4d9164227a96ad7cb5e9cf54ce6a19c8b1f4fda97cbe3083acc1
+              tag: dev@sha256:5f5b1ef9d31010ce41f585d80cad713cc0a6da6d126194407854e508104a0b5d
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -61,7 +61,7 @@ spec:
           app:
             image:
               repository: ghcr.io/doezer/questarr
-              tag: dev@sha256:114c0dae73ea4d9164227a96ad7cb5e9cf54ce6a19c8b1f4fda97cbe3083acc1
+              tag: dev@sha256:5f5b1ef9d31010ce41f585d80cad713cc0a6da6d126194407854e508104a0b5d
               pullPolicy: IfNotPresent
             env:
               PUID: ${PUID}
