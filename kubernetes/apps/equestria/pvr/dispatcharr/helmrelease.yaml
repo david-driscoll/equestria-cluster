@@ -55,7 +55,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dispatcharr/dispatcharr
-              tag: dev@sha256:d352833716cf18c30944abb1752afb352f4f8e706a40e718b2970eb5076fb521
+              tag: dev@sha256:703c374f5a78cde62d68292e07a4dac77aacadd7b7c7311d430f748b5757866c
               pullPolicy: IfNotPresent
             # -- environment variables.
             # See Dispatcharr documentation for environment variable details.
