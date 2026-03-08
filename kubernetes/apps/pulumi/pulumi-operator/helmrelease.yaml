@@ -40,10 +40,9 @@ spec:
       requests:
         memory: 256Mi
         cpu: 100m
-    metrics:
-      secure: false
+    controller:
+      metricsSecure: false
     serviceMonitor:
       enabled: true
-      scheme: http
     nameOverride: "pulumi-operator"
     fullnameOverride: "pulumi-operator"
