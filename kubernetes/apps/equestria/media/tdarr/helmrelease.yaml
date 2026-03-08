@@ -10,6 +10,8 @@ spec:
     name: app-template
   dependsOn: []
   interval: 15m
+  driftDetection:
+    mode: enabled
   values:
     controllers:
       *app :
