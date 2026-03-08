@@ -34,6 +34,7 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
+    - ../../../../components/failover/fast-node-eviction
   postBuild:
     substitute:
       APP: *app

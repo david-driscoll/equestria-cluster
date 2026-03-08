@@ -33,6 +33,7 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
+    - ../../../../components/failover/fast-node-eviction
     - ../../../../components/tailscale
     - ../../../../components/volsync
   postBuild:

@@ -3,27 +3,22 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app xcproxy
-  namespace: equestria
+  name: &app valkey
+  namespace: &namespace database
   labels:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
 spec:
-  targetNamespace: &namespace database
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  path: ./kubernetes/apps/equestria/pvr/xcproxy
-  dependsOn:
-    - name: postgres
-      namespace: *namespace
-    - name: external-secrets
-      namespace: kube-system
+  dependsOn: []
+  path: ./kubernetes/apps/database/valkey
   prune: true
   wait: true
   force: false
-  suspend: false
   interval: 1h
   retryInterval: 2m
   timeout: 10m
@@ -32,8 +27,4 @@ spec:
     name: flux-system
     namespace: flux-system
   components:
-    - ../../../../components/failover/fast-node-eviction
-  postBuild:
-    substitute:
-      APP: *app
-      NAMESPACE: *namespace
+    - ../../../components/failover/fast-node-eviction

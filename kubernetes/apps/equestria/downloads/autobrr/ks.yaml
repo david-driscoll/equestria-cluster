@@ -38,6 +38,7 @@ spec:
   components:
     - ../../../../components/tailscale
     - ../../../../components/volsync
+    - ../../../../components/failover/fast-node-eviction
     # - ../../../../components/postgres
   postBuild:
     substitute:
