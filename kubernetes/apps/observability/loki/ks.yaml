@@ -32,6 +32,8 @@ spec:
       namespace: kube-system
     - name: external-secrets
       namespace: kube-system
+    - name: alloy
+      namespace: kube-system
   postBuild:
     substitute:
       APP: *app

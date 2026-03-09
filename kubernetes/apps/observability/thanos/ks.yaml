@@ -25,6 +25,8 @@ spec:
       namespace: kube-system
     - name: external-secrets
       namespace: kube-system
+    - name: prometheus
+      namespace: observability
   components:
     - ../../../components/failover/fast-node-eviction
   postBuild:

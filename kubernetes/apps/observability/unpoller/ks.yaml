@@ -16,8 +16,12 @@ spec:
       driscoll.dev/name: *app
   path: ./kubernetes/apps/observability/unpoller
   dependsOn:
-    - name: external-secrets
-      namespace: kube-system
+    - name: grafana
+      namespace: observability
+    - name: grafana-operator
+      namespace: observability
+    - name: prometheus
+      namespace: observability
   prune: true
   wait: true
   force: false

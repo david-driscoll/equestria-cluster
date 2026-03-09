@@ -20,6 +20,9 @@ spec:
       name: silence-operator
       namespace: *namespace
   path: ./kubernetes/apps/observability/silences
+  dependsOn:
+    - name: alertmanager
+      namespace: observability
   prune: true
   wait: true
   force: false

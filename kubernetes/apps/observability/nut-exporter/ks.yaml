@@ -15,6 +15,11 @@ spec:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
   path: ./kubernetes/apps/observability/nut-exporter
+  dependsOn:
+    - name: grafana
+      namespace: observability
+    - name: grafana-operator
+      namespace: observability
   prune: true
   wait: true
   force: false
