@@ -193,7 +193,25 @@ tasks:
       KUBERNETES_VERSION:
         sh: yq '.kubernetesVersion' {{.TALOS_DIR}}/talenv.yaml
     deps:
-      - generate-config
+      - validate-config
+    preconditions:
+      - talosctl config info
+      - test -f {{.TALOSCONFIG}}
+      - which talhelper talosctl yq
+
+  upgrade-k8s-to:
+    desc: Upgrade Kubernetes to an explicit intermediate version [VERSION=required]
+    dir: '{{.TALOS_DIR}}'
+    cmd: |
+      set -eu
+      tmpfile="$(mktemp)"
+      trap 'rm -f "${tmpfile}"' EXIT
+      echo "kubernetesVersion: {{.VERSION}}" > "${tmpfile}"
+      talhelper gencommand upgrade-k8s --env-file talenv.yaml --env-file "${tmpfile}" | bash
+    requires:
+      vars: [VERSION]
+    deps:
+      - validate-config
     preconditions:
       - talosctl config info
       - test -f {{.TALOSCONFIG}}
