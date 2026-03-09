@@ -1,12 +1,12 @@
-# Talos and Kubernetes Upgrade Runbook (v1.11.6 -> v1.12.4, v1.33.4 -> v1.35.2)
+# Talos and Kubernetes Upgrade Runbook (v1.11.6 -> v1.12.5, v1.33.4 -> v1.34.5)
 
 ## Scope
 
 This runbook covers direct-jump upgrade preparation and execution for:
 
-- Talos: v1.11.6 -> v1.12.4
-- Kubernetes/kubelet: v1.33.4 -> v1.35.2
-- Tooling alignment: kubectl 1.33.4 -> 1.35.2, talosctl 1.11.6 -> 1.12.4
+- Talos: v1.11.6 -> v1.12.5
+- Kubernetes/kubelet: v1.33.4 -> v1.34.5
+- Tooling alignment: kubectl 1.33.4 -> 1.34.5, talosctl 1.11.6 -> 1.12.5
 
 Primary Renovate PRs analyzed:
 
@@ -19,18 +19,18 @@ Primary Renovate PRs analyzed:
 The version bump spans all control points:
 
 - talos/talenv.yaml
-  - talosVersion
-  - kubernetesVersion
+    - talosVersion
+    - kubernetesVersion
 - versions.env
-  - TALOS_VERSION
-  - KUBERNETES_VERSION
+    - TALOS_VERSION
+    - KUBERNETES_VERSION
 - .mise.toml
-  - kubectl
-  - talosctl
+    - kubectl
+    - talosctl
 - kubernetes/apps/system-upgrade/upgrades/talos.yaml
-  - spec.talos.version
+    - spec.talos.version
 - kubernetes/apps/system-upgrade/upgrades/kubernetes.yaml
-  - spec.kubernetes.version
+    - spec.kubernetes.version
 
 ## External Changes To Account For
 
@@ -39,9 +39,9 @@ The version bump spans all control points:
 Key behavior changes called out in Talos docs and release notes:
 
 - Some machine config fields are now ignored/locked in v1.12:
-  - machine.features.rbac (locked true)
-  - machine.features.apidCheckExtKeyUsage (locked true)
-  - cluster.apiServer.disablePodSecurityPolicy (locked false)
+    - machine.features.rbac (locked true)
+    - machine.features.apidCheckExtKeyUsage (locked true)
+    - cluster.apiServer.disablePodSecurityPolicy (locked false)
 - Kernel and hardening defaults changed across v1.12 patches.
 - Talos recommends tested upgrades between adjacent minor releases.
 
@@ -87,14 +87,14 @@ It validates before rollout:
 
 1. Align branch with PR version bumps.
 2. Run preflight checks:
-   - task talos:preflight-upgrade
+    - task talos:preflight-upgrade
 3. Take etcd backup:
-   - task talos:backup-etcd
+    - task talos:backup-etcd
 4. Upgrade Talos first:
-   - task talos:upgrade
+    - task talos:upgrade
 5. Validate node and control-plane stability.
 6. Upgrade Kubernetes:
-   - task talos:upgrade-k8s
+    - task talos:upgrade-k8s
 7. Validate again and observe for a soak window.
 
 ## Validation Gates
