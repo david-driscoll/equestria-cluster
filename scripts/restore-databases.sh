@@ -12,7 +12,7 @@ BACKUP_DIR="/Volumes/backup/postgres/temp"
 APP_NAMESPACE="equestria"
 POSTGRES_CONNECTIONSTRING=$(op read "op://Eris/equestria-postgres-superuser/public-uri")
 
-DATABASES=("immich" "n8n" "pulsarr" "questarr" "retrom" "romm" "tandoor" "vikunja")
+DATABASES=("n8n" "pulsarr" "questarr" "romm" "vikunja")
 
 # Track original replica counts
 typeset -A ORIGINAL_REPLICAS
@@ -124,9 +124,18 @@ for DB in "${DATABASES[@]}"; do
         psql "$POSTGRES_CONNECTIONSTRING" -v ON_ERROR_STOP=1 -c "DROP DATABASE \"$DB\";" >/dev/null 2>&1 || true
     fi
 
+    # Create owner role if it doesn't exist
+    echo "  Ensuring owner role exists..."
+    psql "$POSTGRES_CONNECTIONSTRING" -v ON_ERROR_STOP=1 -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = '$DB') THEN CREATE ROLE \"$DB\" WITH LOGIN PASSWORD NULL; END IF; END \$\$;" >/dev/null 2>&1 || {
+        echo -e "${RED}  ✗ Failed to create owner role $DB${NC}"
+        FAILED=$((FAILED + 1))
+        echo ""
+        continue
+    }
+
     # Create database
     echo "  Creating database..."
-    psql "$POSTGRES_CONNECTIONSTRING" -v ON_ERROR_STOP=1 -c "CREATE DATABASE \"$DB\";" >/dev/null 2>&1 || {
+    psql "$POSTGRES_CONNECTIONSTRING" -v ON_ERROR_STOP=1 -c "CREATE DATABASE \"$DB\" OWNER \"$DB\";" >/dev/null 2>&1 || {
         echo -e "${RED}  ✗ Failed to create database $DB${NC}"
         FAILED=$((FAILED + 1))
         echo ""
@@ -138,12 +147,14 @@ for DB in "${DATABASES[@]}"; do
     DB_CONNECTIONSTRING=$(build_conn_for_db "$DB")
     BACKUP_MAGIC=$(gunzip -c "$LATEST_BACKUP" 2>/dev/null | head -c 5 || true)
     LOG_FILE="/tmp/restore-${DB}.log"
+    RESTORE_SUCCESS=0
 
     if [ "$BACKUP_MAGIC" = "PGDMP" ]; then
         # Backup produced by pg_dump --format=custom; restore with pg_restore.
         if gunzip -c "$LATEST_BACKUP" | pg_restore --dbname="$DB_CONNECTIONSTRING" --no-owner --no-privileges --exit-on-error --verbose >"$LOG_FILE" 2>&1; then
             echo -e "${GREEN}  ✓ Successfully restored $DB (custom format)${NC}"
             RESTORED=$((RESTORED + 1))
+            RESTORE_SUCCESS=1
         else
             echo -e "${RED}  ✗ Failed to restore $DB${NC}"
             echo "  Log: $LOG_FILE"
@@ -153,12 +164,36 @@ for DB in "${DATABASES[@]}"; do
     elif gunzip -c "$LATEST_BACKUP" | psql "$DB_CONNECTIONSTRING" -v ON_ERROR_STOP=1 >"$LOG_FILE" 2>&1; then
         echo -e "${GREEN}  ✓ Successfully restored $DB${NC}"
         RESTORED=$((RESTORED + 1))
+        RESTORE_SUCCESS=1
     else
         echo -e "${RED}  ✗ Failed to restore $DB${NC}"
         echo "  Log: $LOG_FILE"
         tail -n 20 "$LOG_FILE" || true
         FAILED=$((FAILED + 1))
     fi
+
+#     # Set ownership of all database objects if restore succeeded
+#     if [ $RESTORE_SUCCESS -eq 1 ]; then
+#         echo "  Setting database ownership..."
+#         psql "$DB_CONNECTIONSTRING" -v ON_ERROR_STOP=1 <<-EOSQL >/dev/null 2>&1 || true
+#             -- Reassign ownership of all objects in the database
+#             REASSIGN OWNED BY CURRENT_USER TO "$DB";
+
+#             -- Grant all privileges on database
+#             GRANT ALL PRIVILEGES ON DATABASE "$DB" TO "$DB";
+
+#             -- Grant privileges on all tables in public schema
+#             GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "$DB";
+#             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "$DB";
+#             GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO "$DB";
+
+#             -- Set default privileges for future objects
+#             ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "$DB";
+#             ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "$DB";
+#             ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO "$DB";
+# EOSQL
+#         echo -e "${GREEN}  ✓ Ownership configured${NC}"
+#     fi
 
     echo ""
 done
