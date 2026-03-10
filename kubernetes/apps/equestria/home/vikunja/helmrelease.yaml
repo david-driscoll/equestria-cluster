@@ -38,6 +38,10 @@ spec:
         pod:
           securityContext:
             runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
 
         containers:
           *app :
@@ -46,6 +50,13 @@ spec:
               tag: unstable@sha256:87abbc86bbfa9d192615308c3efbcf9cfdc3fc3b60b5e1922b9c3ba4b628a8d6
             env:
               TZ: "${TIMEZONE}"
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 200m
@@ -58,6 +69,9 @@ spec:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
         runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
         seccompProfile:
           type: RuntimeDefault
       shareProcessNamespace: true
