@@ -38,7 +38,7 @@ spec:
             runAsUser: 568
             runAsGroup: 568
             runAsNonRoot: true
-            fsGroupChangePolicy: "OnRootMismatch"
+            # fsGroupChangePolicy: "OnRootMismatch"
         containers:
           *app :
             nameOverride: *app

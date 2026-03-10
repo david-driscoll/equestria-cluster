@@ -58,7 +58,7 @@ spec:
               - secretRef:
                   name: kometa-secret
             securityContext:
-              fsGroupChangePolicy: OnRootMismatch
+              # fsGroupChangePolicy: OnRootMismatch
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
