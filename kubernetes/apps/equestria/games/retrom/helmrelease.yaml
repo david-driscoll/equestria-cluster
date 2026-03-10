@@ -39,7 +39,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/jmberesford/retrom-service
-              tag: 0.8.0@sha256:f5cc9732248e0e2ba6f2d81641c3152938b5c94d0c3089a1c9dfa48addb249de
+              tag: 0.8.0@sha256:42c37204270aeead444ae3643f39b412bd156b43710f50a3dca37d2b952bbadf
             env:
               - name: PORT
                 value: "5101"
