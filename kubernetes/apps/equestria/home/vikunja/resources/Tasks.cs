@@ -15,6 +15,11 @@ using Refit;
 using Spectre;
 using Spectre.Console;
 
+const int MORNING_START = 8;
+const int AFTERWORK_START = 17;
+const int EVENING_ENDS = 22;
+
+
 var vikunjaToken = Environment.GetEnvironmentVariable("VIKUNJA_TOKEN");
 if (string.IsNullOrWhiteSpace(vikunjaToken))
 {
@@ -54,6 +59,7 @@ foreach (var task in tasks)
 
     dueDate.Dump("New Due Date");
     t.DueDate = dueDate;
+    // JsonSerializer.Serialize(t, SourceGenerationContext.Default.Task)!.Dump("Updated Task");
     await client.TasksPost(task.Id, t);
   }
   catch (Exception ex)
@@ -82,35 +88,23 @@ ZonedDateTime GetNextDueDate(Task task, DateTimeZone zone, Instant now)
 LocalDateTime GetCompletionDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone)
 {
   var todayDate = nowInZone.Date.AtMidnight();
-  var eveningStart = todayDate.PlusHours(17);
-  var eveningCutoff = todayDate.PlusHours(22);
+  var isOverdue = dueDate <= nowInZone.PlusMinutes(10);
   var isMorning = task.Labels.Any(z => z.Title.Equals("morning", StringComparison.OrdinalIgnoreCase));
   var isAfterWork = task.Labels.Any(z => z.Title.Equals("after work", StringComparison.OrdinalIgnoreCase));
 
-  // Keep tasks moving in small increments during evening hours.
-  if (nowInZone >= eveningStart && nowInZone < eveningCutoff)
+  if (!isOverdue)
   {
-    var bumped = nowInZone.PlusMinutes(30);
-    return bumped > eveningCutoff ? eveningCutoff : bumped;
+    return dueDate;
   }
 
-  // Morning takes priority when both labels are present.
-  if (isMorning)
+  return (dueDate.TimeOfDay, isMorning, isAfterWork) switch
   {
-    return NextMorningSlot(nowInZone);
-  }
-
-  // After-work means 5pm on weekdays and 9am on weekends.
-  if (isAfterWork)
-  {
-    return NextAfterWorkSlot(nowInZone);
-  }
-
-  return dueDate.TimeOfDay switch
-  {
-    { Hour: >= 22 } => todayDate.Plus(Period.FromHours(7) + Period.FromDays(1)),
-    { Hour: < 7 } => todayDate.Plus(Period.FromHours(7)),
-    _ => nowInZone.Plus(Period.FromMinutes(30)),
+    ({ Hour: >= EVENING_ENDS }, false, true) => NextAfterWorkSlot(nowInZone),
+    ({ Hour: >= EVENING_ENDS }, _, false) => NextMorningSlot(nowInZone),
+    ({ Hour: < MORNING_START }, false, true) => NextAfterWorkSlot(nowInZone),
+    ({ Hour: < MORNING_START }, _, false) => NextMorningSlot(nowInZone),
+    ({ Hour: < AFTERWORK_START }, _, true) => NextAfterWorkSlot(nowInZone),
+    _ => nowInZone.PlusMinutes(30),
   };
 }
 
@@ -136,7 +130,7 @@ LocalDateTime GetNextRepeatAfterDueDate(Task task, LocalDateTime dueDate, Instan
 
 LocalDateTime NextMorningSlot(LocalDateTime nowInZone)
 {
-  var candidate = nowInZone.Date + new LocalTime(9, 0);
+  var candidate = nowInZone.Date + new LocalTime(8, 0);
   return candidate <= nowInZone ? candidate.PlusDays(1) : candidate;
 }
 
@@ -159,7 +153,12 @@ LocalDateTime SlotForDate(LocalDate date)
   return date + slotTime;
 }
 #region Vikunja
-[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSourceGenerationOptions(
+  WriteIndented = true,
+  Converters = [
+    typeof(ApiEnumJsonConverterFactory),
+  ]
+)]
 [JsonSerializable(typeof(Task))]
 [JsonSerializable(typeof(FileResponse))]
 [JsonSerializable(typeof(ProjectViewViewKind))]
@@ -4364,6 +4363,7 @@ public partial class Message
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum Permission
 {
 
@@ -4546,7 +4546,6 @@ public partial class ProjectView
   /// The bucket configuration mode. Can be `none`, `manual` or `filter`. `manual` allows to move tasks between buckets as you normally would. `filter` creates buckets based on a filter for each bucket.
   /// </summary>
   [JsonPropertyName("bucket_configuration_mode")]
-  [JsonConverter(typeof(JsonStringEnumConverter<ProjectViewBucketConfigurationMode>))]
   public ProjectViewBucketConfigurationMode? BucketConfigurationMode { get; set; }
 
   /// <summary>
@@ -4607,7 +4606,6 @@ public partial class ProjectView
   /// The kind of this view. Can be `list`, `gantt`, `table` or `kanban`.
   /// </summary>
   [JsonPropertyName("view_kind")]
-  [JsonConverter(typeof(JsonStringEnumConverter<ProjectViewViewKind>))]
   public ProjectViewViewKind? ViewKind { get; set; }
 
 }
@@ -4661,6 +4659,7 @@ public partial class RelatedTaskMap : Dictionary<string, System.Collections.Obje
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum RelationKind
 {
 
@@ -4703,6 +4702,7 @@ public enum RelationKind
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum ReminderRelation
 {
 
@@ -4785,6 +4785,7 @@ public partial class SavedFilter
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum SharingType
 {
 
@@ -5213,7 +5214,6 @@ public partial class TaskRelation
   /// The kind of the relation.
   /// </summary>
   [JsonPropertyName("relation_kind")]
-  [JsonConverter(typeof(JsonStringEnumConverter<RelationKind>))]
   public RelationKind? RelationKind { get; set; }
 
   /// <summary>
@@ -5238,7 +5238,6 @@ public partial class TaskReminder
   /// The name of the date field to which the relative period refers to.
   /// </summary>
   [JsonPropertyName("relative_to")]
-  [JsonConverter(typeof(JsonStringEnumConverter<ReminderRelation>))]
   public ReminderRelation? RelativeTo { get; set; }
 
   /// <summary>
@@ -5250,6 +5249,7 @@ public partial class TaskReminder
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum TaskRepeatMode
 {
 
@@ -6248,6 +6248,7 @@ public partial class HTTPError
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum ProjectViewBucketConfigurationMode
 {
 
@@ -6263,6 +6264,7 @@ public enum ProjectViewBucketConfigurationMode
 }
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
+[JsonConverter(typeof(ApiEnumJsonConverterFactory))]
 public enum ProjectViewViewKind
 {
 
@@ -6313,6 +6315,134 @@ public partial class FileResponse : System.IDisposable
       _response.Dispose();
     if (_client != null)
       _client.Dispose();
+  }
+}
+
+internal sealed class ApiEnumJsonConverterFactory : JsonConverterFactory
+{
+  public override bool CanConvert(Type typeToConvert)
+  {
+    var targetType = Nullable.GetUnderlyingType(typeToConvert) ?? typeToConvert;
+    return targetType.IsEnum;
+  }
+
+  public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+  {
+    if (typeToConvert.IsEnum)
+    {
+      return (JsonConverter)Activator.CreateInstance(typeof(ApiEnumJsonConverter<>).MakeGenericType(typeToConvert)!);
+    }
+    var targetType = Nullable.GetUnderlyingType(typeToConvert) ?? typeToConvert;
+    if (targetType.IsEnum)
+    {
+      return (JsonConverter)Activator.CreateInstance(typeof(NullableApiEnumJsonConverter<>).MakeGenericType(targetType)!);
+    }
+
+    throw new InvalidOperationException($"Cannot create converter for {typeToConvert}.");
+  }
+
+  internal sealed class ApiEnumJsonConverter<TEnum> : JsonConverter<TEnum> where TEnum : struct, Enum
+  {
+    public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+      if (reader.TokenType == JsonTokenType.Number)
+      {
+        var number = reader.GetInt32();
+        return (TEnum)Enum.ToObject(typeof(TEnum), number);
+      }
+
+      if (reader.TokenType != JsonTokenType.String)
+      {
+        throw new JsonException($"Unexpected token '{reader.TokenType}' for enum '{typeof(TEnum).Name}'.");
+      }
+
+      var text = reader.GetString();
+      if (string.IsNullOrWhiteSpace(text))
+      {
+        throw new JsonException($"Cannot parse empty value for enum '{typeof(TEnum).Name}'.");
+      }
+
+      if (int.TryParse(text, out var numericText))
+      {
+        return (TEnum)Enum.ToObject(typeof(TEnum), numericText);
+      }
+
+      if (Enum.TryParse<TEnum>(text, ignoreCase: true, out var parsed))
+      {
+        return parsed;
+      }
+
+      throw new JsonException($"Unable to parse enum '{typeof(TEnum).Name}' from '{text}'.");
+    }
+
+    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
+    {
+      var name = value.ToString();
+
+      // Keep numeric enums (for values like _0, _1, _2) as numbers for API compatibility.
+      if (name.Length > 1 && name[0] == '_' && int.TryParse(name.AsSpan(1), out var numericValue))
+      {
+        writer.WriteNumberValue(numericValue);
+        return;
+      }
+
+      writer.WriteStringValue(name.ToLowerInvariant());
+    }
+  }
+
+  internal sealed class NullableApiEnumJsonConverter<TEnum> : JsonConverter<TEnum?> where TEnum : struct, Enum
+  {
+    public override TEnum? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+      if (reader.TokenType == JsonTokenType.Number)
+      {
+        var number = reader.GetInt32();
+        return (TEnum)Enum.ToObject(typeof(TEnum), number);
+      }
+
+      if (reader.TokenType != JsonTokenType.String)
+      {
+        throw new JsonException($"Unexpected token '{reader.TokenType}' for enum '{typeof(TEnum).Name}'.");
+      }
+
+      var text = reader.GetString();
+      if (string.IsNullOrWhiteSpace(text))
+      {
+        throw new JsonException($"Cannot parse empty value for enum '{typeof(TEnum).Name}'.");
+      }
+
+      if (int.TryParse(text, out var numericText))
+      {
+        return (TEnum)Enum.ToObject(typeof(TEnum), numericText);
+      }
+
+      if (Enum.TryParse<TEnum>(text, ignoreCase: true, out var parsed))
+      {
+        return parsed;
+      }
+
+      throw new JsonException($"Unable to parse enum '{typeof(TEnum).Name}' from '{text}'.");
+    }
+
+    public override void Write(Utf8JsonWriter writer, TEnum? value, JsonSerializerOptions options)
+    {
+      if (value == null)
+      {
+        writer.WriteNullValue();
+        return;
+      }
+
+      var name = value.Value.ToString();
+
+      // Keep numeric enums (for values like _0, _1, _2) as numbers for API compatibility.
+      if (name.Length > 1 && name[0] == '_' && int.TryParse(name.AsSpan(1), out var numericValue))
+      {
+        writer.WriteNumberValue(numericValue);
+        return;
+      }
+
+      writer.WriteStringValue(name.ToLowerInvariant());
+    }
   }
 }
 #endregion
