@@ -36,6 +36,7 @@ david-driscoll/stargate-command-cluster:
     exclude: |
       features/kustomization.yaml
       features/amd/
+      features/nvidia/
     deleteOrphaned: true
   - source: kubernetes/apps/flux-system/weave/
     dest: kubernetes/apps/flux-system/weave/
