@@ -15,10 +15,9 @@ using Refit;
 using Spectre;
 using Spectre.Console;
 
-const int MORNING_START = 8;
-const int AFTERWORK_START = 17;
-const int EVENING_ENDS = 22;
-
+const int WORKDAY_START = 9;
+const int WORKDAY_END = 17;
+const int EVENING_END = 22;
 
 var vikunjaToken = Environment.GetEnvironmentVariable("VIKUNJA_TOKEN");
 if (string.IsNullOrWhiteSpace(vikunjaToken))
@@ -41,12 +40,13 @@ var tasks = await client.TasksGet(per_page: 500, filter: $"done = false && proje
 
 foreach (var task in tasks)
 {
-  task.Title.Dump("Title");
+  AnsiConsole.MarkupLine("[yellow]Processing task:[/] " + task.Title);
   try
   {
     var t = await client.TasksGet(task.Id);
     if (t.DueDate is null)
     {
+      AnsiConsole.MarkupLine("[grey]Task has no due date, skipping.[/]");
       continue;
     }
 
@@ -54,12 +54,12 @@ foreach (var task in tasks)
 
     if (t.DueDate.Value == dueDate)
     {
+      AnsiConsole.MarkupLine("[grey]Task due date is unchanged, skipping.[/]");
       continue;
     }
 
-    dueDate.Dump("New Due Date");
+    AnsiConsole.MarkupLine($"[green]Updating task due date to {dueDate:G}[/]");
     t.DueDate = dueDate;
-    // JsonSerializer.Serialize(t, SourceGenerationContext.Default.Task)!.Dump("Updated Task");
     await client.TasksPost(task.Id, t);
   }
   catch (Exception ex)
@@ -74,49 +74,48 @@ foreach (var task in tasks)
 ZonedDateTime GetNextDueDate(Task task, DateTimeZone zone, Instant now)
 {
   var dueDate = Instant.FromDateTimeOffset(task.DueDate!.Value).InZone(zone).LocalDateTime;
-  var nowInZone = now.InZone(zone);
+  var nowInZone = now.InZone(zone).LocalDateTime;
+  var isOverdue = dueDate <= nowInZone.PlusMinutes(10);
+  if (!isOverdue)
+  {
+    return dueDate.InZoneLeniently(zone);
+  }
 
   return (task switch
   {
-    { RepeatMode: TaskRepeatMode._2 } => GetCompletionDueDate(task, dueDate, nowInZone.LocalDateTime),
+    { RepeatMode: TaskRepeatMode._2 } => GetCompletionDueDate(task, dueDate, nowInZone),
     { RepeatMode: TaskRepeatMode._1 } => GetNextMonthlyDueDate(task, dueDate, nowInZone, zone),
     { RepeatAfter: > 0 } => GetNextRepeatAfterDueDate(task, dueDate, now, zone),
-    _ => GetCompletionDueDate(task, dueDate, nowInZone.LocalDateTime),
+    _ => GetCompletionDueDate(task, dueDate, nowInZone),
   }).InZoneLeniently(zone);
 }
 
 LocalDateTime GetCompletionDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone)
 {
   var todayDate = nowInZone.Date.AtMidnight();
-  var isOverdue = dueDate <= nowInZone.PlusMinutes(10);
   var isMorning = task.Labels.Any(z => z.Title.Equals("morning", StringComparison.OrdinalIgnoreCase));
   var isAfterWork = task.Labels.Any(z => z.Title.Equals("after work", StringComparison.OrdinalIgnoreCase));
 
-  if (!isOverdue)
-  {
-    return dueDate;
-  }
-
   return (dueDate.TimeOfDay, isMorning, isAfterWork) switch
   {
-    ({ Hour: >= EVENING_ENDS }, false, true) => NextAfterWorkSlot(nowInZone),
-    ({ Hour: >= EVENING_ENDS }, _, false) => NextMorningSlot(nowInZone),
-    ({ Hour: < MORNING_START }, false, true) => NextAfterWorkSlot(nowInZone),
-    ({ Hour: < MORNING_START }, _, false) => NextMorningSlot(nowInZone),
-    ({ Hour: < AFTERWORK_START }, _, true) => NextAfterWorkSlot(nowInZone),
+    ({ Hour: >= EVENING_END }, false, true) => NextAfterWorkSlot(nowInZone),
+    ({ Hour: >= EVENING_END }, _, false) => NextMorningSlot(nowInZone),
+    ({ Hour: < WORKDAY_START }, false, true) => NextAfterWorkSlot(nowInZone),
+    ({ Hour: < WORKDAY_START }, _, false) => NextMorningSlot(nowInZone),
+    ({ Hour: < WORKDAY_END }, _, true) => NextAfterWorkSlot(nowInZone),
     _ => nowInZone.PlusMinutes(30),
   };
 }
 
-LocalDateTime GetNextMonthlyDueDate(Task task, LocalDateTime dueDate, ZonedDateTime nowInZone, DateTimeZone zone)
+LocalDateTime GetNextMonthlyDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone, DateTimeZone zone)
 {
   var nextMonthly = dueDate;
-  while (nextMonthly.InZoneLeniently(zone).ToInstant() <= nowInZone.ToInstant())
+  while (nextMonthly.InZoneLeniently(zone).ToInstant() <= nowInZone.InZoneLeniently(zone).ToInstant())
   {
     nextMonthly = nextMonthly.PlusMonths(1);
   }
 
-  return nextMonthly;
+  return dueDate.PlusMonths(1);
 }
 
 LocalDateTime GetNextRepeatAfterDueDate(Task task, LocalDateTime dueDate, Instant now, DateTimeZone zone)
