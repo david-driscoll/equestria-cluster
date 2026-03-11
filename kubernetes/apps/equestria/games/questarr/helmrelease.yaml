@@ -42,8 +42,8 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-              runAsUser: 568
-              runAsGroup: 568
+              runAsUser: 1001
+              runAsGroup: 1001
               capabilities: { drop: ["ALL"] }
             image:
               repository: ghcr.io/doezer/questarr
@@ -66,9 +66,9 @@ spec:
               tag: dev@sha256:a3e09992234ed2bef0e9bff5aebda3bbcf83c83c42785194a0a3c0ff2b62eacd
               pullPolicy: IfNotPresent
             env:
-              PUID: ${PUID}
-              PGID: ${PGID}
-              UMASK: 002
+              # PUID: ${PUID}
+              # PGID: ${PGID}
+              # UMASK: 002
               PORT: &port 5000
               TZ: ${TIMEZONE}
             workingDir: /app-writable
@@ -103,9 +103,9 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 

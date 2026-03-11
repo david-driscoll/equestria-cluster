@@ -12,7 +12,7 @@ BACKUP_DIR="/Volumes/backup/postgres/temp"
 APP_NAMESPACE="equestria"
 POSTGRES_CONNECTIONSTRING=$(op read "op://Eris/equestria-postgres-superuser/public-uri")
 
-DATABASES=("n8n" "pulsarr" "questarr" "romm" "vikunja")
+DATABASES=("pulsarr" "questarr")
 
 # Track original replica counts
 typeset -A ORIGINAL_REPLICAS
@@ -172,28 +172,45 @@ for DB in "${DATABASES[@]}"; do
         FAILED=$((FAILED + 1))
     fi
 
-#     # Set ownership of all database objects if restore succeeded
-#     if [ $RESTORE_SUCCESS -eq 1 ]; then
-#         echo "  Setting database ownership..."
-#         psql "$DB_CONNECTIONSTRING" -v ON_ERROR_STOP=1 <<-EOSQL >/dev/null 2>&1 || true
-#             -- Reassign ownership of all objects in the database
-#             REASSIGN OWNED BY CURRENT_USER TO "$DB";
+    if [ $RESTORE_SUCCESS -eq 1 ]; then
+        echo "  Setting database ownership..."
+        psql "$DB_CONNECTIONSTRING" -v ON_ERROR_STOP=1 <<-EOSQL >/dev/null 2>&1 || true
+            -- Grant all privileges on database
+            GRANT ALL PRIVILEGES ON DATABASE "$DB" TO "$DB";
 
-#             -- Grant all privileges on database
-#             GRANT ALL PRIVILEGES ON DATABASE "$DB" TO "$DB";
+            -- Reassign table ownership
+            DO \$\$
+            DECLARE
+                r RECORD;
+            BEGIN
+                FOR r IN
+                    SELECT tablename FROM pg_tables
+                    WHERE schemaname = 'public'
+                LOOP
+                    EXECUTE 'ALTER TABLE public.' || quote_ident(r.tablename) || ' OWNER TO "' || '$DB' || '"';
+                END LOOP;
+            END \$\$;
 
-#             -- Grant privileges on all tables in public schema
-#             GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "$DB";
-#             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "$DB";
-#             GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO "$DB";
+            -- Reassign sequence ownership
+            DO \$\$
+            DECLARE
+                r RECORD;
+            BEGIN
+                FOR r IN
+                    SELECT sequencename FROM pg_sequences
+                    WHERE schemaname = 'public'
+                LOOP
+                    EXECUTE 'ALTER SEQUENCE public.' || quote_ident(r.sequencename) || ' OWNER TO "' || '$DB' || '"';
+                END LOOP;
+            END \$\$;
 
-#             -- Set default privileges for future objects
-#             ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "$DB";
-#             ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "$DB";
-#             ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO "$DB";
-# EOSQL
-#         echo -e "${GREEN}  ✓ Ownership configured${NC}"
-#     fi
+            -- Grant privileges on all tables in public schema
+            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "$DB";
+            GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "$DB";
+            GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO "$DB";
+EOSQL
+        echo -e "${GREEN}  ✓ Ownership configured${NC}"
+    fi
 
     echo ""
 done
