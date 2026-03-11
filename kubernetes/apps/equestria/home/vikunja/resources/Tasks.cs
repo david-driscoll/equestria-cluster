@@ -27,6 +27,10 @@ var client = RestService.For<IVikunjaAPI>("https://vikunja.driscoll.tech/api/v1"
   ContentSerializer = new SystemTextJsonContentSerializer(SourceGenerationContext.Default.Options),
 });
 
+var zone = Environment.GetEnvironmentVariable("TZ") is { Length: > 0 } tz
+  ? DateTimeZoneProviders.Tzdb[tz]
+  : DateTimeZoneProviders.Tzdb["America/New_York"];
+
 var tasks = await client.TasksGet(per_page: 500, filter: "done = false && due_date < now");
 
 foreach (var task in tasks)
@@ -35,9 +39,19 @@ foreach (var task in tasks)
   try
   {
     var t = await client.TasksGet(task.Id);
-    var dueDate = GetDueDate(task).ToDateTimeOffset();
+    if (t.DueDate is null)
+    {
+      continue;
+    }
+
+    var dueDate = GetNextDueDate(t, zone, SystemClock.Instance.GetCurrentInstant()).ToDateTimeOffset();
+
+    if (t.DueDate.Value == dueDate)
+    {
+      continue;
+    }
+
     dueDate.Dump("New Due Date");
-    // TODO: Spread this date out over based on labels and the project
     t.DueDate = dueDate;
     await client.TasksPost(task.Id, t);
   }
@@ -47,21 +61,101 @@ foreach (var task in tasks)
   }
 }
 
-ZonedDateTime GetDueDate(Task task)
+// TaskRepeatMode 0 = uses repeat after
+// TaskRepeatMode 1 = repeat every month on the same day
+// TaskRepeatMode 2 = from completion date
+ZonedDateTime GetNextDueDate(Task task, DateTimeZone zone, Instant now)
 {
-  var dueDate = ZonedDateTime.FromDateTimeOffset(task.DueDate!.Value);
-  var zone = Environment.GetEnvironmentVariable("TZ") is { Length: > 0 } tz ? DateTimeZoneProviders.Tzdb[tz] : DateTimeZoneProviders.Tzdb["America/New_York"];
-  var todayDate = LocalDateTime.FromDateTime(DateTime.Now).With(_ => new LocalTime(0, 0)).InZoneLeniently(zone);
-  var isMorning = task.Labels.Any(z => z.Title.Equals("morning", StringComparison.OrdinalIgnoreCase));
-  var isAfterWork = task.Labels.Any(z => z.Title.Equals("after work", StringComparison.OrdinalIgnoreCase)) && todayDate.DayOfWeek is not IsoDayOfWeek.Sunday and not IsoDayOfWeek.Saturday;
+  var dueDate = Instant.FromDateTimeOffset(task.DueDate!.Value).InZone(zone).LocalDateTime;
+  var nowInZone = now.InZone(zone);
 
-  return (dueDate.TimeOfDay, isMorning, isAfterWork) switch
+  return (task switch
   {
-    ({ Hour: >= 22 }, var m, var w) => todayDate.Plus(Duration.FromHours(w ? 17 : 7) + Duration.FromDays(1)),
-    ({ Hour: < 7 }, _, _) => todayDate.Plus(Duration.FromHours(7)),
-    ({ Hour: < 17 } time, _, true) => todayDate.Plus(Duration.FromHours(time.Hour > 7 ? 17 : 7)),
-    _ => todayDate.Plus(Duration.FromMinutes(30)),
+    { RepeatMode: TaskRepeatMode._2 } => GetCompletionDueDate(task, dueDate, nowInZone.LocalDateTime),
+    { RepeatMode: TaskRepeatMode._1 } => GetNextMonthlyDueDate(task, dueDate, nowInZone, zone),
+    { RepeatAfter: > 0 } => GetNextRepeatAfterDueDate(task, dueDate, now, zone),
+    _ => GetCompletionDueDate(task, dueDate, nowInZone.LocalDateTime),
+  }).InZoneLeniently(zone);
+}
+
+LocalDateTime GetCompletionDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone)
+{
+  var todayDate = nowInZone.Date.AtMidnight();
+  var eveningStart = todayDate.PlusHours(17);
+  var eveningCutoff = todayDate.PlusHours(22);
+  var isMorning = task.Labels.Any(z => z.Title.Equals("morning", StringComparison.OrdinalIgnoreCase));
+  var isAfterWork = task.Labels.Any(z => z.Title.Equals("after work", StringComparison.OrdinalIgnoreCase));
+
+  // Keep tasks moving in small increments during evening hours.
+  if (nowInZone >= eveningStart && nowInZone < eveningCutoff)
+  {
+    var bumped = nowInZone.PlusMinutes(30);
+    return bumped > eveningCutoff ? eveningCutoff : bumped;
+  }
+
+  // Morning takes priority when both labels are present.
+  if (isMorning)
+  {
+    return NextMorningSlot(nowInZone);
+  }
+
+  // After-work means 5pm on weekdays and 9am on weekends.
+  if (isAfterWork)
+  {
+    return NextAfterWorkSlot(nowInZone);
+  }
+
+  return dueDate.TimeOfDay switch
+  {
+    { Hour: >= 22 } => todayDate.Plus(Period.FromHours(7) + Period.FromDays(1)),
+    { Hour: < 7 } => todayDate.Plus(Period.FromHours(7)),
+    _ => nowInZone.Plus(Period.FromMinutes(30)),
   };
+}
+
+LocalDateTime GetNextMonthlyDueDate(Task task, LocalDateTime dueDate, ZonedDateTime nowInZone, DateTimeZone zone)
+{
+  var nextMonthly = dueDate;
+  while (nextMonthly.InZoneLeniently(zone).ToInstant() <= nowInZone.ToInstant())
+  {
+    nextMonthly = nextMonthly.PlusMonths(1);
+  }
+
+  return nextMonthly;
+}
+
+LocalDateTime GetNextRepeatAfterDueDate(Task task, LocalDateTime dueDate, Instant now, DateTimeZone zone)
+{
+  var repeatSeconds = task.RepeatAfter!.Value;
+  var delta = now - dueDate.InZoneLeniently(zone).ToInstant();
+  var overdueSeconds = Math.Max(0, (long)Math.Floor(delta.TotalSeconds));
+  var steps = (overdueSeconds / repeatSeconds) + 1;
+  return dueDate.Plus(Period.FromSeconds(repeatSeconds * steps));
+}
+
+LocalDateTime NextMorningSlot(LocalDateTime nowInZone)
+{
+  var candidate = nowInZone.Date + new LocalTime(9, 0);
+  return candidate <= nowInZone ? candidate.PlusDays(1) : candidate;
+}
+
+LocalDateTime NextAfterWorkSlot(LocalDateTime nowInZone)
+{
+  var candidate = SlotForDate(nowInZone.Date);
+  if (candidate <= nowInZone)
+  {
+    candidate = SlotForDate(nowInZone.Date.PlusDays(1));
+  }
+
+  return candidate;
+}
+
+LocalDateTime SlotForDate(LocalDate date)
+{
+  var slotTime = date.DayOfWeek is IsoDayOfWeek.Saturday or IsoDayOfWeek.Sunday
+    ? new LocalTime(9, 0)
+    : new LocalTime(17, 0);
+  return date + slotTime;
 }
 #region Vikunja
 [JsonSourceGenerationOptions(WriteIndented = true)]
