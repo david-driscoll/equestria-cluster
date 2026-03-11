@@ -31,6 +31,7 @@ var zone = Environment.GetEnvironmentVariable("TZ") is { Length: > 0 } tz
   ? DateTimeZoneProviders.Tzdb[tz]
   : DateTimeZoneProviders.Tzdb["America/New_York"];
 
+var choresProject = (await client.ProjectsGet(per_page: 100)).Single(z => z.Title.Equals("Chores", StringComparison.OrdinalIgnoreCase));
 var tasks = await client.TasksGet(per_page: 500, filter: "done = false && due_date < now");
 
 foreach (var task in tasks)
