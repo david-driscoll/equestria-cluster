@@ -6,10 +6,10 @@ components:
   - ../../../components/secret-store
 resources:
   - ./immich/ks.yaml
-  # - ./n8n/ks.yaml
+  - ./n8n/ks.yaml
   - ./glance/ks.yaml
   - ./obsidian-sync/ks.yaml
-  # - ./vikunja/ks.yaml
+  - ./vikunja/ks.yaml
   # - ./windmill/ks.yaml
   - ./rustdesk/ks.yaml
   - ./tandoor/ks.yaml
