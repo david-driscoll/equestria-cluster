@@ -14,9 +14,7 @@ mountOptions:
   - nfsvers=4.2
   - hard
   - intr
-  - nconnect=16
+  - nconnect=8
   - noatime
-  - rsize=1048576
-  - wsize=1048576
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
