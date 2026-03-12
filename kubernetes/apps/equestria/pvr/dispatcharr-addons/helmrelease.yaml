@@ -167,18 +167,18 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 2Gi
-          # xtream-strm:
-          #   image:
-          #     repository: mourabena2ui/xtream-to-strm-web
-          #     tag: "v3.1.0@sha256:eb722cf936af885facbf70be52abea622b1a643dcb6e558ffcf0927e2e305e0a"
-          #   env:
-          #     TZ: ${TIMEZONE}
-          #   resources:
-          #     requests:
-          #       cpu: 10m
-          #       memory: 128Mi
-          #     limits:
-          #       memory: 2Gi
+          xtream-strm:
+            image:
+              repository: mourabena2ui/xtream-to-strm-web
+              tag: "v3.8.0sha256:103b3727febe1b2f5f56cdaa7395d733e8397e94fcf92109b68dbf26c6c23858"
+            env:
+              TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
 
     # -- Configures service settings for the chart.
     defaultPodOptions:
@@ -222,12 +222,12 @@ spec:
         ports:
           http:
             port: *kptv-fast-port
-      # xtream-strm:
-      #   controller: app
-      #   type: ClusterIP
-      #   ports:
-      #     http:
-      #       port: &xtream-strm-port 8000
+      xtream-strm:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: &xtream-strm-port 8000
 
     configMaps:
       init-identifiarr:
@@ -311,7 +311,7 @@ spec:
             namespace: network
             kind: Gateway
         hostnames:
-          - "dispatcharr-ecm.${ROOT_DOMAIN}"
+          - "ecm.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
@@ -329,7 +329,7 @@ spec:
             namespace: network
             kind: Gateway
         hostnames:
-          - "dispatcharr-identifiarr.${ROOT_DOMAIN}"
+          - "identifiarr.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
@@ -347,7 +347,7 @@ spec:
             namespace: network
             kind: Gateway
         hostnames:
-          - "dispatcharr-teamarr.${ROOT_DOMAIN}"
+          - "teamarr.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
@@ -397,21 +397,21 @@ spec:
                   kind: Middleware
                   name: local-user
 
-      # xtream-strm:
-      #   parentRefs:
-      #     - name: internal
-      #       namespace: network
-      #       kind: Gateway
-      #   hostnames:
-      #     - "dispatcharr-xtream-strm.${ROOT_DOMAIN}"
-      #   kind: HTTPRoute
-      #   rules:
-      #     - backendRefs:
-      #         - identifier: xtream-strm
-      #           port: *xtream-strm-port
-      #       filters:
-      #         - type: ExtensionRef
-      #           extensionRef:
-      #             group: traefik.io
-      #             kind: Middleware
-      #             name: local-user
+      xtream-strm:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "xtream-strm.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: xtream-strm
+                port: *xtream-strm-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user

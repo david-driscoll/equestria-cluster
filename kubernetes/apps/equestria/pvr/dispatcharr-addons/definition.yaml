@@ -8,14 +8,14 @@ spec:
   name: Enhanced Channel Manager
   category: Media Management
   description: Enhanced channel manager for dispatcharr
-  url: &url https://dispatcharr-ecm.${ROOT_DOMAIN}
+  url: &url https://ecm.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
   access_policy:
     groups:
       - media-managers
   gatus:
     - group: "Applications"
-      url: https://dispatcharr-ecm.${ROOT_DOMAIN}/
+      url: *url
       method: GET
       conditions:
         - "[STATUS] == 200"
@@ -30,14 +30,14 @@ spec:
   name: Teamarr
   category: Media Management
   description: Teamarr for dispatcharr
-  url: &url https://dispatcharr-teamarr.${ROOT_DOMAIN}
+  url: &url https://teamarr.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
   access_policy:
     groups:
       - media-managers
   gatus:
     - group: "Applications"
-      url: https://dispatcharr-teamarr.${ROOT_DOMAIN}/
+      url: *url
       method: GET
       conditions:
         - "[STATUS] == 200"
@@ -52,36 +52,36 @@ spec:
   name: Channel Identifiarr
   category: Media Management
   description: Channel Identifiarr for dispatcharr
-  url: &url https://dispatcharr-identifiarr.${ROOT_DOMAIN}
+  url: &url https://identifiarr.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
   access_policy:
     groups:
       - media-managers
   gatus:
     - group: "Applications"
-      url: https://dispatcharr-identifiarr.${ROOT_DOMAIN}/
+      url: *url
       method: GET
       conditions:
         - "[STATUS] == 200"
 
-# ---
-# # yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
-# apiVersion: driscoll.dev/v1
-# kind: ApplicationDefinition
-# metadata:
-#   name: ${APP}-xtream-strm
-# spec:
-#   name: Xtream to STRM
-#   category: Media Management
-#   description: A modern web application for managing Xtream Codes and M3U playlists
-#   url: &url https://dispatcharr-xtream-strm.${ROOT_DOMAIN}
-#   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
-#   access_policy:
-#     groups:
-#       - media-managers
-#   gatus:
-#     - group: "Applications"
-#       url: https://dispatcharr-xtream-strm.${ROOT_DOMAIN}/
-#       method: GET
-#       conditions:
-#         - "[STATUS] == 200"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}-xtream-strm
+spec:
+  name: Xtream to STRM
+  category: Media Management
+  description: A modern web application for managing Xtream Codes and M3U playlists
+  url: &url https://xtream-strm.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
+  access_policy:
+    groups:
+      - media-managers
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
