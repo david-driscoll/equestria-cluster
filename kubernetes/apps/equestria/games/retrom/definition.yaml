@@ -19,6 +19,7 @@ spec:
       clientType: confidential
       allowedRedirectUris:
         - url: "https://${APP}.${ROOT_DOMAIN}/auth/callback"
+        - url: "https://${APP}.${TAILSCALE_DOMAIN}/auth/callback"
       propertyMappings:
         - email
         - openid

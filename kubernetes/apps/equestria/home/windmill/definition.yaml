@@ -19,6 +19,7 @@ spec:
       clientType: confidential
       allowedRedirectUris:
         - url: "https://${APP}.${ROOT_DOMAIN}/user/login_callback/authentik"
+        - url: "https://${APP}.${TAILSCALE_DOMAIN}/user/login_callback/authentik"
       propertyMappings:
         - email
         - openid
