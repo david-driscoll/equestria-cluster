@@ -31,6 +31,8 @@ var client = RestService.For<IVikunjaAPI>("https://vikunja.driscoll.tech/api/v1"
   ContentSerializer = new SystemTextJsonContentSerializer(SourceGenerationContext.Default.Options),
 });
 
+var now = SystemClock.Instance.GetCurrentInstant();
+
 var zone = Environment.GetEnvironmentVariable("TZ") is { Length: > 0 } tz
   ? DateTimeZoneProviders.Tzdb[tz]
   : DateTimeZoneProviders.Tzdb["America/New_York"];
@@ -38,6 +40,7 @@ var zone = Environment.GetEnvironmentVariable("TZ") is { Length: > 0 } tz
 var choresProject = (await client.ProjectsGet(per_page: 100)).Single(z => z.Title.Equals("Chores", StringComparison.OrdinalIgnoreCase));
 var tasks = await client.TasksGet(per_page: 500, filter: $"done = false && project = {choresProject.Id}");
 
+var offset = 0;
 foreach (var task in tasks)
 {
   AnsiConsole.MarkupLine("[yellow]Processing task:[/] " + task.Title);
@@ -50,7 +53,7 @@ foreach (var task in tasks)
       continue;
     }
 
-    var dueDate = GetNextDueDate(t, zone, SystemClock.Instance.GetCurrentInstant()).ToDateTimeOffset();
+    var dueDate = GetNextDueDate(t, zone, offset, now).ToDateTimeOffset();
 
     if (t.DueDate.Value == dueDate)
     {
@@ -61,6 +64,7 @@ foreach (var task in tasks)
     AnsiConsole.MarkupLine($"[green]Updating task due date to {dueDate:G}[/]");
     t.DueDate = dueDate;
     await client.TasksPost(task.Id, t);
+    offset++;
   }
   catch (Exception ex)
   {
@@ -71,7 +75,7 @@ foreach (var task in tasks)
 // TaskRepeatMode 0 = uses repeat after
 // TaskRepeatMode 1 = repeat every month on the same day
 // TaskRepeatMode 2 = from completion date
-ZonedDateTime GetNextDueDate(Task task, DateTimeZone zone, Instant now)
+static ZonedDateTime GetNextDueDate(Task task, DateTimeZone zone, int offset, Instant now)
 {
   var dueDate = Instant.FromDateTimeOffset(task.DueDate!.Value).InZone(zone).LocalDateTime;
   var nowInZone = now.InZone(zone).LocalDateTime;
@@ -87,10 +91,10 @@ ZonedDateTime GetNextDueDate(Task task, DateTimeZone zone, Instant now)
     { RepeatMode: TaskRepeatMode._1 } => GetNextMonthlyDueDate(task, dueDate, nowInZone, zone),
     { RepeatAfter: > 0 } => GetNextRepeatAfterDueDate(task, dueDate, now, zone),
     _ => GetCompletionDueDate(task, dueDate, nowInZone),
-  }).InZoneLeniently(zone);
+  }).InZoneLeniently(zone).PlusMinutes(offset * 10);
 }
 
-LocalDateTime GetCompletionDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone)
+static LocalDateTime GetCompletionDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone)
 {
   var todayDate = nowInZone.Date.AtMidnight();
   var isMorning = task.Labels.Any(z => z.Title.Equals("morning", StringComparison.OrdinalIgnoreCase));
@@ -107,7 +111,7 @@ LocalDateTime GetCompletionDueDate(Task task, LocalDateTime dueDate, LocalDateTi
   };
 }
 
-LocalDateTime GetNextMonthlyDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone, DateTimeZone zone)
+static LocalDateTime GetNextMonthlyDueDate(Task task, LocalDateTime dueDate, LocalDateTime nowInZone, DateTimeZone zone)
 {
   var nextMonthly = dueDate;
   while (nextMonthly.InZoneLeniently(zone).ToInstant() <= nowInZone.InZoneLeniently(zone).ToInstant())
@@ -118,7 +122,7 @@ LocalDateTime GetNextMonthlyDueDate(Task task, LocalDateTime dueDate, LocalDateT
   return dueDate.PlusMonths(1);
 }
 
-LocalDateTime GetNextRepeatAfterDueDate(Task task, LocalDateTime dueDate, Instant now, DateTimeZone zone)
+static LocalDateTime GetNextRepeatAfterDueDate(Task task, LocalDateTime dueDate, Instant now, DateTimeZone zone)
 {
   var repeatSeconds = task.RepeatAfter!.Value;
   var delta = now - dueDate.InZoneLeniently(zone).ToInstant();
@@ -127,13 +131,13 @@ LocalDateTime GetNextRepeatAfterDueDate(Task task, LocalDateTime dueDate, Instan
   return dueDate.Plus(Period.FromSeconds(repeatSeconds * steps));
 }
 
-LocalDateTime NextMorningSlot(LocalDateTime nowInZone)
+static LocalDateTime NextMorningSlot(LocalDateTime nowInZone)
 {
   var candidate = nowInZone.Date + new LocalTime(8, 0);
   return candidate <= nowInZone ? candidate.PlusDays(1) : candidate;
 }
 
-LocalDateTime NextAfterWorkSlot(LocalDateTime nowInZone)
+static LocalDateTime NextAfterWorkSlot(LocalDateTime nowInZone)
 {
   var candidate = SlotForDate(nowInZone.Date);
   if (candidate <= nowInZone)
@@ -144,7 +148,7 @@ LocalDateTime NextAfterWorkSlot(LocalDateTime nowInZone)
   return candidate;
 }
 
-LocalDateTime SlotForDate(LocalDate date)
+static LocalDateTime SlotForDate(LocalDate date)
 {
   var slotTime = date.DayOfWeek is IsoDayOfWeek.Saturday or IsoDayOfWeek.Sunday
     ? new LocalTime(9, 0)
