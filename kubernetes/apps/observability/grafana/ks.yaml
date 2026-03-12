@@ -14,9 +14,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  dependsOn:
-    - name: grafana-operator
-      namespace: *namespace
+  dependsOn: []
   path: ./kubernetes/apps/observability/grafana
   components:
     - ../../../components/postgres

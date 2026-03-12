@@ -18,8 +18,6 @@ spec:
   dependsOn:
     - name: grafana
       namespace: *namespace
-    - name: grafana-operator
-      namespace: *namespace
     - name: prometheus
       namespace: *namespace
   prune: true

@@ -18,8 +18,6 @@ spec:
   dependsOn:
     - name: grafana
       namespace: *namespace
-    - name: grafana-operator
-      namespace: *namespace
   prune: true
   wait: true
   force: false
