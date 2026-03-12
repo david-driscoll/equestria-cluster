@@ -13,6 +13,7 @@ alertmanager:
       tailscale.com/expose: "true"
       tailscale.com/hostname: alertmanager
       tailscale.com/tags: "tag:observability"
+      tailscale.com/proxy-group: inbound
   route:
     main:
       enabled: true
