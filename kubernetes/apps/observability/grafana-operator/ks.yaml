@@ -16,7 +16,7 @@ spec:
       driscoll.dev/name: *app
   dependsOn:
     - name: prometheus
-      namespace: observability
+      namespace: *namespace
   path: ./kubernetes/apps/observability/grafana-operator
   prune: true
   wait: true

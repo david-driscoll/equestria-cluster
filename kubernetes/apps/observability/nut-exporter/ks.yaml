@@ -17,9 +17,9 @@ spec:
   path: ./kubernetes/apps/observability/nut-exporter
   dependsOn:
     - name: grafana
-      namespace: observability
+      namespace: *namespace
     - name: grafana-operator
-      namespace: observability
+      namespace: *namespace
   prune: true
   wait: true
   force: false
