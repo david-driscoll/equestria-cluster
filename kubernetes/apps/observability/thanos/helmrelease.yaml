@@ -158,9 +158,10 @@ spec:
         size: 80Gi
       service:
         annotations:
-          tailscale.com/expose: "true"
+          # tailscale.com/expose: "true"
           tailscale.com/hostname: thanos-receive
           tailscale.com/tags: "tag:observability"
+          tailscale.com/proxy-group: "outbound"
       resources:
         requests:
           cpu: 200m
