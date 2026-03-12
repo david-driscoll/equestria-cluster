@@ -12,8 +12,8 @@ alertmanager:
     annotations:
       tailscale.com/expose: "true"
       tailscale.com/hostname: alertmanager
-      tailscale.com/tags: "tag:observability"
-      tailscale.com/proxy-group: "outbound"
+      tailscale.com/tags: tag:observability
+      tailscale.com/proxy-group: outbound
   route:
     main:
       enabled: true

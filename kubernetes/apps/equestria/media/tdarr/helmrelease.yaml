@@ -111,8 +111,8 @@ spec:
         annotations:
           tailscale.com/expose: "true"
           tailscale.com/hostname: tdarr-server
-          tailscale.com/tags: "tag:observability"
-          tailscale.com/proxy-group: "outbound"
+          tailscale.com/tags: tag:observability
+          tailscale.com/proxy-group: outbound
       *app :
         controller: *app
         ports:

@@ -95,8 +95,8 @@ spec:
         annotations:
           tailscale.com/expose: "true"
           tailscale.com/hostname: loki
-          tailscale.com/tags: "tag:observability"
-          tailscale.com/proxy-group: "outbound"
+          tailscale.com/tags: tag:observability
+          tailscale.com/proxy-group: outbound
     gateway:
       enabled: false
       replicas: 0
