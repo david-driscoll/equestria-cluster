@@ -158,7 +158,7 @@ spec:
         size: 80Gi
       service:
         annotations:
-          tailscale.com/expose: "true"
+          tailscale.com/expose: "false"
           tailscale.com/hostname: thanos-receive
           tailscale.com/tags: tag:observability
           # set like this because it seems the operator doesn't resolve Tailscale Services yet.
