@@ -14,7 +14,7 @@ alertmanager:
       tailscale.com/hostname: alertmanager
       tailscale.com/tags: tag:observability
           # set like this because it seems the operator doesn't resolve Tailscale Services yet.
-      # tailscale.com/proxy-group: outbound
+      # tailscale.com/proxy-group: tailnet-outbound
   route:
     main:
       enabled: true
