@@ -10,7 +10,7 @@ alertmanager:
   priorityClassName: observability-critical
   service:
     annotations:
-      tailscale.com/expose: "false"
+      tailscale.com/expose: "true"
       tailscale.com/hostname: alertmanager
       tailscale.com/tags: tag:observability
           # set like this because it seems the operator doesn't resolve Tailscale Services yet.
