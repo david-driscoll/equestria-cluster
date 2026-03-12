@@ -9,7 +9,7 @@ components:
   - ../../components/repos/app-template
 resources:
   - ./authkey/ks.yaml
-  # - ./operator/ks.yaml
-  # - ./services/ks.yaml
-  # - ./resources/ks.yaml
-  # - ./golink/ks.yaml
+  - ./operator/ks.yaml
+  - ./services/ks.yaml
+  - ./resources/ks.yaml
+  - ./golink/ks.yaml
