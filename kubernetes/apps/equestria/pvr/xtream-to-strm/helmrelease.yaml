@@ -37,29 +37,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
-        initContainers:
-          chown-dbdir:
-            image:
-              repository: alpine
-              tag: 3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
-              pullPolicy: IfNotPresent
-            command:
-              - /bin/sh
-              - -c
-            args:
-              - |
-                chmod 0750 /data/db
-            securityContext:
-              runAsUser: 0
-              # fsGroupChangePolicy: OnRootMismatch
-          identifiarr-db:
-            image:
-              repository: golang
-              tag: 1.26.1-bookworm@sha256:c7a82e9e2df2fea5d8cb62a16aa6f796d2b2ed81ccad4ddd2bc9f0d22936c3f2
-              pullPolicy: IfNotPresent
-            command:
-              - /scripts/init-identifiarr-db.sh
-
         containers:
           xtream-strm:
             image:
