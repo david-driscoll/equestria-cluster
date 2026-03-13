@@ -37,6 +37,22 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
+        initContainers:
+          chown-dbdir:
+            image:
+              repository: alpine
+              tag: 3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+              pullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                chmod 0750 /db
+            securityContext:
+              runAsUser: 0
+              # fsGroupChangePolicy: OnRootMismatch
+
         containers:
           xtream-strm:
             image:
