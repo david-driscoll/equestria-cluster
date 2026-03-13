@@ -41,7 +41,7 @@ spec:
           strmgen:
             image:
               repository: mercenaryjustice/strmgen
-              tag: latest
+              tag: latest@sha256:a9e94f4f0776bd8c2b4d6cf6b18be3d49dfe3f8175e310bea1814c74c5ee55b8
             envFrom:
               - secretRef:
                   name: ${APP}-secret
