@@ -1,0 +1,115 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app dispatcharr-addons
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: -1
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: -1
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        initContainers:
+          chown-dbdir:
+            image:
+              repository: alpine
+              tag: 3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+              pullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                chmod 0750 /data/db
+            securityContext:
+              runAsUser: 0
+              # fsGroupChangePolicy: OnRootMismatch
+          identifiarr-db:
+            image:
+              repository: golang
+              tag: 1.26.1-bookworm@sha256:c7a82e9e2df2fea5d8cb62a16aa6f796d2b2ed81ccad4ddd2bc9f0d22936c3f2
+              pullPolicy: IfNotPresent
+            command:
+              - /scripts/init-identifiarr-db.sh
+
+        containers:
+          xtream-strm:
+            image:
+              repository: mourabena2ui/xtream-to-strm-web
+              tag: "v3.8.0@sha256:103b3727febe1b2f5f56cdaa7395d733e8397e94fcf92109b68dbf26c6c23858"
+            env:
+              TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+
+    service:
+      xtream-strm:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: &xtream-strm-port 8000
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /db
+      media:
+        existingClaim: truenas-media
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+            - path: /tmp
+
+    route:
+      xtream-strm:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "xtream-strm.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: xtream-strm
+                port: *xtream-strm-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
