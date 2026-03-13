@@ -170,7 +170,7 @@ spec:
           xtream-strm:
             image:
               repository: mourabena2ui/xtream-to-strm-web
-              tag: "v3.8.0sha256:103b3727febe1b2f5f56cdaa7395d733e8397e94fcf92109b68dbf26c6c23858"
+              tag: "v3.8.0@sha256:103b3727febe1b2f5f56cdaa7395d733e8397e94fcf92109b68dbf26c6c23858"
             env:
               TZ: ${TIMEZONE}
             resources:
@@ -298,7 +298,6 @@ spec:
         globalMounts:
           - path: /scripts/init-identifiarr-db.sh
             subPath: init-identifiarr-db.sh
-
       tmpfs:
         type: emptyDir
         globalMounts:
