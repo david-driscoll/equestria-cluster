@@ -21,7 +21,7 @@ spec:
       namespace: volsync-system
     - name: tailscale-operator
       namespace: tailscale-system
-  path: ./kubernetes/apps/equestria/pvr/dispatcharr-addons
+  path: ./kubernetes/apps/equestria/pvr/xtream-to-strm
   prune: true
   wait: true
   interval: 1h
