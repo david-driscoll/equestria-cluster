@@ -11,4 +11,4 @@ resources:
   - ./dispatcharr/ks.yaml
   - ./dispatcharr-addons/ks.yaml
   - ./xcproxy/ks.yaml
-  # - ./xtream-to-strm/ks.yaml
+  # - ./strmgen/ks.yaml

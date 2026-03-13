@@ -3,13 +3,13 @@
 apiVersion: driscoll.dev/v1
 kind: ApplicationDefinition
 metadata:
-  name: xtream-strm
+  name: strmgen
 spec:
-  name: Xtream to STRM
+  name: STRMGen
   category: Media Management
-  description: A modern web application for managing Xtream Codes and M3U playlists
-  url: &url https://xtream-strm.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
+  description: STRMGen is a Python-based tool and web API/UI for generating Jellyfin-compatible .strm files (and optional accompanying metadata) from IPTV/M3U playlists and TMDb data.
+  url: &url https://strmgen.${ROOT_DOMAIN}
+  # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dispatcharr.svg
   access_policy:
     groups:
       - media-managers

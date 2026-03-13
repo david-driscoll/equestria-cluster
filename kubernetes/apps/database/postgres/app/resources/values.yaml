@@ -110,6 +110,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: n8n-postgres
+  - name: strmgen
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: strmgen-postgres
   - name: retrom
     ensure: present
     login: true

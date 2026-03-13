@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app xtream-to-strm
+  name: &app strmgen
 spec:
   chartRef:
     kind: OCIRepository
@@ -37,33 +37,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
-        initContainers:
-          chown-dbdir:
-            image:
-              repository: alpine
-              tag: 3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
-              pullPolicy: IfNotPresent
-            command:
-              - /bin/sh
-              - -c
-            args:
-              - |
-                chmod 0750 /db
-            securityContext:
-              runAsUser: 0
-              # fsGroupChangePolicy: OnRootMismatch
-
         containers:
-          xtream-strm:
+          strmgen:
             image:
-              repository: mourabena2ui/xtream-to-strm-web
-              tag: "v4.1.6@sha256:2f18fed26f0307ce652b76658ec730de39e3dcab15780eb8602fc491b2b2298c"
-            env:
-              TZ: ${TIMEZONE}
-              DATABASE_URL: sqlite:///db/xtream.db
-              SERIES_USE_SEASON_FOLDERS: "true"
-              SERIES_USE_CATEGORY_FOLDERS: "false"
-              MOVIE_USE_CATEGORY_FOLDERS: "false"
+              repository: mercenaryjustice/strmgen
+              tag: latest
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
             resources:
               requests:
                 cpu: 10m
@@ -72,38 +53,26 @@ spec:
                 memory: 2Gi
 
     service:
-      xtream-strm:
+      strmgen:
         controller: app
         type: ClusterIP
         ports:
           http:
-            port: &xtream-strm-port 8000
-
-    persistence:
-      config:
-        existingClaim: ${APP}
-        globalMounts:
-          - path: /db
-      media:
-        existingClaim: truenas-media
-      tmpfs:
-        type: emptyDir
-        globalMounts:
-            - path: /tmp
+            port: &strmgen-port 8808
 
     route:
-      xtream-strm:
+      strmgen:
         parentRefs:
           - name: internal
             namespace: network
             kind: Gateway
         hostnames:
-          - "xtream-strm.${ROOT_DOMAIN}"
+          - "strmgen.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
           - backendRefs:
-              - identifier: xtream-strm
-                port: *xtream-strm-port
+              - identifier: strmgen
+                port: *strmgen-port
             filters:
               - type: ExtensionRef
                 extensionRef:
