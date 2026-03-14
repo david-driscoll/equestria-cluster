@@ -4,12 +4,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app xcproxy
-  namespace: equestria
+  namespace: &namespace equestria
   labels:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
 spec:
-  targetNamespace: &namespace database
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -17,7 +17,7 @@ spec:
   path: ./kubernetes/apps/equestria/pvr/xcproxy
   dependsOn:
     - name: postgres
-      namespace: *namespace
+      namespace: database
     - name: external-secrets
       namespace: kube-system
   prune: true
