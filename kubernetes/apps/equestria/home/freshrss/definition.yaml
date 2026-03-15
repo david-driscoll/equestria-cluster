@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: FreshRSS
+  category: Applications
+  description: Free and open source RSS feed aggregator
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/freshrss.svg
+  access_policy:
+    groups:
+      - friends
+      - family
+  authentik:
+    oauth2:
+      clientType: confidential
+      redirectUris:
+        - url: "https://${APP}.${ROOT_DOMAIN}/index.php?c=auth&a=openidConnect"
+        - url: "https://${APP}.${TAILSCALE_DOMAIN}/index.php?c=auth&a=openidConnect"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"

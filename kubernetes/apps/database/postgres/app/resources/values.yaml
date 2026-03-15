@@ -104,6 +104,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: windmill-postgres
+  - name: freshrss
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: freshrss-postgres
   - name: n8n
     ensure: present
     login: true
