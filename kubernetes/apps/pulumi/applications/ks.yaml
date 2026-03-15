@@ -16,9 +16,9 @@ spec:
       driscoll.dev/name: *app
   dependsOn:
     - name: home-operations
-      namespace: *namespace
+      namespace: pulumi
     - name: authentik
-      namespace: *namespace
+      namespace: pulumi
   path: ./kubernetes/apps/pulumi/applications
   prune: true
   wait: false

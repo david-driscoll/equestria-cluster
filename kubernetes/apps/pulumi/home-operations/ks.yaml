@@ -16,7 +16,7 @@ spec:
       driscoll.dev/name: *app
   dependsOn:
     - name: pulumi-secrets
-      namespace: *namespace
+      namespace: pulumi
   path: ./kubernetes/apps/pulumi/home-operations
   prune: true
   wait: false

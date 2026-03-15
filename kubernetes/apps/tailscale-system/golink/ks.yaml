@@ -19,7 +19,7 @@ spec:
   timeout: 10m
   dependsOn:
     - name: tailscale-operator
-      namespace: *namespace
+      namespace: tailscale-system
     - name: volsync
       namespace: volsync-system
   sourceRef:
