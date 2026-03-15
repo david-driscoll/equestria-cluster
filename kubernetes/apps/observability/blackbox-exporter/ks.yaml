@@ -16,10 +16,8 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/observability/blackbox-exporter
   dependsOn:
-    - name: grafana
-      namespace: *namespace
     - name: prometheus
-      namespace: *namespace
+      namespace: observability
   prune: true
   retryInterval: 2m
   sourceRef:

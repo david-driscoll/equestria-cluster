@@ -16,8 +16,8 @@ spec:
       driscoll.dev/name: *app
   path: ./kubernetes/apps/observability/nut-exporter
   dependsOn:
-    - name: grafana
-      namespace: *namespace
+    - name: prometheus
+      namespace: observability
   prune: true
   wait: true
   force: false
