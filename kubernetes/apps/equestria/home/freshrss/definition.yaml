@@ -17,7 +17,7 @@ spec:
   authentik:
     oauth2:
       clientType: confidential
-      redirectUris:
+      allowedRedirectUris:
         - url: "https://${APP}.${ROOT_DOMAIN}/index.php?c=auth&a=openidConnect"
         - url: "https://${APP}.${TAILSCALE_DOMAIN}/index.php?c=auth&a=openidConnect"
       propertyMappings:
