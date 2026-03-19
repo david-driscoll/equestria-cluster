@@ -42,7 +42,7 @@ spec:
       - IPv4
     cleanPrometheusOperatorObjectNames: true
     grafana:
-      replicas: 2
+      replicas: 1
       headlessService: true
       annotations:
         reloader.stakater.com/auto: "true"
