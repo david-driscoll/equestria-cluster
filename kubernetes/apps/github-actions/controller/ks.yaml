@@ -14,7 +14,7 @@ spec:
   path: ./kubernetes/apps/github-actions/controller
   dependsOn:
     - name: gha-repositories
-      namespace: *namespace
+      namespace: github-actions
   prune: true
   sourceRef:
     kind: GitRepository

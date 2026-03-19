@@ -18,7 +18,7 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: silence-operator
-      namespace: *namespace
+      namespace: observability
   path: ./kubernetes/apps/observability/silences
   dependsOn:
     - name: alertmanager

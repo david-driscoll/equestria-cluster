@@ -12,9 +12,9 @@ spec:
       driscoll.dev/name: *app
   dependsOn:
     - name: gha-arc-controller
-      namespace: *namespace
+      namespace: github-actions
     - name: littles-tech
-      namespace: *namespace
+      namespace: github-actions
   path: ./kubernetes/apps/github-actions/runners/littles-tech-release
   prune: true
   sourceRef:

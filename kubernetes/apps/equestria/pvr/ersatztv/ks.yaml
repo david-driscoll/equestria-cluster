@@ -15,7 +15,7 @@ spec:
       driscoll.dev/name: *app
   dependsOn:
     - name: truenas-volumes
-      namespace: *namespace
+      namespace: equestria
     - name: tailscale-operator
       namespace: tailscale-system
   path: ./kubernetes/apps/equestria/pvr/ersatztv
