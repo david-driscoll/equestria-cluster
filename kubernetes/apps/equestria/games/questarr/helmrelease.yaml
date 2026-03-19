@@ -37,6 +37,21 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: Recreate
+        initContainers:
+          fix-permissions:
+            image:
+              repository: busybox
+              tag: 1.36.0
+              pullPolicy: IfNotPresent
+            command:
+              - sh
+              - -c
+              - |
+                # chown common directories so usermod/chown in startup can succeed
+                chown -R 1001:1001 /app || true
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
         containers:
           app:
             image:
@@ -44,9 +59,9 @@ spec:
               tag: dev@sha256:230f8e1fd5da36364abe0fac56fbbd1c28e8321037b600498aafc32f71d9d535
               pullPolicy: IfNotPresent
             env:
-              # PUID: ${PUID}
-              # PGID: ${PGID}
-              # UMASK: 002
+              PUID: "1001"
+              PGID: "1001"
+              UMASK: "002"
               PORT: &port 5000
               TZ: ${TIMEZONE}
             workingDir: /app
