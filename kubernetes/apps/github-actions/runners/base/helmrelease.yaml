@@ -58,8 +58,4 @@ spec:
                 mountPath: /home/runner/_work
         volumes:
           - name: work
-            accessModes: [ "ReadWriteOnce" ]
-            storageClassName: longhorn-local
-            resources:
-              requests:
-                storage: 5Gi
+
