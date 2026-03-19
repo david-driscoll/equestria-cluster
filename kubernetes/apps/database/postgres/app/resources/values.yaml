@@ -60,92 +60,92 @@ cluster:
     topologyKey: kubernetes.io/hostname
     podAntiAffinityType: required
   enableSuperuserAccess: true
-  superuserSecret: "postgres-superuser"
+  superuserSecret: "postgres-superuser-password"
   roles:
   - name: ${CLUSTER_CNAME}
     ensure: present
     login: true
     superuser: true
     passwordSecret:
-      name: postgres-user
+      name: postgres-user-password
   - name: crowdsec
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: crowdsec-postgres
+      name: crowdsec-postgres-password
   - name: grafana
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: grafana-postgres
+      name: grafana-postgres-password
   - name: tandoor
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: tandoor-postgres
+      name: tandoor-postgres-password
   - name: immich
     ensure: present
     login: true
     superuser: true
     passwordSecret:
-      name: immich-postgres
+      name: immich-postgres-password
   - name: vikunja
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: vikunja-postgres
+      name: vikunja-postgres-password
   - name: windmill
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: windmill-postgres
+      name: windmill-postgres-password
   - name: freshrss
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: freshrss-postgres
+      name: freshrss-postgres-password
   - name: n8n
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: n8n-postgres
+      name: n8n-postgres-password
   - name: strmgen
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: strmgen-postgres
+      name: strmgen-postgres-password
   - name: retrom
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: retrom-postgres
+      name: retrom-postgres-password
   - name: questarr
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: questarr-postgres
+      name: questarr-postgres-password
   - name: romm
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: romm-postgres
+      name: romm-postgres-password
   - name: pulsarr
     ensure: present
     login: true
     superuser: false
     passwordSecret:
-      name: pulsarr-postgres
+      name: pulsarr-postgres-password
   monitoring:
     enabled: true
     podMonitor:
