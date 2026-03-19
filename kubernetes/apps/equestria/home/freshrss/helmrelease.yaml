@@ -38,10 +38,10 @@ spec:
         replicas: 1
         pod:
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 33
-            runAsGroup: 33
-            fsGroup: 33
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
+            fsGroup: 0
             fsGroupChangePolicy: OnRootMismatch
 
         containers:
@@ -83,10 +83,10 @@ spec:
     defaultPodOptions:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
-        runAsNonRoot: true
-        runAsUser: 33
-        runAsGroup: 33
-        fsGroup: 33
+        runAsNonRoot: false
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
         seccompProfile:
           type: RuntimeDefault
 
