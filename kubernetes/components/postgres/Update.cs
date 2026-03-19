@@ -218,7 +218,7 @@ try
   var addedSecret = false;
   foreach (var user in databases
   .Select(db => (name: GetName(db), database: GetName(db), key: $"{GetName(db)}-postgres"))
-  .Concat([(name: "postgres-user", database: "postgres", key: "postgres-user"), (name: "postgres-superuser", database: "postgres", key: "postgres-superuser")]))
+  .Concat([(name: "${CLUSTER_CNAME}", database: "postgres", key: "postgres-user"), (name: "postgres-superuser", database: "postgres", key: "postgres-superuser")]))
   {
     var found = existingSops.TryGetValue($"{user.key}-password", out var existingNode);
 
