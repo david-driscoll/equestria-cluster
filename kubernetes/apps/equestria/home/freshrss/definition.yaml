@@ -18,8 +18,8 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/index.php?c=auth&a=openidConnect"
-        - url: "https://${APP}.${TAILSCALE_DOMAIN}/index.php?c=auth&a=openidConnect"
+        - url: https://${APP}.${ROOT_DOMAIN}:443/i/oidc/
+        - url: https://${APP}.${TAILSCALE_DOMAIN}:443/i/oidc/
       propertyMappings:
         - email
         - openid
