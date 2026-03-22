@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/doezer/questarr
-              tag: dev@sha256:55e9facb333ca683d029b493116a6de120c91b6bffeae97870da3b4c21c4ef7b
+              tag: dev@sha256:f7bae71a817d1b6a2c4f9a77de0e2bd36b8f02d07abf5cc149052662619c8a01
               pullPolicy: IfNotPresent
             env:
               PUID: "1001"
