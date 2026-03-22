@@ -16,7 +16,7 @@ spec:
   resyncFrequencySeconds: 300
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/unifi-network?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
-  continueResyncOnCommitMatch: false
+  continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Retain
   # refresh: true
