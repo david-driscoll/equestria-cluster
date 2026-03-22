@@ -13,3 +13,4 @@ resources:
   - ./applications/ks.yaml
   - ./authentik/ks.yaml
   - ./home-operations/ks.yaml
+  - ./unifi-network/ks.yaml
