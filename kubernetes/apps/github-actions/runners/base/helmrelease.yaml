@@ -36,7 +36,7 @@ spec:
       spec:
         containers:
           - name: runner
-            image: daviddriscoll/github-arc-runner-az-dotnet:latest@sha256:59ecde7317337bc952e00f41f7ec346f2b8220b6230a366e6a63e4e569ad646c
+            image: daviddriscoll/github-arc-runner-az-dotnet:latest@sha256:019e827fcd1e9e6813523655bc0d09b825f1c361b3879365a4ea6f6672679af7
             resources:
               requests:
                 cpu: 500m
