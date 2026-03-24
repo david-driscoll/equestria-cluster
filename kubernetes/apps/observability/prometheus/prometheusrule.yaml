@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: watchdog-rules
+spec:
+  groups:
+    - name: watchdog
+      interval: 30s
+      rules:
+        # Alert when Watchdog is missing from equestria cluster
+        - alert: WatchdogMissing
+          annotations:
+            description: "The Watchdog alert has not fired for the last 5 minutes on equestria cluster. This indicates a critical failure in the alerting pipeline."
+            runbook_url: "https://runbooks.prometheus-operator.dev/runbooks/general/watchdog"
+            summary: "Equestria Watchdog alert is missing - alerting pipeline may be broken"
+          expr: |
+            absent(ALERTS{alertname="Watchdog",cluster="equestria"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+            cluster: equestria
+
+        # Alert when Watchdog is missing from sgc cluster
+        - alert: WatchdogMissing
+          annotations:
+            description: "The Watchdog alert has not fired for the last 5 minutes on sgc cluster. This indicates a critical failure in the alerting pipeline."
+            runbook_url: "https://runbooks.prometheus-operator.dev/runbooks/general/watchdog"
+            summary: "SGC Watchdog alert is missing - alerting pipeline may be broken"
+          expr: |
+            absent(ALERTS{alertname="Watchdog",cluster="sgc"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+            cluster: sgc
+
+        # Alert when Watchdog is missing from celestia cluster
+        - alert: WatchdogMissing
+          annotations:
+            description: "The Watchdog alert has not fired for the last 5 minutes on celestia cluster. This indicates a critical failure in the alerting pipeline."
+            runbook_url: "https://runbooks.prometheus-operator.dev/runbooks/general/watchdog"
+            summary: "Celestia Watchdog alert is missing - alerting pipeline may be broken"
+          expr: |
+            absent(ALERTS{alertname="Watchdog",cluster="celestia"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+            cluster: celestia
+
+        # Alert when Watchdog is missing from luna cluster
+        - alert: WatchdogMissing
+          annotations:
+            description: "The Watchdog alert has not fired for the last 5 minutes on luna cluster. This indicates a critical failure in the alerting pipeline."
+            runbook_url: "https://runbooks.prometheus-operator.dev/runbooks/general/watchdog"
+            summary: "Luna Watchdog alert is missing - alerting pipeline may be broken"
+          expr: |
+            absent(ALERTS{alertname="Watchdog",cluster="luna"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+            cluster: luna
+
+        # Alert when Watchdog is missing from alpha-site cluster
+        - alert: WatchdogMissing
+          annotations:
+            description: "The Watchdog alert has not fired for the last 5 minutes on alpha-site cluster. This indicates a critical failure in the alerting pipeline."
+            runbook_url: "https://runbooks.prometheus-operator.dev/runbooks/general/watchdog"
+            summary: "Alpha Site Watchdog alert is missing - alerting pipeline may be broken"
+          expr: |
+            absent(ALERTS{alertname="Watchdog",cluster="alpha-site"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+            cluster: alpha-site

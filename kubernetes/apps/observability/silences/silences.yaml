@@ -11,3 +11,65 @@ spec:
     - name: horizontalpodautoscaler
       value: keda-hpa-.*
       matchType: "=~"
+---
+# Silence Watchdog alert from equestria cluster
+# Watchdog continuously fires to verify alerting pipeline health.
+# Instead, we alert on absence of Watchdog (WatchdogMissing alert).
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: watchdog-equestria
+spec:
+  matchers:
+    - name: alertname
+      value: Watchdog
+    - name: cluster
+      value: equestria
+---
+# Silence Watchdog alert from sgc (stargate-command) cluster
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: watchdog-sgc
+spec:
+  matchers:
+    - name: alertname
+      value: Watchdog
+    - name: cluster
+      value: sgc
+---
+# Silence Watchdog alert from celestia cluster
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: watchdog-celestia
+spec:
+  matchers:
+    - name: alertname
+      value: Watchdog
+    - name: cluster
+      value: celestia
+---
+# Silence Watchdog alert from luna cluster
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: watchdog-luna
+spec:
+  matchers:
+    - name: alertname
+      value: Watchdog
+    - name: cluster
+      value: luna
+---
+# Silence Watchdog alert from alpha-site cluster
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: watchdog-alpha-site
+spec:
+  matchers:
+    - name: alertname
+      value: Watchdog
+    - name: cluster
+      value: alpha-site
