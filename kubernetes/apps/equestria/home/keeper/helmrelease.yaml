@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app freshrss
+  name: &app keeper
 spec:
   chartRef:
     kind: OCIRepository
@@ -31,6 +31,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    fullnameOverride: *app
     controllers:
       *app :
         annotations:
@@ -38,76 +39,66 @@ spec:
         replicas: 1
         pod:
           securityContext:
-            runAsNonRoot: false
-            runAsUser: 0
-            runAsGroup: 0
-            fsGroup: 0
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
             fsGroupChangePolicy: OnRootMismatch
-
         containers:
           *app :
             image:
-              repository: freshrss/freshrss
-              tag: latest@sha256:9100f649f5c946f589f54cdb9be7a65996528f48f691ef90eb262a0e06e5a522
-            env:
-              TZ: "${TIMEZONE}"
+              repository: ghcr.io/ridafkih/keeper-services
+              tag: 2.9.14
+              pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
                   name: ${APP}-env
+            env:
+              TZ: "${TIMEZONE}"
             resources:
               requests:
                 cpu: 100m
                 memory: 256Mi
               limits:
-                memory: 1024Mi
+                cpu: 500m
+                memory: 512Mi
             probes:
-              liveness: &probes
+              liveness: &probe
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /
-                    port: &port 80
-                  initialDelaySeconds: 30
+                    port: http
+                  initialDelaySeconds: 15
                   periodSeconds: 10
-                  timeoutSeconds: 1
+                  timeoutSeconds: 2
                   failureThreshold: 3
-              readiness: *probes
+              readiness: *probe
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities:
                 drop:
                   - ALL
-
     defaultPodOptions:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
-        runAsNonRoot: false
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
-
-    persistence:
-      data:
-        existingClaim: ${APP}
-        globalMounts:
-          - path: /var/www/FreshRSS/data
-      extensions:
-        type: emptyDir
-        globalMounts:
-          - path: /var/www/FreshRSS/extensions
+      shareProcessNamespace: true
 
     service:
-      app:
+      *app :
         controller: *app
         type: ClusterIP
         ports:
           http:
-            port: *port
-            targetPort: *port
+            port: &port 3000
 
     route:
       internal:
@@ -119,12 +110,8 @@ spec:
           - "${APP}.${ROOT_DOMAIN}"
         kind: HTTPRoute
         rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
-              - name: *app
+          - backendRefs:
+              - identifier: *app
                 port: *port
             filters:
               - type: ExtensionRef

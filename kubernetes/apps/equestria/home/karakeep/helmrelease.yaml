@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app freshrss
+  name: &app karakeep
 spec:
   chartRef:
     kind: OCIRepository
@@ -31,6 +31,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    fullnameOverride: *app
     controllers:
       *app :
         annotations:
@@ -38,28 +39,29 @@ spec:
         replicas: 1
         pod:
           securityContext:
-            runAsNonRoot: false
-            runAsUser: 0
-            runAsGroup: 0
-            fsGroup: 0
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
             fsGroupChangePolicy: OnRootMismatch
-
         containers:
           *app :
             image:
-              repository: freshrss/freshrss
-              tag: latest@sha256:9100f649f5c946f589f54cdb9be7a65996528f48f691ef90eb262a0e06e5a522
-            env:
-              TZ: "${TIMEZONE}"
+              repository: ghcr.io/karakeep-app/karakeep
+              tag: 0.31.0
+              pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
                   name: ${APP}-env
+            env:
+              TZ: "${TIMEZONE}"
             resources:
               requests:
                 cpu: 100m
                 memory: 256Mi
               limits:
-                memory: 1024Mi
+                cpu: 1
+                memory: 1Gi
             probes:
               liveness: &probes
                 enabled: true
@@ -67,10 +69,10 @@ spec:
                 spec:
                   httpGet:
                     path: /
-                    port: &port 80
+                    port: &port 3000
                   initialDelaySeconds: 30
                   periodSeconds: 10
-                  timeoutSeconds: 1
+                  timeoutSeconds: 2
                   failureThreshold: 3
               readiness: *probes
             securityContext:
@@ -79,35 +81,57 @@ spec:
               capabilities:
                 drop:
                   - ALL
-
+          meilisearch:
+            image:
+              repository: getmeili/meilisearch
+              tag: v1.37.0
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            env:
+              MEILI_NO_ANALYTICS: "true"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
-        runAsNonRoot: false
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
-
     persistence:
       data:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /var/www/FreshRSS/data
-      extensions:
-        type: emptyDir
-        globalMounts:
-          - path: /var/www/FreshRSS/extensions
-
+        advancedMounts:
+          *app :
+            *app :
+            - path: /data
+              subPath: karakeep
+            meilisearch:
+              - path: /meili_data
+                subPath: meilisearch
     service:
-      app:
+      *app :
         controller: *app
         type: ClusterIP
         ports:
           http:
             port: *port
             targetPort: *port
+      meilisearch:
+        controller: *app
+        type: ClusterIP
+        ports:
+          http:
+            port: 7700
+            targetPort: 7700
 
     route:
       internal:

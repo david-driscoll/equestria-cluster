@@ -1,0 +1,59 @@
+use_default_settings: true
+
+engines:
+  - name: bitbucket
+    disabled: false
+  - name: gitlab
+    disabled: false
+  - name: gitea
+    disabled: false
+  - name: goodreads
+    disabled: false
+  - name: hackernews
+    disabled: false
+  - name: reddit
+    disabled: false
+  - name: crossref
+    disabled: false
+  - name: free software directory
+    disabled: false
+
+# Minimal SearXNG settings.yml
+# Replace or extend with a production-ready configuration from https://docs.searxng.org/
+server:
+  bind_address: 0.0.0.0
+  port: 8080
+
+# Example placeholders
+search:
+  timeout: 10
+  image_proxy: true
+  base_url: https://searxng.${ROOT_DOMAIN}
+valkey:
+  host: valkey://valkey.database.svc.cluster.local:6379/8
+plugins:
+
+  searx.plugins.calculator.SXNGPlugin:
+    active: true
+
+  searx.plugins.infinite_scroll.SXNGPlugin:
+    active: true
+
+  searx.plugins.hash_plugin.SXNGPlugin:
+    active: true
+
+  searx.plugins.self_info.SXNGPlugin:
+    active: true
+
+  searx.plugins.tracker_url_remover.SXNGPlugin:
+    active: true
+
+  searx.plugins.unit_converter.SXNGPlugin:
+    active: true
+
+  searx.plugins.ahmia_filter.SXNGPlugin:
+    active: true
+
+  searx.plugins.hostnames.SXNGPlugin:
+    active: true
+
