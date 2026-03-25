@@ -1,9 +1,9 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app karakeep
+  name: &app habitica
   namespace: &namespace equestria
   labels:
     app.kubernetes.io/name: *app
@@ -14,12 +14,16 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  dependsOn: []
-  path: ./kubernetes/apps/equestria/home/karakeep
+  dependsOn:
+    - name: external-secrets
+      namespace: kube-system
+    - name: volsync
+      namespace: volsync-system
+  path: ./kubernetes/apps/equestria/games/habitica
   prune: true
-  force: false
   wait: true
   interval: 1h
+  retryInterval: 2m
   timeout: 10m
   sourceRef:
     kind: GitRepository
@@ -27,10 +31,10 @@ spec:
     namespace: flux-system
   components:
     - ../../../../components/failover/fast-node-eviction
+    - ../../../../components/tailscale
     - ../../../../components/volsync
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_ACCESSMODES: ReadWriteOnce

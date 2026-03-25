@@ -33,7 +33,7 @@ spec:
   values:
     fullnameOverride: *app
     controllers:
-      *app:
+      *app :
         annotations:
           reloader.stakater.com/auto: "true"
         replicas: 1
@@ -45,7 +45,7 @@ spec:
             fsGroup: 1001
             fsGroupChangePolicy: OnRootMismatch
         containers:
-          *app:
+          *app :
             image:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.31.0
@@ -81,6 +81,22 @@ spec:
               capabilities:
                 drop:
                   - ALL
+          meilisearch:
+            image:
+              repository: getmeili/meilisearch
+              tag: v1.37.0
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            env:
+              MEILI_NO_ANALYTICS: "true"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
@@ -93,97 +109,50 @@ spec:
     persistence:
       data:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /data
+        advancedMounts:
+          *app :
+            *app :
+            - path: /data
+              subPath: karakeep
+            meilisearch:
+              - path: /meili_data
+                subPath: meilisearch
     service:
-      app:
+      *app :
         controller: *app
         type: ClusterIP
         ports:
           http:
             port: *port
             targetPort: *port
-    ingress:
-      app:
-        enabled: true
-        className: internal
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-        hosts:
-          - host: &host ${APP}.${ROOT_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-          - host: ${APP}.${TAILSCALE_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: ${APP}-tls
-            hosts:
-              - *host
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ${APP}-meilisearch
-  labels:
-    app: ${APP}-meilisearch
-spec:
-  ports:
-    - port: 7700
-      targetPort: 7700
-      protocol: TCP
-      name: http
-  selector:
-    app: ${APP}-meilisearch
-  type: ClusterIP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ${APP}-meilisearch
-  labels:
-    app: ${APP}-meilisearch
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: ${APP}-meilisearch
-  template:
-    metadata:
-      labels:
-        app: ${APP}-meilisearch
-    spec:
-      containers:
-        - name: meilisearch
-          image: getmeili/meilisearch:v1.37.0
-          ports:
-            - containerPort: 7700
-              name: http
-          env:
-            - name: MEILI_NO_ANALYTICS
-              value: "true"
-            - name: MEILI_MASTER_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: ${APP}-env
-                  key: MEILI_MASTER_KEY
-          volumeMounts:
-            - name: meili-data
-              mountPath: /meili_data
-      volumes:
-        - name: meili-data
-          persistentVolumeClaim:
-            claimName: ${APP}-meilisearch-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ${APP}-meilisearch-data
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
+      meilisearch:
+        controller: *app
+        type: ClusterIP
+        ports:
+          http:
+            port: 7700
+            targetPort: 7700
+
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: *app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user

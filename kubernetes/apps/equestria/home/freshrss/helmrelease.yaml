@@ -109,22 +109,26 @@ spec:
             port: *port
             targetPort: *port
 
-    ingress:
-      app:
-        enabled: true
-        className: internal
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-production
-        hosts:
-          - host: &host ${APP}.${ROOT_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-          - host: ${APP}.${TAILSCALE_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: ${APP}-tls
-            hosts:
-              - *host
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: *app
+                port: *port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user

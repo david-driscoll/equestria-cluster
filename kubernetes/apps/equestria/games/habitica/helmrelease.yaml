@@ -1,0 +1,188 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app habitica
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  timeout: 15m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    fullnameOverride: *app
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: docker.io/awinterstein/habitica-server
+              tag: 5.47.0@sha256:b85201eb6574215f0fe314c582426f8ea1fda91fea3de8e0a25efa9056d4c58b
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            env:
+              BASE_URL: https://${APP}.${ROOT_DOMAIN}
+              NODE_ENV: production
+              TZ: "${TIMEZONE}"
+              NODE_DB_URI: "mongodb://127.0.0.1:27017/habitica?replicaSet=rs&directConnection=true&readPreference=primary"
+              MONGO_URI: "mongodb://127.0.0.1:27017/habitica?replicaSet=rs&directConnection=true&readPreference=primary"
+              INVITE_ONLY: "false"
+              EMAIL_SERVER_URL: "http://127.0.0.1:8080"
+              ADMIN_EMAIL: "nobody@${ROOT_DOMAIN}"
+            ports:
+              - containerPort: 3000
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: 3000
+                  initialDelaySeconds: 10
+                  periodSeconds: 20
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: 3000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+          mongo:
+            image:
+              repository: mongo
+              tag: 6.0.11
+            command:
+              - bash
+              - -c
+              - |
+                set -e
+                mongod --replSet rs --bind_ip_all --dbpath /data/db &
+                until mongosh --host 127.0.0.1 --eval "rs.initiate()" >/dev/null 2>&1; do
+                  sleep 1
+                done
+                wait
+            ports:
+              - containerPort: 27017
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+          email:
+            image:
+              repository: hashicorp/http-echo
+              tag: 0.2.3
+            args:
+              - "-text=OK"
+              - "-listen=:8080"
+            ports:
+              - containerPort: 8080
+            resources:
+              requests:
+                cpu: 5m
+                memory: 16Mi
+              limits:
+                cpu: 50m
+                memory: 64Mi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: app
+        type: ClusterIP
+        ports:
+          http:
+            port: 3000
+
+    persistence:
+      data:
+        existingClaim: volsync
+        advancedMounts:
+          app:
+            app:
+              - path: /data
+                subPath: ${APP}/data
+            mongo:
+              - path: /data/db
+                subPath: ${APP}/mongo
+            email:
+              - path: /var/run/email
+                subPath: ${APP}/email
+      config:
+        type: configMap
+        name: ${APP}-config
+      tmpfs:
+        type: emptyDir
+
+    route:
+      internal:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 3000
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
