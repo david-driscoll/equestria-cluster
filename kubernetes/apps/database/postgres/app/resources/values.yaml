@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/refs/heads/main/charts/cluster/values.schema.json
-nameOverride: "postgres"
-fullnameOverride: "postgres"
+nameOverride: &name "postgres"
+fullnameOverride: *name
 type: postgresql
 version:
   postgresql: "17.5"
@@ -9,14 +9,14 @@ mode: standalone
 recovery:
   method: object_store
   clusterName: "${CLUSTER_CNAME}"
-  endpointURL: https://{{ .backblaze_hostname }}/
+  endpointURL: "{{ .minio_endpoint }}"
   provider: s3
   s3:
-    region: "${CLUSTER_CNAME}"
-    bucket: "{{ .backblaze_bucket }}"
+    region: "{{ .minio_region }}"
+    bucket: "{{ .backblaze_bucket }}-restore"
     path: "/"
-    accessKey: "{{ .backblaze_username }}"
-    secretKey: "{{ .backblaze_credential }}"
+    accessKey: "{{ .minio_username }}"
+    secretKey: "{{ .minio_password }}"
 backups:
   enabled: false
   endpointURL: "{{ .minio_endpoint }}"
