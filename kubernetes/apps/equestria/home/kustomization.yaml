@@ -14,5 +14,8 @@ resources:
   - ./rustdesk/ks.yaml
   - ./tandoor/ks.yaml
   - ./freshrss/ks.yaml
+  - ./searxng/ks.yaml
   - ./outline/ks.yaml
+  - ./keeper/ks.yaml
+  - ./karakeep/ks.yaml
   # - ./collabora/ks.yaml

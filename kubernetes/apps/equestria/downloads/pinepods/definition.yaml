@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: "PinePods"
+  category: Applications
+  description: "Self-hosted podcast manager (PinePods)."
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://raw.githubusercontent.com/madeofpendletonwool/PinePods/main/images/pinepods-logo.jpeg
+  access_policy:
+    groups:
+      - family
+  authentik:
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+        - url: "https://${APP}.${ROOT_DOMAIN}/oauth/callback"
+        - url: "https://${APP}.${TAILSCALE_DOMAIN}/oauth/callback"
+      propertyMappings:
+        - openid
+        - profile
+        - email
+      includeClaimsInIdToken: true
+      subMode: user_email
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"

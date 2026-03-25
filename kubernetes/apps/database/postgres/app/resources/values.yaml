@@ -122,12 +122,24 @@ cluster:
     superuser: false
     passwordSecret:
       name: outline-postgres-password
+  - name: keeper
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: keeper-postgres-password
   - name: strmgen
     ensure: present
     login: true
     superuser: false
     passwordSecret:
       name: strmgen-postgres-password
+  - name: pinepods
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: pinepods-postgres-password
   - name: retrom
     ensure: present
     login: true
