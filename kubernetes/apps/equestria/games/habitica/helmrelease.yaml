@@ -95,7 +95,7 @@ spec:
           mongo:
             image:
               repository: mongo
-              tag: 6.0.27@sha256:03cda579c8caad6573cb98c2b3d5ff5ead452a6450561129b89595b4b9c18de2
+              tag: 8.2.6@sha256:d343c378b5c6e2fe373174abcf4a877be0dfc721b5d0b9d582204dccb1c00b86
             command:
               - bash
               - -c
