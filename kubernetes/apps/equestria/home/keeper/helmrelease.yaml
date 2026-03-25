@@ -48,7 +48,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/ridafkih/keeper-services
-              tag: 2.9.14
+              tag: 2.9.15@sha256:ccad8d404e8cd1c6d1e9c5351292e9d2ace183a406390a5256a476a5f77d6ac4
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
