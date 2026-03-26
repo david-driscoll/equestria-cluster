@@ -113,7 +113,6 @@ spec:
                 cpu: 50m
                 memory: 256Mi
               limits:
-                cpu: 500m
                 memory: 1Gi
           email:
             image:
@@ -129,7 +128,6 @@ spec:
                 cpu: 5m
                 memory: 16Mi
               limits:
-                cpu: 50m
                 memory: 64Mi
 
     defaultPodOptions:

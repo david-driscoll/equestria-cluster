@@ -87,7 +87,6 @@ spec:
                 cpu: 50m
                 memory: 100Mi
               limits:
-                cpu: 1000m
                 memory: 2Gi
 
     defaultPodOptions:
