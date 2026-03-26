@@ -113,17 +113,15 @@ spec:
       data:
         existingClaim: ${APP}
         globalMounts:
-          - path: /opt/pinepods/
+          - path: /opt/pinepods
+            subPath: data
+          - path: /opt/pinepods/backup
+            subPath: backup
       downloads:
         existingClaim: truenas-media
         globalMounts:
           - path: /opt/pinepods/downloads
             subPath: downloads/podcasts
-      backups:
-        existingClaim: ${APP}
-        globalMounts:
-          - path: /backups
-            subPath: backups
       tmp:
         type: emptyDir
         globalMounts:
