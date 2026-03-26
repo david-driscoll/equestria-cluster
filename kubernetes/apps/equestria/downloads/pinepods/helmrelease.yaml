@@ -39,9 +39,6 @@ spec:
         replicas: 1
         pod:
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 911
-            runAsGroup: 911
             supplementalGroups: [0, 1, 44, 109, 303, 911, 10000]
         initContainers:
           fix-run-perms:
@@ -99,6 +96,9 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
+              runAsNonRoot: true
+              runAsUser: 911
+              runAsGroup: 911
               capabilities:
                 drop:
                   - ALL

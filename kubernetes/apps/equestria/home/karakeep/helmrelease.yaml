@@ -37,13 +37,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         replicas: 1
-        pod:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1001
-            runAsGroup: 1001
-            fsGroup: 1001
-            fsGroupChangePolicy: OnRootMismatch
         initContainers:
           fix-run-perms:
             image:
@@ -94,6 +87,9 @@ spec:
               capabilities:
                 drop:
                   - ALL
+              runAsNonRoot: true
+              runAsUser: 1001
+              runAsGroup: 1001
     defaultPodOptions:
       securityContext:
         seccompProfile:

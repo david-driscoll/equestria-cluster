@@ -147,18 +147,18 @@ spec:
 
     persistence:
       data:
-        existingClaim: volsync
+        existingClaim: ${APP}
         advancedMounts:
           app:
             app:
               - path: /data
-                subPath: ${APP}/data
+                subPath: data
             mongo:
               - path: /data/db
-                subPath: ${APP}/mongo
+                subPath: mongo
             email:
               - path: /var/run/email
-                subPath: ${APP}/email
+                subPath: email
       config:
         type: configMap
         name: ${APP}-config
