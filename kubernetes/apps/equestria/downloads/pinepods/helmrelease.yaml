@@ -65,8 +65,6 @@ spec:
                   name: ${APP}-env
             env:
               TZ: "${TIMEZONE}"
-              PUID: ${PUID}
-              PGID: ${PGID}
             resources:
               requests:
                 cpu: 100m
