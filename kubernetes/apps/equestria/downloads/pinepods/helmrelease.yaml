@@ -115,6 +115,8 @@ spec:
             subPath: data
           - path: /opt/pinepods/backup
             subPath: backup
+          - path: /etc/horust/services
+            subPath: horust
       downloads:
         existingClaim: truenas-media
         globalMounts:
