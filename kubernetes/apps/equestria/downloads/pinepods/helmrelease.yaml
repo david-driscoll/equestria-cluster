@@ -112,6 +112,12 @@ spec:
         globalMounts:
           - path: /backups
             subPath: backups
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /pinepods/cache
+          - path: /tmp
+
 
     service:
       *app :
