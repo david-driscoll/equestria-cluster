@@ -18,4 +18,5 @@ resources:
   - ./outline/ks.yaml
   - ./keeper/ks.yaml
   - ./karakeep/ks.yaml
+  - ./meilisearch/ks.yaml
   # - ./collabora/ks.yaml

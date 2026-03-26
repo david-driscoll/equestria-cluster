@@ -44,6 +44,19 @@ spec:
             runAsGroup: 1001
             fsGroup: 1001
             fsGroupChangePolicy: OnRootMismatch
+        initContainers:
+          fix-run-perms:
+            image:
+              repository: busybox
+              tag: 1.37.0@sha256:1487d0af5f52b4ba31c7e465126ee2123fe3f2305d638e7827681e7cf6c83d5e
+              pullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - chown -R 1001:1001 /run || true
+            securityContext:
+              runAsUser: 0
         containers:
           *app :
             image:
@@ -81,22 +94,6 @@ spec:
               capabilities:
                 drop:
                   - ALL
-          meilisearch:
-            image:
-              repository: getmeili/meilisearch
-              tag: v1.40.0@sha256:54f0cca5442af756ff0254e3307cfd846605facf9b6989f571f6b1a96deb0c7c
-            envFrom:
-              - secretRef:
-                  name: ${APP}-env
-            env:
-              MEILI_NO_ANALYTICS: "true"
-            resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-              limits:
-                cpu: 500m
-                memory: 512Mi
     defaultPodOptions:
       securityContext:
         fsGroupChangePolicy: OnRootMismatch
@@ -117,6 +114,10 @@ spec:
             meilisearch:
               - path: /meili_data
                 subPath: meilisearch
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /run
     service:
       *app :
         controller: *app
@@ -125,13 +126,6 @@ spec:
           http:
             port: *port
             targetPort: *port
-      meilisearch:
-        controller: *app
-        type: ClusterIP
-        ports:
-          http:
-            port: 7700
-            targetPort: 7700
 
     route:
       internal:
