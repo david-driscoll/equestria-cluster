@@ -43,6 +43,20 @@ spec:
             runAsUser: 911
             runAsGroup: 911
             supplementalGroups: [0, 1, 44, 109, 303, 911, 10000]
+        initContainers:
+          fix-run-perms:
+            image:
+              repository: busybox
+              tag: 1.37.0@sha256:1487d0af5f52b4ba31c7e465126ee2123fe3f2305d638e7827681e7cf6c83d5e
+              pullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - chown -R 911:911 /opt/pinepods/ || true
+            securityContext:
+              runAsUser: 0
+              allowPrivilegeEscalation: true
         containers:
           *app :
             image:
