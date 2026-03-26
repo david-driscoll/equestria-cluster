@@ -109,7 +109,7 @@ spec:
       downloads:
         existingClaim: truenas-media
         globalMounts:
-          - path: /downloads
+          - path: /opt/pinepods/downloads
             subPath: downloads/podcasts
       backups:
         existingClaim: ${APP}
