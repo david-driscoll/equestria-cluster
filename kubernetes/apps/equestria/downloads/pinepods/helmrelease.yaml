@@ -102,6 +102,10 @@ spec:
       shareProcessNamespace: true
 
     persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /opt/pinepods/
       downloads:
         existingClaim: truenas-media
         globalMounts:
