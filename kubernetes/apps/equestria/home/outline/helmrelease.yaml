@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: community-charts
+spec:
+  interval: 1h
+  url: https://community-charts.github.io/helm-charts
+---
+# HelmRelease for standalone MeiliSearch (broken out from karakeep)
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: outline
+spec:
+  chart:
+    spec:
+      chart: outline
+      version: 0.7.3
+      sourceRef:
+        kind: HelmRepository
+        name: community-charts
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+      strategy: rollback
+  valuesFrom:
+    - kind: Secret
+      name: ${APP}-values
+      valuesKey: values.yaml

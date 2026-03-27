@@ -1,0 +1,227 @@
+# Default values for outline.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: outlinewiki/outline
+  # -- This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: "1.6.1"
+# -- This is for setting up the secret key. It will be auto generated if not set and external secret is not set.
+secretKey: "{{ .outline_password }}"
+
+# -- This is for setting up the utils secret. It will be auto generated if not set and external secret is not set.
+utilsSecret: "{{ .outline_password }}"
+
+# -- This is for setting up the file storage. More information about file storage can be found here: https://docs.getoutline.com/s/hosting/doc/file-storage-N4M0T6Ypu7
+fileStorage:
+  local:
+    rootDir: /var/lib/outline/data
+    persistence:
+      enabled: true
+      existingClaim: "${APP}"
+
+# -- This is for setting up the auth.
+auth:
+  oidc:
+    enabled: true
+    # -- This is for setting up the oidc client id.
+    clientId: "{{ .oidc_client_id }}"
+    # -- This is for setting up the oidc client secret.
+    clientSecret: "{{ .oidc_client_secret }}"
+    # -- This is for setting up the oidc auth uri.
+    authUri: "{{ .oidc_authorization_url }}"
+    # -- This is for setting up the oidc token uri.
+    tokenUri: "{{ .oidc_token_url }}"
+    # -- This is for setting up the oidc user info uri.
+    userInfoUri: "{{ .oidc_userinfo_url }}"
+    # -- This is for setting up the oidc logout uri. This is optional.
+    logoutUri: "{{ .oidc_logout_url }}"
+    # -- This is for setting up the oidc username claim.
+    usernameClaim: preferred_username
+    # -- This is for setting up the oidc display name.
+    displayName: "${CLUSTER_TITLE}"
+    # -- This is for setting up the oidc scopes.
+    scopes:
+      - openid
+      - profile
+      - email
+# -- This is for setting up the integrations. More information about integrations can be found here: https://docs.getoutline.com/s/hosting/doc/integrations-Oav5MXNDJk
+integrations:
+
+  # -- This is for setting up the iframely. More information about iframely can be found here: https://docs.getoutline.com/s/hosting/doc/iframely-HwLF1EZ9mo
+  iframely:
+    # -- This is for setting up the iframely enabled.
+    enabled: false
+    # -- This is for setting up the iframely url.
+    url: ""
+    # -- This is for setting up the iframely api key.
+    apiKey: ""
+    # -- This is for setting up the iframely existing secret. If it's set, apiKey will be ignored.
+    existingSecret:
+      # -- This is for setting up the iframely existing secret name.
+      name: ""
+      # -- This is for setting up the iframely secret key.
+      apiKeyKey: "api-key"
+
+  # -- This is for setting up the openai. More information about openai can be found here: https://docs.getoutline.com/s/hosting/doc/openai-iiTYCN9Nct
+  openAI:
+    # -- This is for setting up the openai enabled.
+    enabled: false
+    # -- This is for setting up the openai url.
+    url: ""
+    # -- This is for setting up the openai api key.
+    apiKey: ""
+    # -- This is for setting up the openai vector database url.
+    vectorDatabaseUrl: ""
+    # -- This is for setting up the openai existing secret. If it's set, apiKey will be ignored.
+    existingSecret:
+      # -- This is for setting up the openai existing secret name.
+      name: ""
+      # -- This is for setting up the openai secret key.
+      apiKeyKey: "api-key"
+
+  # -- This is for setting up the pdf export. More information about pdf export can be found here: https://docs.getoutline.com/s/hosting/doc/pdf-export-7Dn1hCyUo5
+  pdfExport:
+    # -- This is for setting up the pdf export enabled.
+    enabled: false
+    # -- This is for setting up the pdf export gotenberg url.
+    gotenbergUrl: ""
+
+  # -- This is for setting up the sentry. More information about sentry can be found here: https://docs.getoutline.com/s/hosting/doc/sentry-jxcFttcDl5
+  sentry:
+    # -- This is for setting up the sentry enabled.
+    enabled: false
+    # -- This is for setting up the sentry dsn.
+    dsn: ""
+    # -- This is for setting up the sentry tunnel.
+    tunnel: ""
+
+  # -- This is for setting up the slack. More information about slack can be found here: https://docs.getoutline.com/s/hosting/doc/slack-G2mc8DOJHk
+  slack:
+    # -- This is for setting up the slack enabled.
+    enabled: false
+    # -- This is for setting up the slack verification token.
+    verificationToken: ""
+    # -- This is for setting up the slack app id.
+    appId: ""
+    # -- This is for setting up the slack message actions.
+    messageActions: true
+    # -- This is for setting up the slack existing secret. If it's set, verificationToken will be ignored.
+    existingSecret:
+      # -- This is for setting up the slack existing secret name.
+      name: ""
+      # -- This is for setting up the slack secret key.
+      verificationTokenKey: "verification-token"
+
+  # -- This is for setting up the dropbox.
+  dropbox:
+    # -- This is for setting up the dropbox enabled.
+    enabled: false
+    # -- This is for setting up the dropbox app key.
+    appKey: ""
+    # -- This is for setting up the dropbox existing secret. If it's set, appKey will be ignored.
+    existingSecret:
+      # -- This is for setting up the dropbox existing secret name.
+      name: ""
+      # -- This is for setting up the dropbox secret key.
+      appKeyKey: "app-key"
+
+  # -- This is for setting up the linear. More information about linear can be found here: https://docs.getoutline.com/s/hosting/doc/linear-g8N2riMweL
+  linear:
+    # -- This is for setting up the linear enabled.
+    enabled: false
+    # -- This is for setting up the linear client id.
+    clientId: ""
+    # -- This is for setting up the linear client secret.
+    clientSecret: ""
+    # -- This is for setting up the linear existing secret. If it's set, clientSecret will be ignored.
+    existingSecret:
+      # -- This is for setting up the linear existing secret name.
+      name: ""
+      # -- This is for setting up the linear secret key.
+      clientSecretKey: "client-secret"
+
+  # -- This is for setting up the notion. More information about notion can be found here: https://docs.getoutline.com/s/hosting/doc/notion-2v6g7WY3l3
+  notion:
+    # -- This is for setting up the notion enabled.
+    enabled: false
+    # -- This is for setting up the notion client id.
+    clientId: ""
+    # -- This is for setting up the notion client secret.
+    clientSecret: ""
+    # -- This is for setting up the notion existing secret. If it's set, clientSecret will be ignored.
+    existingSecret:
+      # -- This is for setting up the notion existing secret name.
+      name: ""
+      # -- This is for setting up the notion secret key.
+      clientSecretKey: "client-secret"
+
+# -- This is for setting up the smtp. More information about smtp can be found here: https://docs.getoutline.com/s/hosting/doc/smtp-cqCJyZGMIB
+smtp:
+  # -- This is for setting up the smtp host.
+  host: ""
+  # -- This is for setting up the smtp port.
+  port: 587
+  # -- This is for setting up the smtp username.
+  username: ""
+  # -- This is for setting up the smtp password.
+  password: ""
+  # -- This is for setting up the smtp from email.
+  fromEmail: ""
+  # -- This is for setting up the smtp reply email.
+  replyEmail: ""
+  # -- This is for setting up the smtp tls ciphers.
+  tlsCiphers: ""
+  # -- This is for setting up the smtp secure.
+  secure: true
+  # -- This is for setting up the smtp existing secret. If it's set, password will be ignored.
+  existingSecret:
+    # -- This is for setting up the smtp existing secret name.
+    name: ""
+    # -- This is for setting up the smtp username key.
+    usernameKey: "username"
+    # -- This is for setting up the smtp secret key.
+    passwordKey: "password"
+
+# -- This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  # -- This is for setting up the ingress enabled.
+  enabled: false
+  # -- This is for setting up the ingress class name.
+  className: ""
+  # -- This is for setting up the ingress annotations.
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- This is for setting up the ingress hosts.
+  hosts:
+    - host: outline.mydomain.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  # -- This is for setting up the ingress tls.
+  tls: []
+  #  - secretName: outline-tls
+  #    hosts:
+  #      - outline.mydomain.com
+
+# -- External Redis parameters
+externalRedis:
+  # -- External Redis server host
+  host: "valkey.datavalkey.database.svc.cluster.local"
+  # -- External Redis server port
+  port: 6379
+
+# -- External PostgreSQL parameters
+externalPostgresql:
+  # -- External PostgreSQL server host
+  host: "{{ .postgresql_hostname }}"
+  # -- External PostgreSQL username
+  username: "{{ .postgresql_username }}"
+  # -- External PostgreSQL password
+  password: "{{ .postgresql_password }}"
+  # -- External PostgreSQL server port
+  port: 5432
+  # -- The name of the external PostgreSQL database. For more information: https://docs.getoutline.com/s/hosting/doc/docker-7pfeLP5a8t
+  database: "${APP}"

@@ -1,0 +1,46 @@
+neo4j:
+  # Name of your cluster
+  name: "${CLUSTER_CNAME}"
+  # If password is not set or empty a random password will be generated during installation.
+  # Ignored if `neo4j.passwordFromSecret` is provided
+  password: "{{ .neo4j_password }}"
+  edition: "community"
+
+  # set edition: "enterprise" to use Neo4j Enterprise Edition
+  #
+  # To use Neo4j Enterprise Edition you must have a Neo4j license agreement.
+  #
+  # More information is also available at: https://neo4j.com/licensing/
+  # Email inquiries can be directed to: licensing@neo4j.com
+  #
+  # Set acceptLicenseAgreement: "yes" to confirm that you have a Neo4j license agreement.
+  # Set acceptLicenseAgreement: "eval" to use Neo4j Enterprise Edition for evaluation purposes.
+  acceptLicenseAgreement: "no"
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "2Gi"
+    limits:
+      memory: "4Gi"
+
+  #add labels if required
+  labels:
+
+# Volumes for Neo4j
+volumes:
+  data:
+    labels: {}
+    disableSubPathExpr: false
+    mode: "volume"
+    volume:
+      setOwnerAndGroupWritableFilePermissions: false
+      claimName: ${APP}
+
+# Override image settings in Neo4j pod
+image:
+  imagePullPolicy: IfNotPresent
+
+# Service Monitor for prometheus
+# Please ensure prometheus operator or the service monitor CRD is present in your cluster before using service monitor config
+serviceMonitor:
+  enabled: true
