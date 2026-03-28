@@ -5,9 +5,3 @@ resources:
   - ./helmrelease.yaml
   - ./definition.yaml
   - ./externalsecret.yaml
-configMapGenerator:
-  - name: ${APP}-values
-    files:
-      - values.yaml=./resources/values.yaml
-    options:
-      disableNameSuffixHash: true

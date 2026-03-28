@@ -17,5 +17,5 @@ resources:
   - ./searxng/ks.yaml
   - ./karakeep/ks.yaml
   - ./meilisearch/ks.yaml
-  - ./outline/ks.yaml
+  # - ./outline/ks.yaml
   # - ./collabora/ks.yaml
