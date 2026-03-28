@@ -12,3 +12,4 @@ resources:
   - ./postgres
   - ./valkey/ks.yaml
   - ./cloudbeaver/ks.yaml
+  - ./neo4j/ks.yaml
