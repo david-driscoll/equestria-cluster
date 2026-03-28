@@ -46,7 +46,7 @@ spec:
           *app :
             image:
               repository: searxng/searxng
-              tag: 2026.3.25-541c6c3cb
+              tag: 2026.3.25-541c6c3cb@sha256:0ae88cc7056eddde1f02df272f39f6fb2884640ed7af428c5b0a6b9c3d5bb918
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
