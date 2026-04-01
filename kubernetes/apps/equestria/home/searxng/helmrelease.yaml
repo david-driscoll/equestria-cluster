@@ -56,15 +56,13 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               SEARX_SETTINGS_PATH: /etc/searxng/settings.yml
-            ports:
-              - containerPort: 8080
             probes:
               liveness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /
+                    path: /healthz
                     port: http
                   initialDelaySeconds: 30
                   periodSeconds: 20
@@ -74,7 +72,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /
+                    path: /healthz
                     port: http
                   initialDelaySeconds: 5
                   periodSeconds: 10
