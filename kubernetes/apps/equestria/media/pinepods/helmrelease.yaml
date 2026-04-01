@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: pinepods
+spec:
+  interval: 1h
+  url: http://helm.pinepods.online
+---
+# HelmRelease for PinePods
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pinepods
+spec:
+  chart:
+    spec:
+      chart: pinepods
+      version: 0.8.2
+      sourceRef:
+        kind: HelmRepository
+        name: pinepods
+  maxHistory: 3
+  interval: 15m
+  driftDetection:
+    mode: enabled
+  timeout: 15m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  valuesFrom:
+    - kind: Secret
+      name: ${APP}-values
+      valuesKey: values.yaml
+  values:
+    backend:
+      # -- Enable backend deployment
+      enabled: false
+
+    ## PodPeople DB configuration
+    ## Podpeople is a publically available website in which you can get details on guests and hosts for podcasts that don't maintain podcast 2.0 in their feeds.
+    ## If you do want to maintain it yourself you'll probably want to download a copy of the database here: https://podpeople.pinepods.online
+    podpeople:
+      # -- Enable PodPeople DB deployment
+      enabled: false
+      environment: {}

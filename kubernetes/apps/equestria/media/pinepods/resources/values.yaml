@@ -1,0 +1,72 @@
+---
+# Default values for pinepods.
+# This is a YAML-formatted file.
+
+## Number of pinepods pods to run
+replicaCount: 1
+
+## Container image configuration
+image:
+  repository: madeofpendletonwool/pinepods
+  tag: 0.8.2
+
+## Ingress configuration for exposing the application to external traffic
+ingress:
+  # -- Enable ingress resource
+  enabled: false
+
+## Persistence configuration
+persistence:
+  # -- Enable persistent storage
+  enabled: true
+  downloads:
+    # -- Use existing PVC for downloads
+    # If set, a new PVC will not be created
+    existingClaim: "spike-media-downloads-${APP}"
+  backups:
+    # -- Use existing PVC for backups
+    existingClaim: "${APP}"
+
+## PostgreSQL configuration
+postgresql:
+  # -- Enable PostgreSQL deployment
+  # Set to false if using external database
+  enabled: false
+
+# External database configuration
+# Only used when postgresql.enabled is false
+externalDatabase:
+  type: postgresql
+  host: "{{ .postgres_hostname }}"
+  port: "{{ .postgres_port }}"
+  user: "{{ .postgres_username }}"
+  password: "{{ .postgres_password }}"
+  database: "{{ .postgres_database }}"
+
+## Valkey configuration
+valkey:
+  # -- Enable Valkey deployment
+  enabled: false
+
+## Application environment variables
+env:
+  # -- Search API URL for podcast search functionality - Change these only if you're hosting the backend and the podcast people database yourself
+  SEARCH_API_URL: "https://search.pinepods.online/api/search"
+  PEOPLE_API_URL: "https://people.pinepods.online/api/hosts"
+  # User Configuration
+  # -- Default admin username
+  USERNAME: "{{ .pinepods_admin_username }}"
+  # -- Default admin password
+  PASSWORD: "{{ .pinepods_admin_password }}"
+  # -- Admin full name
+  FULLNAME: "{{ .pinepods_admin_name }}"
+  # -- Admin email address
+  EMAIL: "{{ .pinepods_admin_email }}"
+
+  VALKEY_HOST: "valkey.database.svc.cluster.local"
+  VALKEY_PORT: "6379"
+
+  # Application Configuration
+  # -- Debug mode
+  # Set to true for additional logging
+  DEBUG_MODE: "false"

@@ -20,3 +20,4 @@ resources:
   - ./pulsarr/ks.yaml
   - ./seerr/ks.yaml
   # - ./stremio/ks.yaml
+  - ./pinepods/ks.yaml
