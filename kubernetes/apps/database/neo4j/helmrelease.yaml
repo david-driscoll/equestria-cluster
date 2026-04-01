@@ -56,6 +56,8 @@ spec:
               - containerPort: &bolt-port 7687
             securityContext:
               runAsNonRoot: true
+              runAsGroup: 568
+              runAsUser: 568
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
