@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./helmrelease.yaml
+  - ./definition.yaml
+  - ./externalsecret.yaml
+  - ./nfs.yaml
+  - ./httproute.yaml
+configMapGenerator:
+- name: ${APP}-values
+  files:
+  - values.yaml=./resources/values.yaml
+  options:
+    disableNameSuffixHash: true

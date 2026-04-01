@@ -14,7 +14,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  path: ./kubernetes/apps/equestria/downloads/pinepods
+  path: ./kubernetes/apps/equestria/media/pinepods
   prune: true
   wait: true
   interval: 1h
