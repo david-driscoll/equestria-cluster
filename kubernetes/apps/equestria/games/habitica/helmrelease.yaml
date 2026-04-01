@@ -130,6 +130,10 @@ spec:
             mongo:
               - path: /data/db
                 subPath: mongo
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /etc/environment
 
     route:
       internal:
