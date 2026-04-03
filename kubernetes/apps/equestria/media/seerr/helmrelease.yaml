@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/seerr-team/seerr
-              tag: develop@sha256:f41a4ed7ac18878431e1bcc398e831097fc29d4c7eaeb44d285f25ecd2e17c98
+              tag: develop@sha256:0f7fbd16da051dca5905944bef82ff9c803c8024ce35a13c7790ad5509e76ae5
             env:
               TZ: ${TIMEZONE}
             probes:
