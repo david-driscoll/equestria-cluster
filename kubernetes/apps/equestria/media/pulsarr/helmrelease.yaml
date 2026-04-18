@@ -41,7 +41,7 @@ spec:
           *app :
             image:
               repository: lakker/pulsarr
-              tag: 0.15.0@sha256:08ea27ce8e4ea512c785afdcc94b25497f058efcefe7721366d3255c1813c250
+              tag: 0.15.3@sha256:2768c2015fccc7edf2b68cb9b4dfdee991435e7f68199d6ebd13175291e63d2d
               pullPolicy: Always
             env:
               PUID: ${PUID}
