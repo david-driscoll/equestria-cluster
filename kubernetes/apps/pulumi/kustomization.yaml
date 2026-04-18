@@ -10,7 +10,7 @@ components:
 resources:
   - ./secrets/ks.yaml
   - ./pulumi-operator/ks.yaml
-  # - ./applications/ks.yaml
+  - ./applications/ks.yaml
   - ./authentik/ks.yaml
-  # - ./home-operations/ks.yaml
+  - ./home-operations/ks.yaml
   - ./unifi-network/ks.yaml
