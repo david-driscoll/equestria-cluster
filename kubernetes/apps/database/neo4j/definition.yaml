@@ -21,3 +21,7 @@ spec:
     - url: *url
       conditions:
         - "[STATUS] == 200"
+    - url: "tcp://${APP}.${CLUSTER_DOMAIN}:7687"
+      interval: 30s
+      conditions:
+        - "[CONNECTED] == true"
