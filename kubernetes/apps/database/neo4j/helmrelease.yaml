@@ -110,6 +110,24 @@ spec:
                   group: traefik.io
                   kind: Middleware
                   name: local-user
+      bolt:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - backendRefs:
+              - identifier: *app
+                port: *bolt-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
     # serviceMonitor:
     #   *app :
     #     endpoints:
