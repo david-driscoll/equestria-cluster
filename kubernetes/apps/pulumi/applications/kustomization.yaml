@@ -6,6 +6,3 @@ resources:
   - ./serviceaccount.yaml
   - ./equestria.yaml
   - ./sgc.yaml
-  - ./celestia.yaml
-  - ./luna.yaml
-  - ./alpha-site.yaml
