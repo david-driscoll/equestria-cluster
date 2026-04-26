@@ -16,3 +16,4 @@ resources:
   - ./home
   - ./media
   - ./pvr
+  # - ./dns
