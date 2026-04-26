@@ -43,6 +43,8 @@ spec:
     cleanPrometheusOperatorObjectNames: true
     grafana:
       replicas: 1
+      deploymentStrategy:
+        type: Recreate
       headlessService: true
       annotations:
         reloader.stakater.com/auto: "true"
