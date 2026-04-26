@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: pulumi-stacks
+spec:
+  groups:
+    - name: pulumi.stacks
+      rules:
+        - alert: PulumiStackFailed
+          expr: kube_stack_status_condition{type="Reconciling", reason="RetryingAfterFailure"} == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pulumi Stack {{ $labels.name }} is failing"
+            description: "Stack {{ $labels.namespace }}/{{ $labels.name }} is retrying after failures. Check the stack logs for details."
+
+        - alert: PulumiStackStalled
+          expr: kube_stack_status_condition{type="Stalled"} == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pulumi Stack {{ $labels.name }} is stalled"
+            description: "Stack {{ $labels.namespace }}/{{ $labels.name }} is stalled and cannot make progress."
+
+        - alert: PulumiStackPrerequisiteNotSatisfied
+          expr: kube_stack_status_condition{type="Reconciling", reason="PrerequisiteNotSatisfied"} == 1
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pulumi Stack {{ $labels.name }} prerequisites not satisfied for 30m"
+            description: "Stack {{ $labels.namespace }}/{{ $labels.name }} prerequisites have not been satisfied for 30 minutes."

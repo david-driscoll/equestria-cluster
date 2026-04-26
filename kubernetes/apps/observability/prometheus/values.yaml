@@ -143,6 +143,34 @@ kube-state-metrics:
     - pods=[*]
     - deployments=[*]
     - persistentvolumeclaims=[*]
+  customResourceState:
+    enabled: true
+    config:
+      kind: CustomResourceStateMetrics
+      spec:
+        resources:
+          - groupVersionKind:
+              group: pulumi.com
+              version: v1
+              kind: Stack
+            metricNamePrefix: kube_stack
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics:
+              - name: status_condition
+                help: "The current status conditions of a Pulumi Stack"
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [status, conditions]
+                    valueFrom: [status]
+                    booleanTrue: "True"
+                    booleanFalse: "False"
+                    nilIsZero: true
+                    labelsFromPath:
+                      type: [type]
+                      reason: [reason]
   prometheus:
     monitor:
       enabled: true
