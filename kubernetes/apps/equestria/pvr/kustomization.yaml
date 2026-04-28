@@ -9,6 +9,11 @@ resources:
   # - ./nextpvr/ks.yaml
   # - ./threadfin/ks.yaml
   - ./dispatcharr/ks.yaml
-  - ./dispatcharr-addons/ks.yaml
+  # - ./dispatcharr-addons/ks.yaml  # replaced by individual app kustomizations below
+  - ./ecm/ks.yaml
+  - ./game-thumbs/ks.yaml
+  - ./identifiarr/ks.yaml
+  - ./teamarr/ks.yaml
+  - ./kptv-fast/ks.yaml
   - ./xcproxy/ks.yaml
   # - ./strmgen/ks.yaml
