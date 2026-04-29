@@ -118,14 +118,8 @@ spec:
     persistence:
       config:
         existingClaim: ${APP}
-        advancedMounts:
-          app:
-            chown-dbdir:
-              - path: /data
-            identifiarr-db:
-              - path: /data
-            app:
-              - path: /data
+        globalMounts:
+          - path: /data
       scripts:
         type: configMap
         name: init-identifiarr
