@@ -703,11 +703,39 @@ class CacheHostedService(PlaylistData playlistData, TmdbEnricher tmdbEnricher, I
           string.Join(", ", seriesItems.Select(z => z.Info.SeriesName)));
         foreach (var item in movieItems)
         {
-          await tmdbEnricher.SearchMovieAsync(item.Title, item.Year);
+          try
+          {
+            await tmdbEnricher.SearchMovieAsync(item.Title, item.Year);
+          }
+          catch (OperationCanceledException)
+          {
+            // Graceful shutdown
+            logger.LogInformation("Cache maintenance task is stopping due to cancellation.");
+            break;
+          }
+          catch (Exception ex)
+          {
+            // Log any unexpected errors and continue with the next cycle
+            logger.LogError(ex, "An error occurred during cache maintenance.");
+          }
         }
         foreach (var item in seriesItems)
         {
-          await tmdbEnricher.SearchSeriesAsync(item.Info.SeriesName);
+          try
+          {
+            await tmdbEnricher.SearchSeriesAsync(item.Info.SeriesName);
+          }
+          catch (OperationCanceledException)
+          {
+            // Graceful shutdown
+            logger.LogInformation("Cache maintenance task is stopping due to cancellation.");
+            break;
+          }
+          catch (Exception ex)
+          {
+            // Log any unexpected errors and continue with the next cycle
+            logger.LogError(ex, "An error occurred during cache maintenance.");
+          }
         }
         logger.LogInformation("Completed enrichment cycle for {Movies} movies and {Series} series", movieItems.Count, seriesItems.Count);
 
