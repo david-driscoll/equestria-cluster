@@ -9,9 +9,9 @@ resources:
   # - ./nextpvr/ks.yaml
   # - ./threadfin/ks.yaml
   - ./dispatcharr/ks.yaml
-  - ./ecm/ks.yaml
+  # - ./ecm/ks.yaml
   - ./game-thumbs/ks.yaml
-  - ./identifiarr/ks.yaml
+  # - ./identifiarr/ks.yaml
   # - ./teamarr/ks.yaml
   - ./kptv-fast/ks.yaml
   - ./xcproxy/ks.yaml
