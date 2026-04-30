@@ -21,3 +21,4 @@ talosconfig
 Thumbs.db
 *.db*
 issues/
+.skillfile/cache/
