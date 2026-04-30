@@ -48,3 +48,5 @@ run = [
   'dotnet run .mise/tasks/do-update.cs',
   'flux-local test --enable-helm --all-namespaces --path ./kubernetes/flux/ --verbosity 1',
 ]
+[[hooks.enter]]
+script = "dotnet tool restore"
