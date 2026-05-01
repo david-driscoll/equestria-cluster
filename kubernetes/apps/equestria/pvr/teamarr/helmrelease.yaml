@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/pharaoh-labs/teamarr
-              tag: "2.4.3@sha256:1a7915fe301afa81c04618b632775482971f6c535e78ec6c4dd114d899a2ce3a"
+              tag: "2.4.5@sha256:f1b0de0901c284fa2f092c2f0982e9f0d62ce4917e0a72ffac077cf7c84fe168"
             env:
               TZ: ${TIMEZONE}
             probes:
