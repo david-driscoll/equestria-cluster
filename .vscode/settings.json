@@ -49,5 +49,6 @@
   "peacock.color": "#639",
   "vscode-kubernetes.log-viewer.follow": true,
   "vscode-kubernetes.log-viewer.timestamp": true,
-  "vscode-kubernetes.log-viewer.autorun": false
+  "vscode-kubernetes.log-viewer.autorun": false,
+  "snyk.advanced.autoSelectOrganization": true
 }

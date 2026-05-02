@@ -43,8 +43,8 @@ spec:
         containers:
           *app :
             image:
-              repository: glanceapp/glance
-              tag: v0.8.4@sha256:6df86a7e8868d1eda21f35205134b1962c422957e42a0c44d4717c8e8f741b1a
+              repository: ghcr.io/panonim/dynacat
+              tag: 2.2.3@sha256:c6193983a3a2ab7ee89abbe230e7adb34aa4ba126064cdfa0393b4469c6db3eb
             env:
               TZ: "${TIMEZONE}"
             envFrom:
@@ -125,4 +125,4 @@ spec:
                 extensionRef:
                   group: traefik.io
                   kind: Middleware
-                  name: authenticated-user
+                  name: local-user
