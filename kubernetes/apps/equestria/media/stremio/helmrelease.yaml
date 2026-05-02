@@ -70,7 +70,7 @@ spec:
           web:
             image:
               repository: tsaridas/stremio-docker
-              tag: v1.2.15@sha256:1ca6361bd7342171e12e00576b5694eb321b417901f3066e3385f5d51ad50786
+              tag: v1.2.16@sha256:e1da3d3702082a107c03e1b428554749e39ac31559a1ff933e2c7b61390f83d9
               pullPolicy: IfNotPresent
             env:
               TZ: ${TIMEZONE}
