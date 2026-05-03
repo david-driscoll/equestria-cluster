@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: "Super Productivity"
+  category: Applications
+  description: "Advanced todo list app with timeboxing, time tracking, and integrations for Jira, GitHub, GitLab and more"
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/super-productivity.svg
+  access_policy:
+    groups:
+      - family
+  authentik:
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
