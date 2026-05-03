@@ -10,6 +10,7 @@ resources:
   - ./glance/ks.yaml
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
+  - ./super-productivity/ks.yaml
   # - ./windmill/ks.yaml
   - ./rustdesk/ks.yaml
   - ./tandoor/ks.yaml
