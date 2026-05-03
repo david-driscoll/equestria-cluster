@@ -165,8 +165,8 @@ kube-state-metrics:
                   gauge:
                     path: [status, conditions]
                     valueFrom: [status]
-                    booleanTrue: "True"
-                    booleanFalse: "False"
+                    booleanValueTrue: "True"
+                    booleanValueFalse: "False"
                     nilIsZero: true
                     labelsFromPath:
                       type: [type]
