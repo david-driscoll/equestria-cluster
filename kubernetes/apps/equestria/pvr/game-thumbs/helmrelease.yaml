@@ -48,6 +48,10 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
+            env:
+              ALLOW_EVENT_OVERLAYS: "true"
+              IMAGE_CACHE_HOURS: "24"
+              RATE_LIMIT_PER_MINUTE: "0"
 
     service:
       app:
