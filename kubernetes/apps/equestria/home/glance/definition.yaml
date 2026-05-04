@@ -23,7 +23,6 @@ spec:
         - email
         - openid
         - profile
-        - groups
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:
