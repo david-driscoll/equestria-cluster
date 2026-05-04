@@ -10,7 +10,7 @@ resources:
 configMapGenerator:
 - name: glance-config
   files:
-  - ./resources/dynacat.yml
+  - glance.yml=./resources/dynacat.yml
   - ./resources/home.yaml
   - ./resources/homelab.yaml
   - ./resources/high-seas.yaml
