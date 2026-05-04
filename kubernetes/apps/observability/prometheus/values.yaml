@@ -171,6 +171,22 @@ kube-state-metrics:
                     labelsFromPath:
                       type: [type]
                       reason: [reason]
+              - name: last_update_failures
+                help: "Number of consecutive update failures for the Pulumi Stack"
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [status, lastUpdate, failures]
+                    nilIsZero: true
+              - name: last_update_state
+                help: "Current state of the last Pulumi Stack update (1=succeeded, 0=other)"
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [status, lastUpdate, state]
+                    nilIsZero: true
+                    booleanValueTrue: "succeeded"
+                    booleanValueFalse: "failed"
   prometheus:
     monitor:
       enabled: true
