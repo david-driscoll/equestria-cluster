@@ -1,0 +1,25 @@
+---
+# Grant kube-state-metrics permission to list/watch Pulumi Stack CRDs
+# Required for customResourceState metrics: kube_stack_status_condition,
+# kube_stack_last_update_failures, kube_stack_last_update_state
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-state-metrics-pulumi-stacks
+rules:
+  - apiGroups: ["pulumi.com"]
+    resources: ["stacks"]
+    verbs: ["list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kube-state-metrics-pulumi-stacks
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-state-metrics-pulumi-stacks
+subjects:
+  - kind: ServiceAccount
+    name: kube-state-metrics
+    namespace: observability

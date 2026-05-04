@@ -6,3 +6,4 @@ resources:
   # TODO: crds at some point
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
+  - ./ksm-rbac.yaml
