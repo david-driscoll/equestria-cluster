@@ -104,3 +104,6 @@
               <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">CPU</div><div style="font-size:1.2rem;font-weight:700;">{{ if $cpu }}{{ $cpu }}%{{ else }}N/A{{ end }}</div></div>
               <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">Memory</div><div style="font-size:1.2rem;font-weight:700;">{{ if $mem }}{{ $mem }}%{{ else }}N/A{{ end }}</div></div>
             </div>
+
+    - size: full
+      widgets: []

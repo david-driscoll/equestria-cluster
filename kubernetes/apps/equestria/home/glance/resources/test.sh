@@ -48,8 +48,14 @@ op run --no-masking -- docker run \
   -e DISPATCHARR_URL \
   -e DISPATCHARR_USERNAME \
   -e DISPATCHARR_PASSWORD \
+  -e DYNACAT_SECRET_KEY \
+  -e DYNACAT_OIDC_CLIENT_ID \
+  -e DYNACAT_OIDC_CLIENT_SECRET \
+  -e DYNACAT_OIDC_ISSUER_URL \
+  -e THANOS_URL \
+  -e ALERTMANAGER_URL \
   -p 8080:8080 \
   --rm \
   -v .:/app/config/ \
-  glanceapp/glance
+  ghcr.io/panonim/dynacat
 

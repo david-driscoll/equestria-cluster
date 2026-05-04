@@ -5,7 +5,7 @@ auth:
   secret-key: ${DYNACAT_SECRET_KEY}
   disable-password: true
   oidc:
-    issuer-url: ${AUTHENTIK_URL}/application/o/glance/
+    issuer-url: ${DYNACAT_OIDC_ISSUER_URL}
     client-id: ${DYNACAT_OIDC_CLIENT_ID}
     client-secret: ${DYNACAT_OIDC_CLIENT_SECRET}
     redirect-url: https://glance.${ROOT_DOMAIN}/api/oidc/callback
@@ -13,7 +13,6 @@ auth:
       - openid
       - profile
       - email
-      - groups
     groups-claim: groups
 
 document:
@@ -109,10 +108,10 @@ pages:
   - $include: home.yaml
   - $include: homelab.yaml
   - $include: high-seas.yaml
-  - $include: servers/alpha-site.yaml
-  - $include: servers/celestia.yaml
-  - $include: servers/equestria.yaml
-  - $include: servers/luna.yaml
-  - $include: servers/sgc.yaml
+  # - $include: servers/alpha-site.yaml
+  # - $include: servers/celestia.yaml
+  # - $include: servers/equestria.yaml
+  # - $include: servers/luna.yaml
+  # - $include: servers/sgc.yaml
   - $include: staging.yaml
   # - $include: videos.yaml
