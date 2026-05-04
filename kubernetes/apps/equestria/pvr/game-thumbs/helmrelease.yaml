@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/sethwv/game-thumbs
-              tag: v1.8.0@sha256:9253886254fdb297f79ddc473b6e1732169101bac4c0835d3b2219eb43a5cdd9
+              tag: v1.8.1@sha256:15081614ef049ff4a1689f0462b1a1d4d65c28b23b5938f85eb9571ef0d1a55c
             resources:
               requests:
                 cpu: 10m
