@@ -19,6 +19,7 @@ spec:
       allowedRedirectUris:
         - url: "https://glance.${ROOT_DOMAIN}/api/oidc/callback"
         - url: "https://g.${ROOT_DOMAIN}/api/oidc/callback"
+        - url: "http://localhost:8080/api/oidc/callback"
       propertyMappings:
         - email
         - openid
