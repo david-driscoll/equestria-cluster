@@ -8,7 +8,7 @@ spec:
   name: Glance
   category: Applications
   description: Dynacat is a self-hosted dashboard focused on dynamic reloading and easy app integration
-  url: &url https://glance.${ROOT_DOMAIN}
+  url: &url https://g.${ROOT_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/glance.svg
   access_policy:
     groups:
