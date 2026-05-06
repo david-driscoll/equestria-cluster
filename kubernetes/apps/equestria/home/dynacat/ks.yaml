@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app glance
+  name: &app dynacat
   namespace: &namespace equestria
   labels:
     app.kubernetes.io/name: *app
@@ -21,7 +21,7 @@ spec:
       namespace: kube-system
     - name: github-token
       namespace: kube-system
-  path: ./kubernetes/apps/equestria/home/glance
+  path: ./kubernetes/apps/equestria/home/dynacat
   prune: true
   wait: true
   force: false

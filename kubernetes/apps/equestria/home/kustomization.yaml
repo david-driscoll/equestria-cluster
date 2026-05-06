@@ -7,7 +7,7 @@ components:
 resources:
   - ./immich/ks.yaml
   - ./n8n/ks.yaml
-  - ./glance/ks.yaml
+  - ./dynacat/ks.yaml
   - ./obsidian-sync/ks.yaml
   - ./vikunja/ks.yaml
   - ./super-productivity/ks.yaml
