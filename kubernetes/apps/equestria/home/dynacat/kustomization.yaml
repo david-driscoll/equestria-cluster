@@ -8,7 +8,7 @@ resources:
   - ./externalsecret.yaml
   - ./definition.yaml
 configMapGenerator:
-- name: glance-config
+- name: ${APP}-config
   files:
   - glance.yml=./resources/dynacat.yml
   - ./resources/home.yaml
@@ -20,7 +20,7 @@ configMapGenerator:
     annotations:
       kustomize.toolkit.fluxcd.io/substitute: disabled
 
-- name: glance-widgets
+- name: ${APP}-widgets
   files:
     - ./resources/widgets/nhl-today.yaml
     - ./resources/widgets/nodes.yaml
@@ -31,7 +31,7 @@ configMapGenerator:
     annotations:
       kustomize.toolkit.fluxcd.io/substitute: disabled
 
-- name: glance-servers
+- name: ${APP}-servers
   files:
     - ./resources/servers/alpha-site.yaml
     - ./resources/servers/celestia.yaml
