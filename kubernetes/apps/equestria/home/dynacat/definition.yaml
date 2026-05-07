@@ -9,7 +9,7 @@ spec:
   category: Applications
   description: Dynacat is a self-hosted dashboard focused on dynamic reloading and easy app integration
   url: &url https://g.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/glance.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/dynacat.svg
   access_policy:
     groups:
       - family
