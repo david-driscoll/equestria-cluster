@@ -29,10 +29,7 @@ spec:
   components:
     - ../../../../components/failover/fast-node-eviction
     - ../../../../components/tailscale
-    - ../../../../components/volsync
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_ACCESSMODES: ReadWriteOnce

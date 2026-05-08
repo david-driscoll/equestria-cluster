@@ -45,7 +45,8 @@ spec:
 
     persistence:
       enabled: true
-      existingClaim: meilisearch
+      storageClass: longhorn
+
     serviceMonitor:
       enabled: true
     resources:
