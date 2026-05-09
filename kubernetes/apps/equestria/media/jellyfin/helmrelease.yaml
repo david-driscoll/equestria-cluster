@@ -39,7 +39,8 @@ spec:
           jellyfin:
             image:
               repository: jellyfin/jellyfin
-              tag: 10.11.8@sha256:1694ff069f0c9dafb283c36765175606866769f5d72f2ed56b6a0f1be922fc37
+              # using unstable for now for the performance improvements from https://github.com/jellyfin/jellyfin/pull/16062
+              tag: unstable
             env:
               JELLYFIN_CACHE_DIR: /cache
               JELLYFIN_CONFIG_DIR: /config/config
