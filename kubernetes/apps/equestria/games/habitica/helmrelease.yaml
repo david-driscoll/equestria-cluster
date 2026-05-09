@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: docker.io/awinterstein/habitica-server
-              tag: 5.47.6@sha256:4ac0f76ff44b9ec2ef50e5aed51c6aae311d3180c68a18dadc9f0cad7694ff6c
+              tag: 5.47.8@sha256:7def58f71d9259f71ef86312e761b84ec8c40ab75234cfcdc4615fd01be62400
             env:
               BASE_URL: https://${APP}.${ROOT_DOMAIN}
               NODE_ENV: production
