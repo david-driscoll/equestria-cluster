@@ -19,5 +19,5 @@ resources:
   - ./karakeep/ks.yaml
   - ./meilisearch/ks.yaml
   # - ./technitium/ks.yaml
-  - ./outline/ks.yaml
+  # - ./outline/ks.yaml
   # - ./collabora/ks.yaml
