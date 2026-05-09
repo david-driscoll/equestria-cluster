@@ -41,7 +41,7 @@ spec:
           server:
             image:
               repository: stremio/server
-              tag: v4.20.17@sha256:f8cbbc4e13cd52d914253e8e35c1c7a65b2bc6fb5aba8ae3648379f604d04218
+              tag: v4.20.18@sha256:93aaee2de288456e2394028eab3125cfe66ea86cb3e0f286e0406124a7efbc2d
               pullPolicy: IfNotPresent
             env:
               TZ: ${TIMEZONE}
