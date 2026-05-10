@@ -47,7 +47,7 @@ spec:
           *app :
             image:
               repository: vikunja/vikunja
-              tag: v2.3.0
+              tag: 2.3.0
             env:
               TZ: "${TIMEZONE}"
             securityContext:
