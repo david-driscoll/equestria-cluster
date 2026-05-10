@@ -9,7 +9,7 @@ spec:
   category: Applications
   description: "Advanced todo list app with timeboxing, time tracking, and integrations for Jira, GitHub, GitLab and more"
   url: &url https://${APP}.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/super-productivity.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/super-productivity.png
   access_policy:
     groups:
       - family

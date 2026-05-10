@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: Playerr
-  category: Games
+  category: Applications
   description: Playerr is a self-hosted game library manager and PVR for gaming collections
   url: &url https://${APP}.${ROOT_DOMAIN}
   icon: https://raw.githubusercontent.com/Maikboarder/Playerr/master/frontend/src/assets/app_logo.png
