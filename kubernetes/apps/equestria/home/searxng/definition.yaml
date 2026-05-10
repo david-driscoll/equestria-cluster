@@ -5,11 +5,11 @@ kind: ApplicationDefinition
 metadata:
   name: searxng
 spec:
-  name: "SearXNG"
-  category: "Search"
+  name: SearXNG
+  category: Applications
   description: "Private, decentralized metasearch engine"
   url: &url https://searxng.${ROOT_DOMAIN}
-  icon: https://docs.searxng.org/_static/img/searxng-logo.svg
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/searxng.svg
   access_policy:
     groups:
       - family
