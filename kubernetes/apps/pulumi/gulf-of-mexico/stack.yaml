@@ -13,7 +13,7 @@ spec:
     dir: stacks/gulf-of-mexico
   serviceAccountName: ${APP}
   stack: *stack
-  resyncFrequencySeconds: 300
+  resyncFrequencySeconds: 3600
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/gulf-of-mexico?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: true
