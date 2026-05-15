@@ -19,6 +19,9 @@ spec:
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Retain
+  prerequisites:
+    - name: unifi-network
+    - name: authentik
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:
