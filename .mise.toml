@@ -11,6 +11,7 @@ TALOS_DIR = "{{config_root}}/talos"
 CONNECT_HOST = "https://op-connect.equestria.driscoll.tech/"
 CONNECT_VAULT = "Eris"
 CONNECT_TOKEN = "op://Eris/Eris 1Password Connect Access Token/credential"
+TAILSCALE_API_KEY = "op://Eris/Tailscale API Key/credential"
 
 [tools]
 python = "3.14.5"
