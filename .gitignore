@@ -22,3 +22,7 @@ Thumbs.db
 *.db*
 issues/
 .skillfile/cache/
+
+
+# APM dependencies
+apm_modules/
