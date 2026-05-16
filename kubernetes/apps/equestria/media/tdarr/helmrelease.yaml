@@ -59,7 +59,7 @@ spec:
                   periodSeconds: 10
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 512Mi
               limits:
                 memory: 2Gi
@@ -81,7 +81,7 @@ spec:
                     fieldPath: spec.nodeName
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 512Mi
                 gpu.intel.com/i915: 1
               limits:

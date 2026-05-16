@@ -61,7 +61,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 100Mi
                 gpu.intel.com/i915: 1
               limits:
@@ -95,7 +95,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 100Mi
               limits:
                 memory: 2Gi
