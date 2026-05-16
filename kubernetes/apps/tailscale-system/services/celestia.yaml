@@ -90,6 +90,9 @@ spec:
     - name: pve
       port: 8006
       targetPort: 8006
+    - name: ssh
+      port: 22
+      targetPort: 22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -106,6 +109,20 @@ spec:
         - https://celestia.${TAILSCALE_DOMAIN}:8006
 ---
 apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: proxmox-celestia-ssh
+spec:
+  interval: 5m
+  module: ssh_banner
+  prober:
+    url: blackbox-exporter.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - celestia.${TAILSCALE_DOMAIN}:22
+---
+apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: proxmox-celestia-alerts
@@ -119,6 +136,15 @@ spec:
             summary: "Proxmox celestia is unhealthy"
           expr: |
             probe_success{probe="proxmox-celestia"} < 1
+          for: 10m
+          labels:
+            severity: warning
+        - alert: ProxmoxSSHConnectivityLost
+          annotations:
+            description: "SSH connectivity to Proxmox on celestia has been lost."
+            summary: "Proxmox celestia SSH lost"
+          expr: |
+            probe_success{probe="proxmox-celestia-ssh"} < 1
           for: 10m
           labels:
             severity: warning
