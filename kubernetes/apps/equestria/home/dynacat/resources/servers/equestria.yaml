@@ -2,6 +2,34 @@
 - name: Equestria
   width: wide
   desktop-navigation-width: default
+  head-widgets:
+    - type: extension
+      url: ${GLANCE_K8S_EQUESTRIA_URL}/extension/nodes
+      allow-potentially-dangerous-html: true
+      cache: 30s
+      title: Equestria Nodes
+      title-url: ${HEADLAMP_EQUESTRIA_URL}
+      parameters:
+        show-if: glance.hide != "true"
+    - type: custom-api
+      title: Cluster Resources
+      url: ${THANOS_URL}/api/v1/query
+      cache: 2m
+      parameters:
+        query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="equestria"}[5m]))), 0.1)'
+      subrequests:
+        memory:
+          url: ${THANOS_URL}/api/v1/query
+          parameters:
+            query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="equestria"} / node_memory_MemTotal_bytes{cluster="equestria"})), 0.1)'
+      template: |
+        {{ $cpu := $.JSON.String "data.result.0.value.1" }}
+        {{ $mem := (.Subrequest "memory").JSON.String "data.result.0.value.1" }}
+        <div style="display:flex;gap:24px;padding:4px 0;">
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">CPU</div><div style="font-size:1.2rem;font-weight:700;">{{ if $cpu }}{{ $cpu }}%{{ else }}N/A{{ end }}</div></div>
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">Memory</div><div style="font-size:1.2rem;font-weight:700;">{{ if $mem }}{{ $mem }}%{{ else }}N/A{{ end }}</div></div>
+        </div>
+
 
   columns:
 
@@ -86,32 +114,13 @@
               </ul>
             {{ end }}
 
-        - type: custom-api
-          title: Cluster Resources
-          url: ${THANOS_URL}/api/v1/query
-          cache: 2m
-          parameters:
-            query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="equestria"}[5m]))), 0.1)'
-          subrequests:
-            memory:
-              url: ${THANOS_URL}/api/v1/query
-              parameters:
-                query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="equestria"} / node_memory_MemTotal_bytes{cluster="equestria"})), 0.1)'
-          template: |
-            {{ $cpu := $.JSON.String "data.result.0.value.1" }}
-            {{ $mem := (.Subrequest "memory").JSON.String "data.result.0.value.1" }}
-            <div style="display:flex;gap:24px;padding:4px 0;">
-              <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">CPU</div><div style="font-size:1.2rem;font-weight:700;">{{ if $cpu }}{{ $cpu }}%{{ else }}N/A{{ end }}</div></div>
-              <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">Memory</div><div style="font-size:1.2rem;font-weight:700;">{{ if $mem }}{{ $mem }}%{{ else }}N/A{{ end }}</div></div>
-            </div>
-
     - size: full
       widgets:
 
         - type: extension
           url: ${GLANCE_K8S_EQUESTRIA_URL}/extension/apps
           allow-potentially-dangerous-html: true
-          cache: 10m
+          cache: 1m
           title: Equestria Apps
           parameters:
             show-if: glance.hide != "true"

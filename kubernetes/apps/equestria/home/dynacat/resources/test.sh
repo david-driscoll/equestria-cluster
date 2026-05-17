@@ -52,6 +52,7 @@ op run --no-masking -- docker run \
   -e DYNACAT_OIDC_CLIENT_ID \
   -e DYNACAT_OIDC_CLIENT_SECRET \
   -e DYNACAT_OIDC_ISSUER_URL \
+  -e DYNACAT_OIDC_REDIRECT_URL \
   -e THANOS_URL \
   -e ALERTMANAGER_URL \
   -p 8080:8080 \
