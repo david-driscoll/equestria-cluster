@@ -97,5 +97,5 @@ spec:
           memory: 256Mi
         limits:
           # cpu: 1
-          memory: 4Gi
+          memory: 6Gi
       # pulumiLogLevel: 11
