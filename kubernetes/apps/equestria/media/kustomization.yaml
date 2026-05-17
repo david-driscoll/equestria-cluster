@@ -13,7 +13,7 @@ resources:
   - ./tautulli/ks.yaml
   - ./lidarr/ks.yaml
   - ./mylar/ks.yaml
-  - ./watchstate/ks.yaml
+  # - ./watchstate/ks.yaml
   - ./tdarr/ks.yaml
   - ./kometa/ks.yaml
   - ./kapowarr/ks.yaml
