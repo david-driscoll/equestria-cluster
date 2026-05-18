@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json#/properties/pages
-- name: Alpha Site
+- name: Skystar
   width: wide
   desktop-navigation-width: default
 
@@ -9,14 +9,14 @@
       widgets:
         - type: custom-api
           title: Cluster Applications
-          url: ${AUTHENTIK_URL}/api/v3/core/applications/?group=System:+Alpha+Site&page_size=100&superuser_full_list=true
+          url: ${AUTHENTIK_URL}/api/v3/core/applications/?group=System:+Skystar&page_size=100&superuser_full_list=true
           cache: 1h
           headers:
             Authorization: Bearer ${AUTHENTIK_API_TOKEN}
             Accept: application/json
           subrequests:
             apps:
-              url: ${AUTHENTIK_URL}/api/v3/core/applications/?group=Alpha+Site&page_size=100&superuser_full_list=true
+              url: ${AUTHENTIK_URL}/api/v3/core/applications/?group=Skystar&page_size=100&superuser_full_list=true
               headers:
                 Authorization: Bearer ${AUTHENTIK_API_TOKEN}
                 Accept: application/json
@@ -34,12 +34,12 @@
               <div class="widget-content widget-content-frameless">
                 <div class="widget-group-header">
                   <div class="widget-header gap-20" role="tablist">
-                    <button class="widget-group-title widget-group-title-current" aria-selected="true" role="tab" aria-controls="alpha-system-panel" id="alpha-system">System</button>
-                    <button class="widget-group-title" aria-selected="false" role="tab" aria-controls="alpha-apps-panel" id="alpha-apps">Apps</button>
+                    <button class="widget-group-title widget-group-title-current" aria-selected="true" role="tab" aria-controls="skystar-system-panel" id="skystar-system">System</button>
+                    <button class="widget-group-title" aria-selected="false" role="tab" aria-controls="skystar-apps-panel" id="skystar-apps">Apps</button>
                   </div>
                 </div>
                 <div class="widget-group-contents">
-                  <div class="widget-group-content widget-group-content-current" id="alpha-system-panel" role="tabpanel" aria-labelledby="alpha-system" aria-hidden="false">
+                  <div class="widget-group-content widget-group-content-current" id="skystar-system-panel" role="tabpanel" aria-labelledby="skystar-system" aria-hidden="false">
                     <ul class="app-grid">
                     {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
                       {{ $url := .String "meta_launch_url" }}
@@ -49,7 +49,7 @@
                     {{ end }}
                     </ul>
                   </div>
-                  <div class="widget-group-content" id="alpha-apps-panel" role="tabpanel" aria-labelledby="alpha-apps" aria-hidden="true">
+                  <div class="widget-group-content" id="skystar-apps-panel" role="tabpanel" aria-labelledby="skystar-apps" aria-hidden="true">
                     <ul class="app-grid">
                     {{ range (.Subrequest "apps").JSON.Array "results" | sortByString "name" "asc" }}
                       {{ $url := .String "meta_launch_url" }}
@@ -68,7 +68,7 @@
           url: ${THANOS_URL}/api/v1/query
           cache: 1m
           parameters:
-            query: 'ALERTS{alertstate="firing",severity!="info",alertname!="Watchdog",cluster="alpha-site"}'
+            query: 'ALERTS{alertstate="firing",severity!="info",alertname!="Watchdog",cluster="skystar"}'
           template: |
             {{ $alerts := $.JSON.Array "data.result" }}
             {{ if eq (len $alerts) 0 }}
@@ -91,12 +91,12 @@
           url: ${THANOS_URL}/api/v1/query
           cache: 2m
           parameters:
-            query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="alpha-site"}[5m]))), 0.1)'
+            query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="skystar"}[5m]))), 0.1)'
           subrequests:
             memory:
               url: ${THANOS_URL}/api/v1/query
               parameters:
-                query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="alpha-site"} / node_memory_MemTotal_bytes{cluster="alpha-site"})), 0.1)'
+                query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="skystar"} / node_memory_MemTotal_bytes{cluster="skystar"})), 0.1)'
           template: |
             {{ $cpu := $.JSON.String "data.result.0.value.1" }}
             {{ $mem := (.Subrequest "memory").JSON.String "data.result.0.value.1" }}
