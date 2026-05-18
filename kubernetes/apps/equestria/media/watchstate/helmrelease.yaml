@@ -40,7 +40,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/arabcoders/watchstate
-              tag: v1.8.2
+              tag: v1.8.3@sha256:ff2e4c364ca0020993692d0ea95b51df127b8be5828bd58c49185d467991f7c5
             env:
               TZ: "${TIMEZONE}"
               WS_UID: 568
