@@ -94,12 +94,14 @@ spec:
             <<: *job
 
     defaultPodOptions:
+      automountServiceAccountToken: true
       securityContext:
         fsGroup: 0
         fsGroupChangePolicy: "OnRootMismatch"
         runAsGroup: 0
         runAsNonRoot: false
         runAsUser: 0
+
         seccompProfile:
           type: RuntimeDefault
       shareProcessNamespace: true
