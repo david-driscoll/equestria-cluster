@@ -21,7 +21,6 @@ spec:
   workspaceReclaimPolicy: Retain
   prerequisites:
     - name: home-operations
-    - name: authentik
   envRefs:
     AWS_ACCESS_KEY_ID:
       type: Secret
