@@ -16,7 +16,7 @@ resources:
   - ./tandoor/ks.yaml
   - ./freshrss/ks.yaml
   - ./searxng/ks.yaml
-  - ./karakeep/ks.yaml
+  # - ./karakeep/ks.yaml
   - ./meilisearch/ks.yaml
   # - ./technitium/ks.yaml
   # - ./outline/ks.yaml
