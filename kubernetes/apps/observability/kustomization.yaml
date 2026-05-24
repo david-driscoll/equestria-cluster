@@ -24,3 +24,4 @@ resources:
   - ./speedtest-exporter/ks.yaml
   - ./unpoller/ks.yaml
   - ./glance-k8s/ks.yaml
+  - ./tempo/ks.yaml
