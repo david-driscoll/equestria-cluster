@@ -14,6 +14,6 @@ resources:
   - ./authentik/ks.yaml
   - ./unifi-network/ks.yaml
   - ./backups/ks.yaml
-  # - ./home-operations/ks.yaml
-  # - ./gulf-of-mexico/ks.yaml
-  # - ./ocracoke/ks.yaml
+  - ./home-operations/ks.yaml
+  - ./gulf-of-mexico/ks.yaml
+  - ./ocracoke/ks.yaml
