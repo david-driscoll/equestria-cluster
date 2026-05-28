@@ -18,7 +18,7 @@ spec:
   backend: s3://home-operations/unifi-network?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
-  workspaceReclaimPolicy: Retain
+  workspaceReclaimPolicy: Delete
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:

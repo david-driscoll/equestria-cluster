@@ -18,7 +18,7 @@ spec:
   backend: s3://home-operations/gulf-of-mexico?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
-  workspaceReclaimPolicy: Retain
+  workspaceReclaimPolicy: Delete
   prerequisites:
     - name: home-operations
   envRefs:
