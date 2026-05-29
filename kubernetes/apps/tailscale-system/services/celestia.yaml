@@ -155,15 +155,18 @@ kind: Service
 metadata:
   name: pbs-celestia
   annotations:
-    tailscale.com/tailnet-fqdn: "celestia.${TAILSCALE_DOMAIN}"
+    tailscale.com/tailnet-fqdn: "pbs-celestia.${TAILSCALE_DOMAIN}"
     tailscale.com/proxy-group: tailnet-inbound
 spec:
   type: ExternalName
-  externalName: celestia
+  externalName: pbs-celestia
   ports:
     - name: pbs
       port: 8007
       targetPort: 8007
+    - name: ssh
+      port: 22
+      targetPort: 22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -177,7 +180,21 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://celestia.${TAILSCALE_DOMAIN}:8007
+        - https://pbs-celestia.${TAILSCALE_DOMAIN}:8007
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: pbs-celestia-ssh
+spec:
+  interval: 5m
+  module: ssh_banner
+  prober:
+    url: blackbox-exporter.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - pbs-celestia.${TAILSCALE_DOMAIN}:22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -193,6 +210,15 @@ spec:
             summary: "PBS celestia is unhealthy"
           expr: |
             probe_success{probe="pbs-celestia"} < 1
+          for: 10m
+          labels:
+            severity: warning
+        - alert: PBSSSHConnectivityLost
+          annotations:
+            description: "SSH connectivity to PBS on celestia has been lost."
+            summary: "PBS celestia SSH lost"
+          expr: |
+            probe_success{probe="pbs-celestia-ssh"} < 1
           for: 10m
           labels:
             severity: warning

@@ -155,15 +155,18 @@ kind: Service
 metadata:
   name: pbs-luna
   annotations:
-    tailscale.com/tailnet-fqdn: "luna.${TAILSCALE_DOMAIN}"
+    tailscale.com/tailnet-fqdn: "pbs-luna.${TAILSCALE_DOMAIN}"
     tailscale.com/proxy-group: tailnet-inbound
 spec:
   type: ExternalName
-  externalName: luna
+  externalName: pbs-luna
   ports:
     - name: pbs
       port: 8007
       targetPort: 8007
+    - name: ssh
+      port: 22
+      targetPort: 22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
@@ -177,7 +180,21 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://luna.${TAILSCALE_DOMAIN}:8007
+        - https://pbs-luna.${TAILSCALE_DOMAIN}:8007
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: pbs-luna-ssh
+spec:
+  interval: 5m
+  module: ssh_banner
+  prober:
+    url: blackbox-exporter.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - pbs-luna.${TAILSCALE_DOMAIN}:22
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -193,6 +210,15 @@ spec:
             summary: "PBS luna is unhealthy"
           expr: |
             probe_success{probe="pbs-luna"} < 1
+          for: 10m
+          labels:
+            severity: warning
+        - alert: PBSSSHConnectivityLost
+          annotations:
+            description: "SSH connectivity to PBS on luna has been lost."
+            summary: "PBS luna SSH lost"
+          expr: |
+            probe_success{probe="pbs-luna-ssh"} < 1
           for: 10m
           labels:
             severity: warning
