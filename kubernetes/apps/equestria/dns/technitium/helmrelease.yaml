@@ -102,10 +102,14 @@ spec:
         runAsGroup: 0
         seccompProfile:
           type: RuntimeDefault
-      # Pin to a worker node labeled `technitium-dns=true` (must have enp2s0 NIC)
-      # Label a node: kubectl label node <node-name> technitium-dns=true
+      # Pin to hard-hat (10.10.206.14) via talconfig nodeLabel technitium-dns=true.
+      # That node is a control plane node, so tolerate the NoSchedule taint.
       nodeSelector:
         technitium-dns: "true"
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
 
     service:
       # DNS traffic (port 53 UDP/TCP) is handled directly by the ipvlan interface (see macvlan-nad.yaml).

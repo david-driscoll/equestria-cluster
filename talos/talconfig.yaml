@@ -137,7 +137,10 @@ nodes:
           grow: false
           minSize: 1TB
           maxSize: 1TB
-    nodeLabels: *nodeLabels
+    nodeLabels:
+      <<: *nodeLabels
+      # Pin Technitium DNS to this node — it has enp2s0, required for ipvlan L2 NAD
+      technitium-dns: "true"
     nodeAnnotations: &amd_minifm_annotations
       node.longhorn.io/default-disks-config: |
         {
