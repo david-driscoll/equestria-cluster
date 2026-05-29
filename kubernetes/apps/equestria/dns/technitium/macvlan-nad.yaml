@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/k8s.cni.cncf.io/networkattachmentdefinition_v1.json
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: technitium-dns-net
+  namespace: network
+  annotations:
+    # Purpose: Gives the Technitium pod a dedicated DNS interface (net1) with a
+    # static IP equal to TECHNITIUM_VIP on the LAN.  DNS traffic (port 53
+    # UDP/TCP, 853 DoT, 443 DoH) arrives directly on this interface without
+    # traversing kube-proxy or any LoadBalancer service.
+    #
+    # ipvlan L2 is used instead of macvlan because the equestria nodes are
+    # Proxmox KVM VMs — macvlan requires promiscuous mode on the Proxmox vmbr
+    # bridge, while ipvlan L2 shares the parent MAC so it works without any
+    # Proxmox reconfiguration.
+    #
+    # Nodes with NIC enp2s0 must be labeled: kubectl label node <name> technitium-dns=true
+    # The pod's nodeSelector ensures it only lands on a labeled worker node.
+    #
+    # Tailscale DNS access: the Connector subnet router already advertises
+    # the LAN subnet to the tailnet, so Tailscale clients with --accept-routes
+    # can reach TECHNITIUM_VIP:53 directly (UDP/TCP — no Tailscale Services needed).
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "technitium-dns-net",
+      "type": "ipvlan",
+      "master": "enp2s0",
+      "mode": "l2",
+      "ipam": {
+        "type": "static",
+        "addresses": [
+          {
+            "address": "${TECHNITIUM_VIP}/16"
+          }
+        ]
+      }
+    }

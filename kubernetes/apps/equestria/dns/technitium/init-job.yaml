@@ -1,0 +1,165 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/batch/job_v1.json
+# This Job runs after Technitium is deployed and:
+#   1. Configures SSO via API (idempotent — overwrites env-var values at runtime)
+#   2. Joins the cluster as a secondary node with celestia as primary
+#
+# To re-run: kubectl delete job technitium-init -n network
+# (Jobs are immutable; deleting and letting Flux recreate it is the correct workflow)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: technitium-init
+  namespace: network
+  annotations:
+    # Re-create this job whenever the ConfigMap changes
+    reloader.stakater.com/auto: "true"
+spec:
+  ttlSecondsAfterFinished: 86400
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: default
+      containers:
+        - name: init
+          image: curlimages/curl:8.7.1
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+
+              ADMIN_URL="http://technitium.network.svc.cluster.local:5380"
+              log() { echo "[$(date -u +%T)] $*"; }
+              die() { echo "[$(date -u +%T)] ERROR: $*" >&2; exit 1; }
+
+              # ------------------------------------------------------------------
+              # 1. Wait for Technitium to be ready
+              # ------------------------------------------------------------------
+              log "Waiting for Technitium to be ready..."
+              READY=false
+              for i in $(seq 1 60); do
+                if curl -sf --max-time 3 "${ADMIN_URL}/api/sso/status" >/dev/null 2>&1; then
+                  READY=true
+                  break
+                fi
+                log "  ... (${i}/60)"
+                sleep 5
+              done
+              $READY || die "Technitium did not become ready after 5 minutes"
+              log "Technitium is ready."
+
+              # ------------------------------------------------------------------
+              # 2. Login
+              # ------------------------------------------------------------------
+              encoded_pass=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" \
+                "${DNS_SERVER_ADMIN_PASSWORD}")
+              login_resp=$(curl -sf --max-time 10 \
+                "${ADMIN_URL}/api/user/login?user=admin&pass=${encoded_pass}" \
+                || die "Login failed")
+              TOKEN=$(echo "$login_resp" | python3 -c \
+                "import sys,json; print(json.load(sys.stdin)['response']['token'])" \
+                || die "Failed to parse login token")
+              log "Login successful."
+
+              api() {
+                local endpoint="$1"; shift
+                curl -sf --max-time 15 -X POST \
+                  "${ADMIN_URL}/api/${endpoint}?token=${TOKEN}" "$@"
+              }
+
+              # ------------------------------------------------------------------
+              # 3. Configure SSO (always applied to fix/update runtime values)
+              # ------------------------------------------------------------------
+              log "Configuring SSO..."
+              api "admin/sso/set" \
+                --data-urlencode "ssoEnabled=true" \
+                --data-urlencode "ssoAuthority=${DNS_SERVER_SSO_AUTHORITY}" \
+                --data-urlencode "ssoClientId=${DNS_SERVER_SSO_CLIENT_ID}" \
+                --data-urlencode "ssoClientSecret=${DNS_SERVER_SSO_CLIENT_SECRET}" \
+                --data-urlencode "ssoScopes=openid|profile|email" \
+                --data-urlencode "ssoAllowSignup=true" \
+                --data-urlencode "ssoAllowSignupOnlyForMappedUsers=true" \
+                --data-urlencode "ssoGroupMap=admins|Administrators" \
+                >/dev/null || die "SSO configuration failed"
+              log "SSO configured. Waiting for web service hot-restart..."
+
+              sleep 8
+              for i in $(seq 1 24); do
+                if curl -sf --max-time 3 "${ADMIN_URL}/api/sso/status" >/dev/null 2>&1; then
+                  break
+                fi
+                log "  waiting for restart... (${i}/24)"
+                sleep 5
+              done
+
+              # Re-login after restart
+              login_resp=$(curl -sf --max-time 10 \
+                "${ADMIN_URL}/api/user/login?user=admin&pass=${encoded_pass}" \
+                || die "Re-login failed after SSO restart")
+              TOKEN=$(echo "$login_resp" | python3 -c \
+                "import sys,json; print(json.load(sys.stdin)['response']['token'])" \
+                || die "Failed to parse re-login token")
+              log "Re-login successful."
+
+              # ------------------------------------------------------------------
+              # 4. Configure forwarders (Quad9 over TLS — always applied)
+              # ------------------------------------------------------------------
+              log "Configuring forwarders (Quad9 DoT)..."
+              api "settings/set" \
+                --data-urlencode "forwarders=9.9.9.9, 149.112.112.112, [2620:fe::fe], [2620:fe::9]" \
+                --data-urlencode "forwarderProtocol=Tls" \
+                --data-urlencode "concurrentForwarding=true" \
+                >/dev/null || die "Forwarder configuration failed"
+              log "Forwarders configured."
+
+              # ------------------------------------------------------------------
+              # 5. Join cluster as secondary (skip if already in cluster)
+              # ------------------------------------------------------------------
+              cluster_resp=$(api "admin/cluster/get" || echo '{}')
+              in_cluster=$(echo "$cluster_resp" | python3 -c \
+                "import sys,json; d=json.load(sys.stdin); print('true' if d.get('response',{}).get('enabled') else 'false')" \
+                2>/dev/null || echo "false")
+
+              if [ "$in_cluster" = "true" ]; then
+                log "Already in cluster — skipping join."
+              else
+                log "Joining cluster (primary: ${DNS_CLUSTER_PRIMARY_IP}:53443)..."
+                api "admin/cluster/initJoin" \
+                  --data-urlencode "primaryNodeUrl=https://${DNS_CLUSTER_PRIMARY_IP}:53443/" \
+                  --data-urlencode "primaryNodeIpAddress=${DNS_CLUSTER_PRIMARY_IP}" \
+                  --data-urlencode "ignoreCertificateErrors=true" \
+                  --data-urlencode "primaryNodeUsername=admin" \
+                  --data-urlencode "primaryNodePassword=${DNS_SERVER_ADMIN_PASSWORD}" \
+                  --data-urlencode "secondaryNodeIpAddresses=${TECHNITIUM_VIP}" \
+                  >/dev/null || die "Cluster join failed"
+                log "Successfully joined cluster."
+              fi
+
+              log "Technitium init complete."
+          env:
+            - name: DNS_SERVER_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: technitium-env
+                  key: DNS_SERVER_ADMIN_PASSWORD
+            - name: DNS_SERVER_SSO_AUTHORITY
+              valueFrom:
+                secretKeyRef:
+                  name: technitium-env
+                  key: DNS_SERVER_SSO_AUTHORITY
+            - name: DNS_SERVER_SSO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: technitium-env
+                  key: DNS_SERVER_SSO_CLIENT_ID
+            - name: DNS_SERVER_SSO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: technitium-env
+                  key: DNS_SERVER_SSO_CLIENT_SECRET
+            - name: TECHNITIUM_VIP
+              value: "${TECHNITIUM_VIP}"
+            - name: DNS_CLUSTER_PRIMARY_IP
+              value: "100.111.30.100"
