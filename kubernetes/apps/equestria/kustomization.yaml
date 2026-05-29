@@ -4,6 +4,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: equestria
 components:
+  - ../../components/secret-store
   - ../../components/alerts
   - ../../components/common
   - ../../components/repos/app-template
@@ -16,4 +17,4 @@ resources:
   - ./home
   - ./media
   - ./pvr
-  # - ./dns
+  - ./dns

@@ -2,8 +2,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-components:
-  - ../../../components/secret-store
 resources:
   - ./immich/ks.yaml
   - ./n8n/ks.yaml
@@ -18,6 +16,5 @@ resources:
   - ./searxng/ks.yaml
   # - ./karakeep/ks.yaml
   - ./meilisearch/ks.yaml
-  # - ./technitium/ks.yaml
   # - ./outline/ks.yaml
   # - ./collabora/ks.yaml
