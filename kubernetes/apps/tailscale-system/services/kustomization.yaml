@@ -9,5 +9,3 @@ resources:
   - ./as.yaml
   - ./celestia.yaml
   - ./luna.yaml
-  - ./skystar.yaml
-  - ./twilight-sparkle.yaml
