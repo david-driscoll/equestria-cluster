@@ -68,7 +68,7 @@
           url: ${THANOS_URL}/api/v1/query
           cache: 1m
           parameters:
-            query: 'ALERTS{alertstate="firing",cluster="celestia"}'
+            query: 'ALERTS{alertstate="firing",severity!="info",alertname!="Watchdog",cluster="celestia"}'
           template: |
             {{ $alerts := $.JSON.Array "data.result" }}
             {{ if eq (len $alerts) 0 }}

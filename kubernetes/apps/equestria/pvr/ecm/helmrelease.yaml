@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/motwakorb/enhancedchannelmanager
-              tag: "0.16@sha256:b160233f16fbf8bbdcd0218b52406c10d03256bf707b203ca159b69ec95b7141"
+              tag: "0.17@sha256:a0758cdf08d5db19f8fe65ac4bb729e71176fe1c95da85eb21a2a2cf39a2d2ca"
             probes:
               liveness: &probes
                 enabled: true
@@ -57,7 +57,7 @@ spec:
               readiness: *probes
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 128Mi
               limits:
                 memory: 512Mi

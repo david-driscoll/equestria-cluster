@@ -1,4 +1,5 @@
 #!/usr/bin/dotnet run
+#:package YamlDotNet@16.3.0
 #:package Spectre.Console@0.50.0
 #:package System.Net.Http.Json@9.*
 #:package Duende.IdentityModel@7.1.0
@@ -12,6 +13,8 @@ using System.Text.Json.Serialization;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using Spectre.Console;
+
+var serializer = new YamlDotNet.Serialization.Serializer();
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Service kind and per-type defaults
@@ -93,13 +96,14 @@ if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
   }
   catch (Exception ex)
   {
-    AnsiConsole.MarkupLine($"[red]Tailscale API error: {ex.Message} — falling back to static list[/]");
-    serverKinds.Clear();
+    AnsiConsole.WriteException(ex, new ExceptionSettings { Format = ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenMethods });
+    Environment.Exit(0);
   }
 }
 
 if (serverKinds.Count == 0)
 {
+  Environment.Exit(0);
   AnsiConsole.MarkupLine("[yellow]Using static device list (set TAILSCALE_API_KEY to use Tailscale API)[/]");
   // Static device list — update this when adding/removing servers
   var staticDevices = new (string Server, ServiceKind Kind)[]
@@ -137,34 +141,22 @@ static string ExternalName(string server, ServiceKind kind) => kind switch
 {
   // dockge nodes live on the tailnet as "dockge-<server>"
   ServiceKind.Dockge => $"dockge-{server}",
-  // proxmox shares the same underlying node "<server>"; pbs has its own tailnet device
+  // proxmox and pbs share the same underlying node "<server>"
   ServiceKind.Proxmox => server,
   ServiceKind.Pbs => $"pbs-{server}",
   _ => throw new ArgumentOutOfRangeException(nameof(kind)),
 };
 
-static string TailnetFqdn(string server, ServiceKind kind) => kind switch
-{
-  ServiceKind.Dockge => $"dockge-{server}.${{TAILSCALE_DOMAIN}}",
-  ServiceKind.Proxmox => $"{server}.${{TAILSCALE_DOMAIN}}",
-  ServiceKind.Pbs => $"pbs-{server}.${{TAILSCALE_DOMAIN}}",
-  _ => throw new ArgumentOutOfRangeException(nameof(kind)),
-};
+static string TailnetFqdn(string server, ServiceKind kind) => $"{ExternalName(server, kind)}.${{TAILSCALE_DOMAIN}}";
 
 // Returns the URL used in HTTP probes (includes port for non-standard 80/443)
 static string ProbeHttpUrl(string server, ServiceKind kind, int port)
 {
-  var fqdn = kind == ServiceKind.Dockge ? $"dockge-{server}.${{TAILSCALE_DOMAIN}}" : kind == ServiceKind.Pbs ? $"pbs-{server}.${{TAILSCALE_DOMAIN}}" : $"{server}.${{TAILSCALE_DOMAIN}}";
+  var fqdn = TailnetFqdn(server, kind);
   return port == 443 ? $"https://{fqdn}" : $"https://{fqdn}:{port}";
 }
 
-static string ProbeSshTarget(string server, ServiceKind kind) => kind switch
-{
-  ServiceKind.Dockge => $"dockge-{server}.${{TAILSCALE_DOMAIN}}:22",
-  ServiceKind.Proxmox => $"{server}.${{TAILSCALE_DOMAIN}}:22",
-  ServiceKind.Pbs => $"pbs-{server}.${{TAILSCALE_DOMAIN}}:22",
-  _ => throw new ArgumentOutOfRangeException(nameof(kind)),
-};
+static string ProbeSshTarget(string server, ServiceKind kind) => $"{TailnetFqdn(server, kind)}:22";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // YAML generators
@@ -176,6 +168,7 @@ string ServiceYaml(string server, ServiceKind kind, List<PortDef> ports)
   var extName = ExternalName(server, kind);
   var fqdn = TailnetFqdn(server, kind);
   var sb = new StringBuilder();
+
   sb.AppendLine("---");
   sb.AppendLine($"# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/service.json");
   sb.AppendLine($"apiVersion: v1");
@@ -453,7 +446,7 @@ kustomizationContent.AppendLine("apiVersion: kustomize.config.k8s.io/v1beta1");
 kustomizationContent.AppendLine("kind: Kustomization");
 kustomizationContent.AppendLine("resources:");
 kustomizationContent.AppendLine("  - ./tailscale.yaml");
-kustomizationContent.AppendLine("  - ./prometheusrule.yaml");
+kustomizationContent.AppendLine("  # - ./prometheusrule.yaml");
 foreach (var f in generatedFiles)
   kustomizationContent.AppendLine($"  - ./{f}");
 await File.WriteAllTextAsync(Path.Combine(outputDir, "kustomization.yaml"), kustomizationContent.ToString());

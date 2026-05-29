@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -18,14 +19,18 @@ spec:
           *app :
             image:
               repository: ghcr.io/librespeed/speedtest
-              tag: latest@sha256:7908b0be647956181f6f93c1c6ee6a4bb9a5767710af5409220369d5b4c1f828
+              tag: latest@sha256:2c309fd4bbcb7169eb25faf34b37d65d303b32e7543a2847e98f4aef458be560
             resources:
               requests:
-                cpu: 200m
+                cpu: 50m
                 memory: 32Mi
               limits:
                 memory: 128Mi
-
+            env:
+              USE_NEW_DESIGN: true
+              TELEMETRY: false
+              ENABLE_ID_OBFUSCATION: false
+              REDACT_IP_ADDRESSES: false
             probes:
               liveness: &probes
                 enabled: true

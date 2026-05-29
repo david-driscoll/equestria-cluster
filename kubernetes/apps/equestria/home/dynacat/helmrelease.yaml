@@ -44,7 +44,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/panonim/dynacat
-              tag: 2.2.3@sha256:c6193983a3a2ab7ee89abbe230e7adb34aa4ba126064cdfa0393b4469c6db3eb
+              tag: 2.3.0@sha256:4a9f121745e630a1ccf1537e6e7ad91e356b4110aa66e34e72fed3019e865b7e
             env:
               TZ: "${TIMEZONE}"
             envFrom:
@@ -52,7 +52,7 @@ spec:
                   name: ${APP}-env
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 128Mi
               limits:
                 memory: 256Mi

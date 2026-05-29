@@ -37,6 +37,7 @@ configMapGenerator:
     - ./resources/servers/celestia.yaml
     - ./resources/servers/equestria.yaml
     - ./resources/servers/luna.yaml
+    - ./resources/servers/skystar.yaml
     - ./resources/servers/sgc.yaml
   options:
     disableNameSuffixHash: true

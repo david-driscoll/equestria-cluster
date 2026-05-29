@@ -23,7 +23,7 @@ spec:
           talosctl:
             image:
               repository: ghcr.io/siderolabs/talosctl
-              tag: v1.12.6@sha256:a027cf02cf74a75eee83ccffa201f3a9455d77e795d092b87cae5e637f143e54
+              tag: v1.13.3@sha256:f1094cdda232932d93f558efe7f587b0479efeeea5b7d679d28bc8308937833d
             args:
               - --talosconfig
               - /var/run/secrets/talos.dev/config
@@ -74,25 +74,38 @@ spec:
         containers:
           defrag:
             image:
-              repository: ghcr.io/siderolabs/talosctl
-              tag: v1.12.6@sha256:a027cf02cf74a75eee83ccffa201f3a9455d77e795d092b87cae5e637f143e54
+              repository: ghcr.io/ahrtr/etcd-defrag
+              tag: v0.40.0@sha256:3cc3433d51caabfff917268b3c8aa8f0274d5422127085a7d9f6cf219b6c4b55
             args:
-              - --talosconfig
-              - /var/run/secrets/talos.dev/config
-              - -e
-              - "$(CP_NODE_IP)"
-              - -n
-              - "$(CP_NODE_IP)"
-              - etcd
-              - defrag
-            env:
-              - name: CP_NODE_IP
-                valueFrom:
-                  fieldRef:
-                    fieldPath: status.hostIP
+              - --endpoints=https://127.0.0.1:2379
+              - --cluster
+              - --cacert=/certs/ca.crt
+              - --cert=/certs/server.crt
+              - --key=/certs/server.key
+              # Defrag when DB quota usage > 50% OR free space > 100MB
+              - --defrag-rule=dbQuotaUsage > 0.5 || dbSizeFree > 100*1024*1024
+              # Move leader during defrag (safe for single-node)
+              - --move-leader
+              # Wait 30s between defrags
+              - --wait-between-defrags=30s
+              # Match the quota-backend-bytes set in Talos config
+              - --etcd-storage-quota-bytes=8589934592
+              # Auto-disalarm space quota alarms
+              - --auto-disalarm
+              - --disalarm-threshold=0.8
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              privileged: true
+              runAsUser: 0
 
         pod:
           hostNetwork: true
+          hostPID: true
           nodeSelector:
             node-role.kubernetes.io/control-plane: ""
       prune:
@@ -125,13 +138,17 @@ spec:
         type: secret
         name: etcd-talos
         advancedMounts:
-          defrag:
-            defrag:
-              - path: /var/run/secrets/talos.dev
-                readOnly: true
           backup:
             talosctl:
               - path: /var/run/secrets/talos.dev
+                readOnly: true
+      certs:
+        type: hostPath
+        hostPath: /system/secrets/etcd
+        advancedMounts:
+          defrag:
+            defrag:
+              - path: /certs
                 readOnly: true
       backupdata:
         type: emptyDir

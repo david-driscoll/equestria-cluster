@@ -39,7 +39,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/jmberesford/retrom-service
-              tag: 0.8.1@sha256:11a819cb6873d32493d191e6c8a6c69df8b4a2a25070bfad73a1edf7c443656b
+              tag: 0.8.2@sha256:81452d830535dd721659909d17b3733b6479981329e099945c42bc00f5e698e6
             env:
               - name: PORT
                 value: "5101"
@@ -48,7 +48,7 @@ spec:
                   name: ${APP}-env
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 100Mi
               limits:
                 memory: 1Gi

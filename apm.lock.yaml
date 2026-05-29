@@ -1,0 +1,472 @@
+lockfile_version: '1'
+generated_at: '2026-05-24T16:25:44.533891+00:00'
+apm_version: 0.14.1
+dependencies:
+- repo_url: cloudflare/skills
+  host: github.com
+  resolved_commit: 60147cbb773649eadca89cee92b4e0caf02234b4
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/agents-sdk
+  - .agents/skills/cloudflare
+  - .agents/skills/cloudflare-email-service
+  - .agents/skills/durable-objects
+  - .agents/skills/sandbox-sdk
+  - .agents/skills/web-perf
+  - .agents/skills/workers-best-practices
+  - .agents/skills/wrangler
+  - .claude/commands/build-agent.md
+  - .claude/commands/build-mcp.md
+  - .claude/skills/agents-sdk
+  - .claude/skills/cloudflare
+  - .claude/skills/cloudflare-email-service
+  - .claude/skills/durable-objects
+  - .claude/skills/sandbox-sdk
+  - .claude/skills/web-perf
+  - .claude/skills/workers-best-practices
+  - .claude/skills/wrangler
+  - .github/prompts/build-agent.prompt.md
+  - .github/prompts/build-mcp.prompt.md
+  deployed_file_hashes:
+    .claude/commands/build-agent.md: sha256:2a047542742e35246d9eff4128b1543c5ffa41dc44d347e8dd1bc554cf33d494
+    .claude/commands/build-mcp.md: sha256:78ee1ce2ad9a4904a45843f0aeaeb509cdd67b8931275f1277e80d655753c223
+    .github/prompts/build-agent.prompt.md: sha256:4d2f9777e0bfdd7581921f81459b9a66f78bbbce47a6d890de0a317852b4f46a
+    .github/prompts/build-mcp.prompt.md: sha256:265c29d38cd8f2e59ae097e4d23e53635792a9d34a1187d8208b12775cad5ce6
+  content_hash: sha256:5584fb5c3177456c6f32042aa9fd01a8958ca3d4c3ebeb9b5643f09462e4beed
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/app-template
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/app-template
+  - .claude/skills/app-template
+  content_hash: sha256:2c99c1c27acc1d87f559daa75fdc780f1f27ddb672f30b0221aea8de62057f7e
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/architecture-review
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/architecture-review
+  - .claude/skills/architecture-review
+  content_hash: sha256:66759d03955d378f9995f4277a515deeff51cdb0d1ebf0735fb8ecb03417e18e
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/cnpg-database
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/cnpg-database
+  - .claude/skills/cnpg-database
+  content_hash: sha256:189e9d379bcdb39de246a359e0d21ee973de4c835949af0f83403e2b20a38884
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/deploy-app
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/deploy-app
+  - .claude/skills/deploy-app
+  content_hash: sha256:94401563658a3531df36ec4fd77e3563e3677e53752eaf3364490419c3a8af38
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/flux-gitops
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/flux-gitops
+  - .claude/skills/flux-gitops
+  content_hash: sha256:d79ef1476938c271c00c1f1d57466400ad236c3bd9c16ec7e67540f5e188bc06
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/gateway-routing
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/gateway-routing
+  - .claude/skills/gateway-routing
+  content_hash: sha256:70e15a3d97d9ef30fcb793053c380d9e0d8716e27ecfda3e277a24ba3d35e347
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/gha-pipelines
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/gha-pipelines
+  - .claude/skills/gha-pipelines
+  content_hash: sha256:9ec76efd133ef9915e74d6381bbe39fca8b21cc4757154f8ea9b6d9a2a1692ec
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/grafana-dashboards
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/grafana-dashboards
+  - .claude/skills/grafana-dashboards
+  content_hash: sha256:555f70440d8f94b1844f1d6a8f62efd8563d30e29abfed0f9eab0ff473aa4914
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/instruction-eval
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/instruction-eval
+  - .claude/skills/instruction-eval
+  content_hash: sha256:812f0647f16efd35aaf540633560b193ad0cdbcee007839ff4e7317efdb7ee2e
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/k8s
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/k8s
+  - .claude/skills/k8s
+  content_hash: sha256:f894fd4897a66b709f3804779d9b314c13beb9c6ee7236d562f6f8ded596255e
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/kubesearch
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/kubesearch
+  - .claude/skills/kubesearch
+  content_hash: sha256:032329754d4e89171dcb783d5a9c0b35201548f188748baf4fe6750d124359e2
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/loki
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/loki
+  - .claude/skills/loki
+  content_hash: sha256:999457e56c39548bb32d45923a35342333c72465d13d601be365f9264eafa041
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/monitoring-authoring
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/monitoring-authoring
+  - .claude/skills/monitoring-authoring
+  content_hash: sha256:17ad6ecff06b1f87e2b98cc426839ac7b36856a2b37fc32d2dee966ed670a81f
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/network-policy
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/network-policy
+  - .claude/skills/network-policy
+  content_hash: sha256:8a5fe80b9637a24e3024087363d5b4c60569a8bff79903499249de5063394683
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/opentofu-modules
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/opentofu-modules
+  - .claude/skills/opentofu-modules
+  content_hash: sha256:1a00e78f97984469753eb0faae9dd68037f0c7451c86d963eaafada133e367d2
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/prometheus
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/prometheus
+  - .claude/skills/prometheus
+  content_hash: sha256:747f5dc415b3fadbf837e4a9e9c585a1ec64738f3fd1f4f0ba65ed1ed14b4970
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/promotion-pipeline
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/promotion-pipeline
+  - .claude/skills/promotion-pipeline
+  content_hash: sha256:6af8e957dab1f92c55c34028b244fc2e0123898533eafd836d0ec1b36099977f
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/secrets
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/secrets
+  - .claude/skills/secrets
+  content_hash: sha256:a1de7918123679661bbdbc583b3ccea2bcac730abe69ab544939ea3d7c19df41
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/security-testing
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/security-testing
+  - .claude/skills/security-testing
+  content_hash: sha256:13d89bcc8e126e1e91fc513ceade39a578f11b889c283ac95dd7f3abf26c1425
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/self-improvement
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/self-improvement
+  - .claude/skills/self-improvement
+  content_hash: sha256:acc41e2600af71c0188ceae0cdef6f12be4708f1fbed65d1282262516edf5ea1
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/sre
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/sre
+  - .claude/skills/sre
+  content_hash: sha256:d94fddd82e880311ba4442447a2c34595bcb4f2f6b06c98c60b2f79754a21891
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/sync-claude
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/sync-claude
+  - .claude/skills/sync-claude
+  content_hash: sha256:865b18bb96e9fdf2f6dc24393b82a1e34e39e6e448a0172c2a23a8e1f2f4f339
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/taskfiles
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/taskfiles
+  - .claude/skills/taskfiles
+  content_hash: sha256:e690acbec9f46f3caf1a44a4936a461334b5996453aaaeb93693d03531640b32
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/terragrunt
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/terragrunt
+  - .claude/skills/terragrunt
+  content_hash: sha256:f0eea7f3f27ca13349974b072c2af6ccc4be670616eb0c70d99db576ba00d565
+- repo_url: ionfury/homelab
+  host: github.com
+  resolved_commit: 52dfd7c2cd2381c5e8d398c28df907ea84b6f17b
+  virtual_path: .claude/skills/versions-renovate
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/versions-renovate
+  - .claude/skills/versions-renovate
+  content_hash: sha256:de9f4b703d412d6d4434c67df5bb295caaab33d1e4bd570f8965645a4d34f378
+- repo_url: sirkirby/unifi-mcp
+  host: github.com
+  resolved_commit: 3785a0fc7459ed335cf6eefad3bf4173dca242ee
+  virtual_path: plugins/unifi-access
+  is_virtual: true
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/unifi-access
+  - .agents/skills/unifi-access-setup
+  - .claude/skills/unifi-access
+  - .claude/skills/unifi-access-setup
+  content_hash: sha256:14772840c9bebed8337471a8681bf17883ceb6b905930a3a8f9007ff903fdfae
+- repo_url: sirkirby/unifi-mcp
+  host: github.com
+  resolved_commit: 3785a0fc7459ed335cf6eefad3bf4173dca242ee
+  virtual_path: plugins/unifi-network
+  is_virtual: true
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/firewall-auditor
+  - .agents/skills/firewall-manager
+  - .agents/skills/network-health-check
+  - .agents/skills/unifi-network
+  - .agents/skills/unifi-network-setup
+  - .claude/skills/firewall-auditor
+  - .claude/skills/firewall-manager
+  - .claude/skills/network-health-check
+  - .claude/skills/unifi-network
+  - .claude/skills/unifi-network-setup
+  content_hash: sha256:4e9a42628707e208da7fc6bc2c5d90645cee1f1d4d884024a63ab1355a49cdde
+- repo_url: sirkirby/unifi-mcp
+  host: github.com
+  resolved_commit: 3785a0fc7459ed335cf6eefad3bf4173dca242ee
+  virtual_path: plugins/unifi-protect
+  is_virtual: true
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/security-digest
+  - .agents/skills/unifi-protect
+  - .agents/skills/unifi-protect-setup
+  - .claude/skills/security-digest
+  - .claude/skills/unifi-protect
+  - .claude/skills/unifi-protect-setup
+  content_hash: sha256:797eb2ae9154f7d1d8bf2633ea6bb4b5869342b443b99924f7496e6447f05b8e
+mcp_servers:
+- cloudflare-api
+- cloudflare-bindings
+- cloudflare-builds
+- cloudflare-docs
+- cloudflare-observability
+- kubernetes
+- mise
+- pulumi
+- unifi-access
+- unifi-network
+- unifi-protect
+mcp_configs:
+  cloudflare-api:
+    name: cloudflare-api
+    transport: http
+    registry: false
+    url: https://mcp.cloudflare.com/mcp
+  cloudflare-bindings:
+    name: cloudflare-bindings
+    transport: http
+    registry: false
+    url: https://bindings.mcp.cloudflare.com/mcp
+  cloudflare-builds:
+    name: cloudflare-builds
+    transport: http
+    registry: false
+    url: https://builds.mcp.cloudflare.com/mcp
+  cloudflare-docs:
+    name: cloudflare-docs
+    transport: http
+    registry: false
+    url: https://docs.mcp.cloudflare.com/mcp
+  cloudflare-observability:
+    name: cloudflare-observability
+    transport: http
+    registry: false
+    url: https://observability.mcp.cloudflare.com/mcp
+  kubernetes:
+    name: kubernetes
+    transport: stdio
+    args:
+    - -y
+    - kubernetes-mcp-server
+    registry: false
+    command: npx
+  mise:
+    name: mise
+    transport: stdio
+    env:
+      MISE_EXPERIMENTAL: '1'
+    args:
+    - mcp
+    registry: false
+    command: mise
+  pulumi:
+    name: pulumi
+    transport: stdio
+    args:
+    - -y
+    - '@pulumi/mcp-server'
+    - stdio
+    registry: false
+    command: npx
+  unifi-access:
+    name: unifi-access
+    transport: stdio
+    env:
+      UNIFI_HOST: ${UNIFI_HOST:-}
+      UNIFI_USERNAME: ${UNIFI_USERNAME:-}
+      UNIFI_PASSWORD: ${UNIFI_PASSWORD:-}
+      UNIFI_PORT: ${UNIFI_PORT:-443}
+      UNIFI_VERIFY_SSL: ${UNIFI_VERIFY_SSL:-false}
+      UNIFI_ACCESS_HOST: ${UNIFI_HOST:-}
+      UNIFI_ACCESS_USERNAME: ${UNIFI_USERNAME:-}
+      UNIFI_ACCESS_PASSWORD: ${UNIFI_PASSWORD:-}
+      UNIFI_ACCESS_API_KEY: ${UNIFI_API_KEY:-}
+      UNIFI_ACCESS_PORT: ${UNIFI_PORT:-443}
+      UNIFI_ACCESS_API_PORT: ${UNIFI_API_PORT:-12445}
+      UNIFI_ACCESS_VERIFY_SSL: ${UNIFI_VERIFY_SSL:-false}
+      UNIFI_TOOL_REGISTRATION_MODE: ${UNIFI_TOOL_REGISTRATION_MODE:-lazy}
+    args:
+    - run
+    - --no-masking
+    - --
+    - uvx
+    - --python-preference
+    - system
+    - unifi-access-mcp==0.3.1
+    registry: false
+    command: op
+  unifi-network:
+    name: unifi-network
+    transport: stdio
+    env:
+      UNIFI_HOST: ${UNIFI_HOST:-}
+      UNIFI_USERNAME: ${UNIFI_USERNAME:-}
+      UNIFI_PASSWORD: ${UNIFI_PASSWORD:-}
+      UNIFI_PORT: ${UNIFI_PORT:-443}
+      UNIFI_SITE: ${UNIFI_SITE:-default}
+      UNIFI_VERIFY_SSL: ${UNIFI_VERIFY_SSL:-false}
+      UNIFI_NETWORK_HOST: ${UNIFI_HOST:-}
+      UNIFI_NETWORK_USERNAME: ${UNIFI_USERNAME:-}
+      UNIFI_NETWORK_PASSWORD: ${UNIFI_PASSWORD:-}
+      UNIFI_NETWORK_PORT: ${UNIFI_PORT:-443}
+      UNIFI_NETWORK_SITE: ${UNIFI_SITE:-default}
+      UNIFI_NETWORK_VERIFY_SSL: ${UNIFI_VERIFY_SSL:-false}
+      UNIFI_TOOL_REGISTRATION_MODE: ${UNIFI_TOOL_REGISTRATION_MODE:-lazy}
+    args:
+    - run
+    - --no-masking
+    - --
+    - uvx
+    - --python-preference
+    - system
+    - unifi-network-mcp==0.18.2
+    registry: false
+    command: op
+  unifi-protect:
+    name: unifi-protect
+    transport: stdio
+    env:
+      UNIFI_HOST: ${UNIFI_HOST:-}
+      UNIFI_USERNAME: ${UNIFI_USERNAME:-}
+      UNIFI_PASSWORD: ${UNIFI_PASSWORD:-}
+      UNIFI_PORT: ${UNIFI_PORT:-443}
+      UNIFI_VERIFY_SSL: ${UNIFI_VERIFY_SSL:-false}
+      UNIFI_PROTECT_HOST: ${UNIFI_HOST:-}
+      UNIFI_PROTECT_USERNAME: ${UNIFI_USERNAME:-}
+      UNIFI_PROTECT_PASSWORD: ${UNIFI_PASSWORD:-}
+      UNIFI_PROTECT_PORT: ${UNIFI_PORT:-443}
+      UNIFI_PROTECT_VERIFY_SSL: ${UNIFI_VERIFY_SSL:-false}
+      UNIFI_TOOL_REGISTRATION_MODE: ${UNIFI_TOOL_REGISTRATION_MODE:-lazy}
+    args:
+    - run
+    - --no-masking
+    - --
+    - uvx
+    - --python-preference
+    - system
+    - unifi-protect-mcp==0.4.2
+    registry: false
+    command: op

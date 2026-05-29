@@ -17,8 +17,6 @@ spec:
   dependsOn:
     - name: home-operations
       namespace: pulumi
-    - name: authentik
-      namespace: pulumi
   path: ./kubernetes/apps/pulumi/applications
   prune: true
   wait: false

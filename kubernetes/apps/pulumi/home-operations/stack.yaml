@@ -18,7 +18,7 @@ spec:
   backend: s3://home-operations/home?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
-  workspaceReclaimPolicy: Retain
+  workspaceReclaimPolicy: Delete
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:
@@ -81,7 +81,7 @@ spec:
   workspaceTemplate:
     spec:
       # renovate: datasource=docker depName=pulumi/pulumi-nodejs
-      image: ghcr.io/pulumi/pulumi-nodejs:3.237.0@sha256:24d7ecd2e351e7f0a62813ffa51a2235a75758c390b03c4acecac90289578dc2
+      image: ghcr.io/pulumi/pulumi-nodejs:3.244.0@sha256:c0d76f0ec54b064b4492fbe2c492ca07dd44a3ef69360f8607c18cc3f75a53e5
       env:
         - name: GITHUB_TOKEN
           valueFrom:
@@ -94,5 +94,5 @@ spec:
           memory: 256Mi
         limits:
           # cpu: 1
-          memory: 4Gi
+          memory: 6Gi
       # pulumiLogLevel: 11

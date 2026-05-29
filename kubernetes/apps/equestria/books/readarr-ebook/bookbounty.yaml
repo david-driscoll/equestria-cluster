@@ -47,7 +47,7 @@ spec:
               capabilities: { drop: ["ALL"] }
             image:
               repository: busybox
-              tag: 1.37.0@sha256:1487d0af5f52b4ba31c7e465126ee2123fe3f2305d638e7827681e7cf6c83d5e
+              tag: 1.38.0@sha256:fd8d9aa63ba2f0982b5304e1ee8d3b90a210bc1ffb5314d980eb6962f1a9715d
               pullPolicy: IfNotPresent
             command:
               - "/bin/sh"
@@ -60,7 +60,7 @@ spec:
           app:
             image:
               repository: thewicklowwolf/bookbounty
-              tag: latest@sha256:e407b0bff03a1c4bceeee196c8f3229d0270a95fa58ffd0f156a5365242db363
+              tag: latest@sha256:19ec1f40a3eec58c09e3848667d7ad6d49749cb464300909dd1b87e986e1561e
             # -- environment variables.
             # See [image docs](https://github.com/dani-garcia/vaultwarden/blob/main/.env.template) for more details.
             env:
@@ -81,7 +81,7 @@ spec:
                     key: apikey
             resources:
               requests:
-                cpu: 100m
+                cpu: 50m
                 memory: 100Mi
               limits:
                 memory: 2Gi

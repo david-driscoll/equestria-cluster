@@ -4,6 +4,11 @@ david-driscoll/stargate-command-cluster:
     deleteOrphaned: true
     exclude: |
       settings.json
+  - source: .config/
+    dest: .config/
+    deleteOrphaned: false
+    exclude: |
+      mise/tasks/g
   - source: kubernetes/flux/
     dest: kubernetes/flux/
     deleteOrphaned: true
@@ -76,6 +81,7 @@ david-driscoll/stargate-command-cluster:
       nut-exporter/
       unpoller/
       silences/
+      tempo/
   - source: kubernetes/apps/tailscale-system/
     dest: kubernetes/apps/tailscale-system/
     exclude: |
@@ -88,8 +94,6 @@ david-driscoll/stargate-command-cluster:
     dest: talos/patches/global/machine-kubelet.yaml
   - source: talos/patches/global/machine-files.yaml
     dest: talos/patches/global/machine-files.yaml
-  - source: talos/patches/global/cluster-admissionregistration.yaml
-    dest: talos/patches/global/cluster-admissionregistration.yaml
   - source: talos/patches/global/machine-time.yaml
     dest: talos/patches/global/machine-time.yaml
   - source: talos/patches/controller/cluster.yaml
