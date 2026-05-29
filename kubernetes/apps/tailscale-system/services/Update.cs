@@ -1,4 +1,5 @@
 #!/usr/bin/dotnet run
+#:package YamlDotNet@16.3.0
 #:package Spectre.Console@0.50.0
 #:package System.Net.Http.Json@9.*
 #:package Duende.IdentityModel@7.1.0
@@ -12,6 +13,8 @@ using System.Text.Json.Serialization;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using Spectre.Console;
+
+var serializer = new YamlDotNet.Serialization.Serializer();
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Service kind and per-type defaults
@@ -165,6 +168,7 @@ string ServiceYaml(string server, ServiceKind kind, List<PortDef> ports)
   var extName = ExternalName(server, kind);
   var fqdn = TailnetFqdn(server, kind);
   var sb = new StringBuilder();
+
   sb.AppendLine("---");
   sb.AppendLine($"# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/service.json");
   sb.AppendLine($"apiVersion: v1");
