@@ -180,7 +180,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://pbs-celestia.${TAILSCALE_DOMAIN}:8007
+        - https://celestia.${TAILSCALE_DOMAIN}:8007
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe

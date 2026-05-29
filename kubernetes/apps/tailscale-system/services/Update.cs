@@ -138,7 +138,7 @@ static string ExternalName(string server, ServiceKind kind) => kind switch
 {
   // dockge nodes live on the tailnet as "dockge-<server>"
   ServiceKind.Dockge => $"dockge-{server}",
-  // proxmox shares the same underlying node "<server>"; pbs has its own tailnet device
+  // proxmox and pbs share the same underlying node "<server>"
   ServiceKind.Proxmox => server,
   ServiceKind.Pbs => $"pbs-{server}",
   _ => throw new ArgumentOutOfRangeException(nameof(kind)),
@@ -155,7 +155,7 @@ static string TailnetFqdn(string server, ServiceKind kind) => kind switch
 // Returns the URL used in HTTP probes (includes port for non-standard 80/443)
 static string ProbeHttpUrl(string server, ServiceKind kind, int port)
 {
-  var fqdn = kind == ServiceKind.Dockge ? $"dockge-{server}.${{TAILSCALE_DOMAIN}}" : kind == ServiceKind.Pbs ? $"pbs-{server}.${{TAILSCALE_DOMAIN}}" : $"{server}.${{TAILSCALE_DOMAIN}}";
+  var fqdn = kind == ServiceKind.Dockge ? $"dockge-{server}.${{TAILSCALE_DOMAIN}}" : $"{server}.${{TAILSCALE_DOMAIN}}";
   return port == 443 ? $"https://{fqdn}" : $"https://{fqdn}:{port}";
 }
 
