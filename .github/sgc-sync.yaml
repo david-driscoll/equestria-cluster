@@ -4,6 +4,11 @@ david-driscoll/stargate-command-cluster:
     deleteOrphaned: true
     exclude: |
       settings.json
+  - source: .config/
+    dest: .config/
+    deleteOrphaned: false
+    exclude: |
+      mise/tasks/g
   - source: kubernetes/flux/
     dest: kubernetes/flux/
     deleteOrphaned: true
@@ -76,6 +81,7 @@ david-driscoll/stargate-command-cluster:
       nut-exporter/
       unpoller/
       silences/
+      tempo/
   - source: kubernetes/apps/tailscale-system/
     dest: kubernetes/apps/tailscale-system/
     exclude: |
