@@ -7,7 +7,7 @@ metadata:
 spec:
   name: Technitium DNS
   category: ${CLUSTER_TITLE}
-  description: Primary Technitium DNS cluster node
+  description: Technitium DNS cluster node
   url: &url https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/technitium.png
   access_policy:
@@ -17,7 +17,7 @@ spec:
     oauth2:
       clientType: confidential
       allowedRedirectUris:
-      - url: "https://${APP}.${ROOT_DOMAIN}/sso/callback"
+      - url: "https://${APP}.${CLUSTER_DOMAIN}/sso/callback"
       propertyMappings:
         - email
         - openid
