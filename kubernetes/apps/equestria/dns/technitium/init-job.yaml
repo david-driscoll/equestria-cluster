@@ -104,7 +104,18 @@ spec:
               log "Re-login successful."
 
               # ------------------------------------------------------------------
-              # 4. Join cluster as secondary (skip if already in cluster)
+              # 4. Configure forwarders (Quad9 over TLS — always applied)
+              # ------------------------------------------------------------------
+              log "Configuring forwarders (Quad9 DoT)..."
+              api "settings/set" \
+                --data-urlencode "forwarders=9.9.9.9, 149.112.112.112, [2620:fe::fe], [2620:fe::9]" \
+                --data-urlencode "forwarderProtocol=Tls" \
+                --data-urlencode "concurrentForwarding=true" \
+                >/dev/null || die "Forwarder configuration failed"
+              log "Forwarders configured."
+
+              # ------------------------------------------------------------------
+              # 5. Join cluster as secondary (skip if already in cluster)
               # ------------------------------------------------------------------
               cluster_resp=$(api "admin/cluster/get" || echo '{}')
               in_cluster=$(echo "$cluster_resp" | python3 -c \
