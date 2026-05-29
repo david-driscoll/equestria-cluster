@@ -59,7 +59,7 @@ spec:
                 "${ADMIN_URL}/api/user/login?user=admin&pass=${encoded_pass}" \
                 || die "Login failed")
               TOKEN=$(echo "$login_resp" | python3 -c \
-                "import sys,json; print(json.load(sys.stdin)['response']['token'])" \
+                "import sys,json; print(json.load(sys.stdin)['token'])" \
                 || die "Failed to parse login token")
               log "Login successful."
 
@@ -99,7 +99,7 @@ spec:
                 "${ADMIN_URL}/api/user/login?user=admin&pass=${encoded_pass}" \
                 || die "Re-login failed after SSO restart")
               TOKEN=$(echo "$login_resp" | python3 -c \
-                "import sys,json; print(json.load(sys.stdin)['response']['token'])" \
+                "import sys,json; print(json.load(sys.stdin)['token'])" \
                 || die "Failed to parse re-login token")
               log "Re-login successful."
 
