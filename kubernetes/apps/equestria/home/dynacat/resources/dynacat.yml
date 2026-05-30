@@ -3,6 +3,7 @@ server:
 
 auth:
   secret-key: ${DYNACAT_SECRET_KEY}
+  require-auth: false
   disable-password: true
   oidc:
     issuer-url: ${DYNACAT_OIDC_ISSUER_URL}
