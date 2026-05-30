@@ -30,7 +30,7 @@ spec:
             - |
               set -euo pipefail
 
-              ADMIN_URL="http://technitium.network.svc.cluster.local:5380"
+              ADMIN_URL="http://technitium-admin.network.svc.cluster.local:5380"
               log() { echo "[$(date -u +%T)] $*"; }
               die() { echo "[$(date -u +%T)] ERROR: $*" >&2; exit 1; }
 
