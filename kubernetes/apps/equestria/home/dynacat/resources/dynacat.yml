@@ -1,3 +1,10 @@
+auth:
+  secret-key: ${DYNACAT_SECRET_KEY}
+  require-auth: false
+  users:
+    ${DYNACAT_USERNAME}:
+      password: ${DYNACAT_PASSWORD}
+
 server:
   proxied: true
 
