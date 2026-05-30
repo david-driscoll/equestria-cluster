@@ -14,18 +14,9 @@ spec:
     groups:
       - family
   authentik:
-    oauth2:
-      clientType: confidential
-      allowedRedirectUris:
-        - url: "https://${APP}.${ROOT_DOMAIN}/api/oidc/callback"
-        - url: "https://g.${ROOT_DOMAIN}/api/oidc/callback"
-        - url: "http://localhost:8080/api/oidc/callback"
-      propertyMappings:
-        - email
-        - openid
-        - profile
-      includeClaimsInIdToken: true
-      subMode: user_email
+    proxy:
+      mode: "forward_single"
+      externalHost: *url
   gatus:
     - group: "Applications"
       url: *url
