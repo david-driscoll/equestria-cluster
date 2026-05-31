@@ -13,7 +13,7 @@ resources:
   - ./applications/ks.yaml
   - ./authentik/ks.yaml
   - ./unifi-network/ks.yaml
-  - ./backups/ks.yaml
+  # - ./backups/ks.yaml
   - ./home-operations/ks.yaml
   - ./gulf-of-mexico/ks.yaml
   - ./ocracoke/ks.yaml

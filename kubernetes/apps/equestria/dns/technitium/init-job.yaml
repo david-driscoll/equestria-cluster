@@ -23,14 +23,14 @@ spec:
       serviceAccountName: default
       containers:
         - name: init
-          image: curlimages/curl:8.7.1
+          image: curlimages/curl:8.20.0@sha256:b3f1fb2a51d923260350d21b8654bbc607164a987e2f7c84a0ac199a67df812a
           command:
             - /bin/sh
             - -c
             - |
               set -euo pipefail
 
-              ADMIN_URL="http://technitium.network.svc.cluster.local:5380"
+              ADMIN_URL="http://technitium-admin.network.svc.cluster.local:5380"
               log() { echo "[$(date -u +%T)] $*"; }
               die() { echo "[$(date -u +%T)] ERROR: $*" >&2; exit 1; }
 
