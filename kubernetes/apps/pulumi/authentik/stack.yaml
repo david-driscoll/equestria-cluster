@@ -13,7 +13,7 @@ spec:
     dir: stacks/authentik
   serviceAccountName: ${APP}
   stack: authentik
-  resyncFrequencySeconds: 90
+  # resyncFrequencySeconds: 90
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/authentik?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: false
