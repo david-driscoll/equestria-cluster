@@ -19,6 +19,10 @@ spec:
   continueResyncOnCommitMatch: false
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
+  prerequisites:
+    - name: home-operations
+    - name: backups
+    - name: authentik
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:

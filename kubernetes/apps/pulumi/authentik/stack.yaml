@@ -20,8 +20,7 @@ spec:
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
   # refresh: true
-  prerequisites:
-    - name: home-operations
+  prerequisites: []
   envRefs:
     AWS_ACCESS_KEY_ID:
       type: Secret
