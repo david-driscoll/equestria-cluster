@@ -20,7 +20,6 @@ spec:
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
   prerequisites:
-    - name: home-operations
     - name: backups
     - name: authentik
   # refresh: true
