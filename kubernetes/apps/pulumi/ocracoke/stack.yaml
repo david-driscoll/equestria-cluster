@@ -13,7 +13,7 @@ spec:
     dir: stacks/ocracoke
   serviceAccountName: ${APP}
   stack: *stack
-  resyncFrequencySeconds: 3600
+  resyncFrequencySeconds: 86400
   retryMaxBackoffDurationSeconds: 60
   backend: s3://home-operations/ocracoke?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
   continueResyncOnCommitMatch: true

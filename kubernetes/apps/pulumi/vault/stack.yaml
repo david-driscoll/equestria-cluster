@@ -9,17 +9,19 @@ spec:
     sourceRef:
       apiVersion: source.toolkit.fluxcd.io/v1
       kind: GitRepository
-      name: home-operations
-    dir: stacks/backups
+      name: vault
+    dir: stacks/vault
   serviceAccountName: ${APP}
-  stack: backups
+  stack: vault
   resyncFrequencySeconds: 86400
   retryMaxBackoffDurationSeconds: 60
-  backend: s3://home-operations/backups?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
-  continueResyncOnCommitMatch: false
+  backend: s3://home-operations/vault?endpoint=truenas.driscoll.tech:9000&s3ForcePathStyle=true&disableSSL=true
+  continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
-  prerequisites: []
+  prerequisites:
+    - name: backups
+    - name: authentik
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:

@@ -1,0 +1,89 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+    name: vault
+spec:
+    interval: 5m0s
+    url: ssh://git@github.com/david-driscoll/vault
+    ref:
+        branch: refs/heads/main
+    provider: github
+    secretRef:
+        name: vault-ssh-credentials
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBtMWY2RDZYYkdIMG9lQzBB
+            WXFYWWF4NVJhVWZ0Rnc2dk5tVmlEb2k3MkRNCnZNRG5yd2Y4LzZwNTE3Mnc4ZXRJ
+            MTJ1b3Z3SkRXWFkxNkRlSjExMjNaRGcKLS0tIGk1OFpFVytReUZVbVM0YXp4dGJ3
+            L3FIS0tTd09PdHcrNURuSVQ5OHo3UHMKrhW8tSl0IGU7Upeep02NdOQfZelqShZU
+            nF1p8isOZFwM1nYPqqICdqZ6b8dpTRFjlCIgLxTaDy5zCg7I0Deiqw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBLNjZ2TTRwS3k2c09WeC82
+            V3hhd2J4VEo3U3VMbHhBN0lySlRja29WOUZJCnFlK2kxU0J5UXBJUVZBZGQwVUdU
+            b2xEOUJBUCtYcEZaOWYwZEZ5Si9TWjAKLS0tIE53S3dXd01wZWJidnN2VDlBZWVo
+            ZEpPZUsvOHdSeTBDdG5GdzUyWGlxZGsKp3yaYHTOzutrkPg2y6uxdu66fjGu6ivB
+            FouADLuN9lsOfwrvLuQ5IgenqRlUqwFF9e4g2pTBWIpHBrxggVD9ag==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4WGJaaWxMZmtJaU1NSk85
+            MzB1My9yYXF6SE5ZbVU5UmpYSm91OFVLT2xBCmFMT09WZVNpZkhkM05JYzR4OVBt
+            MmhjRUY2ZGVNdTVhcS8xT0gzQjUwNU0KLS0tIEU5Mm5wRGlHUHBUbXZtVTBRNGV6
+            YW9KRDNId1IwaTFZMHlIQWlJMEU4K2cKC1mU+axo2S48TkIMcYZzIF4w3PUDsqVE
+            futJx7c/sInPGjOUFBpEt7drHxJVdRL1g/eO5p7rndcNagGOajt6QA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-06-04T18:47:55Z"
+    mac: ENC[AES256_GCM,data:SMGFsntPFyyMEzmHV50hlRQ6rH1y/qSltqnMDgVPUq5J/u3Cb3+MYofQkLLCko5kikefWwAtsXLHnakD96n+YHYNDcF45E7QvImhqNwy+lrtI9i7mG7Ja6iH+fBQhPxnsWSwstaydD+AsRf61bPP5ntWc/BAbAIa9R7gLEUUscE=,iv:DFL6BYpa8BeH4JVN3NXLo72D9zJ8WHBagdIXCiv5Ve8=,tag:BpXdjmRryco6ukI/y7pyWg==,type:str]
+    mac_only_encrypted: true
+    version: 3.13.0
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: vault-ssh-credentials
+type: Opaque
+stringData:
+    identity: ENC[AES256_GCM,data:tlP9bvE3vM1/8plM2+6UHPNH8oTdAWkpQN0WyH8gyKdvMJGU578UQXPOjbRf+uCIK+SJodARzA1jiMKJFLkFJBYPXdwl6nnxOYIhz04THvFk56Me08GpioP1SNqgYGyzzh+yFs2msfe19gu29XDGw9oTZjSs288EwpUHTxQErSb5IpN8oI6hQjeaguBsm3AlWDkNPV3Bb/9PuqIsekWUpthDAgxMRgAKXfsxMSfaSuWo3zgee5cIYIhr2lXN3sWZqunf586Jq0JUQ8pnRnUvLAeOhlDhwWwgeKqATWcpu+swB3wVQmbWsDRjnlL7pRXfS1BtYGB3a5v1SZm5i4Xr6Z+QRPhr4njslJA521d3+G4HcbUpPavUZSKKnGrws2nxsVAsfHLZ56pNVWu6ljK+YrboXie9uTqsf8IExwt9tABn/C5crKGXiEclM355kfMS+O1Rnjn4XfTu7TTeUQVlsrxP7+GMqV5K4mZTRbIu9YJeXlb2GZFwtjG+l0/34xq5y/rd,iv:Ww48IM2xjrTouF70blBrNEPLIwcjIzM6zQkDo/Mo428=,tag:cvcldRtdwAr9Niyv/wVDug==,type:str]
+    known_hosts: ENC[AES256_GCM,data:u/fG7hw3fLUGCzs17glmhEV6fQkPukpFBhDpfYpfekE8j2yM/J9QysGSOMCuoPI7D8II6GlciSJpTgPO+K3erLqhhZAPEUnzAcOtVrePAQFVeGNKPvo1+s4NKd8=,iv:zQEf+1wb63O01vdzRbO2YTgt6MCV8fMazg2Ldx6vtx0=,tag:aPT59trtsWyCoYfW1GHjXA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBtMWY2RDZYYkdIMG9lQzBB
+            WXFYWWF4NVJhVWZ0Rnc2dk5tVmlEb2k3MkRNCnZNRG5yd2Y4LzZwNTE3Mnc4ZXRJ
+            MTJ1b3Z3SkRXWFkxNkRlSjExMjNaRGcKLS0tIGk1OFpFVytReUZVbVM0YXp4dGJ3
+            L3FIS0tTd09PdHcrNURuSVQ5OHo3UHMKrhW8tSl0IGU7Upeep02NdOQfZelqShZU
+            nF1p8isOZFwM1nYPqqICdqZ6b8dpTRFjlCIgLxTaDy5zCg7I0Deiqw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1eurl2t7pepw66guv8m7lxh5fjhs4t4frsntqjp08lmypwudlsp7qdusgnf
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBLNjZ2TTRwS3k2c09WeC82
+            V3hhd2J4VEo3U3VMbHhBN0lySlRja29WOUZJCnFlK2kxU0J5UXBJUVZBZGQwVUdU
+            b2xEOUJBUCtYcEZaOWYwZEZ5Si9TWjAKLS0tIE53S3dXd01wZWJidnN2VDlBZWVo
+            ZEpPZUsvOHdSeTBDdG5GdzUyWGlxZGsKp3yaYHTOzutrkPg2y6uxdu66fjGu6ivB
+            FouADLuN9lsOfwrvLuQ5IgenqRlUqwFF9e4g2pTBWIpHBrxggVD9ag==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1klzrc4tp666ykn8u4y2nt80n0tcx52lvezrr54zswz55w2pdsgyqhcdfyr
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4WGJaaWxMZmtJaU1NSk85
+            MzB1My9yYXF6SE5ZbVU5UmpYSm91OFVLT2xBCmFMT09WZVNpZkhkM05JYzR4OVBt
+            MmhjRUY2ZGVNdTVhcS8xT0gzQjUwNU0KLS0tIEU5Mm5wRGlHUHBUbXZtVTBRNGV6
+            YW9KRDNId1IwaTFZMHlIQWlJMEU4K2cKC1mU+axo2S48TkIMcYZzIF4w3PUDsqVE
+            futJx7c/sInPGjOUFBpEt7drHxJVdRL1g/eO5p7rndcNagGOajt6QA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age150z0s36kl9vud8728c5e4zqq6nmyywekk76rwvjclcsfc8mrxuuqr0qfg6
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-06-04T18:47:55Z"
+    mac: ENC[AES256_GCM,data:SMGFsntPFyyMEzmHV50hlRQ6rH1y/qSltqnMDgVPUq5J/u3Cb3+MYofQkLLCko5kikefWwAtsXLHnakD96n+YHYNDcF45E7QvImhqNwy+lrtI9i7mG7Ja6iH+fBQhPxnsWSwstaydD+AsRf61bPP5ntWc/BAbAIa9R7gLEUUscE=,iv:DFL6BYpa8BeH4JVN3NXLo72D9zJ8WHBagdIXCiv5Ve8=,tag:BpXdjmRryco6ukI/y7pyWg==,type:str]
+    mac_only_encrypted: true
+    version: 3.13.0
