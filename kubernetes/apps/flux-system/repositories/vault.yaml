@@ -1,0 +1,48 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: vault
+spec:
+  interval: 5m0s
+  url: ssh://git@github.com/david-driscoll/vault
+  ref:
+    branch: refs/heads/main
+  provider: github
+  secretRef:
+    name: vault-ssh-credentials
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: vault-ssh-credentials
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  refreshPolicy: Periodic
+  refreshInterval: 1m
+  target:
+    name: vault-ssh-credentials
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    template:
+      metadata:
+        labels:
+          cnpg.io/reload: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+      data:
+        githubAppID: "{{ .github_app_id }}"
+        githubAppInstallationOwner: "{{ .owner }}"
+        githubAppInstallationID: "{{ .github_app_installation_id }}"
+        githubAppPrivateKey: "{{ .github_app_private_key }}"
+  dataFrom:
+    - extract:
+        key: "Github Actions Runner (david-driscoll)"
+      rewrite:
+        - regexp:
+            source: "[\\W]"
+            target: _

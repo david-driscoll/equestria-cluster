@@ -8,7 +8,6 @@ resources:
   - ./httproute.yaml
   - ./receiver.yaml
   - ./policies.yaml
-  - ./vault.sops.yaml
 configMapGenerator:
   - name: flux-instance-values
     files:

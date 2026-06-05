@@ -50,7 +50,7 @@ spec:
               TS_AUTHKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: authkey
+                    name: tailscale-authkey
                     key: authkey
             resources:
               requests:
