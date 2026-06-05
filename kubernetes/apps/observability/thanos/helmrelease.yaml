@@ -161,8 +161,7 @@ spec:
           tailscale.com/expose: "true"
           tailscale.com/hostname: thanos-receive
           tailscale.com/tags: tag:observability
-          # set like this because it seems the operator doesn't resolve Tailscale Services yet.
-          # tailscale.com/proxy-group: tailnet-outbound
+          tailscale.com/proxy-group: tailnet-outbound
       resources:
         requests:
           cpu: 200m
