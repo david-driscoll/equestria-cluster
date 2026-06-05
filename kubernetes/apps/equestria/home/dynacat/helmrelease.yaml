@@ -44,7 +44,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/panonim/dynacat
-              tag: 2.3.0@sha256:4a9f121745e630a1ccf1537e6e7ad91e356b4110aa66e34e72fed3019e865b7e
+              tag: 2.3.1@sha256:879f07646aaf6fc5f6ded8d734711a4c8364df3a64ab48091ddd1be9b7151172
             env:
               TZ: "${TIMEZONE}"
             envFrom:
