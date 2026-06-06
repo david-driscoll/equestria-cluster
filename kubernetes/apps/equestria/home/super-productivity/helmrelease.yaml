@@ -42,7 +42,7 @@ spec:
           *app :
             image:
               repository: johannesjo/super-productivity
-              tag: v18.8.0@sha256:c739caca8e0c5e83ea4a6289884079ac49e0c3c87c7f95598b5a9fb10cc2d9c4
+              tag: v18.9.1@sha256:773760107344e739f4c29409f7842db66a1b167d50eb2c40248cb5b5b328652e
               pullPolicy: IfNotPresent
             env:
               TZ: "${TIMEZONE}"
