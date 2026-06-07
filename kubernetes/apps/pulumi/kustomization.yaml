@@ -19,3 +19,4 @@ resources:
   - ./ocracoke/ks.yaml
   - ./vault/ks.yaml
   - ./lock-canceller/ks.yaml
+  - ./kubeproxies/ks.yaml

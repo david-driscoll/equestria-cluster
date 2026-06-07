@@ -9,5 +9,6 @@ resources:
   - ./outbound.yaml
   - ./inbound.yaml
   - ./kubeproxy.yaml
+  - ./kubeproxy-rbac.yaml
   - ./proxy.yaml
   # - ./recorder.yaml

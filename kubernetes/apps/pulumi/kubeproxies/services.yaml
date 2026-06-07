@@ -1,0 +1,36 @@
+---
+# ExternalName service routing to the equestria kubeproxy via the tailnet-inbound egress ProxyGroup.
+# Allows pulumi workspace pods to reach the equestria Kubernetes API server over Tailscale.
+apiVersion: v1
+kind: Service
+metadata:
+  name: equestria-kubeproxy
+  namespace: pulumi
+  annotations:
+    tailscale.com/tailnet-fqdn: "equestria-kubeproxy.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: tailnet-inbound
+spec:
+  type: ExternalName
+  externalName: equestria-kubeproxy
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
+---
+# ExternalName service routing to the sgc kubeproxy via the tailnet-inbound egress ProxyGroup.
+# Allows pulumi workspace pods to reach the SGC Kubernetes API server over Tailscale.
+apiVersion: v1
+kind: Service
+metadata:
+  name: sgc-kubeproxy
+  namespace: pulumi
+  annotations:
+    tailscale.com/tailnet-fqdn: "sgc-kubeproxy.${TAILSCALE_DOMAIN}"
+    tailscale.com/proxy-group: tailnet-inbound
+spec:
+  type: ExternalName
+  externalName: sgc-kubeproxy
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
