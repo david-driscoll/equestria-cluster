@@ -17,3 +17,5 @@ resources:
   - ./home-operations/ks.yaml
   - ./gulf-of-mexico/ks.yaml
   - ./ocracoke/ks.yaml
+  - ./vault/ks.yaml
+  - ./lock-canceller/ks.yaml

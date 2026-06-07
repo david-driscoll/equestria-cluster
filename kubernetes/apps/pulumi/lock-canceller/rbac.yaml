@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pulumi-lock-canceller
+  namespace: pulumi
+---
+# ClusterRole: read Stacks across all namespaces (CRD is cluster-scoped access)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pulumi-lock-canceller
+rules:
+  - apiGroups: [pulumi.com]
+    resources: [stacks]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pulumi-lock-canceller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pulumi-lock-canceller
+subjects:
+  - kind: ServiceAccount
+    name: pulumi-lock-canceller
+    namespace: pulumi
+---
+# Role: exec into workspace pods in the pulumi namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pulumi-lock-canceller
+  namespace: pulumi
+rules:
+  - apiGroups: [""]
+    resources: [pods]
+    verbs: [get, list]
+  - apiGroups: [""]
+    resources: [pods/exec]
+    verbs: [create]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pulumi-lock-canceller
+  namespace: pulumi
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pulumi-lock-canceller
+subjects:
+  - kind: ServiceAccount
+    name: pulumi-lock-canceller
+    namespace: pulumi

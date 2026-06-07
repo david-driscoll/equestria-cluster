@@ -187,6 +187,15 @@ kube-state-metrics:
                     nilIsZero: true
                     booleanValueTrue: "succeeded"
                     booleanValueFalse: "failed"
+              - name: last_update_info
+                help: "Pulumi Stack last update message info (used for lock detection)"
+                each:
+                  type: Info
+                  info:
+                    path: [status, lastUpdate]
+                    labelsFromPath:
+                      message: [message]
+                      state: [state]
   prometheus:
     monitor:
       enabled: true

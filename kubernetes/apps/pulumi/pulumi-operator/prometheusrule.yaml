@@ -41,3 +41,15 @@ spec:
           annotations:
             summary: "Pulumi Stack {{ $labels.name }} prerequisites not satisfied for 30m"
             description: "Stack {{ $labels.namespace }}/{{ $labels.name }} prerequisites have not been satisfied for 30 minutes."
+
+        - alert: PulumiStackLocked
+          # Fires when status.lastUpdate.message contains a Pulumi state lock.
+          # Stale locks occur when the workspace pod restarts mid-run without releasing the lock.
+          # The auto-canceller CronJob will resolve locks held > 30m via `pulumi cancel`.
+          expr: kube_stack_last_update_info{message=~"(?s).*locked by.*"} == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pulumi Stack {{ $labels.name }} is lock-blocked"
+            description: "Stack {{ $labels.namespace }}/{{ $labels.name }} is failing because the Pulumi state is locked. The auto-canceller will resolve this after 30 minutes, or run `kubectl exec -n {{ $labels.namespace }} {{ $labels.name }}-workspace-0 -- pulumi cancel --yes` to resolve immediately."

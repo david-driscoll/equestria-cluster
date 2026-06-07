@@ -1,0 +1,83 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pulumi-lock-canceller
+  namespace: pulumi
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  # Check every 5 minutes; acts on locks held > 30 minutes
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          serviceAccountName: pulumi-lock-canceller
+          restartPolicy: Never
+          containers:
+            - name: lock-canceller
+              # renovate: datasource=docker depName=bitnami/kubectl
+              image: docker.io/bitnami/kubectl:1.32.3
+              command: ["/bin/bash", "-c"]
+              args:
+                - |
+                  set -euo pipefail
+                  NOW=$(date +%s)
+                  LOCK_THRESHOLD=1800  # 30 minutes
+
+                  echo "$(date -u): Checking for stale Pulumi stack locks"
+
+                  readarray -t STACKS < <(
+                    kubectl get stacks -A --no-headers \
+                      -o custom-columns='NAME:.metadata.name,NS:.metadata.namespace' 2>/dev/null \
+                    || true
+                  )
+
+                  for stack_line in "${STACKS[@]:-}"; do
+                    [[ -z "$stack_line" ]] && continue
+                    read -r stack_name stack_ns <<< "$stack_line"
+
+                    message=$(kubectl get stack "$stack_name" -n "$stack_ns" \
+                      -o jsonpath='{.status.lastUpdate.message}' 2>/dev/null || echo "")
+
+                    echo "$message" | grep -q "locked by" || continue
+
+                    # Lock timestamp format: "at YYYY-MM-DDTHH:MM:SSZ"
+                    lock_time=$(echo "$message" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z' | tail -1)
+                    if [[ -z "$lock_time" ]]; then
+                      echo "  Cannot parse lock timestamp for $stack_name, skipping"
+                      continue
+                    fi
+
+                    lock_epoch=$(date -d "$lock_time" +%s)
+                    age=$(( NOW - lock_epoch ))
+
+                    echo "  $stack_ns/$stack_name locked for ${age}s (threshold: ${LOCK_THRESHOLD}s)"
+
+                    if (( age > LOCK_THRESHOLD )); then
+                      workspace_pod="${stack_name}-workspace-0"
+                      echo "  Cancelling stale lock for $stack_ns/$stack_name via pod $workspace_pod"
+
+                      if kubectl get pod -n "$stack_ns" "$workspace_pod" &>/dev/null; then
+                        kubectl exec -n "$stack_ns" "$workspace_pod" -- \
+                          pulumi cancel --yes --non-interactive 2>&1 \
+                          && echo "  Successfully cancelled lock for $stack_name" \
+                          || echo "  WARNING: pulumi cancel failed for $stack_name (will retry next cycle)"
+                      else
+                        echo "  WARNING: Workspace pod $workspace_pod not found in namespace $stack_ns"
+                      fi
+                    fi
+                  done
+
+                  echo "$(date -u): Lock check complete"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 64Mi
