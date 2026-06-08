@@ -13,7 +13,7 @@ spec:
   type: ExternalName
   externalName: equestria-kubeproxy
   ports:
-    - name: http
+    - name: https
       port: 443
       targetPort: 443
 ---
@@ -29,4 +29,4 @@ spec:
   targets:
     staticConfig:
       static:
-        - https://equestria-kubeproxy.${TAILSCALE_DOMAIN}
+        - https://equestria-kubeproxy.${TAILSCALE_DOMAIN}/healthz
