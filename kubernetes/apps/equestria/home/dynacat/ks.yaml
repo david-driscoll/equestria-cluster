@@ -19,8 +19,6 @@ spec:
       namespace: volsync-system
     - name: external-secrets
       namespace: kube-system
-    - name: github-token
-      namespace: kube-system
   path: ./kubernetes/apps/equestria/home/dynacat
   prune: true
   wait: true
