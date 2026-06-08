@@ -35,13 +35,13 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
       data:
-        githubAppID: "{{ .github_app_id }}"
-        githubAppInstallationOwner: "{{ .owner }}"
-        githubAppInstallationID: "{{ .github_app_installation_id }}"
-        githubAppPrivateKey: "{{ .github_app_private_key }}"
+        githubAppID: "{{ .appid }}"
+        # githubAppInstallationOwner: "{{ .owner }}"
+        githubAppInstallationID: "{{ .installationid }}"
+        githubAppPrivateKey: "{{ .private_key }}"
   dataFrom:
     - extract:
-        key: "Github Actions Runner (david-driscoll)"
+        key: "David Driscoll Github App"
       rewrite:
         - regexp:
             source: "[\\W]"
