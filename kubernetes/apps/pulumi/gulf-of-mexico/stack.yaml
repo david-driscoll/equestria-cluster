@@ -96,3 +96,15 @@ spec:
         limits:
           # cpu: 1
           memory: 6Gi
+      podTemplate:
+        spec:
+          volumes:
+            - name: npm-cache
+              hostPath:
+                path: /var/lib/pulumi-npm-cache
+                type: DirectoryOrCreate
+          containers:
+            - name: pulumi
+              volumeMounts:
+                - name: npm-cache
+                  mountPath: /root/.npm
