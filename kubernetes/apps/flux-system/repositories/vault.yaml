@@ -6,7 +6,7 @@ spec:
   interval: 5m0s
   url: https://github.com/david-driscoll/vault.git
   ref:
-    branch: refs/heads/main
+    branch: main
   provider: github
   secretRef:
     name: vault-ssh-credentials

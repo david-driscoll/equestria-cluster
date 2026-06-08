@@ -324,7 +324,7 @@ string TailscaleStaticServiceYaml(TailscaleServiceDef svc)
 }
 
 static string StaticServiceProbeUrl(string name, int port)
-  => $"http://{name}.${{TAILSCALE_DOMAIN}}:{port}";
+  => port == 443 ? $"https://{name}.${{TAILSCALE_DOMAIN}}" : $"https://{name}.${{TAILSCALE_DOMAIN}}:{port}";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Generate per-device YAML files
