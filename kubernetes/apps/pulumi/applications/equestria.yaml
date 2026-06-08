@@ -19,8 +19,7 @@ spec:
   continueResyncOnCommitMatch: true
   destroyOnFinalize: false
   workspaceReclaimPolicy: Delete
-  prerequisites:
-    - name: home-operations
+  prerequisites: []
   envRefs:
     AWS_ACCESS_KEY_ID:
       type: Secret

@@ -21,7 +21,6 @@ spec:
   workspaceReclaimPolicy: Delete
   prerequisites:
     - name: backups
-    - name: authentik
   # refresh: true
   envRefs:
     AWS_ACCESS_KEY_ID:
