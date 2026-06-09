@@ -105,6 +105,12 @@ spec:
                 type: DirectoryOrCreate
           containers:
             - name: pulumi
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 256Mi
+                limits:
+                  memory: 6Gi
               volumeMounts:
                 - name: npm-cache
                   mountPath: /root/.npm
