@@ -14,10 +14,10 @@ resources:
   - ./npm-cache-prune/ks.yaml
   - ./kubeproxies/ks.yaml
   - ./unifi-network/ks.yaml
-  # - ./backups/ks.yaml
-  # - ./authentik/ks.yaml
-  # - ./vault/ks.yaml
-  # - ./applications/ks.yaml
-  # - ./home-operations/ks.yaml
-  # - ./gulf-of-mexico/ks.yaml
-  # - ./ocracoke/ks.yaml
+  - ./backups/ks.yaml
+  - ./authentik/ks.yaml
+  - ./vault/ks.yaml
+  - ./applications/ks.yaml
+  - ./home-operations/ks.yaml
+  - ./gulf-of-mexico/ks.yaml
+  - ./ocracoke/ks.yaml
