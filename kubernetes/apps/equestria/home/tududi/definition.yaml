@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: "Tududi"
+  category: Applications
+  description: "Personal task management with CalDAV sync and OIDC SSO"
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tududi.svg
+  access_policy:
+    groups:
+      - family
+  authentik:
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+        - url: https://${APP}.${ROOT_DOMAIN}/api/oidc/callback/authentik
+        - url: https://${APP}.${TAILSCALE_DOMAIN}/api/oidc/callback/authentik
+      propertyMappings:
+        - email
+        - openid
+        - profile
+      includeClaimsInIdToken: true
+      subMode: user_email
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
