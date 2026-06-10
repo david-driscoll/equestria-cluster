@@ -30,38 +30,15 @@
               .app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:0;padding:0;list-style:none;}
               .app-grid-item{margin:0;}
             </style>
-            <div class="widget widget-type-group">
-              <div class="widget-content widget-content-frameless">
-                <div class="widget-group-header">
-                  <div class="widget-header gap-20" role="tablist">
-                    <button class="widget-group-title widget-group-title-current" aria-selected="true" role="tab" aria-controls="alpha-system-panel" id="alpha-system">System</button>
-                    <button class="widget-group-title" aria-selected="false" role="tab" aria-controls="alpha-apps-panel" id="alpha-apps">Apps</button>
-                  </div>
-                </div>
-                <div class="widget-group-contents">
-                  <div class="widget-group-content widget-group-content-current" id="alpha-system-panel" role="tabpanel" aria-labelledby="alpha-system" aria-hidden="false">
-                    <ul class="app-grid">
-                    {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
-                      {{ $url := .String "meta_launch_url" }}
-                      {{ if ne $url "" }}
-                        <li class="app-grid-item"><a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description"}}"><span><span class="app-name">{{ .String "name" }}</span>{{ if .String "meta_icon" }}<img src="{{ .String "meta_icon"}}" class="app-icon">{{ end }}</span></a></li>
-                      {{ end }}
-                    {{ end }}
-                    </ul>
-                  </div>
-                  <div class="widget-group-content" id="alpha-apps-panel" role="tabpanel" aria-labelledby="alpha-apps" aria-hidden="true">
-                    <ul class="app-grid">
-                    {{ range (.Subrequest "apps").JSON.Array "results" | sortByString "name" "asc" }}
-                      {{ $url := .String "meta_launch_url" }}
-                      {{ if ne $url "" }}
-                        <li class="app-grid-item"><a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description"}}"><span><span class="app-name">{{ .String "name" }}</span>{{ if .String "meta_icon" }}<img src="{{ .String "meta_icon"}}" class="app-icon">{{ end }}</span></a></li>
-                      {{ end }}
-                    {{ end }}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ul class="app-grid">
+            {{ range $.JSON.Array "results" | sortByString "name" "asc" }}
+              {{ $url := .String "meta_launch_url" }}
+              {{ if ne $url "" }}
+                <li class="app-grid-item"><a href="{{ $url }}" target="_blank" class="app-item" title="{{ .String "meta_description"}}"><span><span class="app-name">{{ .String "name" }}</span>{{ if .String "meta_icon" }}<img src="{{ .String "meta_icon"}}" class="app-icon">{{ end }}</span></a></li>
+              {{ end }}
+            {{ end }}
+            </ul>
+
 
         - type: custom-api
           title: Active Alerts
