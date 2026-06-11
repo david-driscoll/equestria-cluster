@@ -78,6 +78,7 @@ prometheus:
             action: replace
     externalLabels:
       cluster: ${CLUSTER_CNAME}
+      cluster_title: ${CLUSTER_TITLE}
       environment: homelab
       region: ${LOCATION}
       machine_type: kubernetes
