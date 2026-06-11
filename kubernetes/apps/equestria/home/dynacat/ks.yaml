@@ -19,7 +19,7 @@ spec:
       namespace: volsync-system
     - name: external-secrets
       namespace: kube-system
-  path: ./kubernetes/apps/equestria/home/dynacat
+  path: ./dashboard
   prune: true
   wait: true
   force: false
@@ -28,12 +28,12 @@ spec:
   timeout: 10m
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: home-operations
     namespace: flux-system
   components:
-    - ../../../../components/failover/fast-node-eviction
-    - ../../../../components/tailscale
-    - ../../../../components/volsync
+    - ../components/failover/fast-node-eviction
+    - ../components/tailscale
+    - ../components/volsync
   postBuild:
     substitute:
       APP: *app

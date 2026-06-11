@@ -3,11 +3,10 @@ kind: GitRepository
 metadata:
   name: vault
 spec:
-  interval: 5m0s
-  url: https://github.com/david-driscoll/vault.git
+  interval: 1h
+  url: ssh://git@github.com/david-driscoll/vault
   ref:
     branch: main
-  provider: github
   secretRef:
     name: vault-ssh-credentials
 ---
@@ -35,13 +34,11 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
       data:
-        githubAppID: "{{ .appid }}"
-        # githubAppInstallationOwner: "{{ .owner }}"
-        githubAppInstallationID: "{{ .installationid }}"
-        githubAppPrivateKey: "{{ .private_key }}"
+        identity: "{{ .private_key }}"
+        known_hosts: "{{ .known_hosts }}"
   dataFrom:
     - extract:
-        key: "David Driscoll Github App"
+        key: "GitHub david-driscoll/vault Deploy Key"
       rewrite:
         - regexp:
             source: "[\\W]"

@@ -23,6 +23,14 @@ spec:
   values:
     fullnameOverride: *app
     runnerScaleSetName: *app
+    githubConfigUrl: "https://github.com/placeholder"
+    githubConfigSecret:
+      github_app_id: "placeholder"
+      github_app_installation_id: "placeholder"
+      github_app_private_key: "placeholder"
+    controllerServiceAccount:
+      name: gha-arc-controller
+      namespace: github-actions
     containerMode:
       type: kubernetes
     kubernetesModeWorkVolumeClaim:
