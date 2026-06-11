@@ -17,6 +17,61 @@
       title-url: ${HEADLAMP_EQUESTRIA_URL}
       parameters:
         show-if: glance.hide != "true"
+    - type: custom-api
+      title: Celestia
+      url: ${THANOS_URL}/api/v1/query
+      cache: 2m
+      parameters:
+        query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="celestia"}[5m]))), 0.1)'
+      subrequests:
+        memory:
+          url: ${THANOS_URL}/api/v1/query
+          parameters:
+            query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="celestia"} / node_memory_MemTotal_bytes{cluster="celestia"})), 0.1)'
+      template: |
+        {{ $cpu := $.JSON.String "data.result.0.value.1" }}
+        {{ $mem := (.Subrequest "memory").JSON.String "data.result.0.value.1" }}
+        <div style="display:flex;gap:24px;padding:4px 0;">
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">CPU</div><div style="font-size:1.2rem;font-weight:700;">{{ if $cpu }}{{ $cpu }}%{{ else }}N/A{{ end }}</div></div>
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">Memory</div><div style="font-size:1.2rem;font-weight:700;">{{ if $mem }}{{ $mem }}%{{ else }}N/A{{ end }}</div></div>
+        </div>
+    - type: custom-api
+      title: Luna
+      url: ${THANOS_URL}/api/v1/query
+      cache: 2m
+      parameters:
+        query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="luna"}[5m]))), 0.1)'
+      subrequests:
+        memory:
+          url: ${THANOS_URL}/api/v1/query
+          parameters:
+            query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="luna"} / node_memory_MemTotal_bytes{cluster="luna"})), 0.1)'
+      template: |
+        {{ $cpu := $.JSON.String "data.result.0.value.1" }}
+        {{ $mem := (.Subrequest "memory").JSON.String "data.result.0.value.1" }}
+        <div style="display:flex;gap:24px;padding:4px 0;">
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">CPU</div><div style="font-size:1.2rem;font-weight:700;">{{ if $cpu }}{{ $cpu }}%{{ else }}N/A{{ end }}</div></div>
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">Memory</div><div style="font-size:1.2rem;font-weight:700;">{{ if $mem }}{{ $mem }}%{{ else }}N/A{{ end }}</div></div>
+        </div>
+    - type: custom-api
+      title: Skystar
+      url: ${THANOS_URL}/api/v1/query
+      cache: 2m
+      parameters:
+        query: 'round(100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle",cluster="skystar"}[5m]))), 0.1)'
+      subrequests:
+        memory:
+          url: ${THANOS_URL}/api/v1/query
+          parameters:
+            query: 'round(100 * (1 - avg(node_memory_MemAvailable_bytes{cluster="skystar"} / node_memory_MemTotal_bytes{cluster="skystar"})), 0.1)'
+      template: |
+        {{ $cpu := $.JSON.String "data.result.0.value.1" }}
+        {{ $mem := (.Subrequest "memory").JSON.String "data.result.0.value.1" }}
+        <div style="display:flex;gap:24px;padding:4px 0;">
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">CPU</div><div style="font-size:1.2rem;font-weight:700;">{{ if $cpu }}{{ $cpu }}%{{ else }}N/A{{ end }}</div></div>
+          <div><div style="font-size:0.75rem;color:var(--color-subdue);text-transform:uppercase;">Memory</div><div style="font-size:1.2rem;font-weight:700;">{{ if $mem }}{{ $mem }}%{{ else }}N/A{{ end }}</div></div>
+        </div>
+
   columns:
     - size: full
       widgets:

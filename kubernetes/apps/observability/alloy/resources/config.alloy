@@ -101,9 +101,10 @@ loki.process "pod_logs" {
 
   stage.static_labels {
       values = {
-        cluster = "${CLUSTER_CNAME}",
-        environment = "homelab",
-        region = "home",
+        cluster      = "${CLUSTER_CNAME}",
+        environment  = "homelab",
+        region       = "${LOCATION}",
+        machine_type = "kubernetes",
       }
   }
 
@@ -133,9 +134,10 @@ loki.process "cluster_events" {
 
   stage.static_labels {
     values = {
-      cluster = "${CLUSTER_CNAME}",
-      environment = "homelab",
-      region = "home",
+      cluster      = "${CLUSTER_CNAME}",
+      environment  = "homelab",
+      region       = "${LOCATION}",
+      machine_type = "kubernetes",
     }
   }
 
@@ -183,7 +185,12 @@ otelcol.processor.attributes "default" {
   }
   action {
     key    = "region"
-    value  = "home"
+    value  = "${LOCATION}"
+    action = "insert"
+  }
+  action {
+    key    = "machine_type"
+    value  = "kubernetes"
     action = "insert"
   }
   output {
@@ -217,7 +224,8 @@ prometheus.remote_write "thanos" {
   external_labels = {
     cluster     = "${CLUSTER_CNAME}",
     environment = "homelab",
-    region      = "home",
+    region      = "${LOCATION}",
+    machine_type = "kubernetes",
   }
 }
 

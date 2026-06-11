@@ -38,21 +38,6 @@ spec:
           reloader.stakater.com/auto: "true"
         replicas: 1
         strategy: Recreate
-        initContainers:
-          fix-permissions:
-            image:
-              repository: busybox
-              tag: 1.38.0@sha256:fd8d9aa63ba2f0982b5304e1ee8d3b90a210bc1ffb5314d980eb6962f1a9715d
-              pullPolicy: IfNotPresent
-            command:
-              - /bin/sh
-              - -c
-              - |
-                chown -R 1001:1001 /app/backend/db /app/backend/uploads || true
-            securityContext:
-              runAsUser: 0
-              runAsNonRoot: false
-              allowPrivilegeEscalation: true
         containers:
           *app :
             image:
@@ -113,20 +98,9 @@ spec:
                   timeoutSeconds: 5
                   failureThreshold: 30
             securityContext:
-              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-              capabilities:
-                drop: ["ALL"]
-              runAsNonRoot: true
-              runAsUser: 1001
-              runAsGroup: 1001
     defaultPodOptions:
       securityContext:
-        fsGroupChangePolicy: OnRootMismatch
-        runAsNonRoot: true
-        runAsUser: 1001
-        runAsGroup: 1001
-        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
 
@@ -136,11 +110,6 @@ spec:
         advancedMounts:
           *app :
             *app :
-              - path: /app/backend/db
-                subPath: db
-              - path: /app/backend/uploads
-                subPath: uploads
-            fix-permissions:
               - path: /app/backend/db
                 subPath: db
               - path: /app/backend/uploads
