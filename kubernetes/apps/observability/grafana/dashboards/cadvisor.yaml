@@ -1,0 +1,686 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: docker-monitoring
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  title: "Docker"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: cadvisor-docker
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  folder: "docker-monitoring"
+  json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "schemaVersion": 39,
+      "tags": ["cadvisor", "docker", "containers"],
+      "time": { "from": "now-3h", "to": "now" },
+      "timepicker": {},
+      "timezone": "",
+      "title": "Docker Container Metrics (cAdvisor)",
+      "uid": "docker-cadvisor",
+      "version": 1,
+      "templating": {
+        "list": [
+          {
+            "current": { "selected": true, "text": "All", "value": "$__all" },
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "definition": "label_values(container_cpu_usage_seconds_total{job=\"cadvisor\"}, host)",
+            "hide": 0,
+            "includeAll": true,
+            "multi": true,
+            "name": "host",
+            "label": "Host",
+            "options": [],
+            "query": {
+              "query": "label_values(container_cpu_usage_seconds_total{job=\"cadvisor\"}, host)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 2,
+            "regex": "",
+            "sort": 1,
+            "type": "query",
+            "allValue": ".+"
+          },
+          {
+            "current": { "selected": true, "text": "All", "value": "$__all" },
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "definition": "label_values(container_cpu_usage_seconds_total{job=\"cadvisor\", host=~\"$host\", name!=\"\"}, name)",
+            "hide": 0,
+            "includeAll": true,
+            "multi": true,
+            "name": "container",
+            "label": "Container",
+            "options": [],
+            "query": {
+              "query": "label_values(container_cpu_usage_seconds_total{job=\"cadvisor\", host=~\"$host\", name!=\"\"}, name)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 2,
+            "regex": "",
+            "sort": 1,
+            "type": "query",
+            "allValue": ".+"
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "type": "stat",
+          "title": "Running Containers",
+          "description": "Number of currently active containers on selected hosts.",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "count(container_last_seen{job=\"cadvisor\", host=~\"$host\", name!=\"\", image!=\"\"})",
+              "legendFormat": "",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null }
+                ]
+              },
+              "unit": "short",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 2,
+          "type": "stat",
+          "title": "Total CPU Cores Used",
+          "description": "Sum of CPU cores consumed across all containers on selected hosts.",
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"cadvisor\", host=~\"$host\", name!=\"\", image!=\"\"}[$__rate_interval]))",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "decimals": 2,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 4 },
+                  { "color": "orange", "value": 8 },
+                  { "color": "red", "value": 16 }
+                ]
+              },
+              "unit": "short",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 3,
+          "type": "stat",
+          "title": "Total Memory Used",
+          "description": "Total memory working set (RSS + anonymous, excludes page cache) across all containers on selected hosts.",
+          "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(container_memory_working_set_bytes{job=\"cadvisor\", host=~\"$host\", name!=\"\", image!=\"\"})",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 8589934592 },
+                  { "color": "orange", "value": 17179869184 },
+                  { "color": "red", "value": 32212254720 }
+                ]
+              },
+              "unit": "bytes",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 4,
+          "type": "stat",
+          "title": "Network Receive Rate",
+          "description": "Total network bytes received per second across all containers on selected hosts.",
+          "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(rate(container_network_receive_bytes_total{job=\"cadvisor\", host=~\"$host\", name!=\"\", image!=\"\", interface!~\"lo|veth.*|br.*|docker.*\"}[$__rate_interval]))",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null }
+                ]
+              },
+              "unit": "Bps",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 5,
+          "type": "row",
+          "title": "CPU Usage",
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 4 },
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "id": 6,
+          "type": "bargauge",
+          "title": "CPU per Container (current)",
+          "description": "Current CPU cores consumed per container. Bars fill proportionally — longer bar = more CPU. Sorted descending.",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sort_desc(sum(rate(container_cpu_usage_seconds_total{job=\"cadvisor\", host=~\"$host\", name=~\"$container\", name!=\"\", image!=\"\"}[$__rate_interval])) by (name, host))",
+              "legendFormat": "{{host}}: {{name}}",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "decimals": 3,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 1 },
+                  { "color": "orange", "value": 2 },
+                  { "color": "red", "value": 4 }
+                ]
+              },
+              "unit": "short",
+              "min": 0,
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "displayMode": "gradient",
+            "orientation": "horizontal",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "showUnfilled": true,
+            "minVizHeight": 16,
+            "namePlacement": "auto",
+            "valueMode": "color",
+            "text": {}
+          }
+        },
+        {
+          "id": 7,
+          "type": "timeseries",
+          "title": "CPU Usage Over Time",
+          "description": "CPU cores consumed per container over time. Values are CPU cores (1.0 = one full core).",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(rate(container_cpu_usage_seconds_total{job=\"cadvisor\", host=~\"$host\", name=~\"$container\", name!=\"\", image!=\"\"}[$__rate_interval])) by (name, host)",
+              "legendFormat": "{{host}}: {{name}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "axisBorderShow": false,
+                "axisLabel": "CPU Cores",
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "scheme",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "unit": "short",
+              "decimals": 3,
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "calcs": ["mean", "lastNotNull", "max"], "displayMode": "table", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          }
+        },
+        {
+          "id": 8,
+          "type": "row",
+          "title": "Memory Usage",
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 },
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "id": 9,
+          "type": "bargauge",
+          "title": "Memory per Container (current)",
+          "description": "Current memory working set per container (RSS + anonymous pages, excludes page cache). Bars fill proportionally — longer bar = more memory. Sorted descending.",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sort_desc(container_memory_working_set_bytes{job=\"cadvisor\", host=~\"$host\", name=~\"$container\", name!=\"\", image!=\"\"})",
+              "legendFormat": "{{host}}: {{name}}",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 1073741824 },
+                  { "color": "orange", "value": 4294967296 },
+                  { "color": "red", "value": 8589934592 }
+                ]
+              },
+              "unit": "bytes",
+              "min": 0,
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "displayMode": "gradient",
+            "orientation": "horizontal",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "showUnfilled": true,
+            "minVizHeight": 16,
+            "namePlacement": "auto",
+            "valueMode": "color",
+            "text": {}
+          }
+        },
+        {
+          "id": 10,
+          "type": "timeseries",
+          "title": "Memory Usage Over Time",
+          "description": "Memory working set over time per container. Working set = RSS + anonymous — more accurate than total memory for OOM pressure assessment.",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "container_memory_working_set_bytes{job=\"cadvisor\", host=~\"$host\", name=~\"$container\", name!=\"\", image!=\"\"}",
+              "legendFormat": "{{host}}: {{name}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "axisBorderShow": false,
+                "axisLabel": "",
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "scheme",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "unit": "bytes",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "calcs": ["mean", "lastNotNull", "max"], "displayMode": "table", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          }
+        },
+        {
+          "id": 11,
+          "type": "row",
+          "title": "Disk — /data/backup/",
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 },
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "id": 12,
+          "type": "stat",
+          "title": "Used %",
+          "description": "Percentage of /data/backup/ filesystem used. Source: node_exporter (cAdvisor does not expose host filesystem by mountpoint). Adjust mountpoint filter if /data/backup is not a separate mount.",
+          "gridPos": { "h": 4, "w": 4, "x": 0, "y": 23 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "100 - (100 * node_filesystem_avail_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"} / node_filesystem_size_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"})",
+              "legendFormat": "{{host}}",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 70 },
+                  { "color": "orange", "value": 85 },
+                  { "color": "red", "value": 95 }
+                ]
+              },
+              "unit": "percent",
+              "min": 0,
+              "max": 100,
+              "mappings": [],
+              "noValue": "N/A (no separate mount)"
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 13,
+          "type": "stat",
+          "title": "Free Space",
+          "description": "Available free space on /data/backup/ filesystem.",
+          "gridPos": { "h": 4, "w": 4, "x": 4, "y": 23 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "node_filesystem_avail_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"}",
+              "legendFormat": "{{host}}",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "yellow", "value": 10737418240 },
+                  { "color": "green", "value": 53687091200 }
+                ]
+              },
+              "unit": "bytes",
+              "mappings": [],
+              "noValue": "N/A"
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 14,
+          "type": "stat",
+          "title": "Total Size",
+          "description": "Total capacity of /data/backup/ filesystem.",
+          "gridPos": { "h": 4, "w": 4, "x": 8, "y": 23 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "node_filesystem_size_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"}",
+              "legendFormat": "{{host}}",
+              "refId": "A",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null }
+                ]
+              },
+              "unit": "bytes",
+              "mappings": [],
+              "noValue": "N/A"
+            },
+            "overrides": []
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "textMode": "auto"
+          }
+        },
+        {
+          "id": 15,
+          "type": "timeseries",
+          "title": "/data/backup/ Usage Over Time",
+          "description": "Disk usage trend for /data/backup/ — used vs free bytes. Useful for capacity planning and detecting backup growth.",
+          "gridPos": { "h": 4, "w": 12, "x": 12, "y": 23 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "node_filesystem_size_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"} - node_filesystem_avail_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"}",
+              "legendFormat": "{{host}} used",
+              "refId": "A"
+            },
+            {
+              "expr": "node_filesystem_avail_bytes{job=\"node-exporter\", host=~\"$host\", mountpoint=\"/data/backup\"}",
+              "legendFormat": "{{host}} free",
+              "refId": "B"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "axisBorderShow": false,
+                "axisLabel": "",
+                "drawStyle": "line",
+                "fillOpacity": 30,
+                "gradientMode": "scheme",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "unit": "bytes",
+              "noValue": "N/A",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          }
+        },
+        {
+          "id": 16,
+          "type": "row",
+          "title": "Network I/O",
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "id": 17,
+          "type": "timeseries",
+          "title": "Network Receive",
+          "description": "Network bytes received per second per container. Excludes loopback and virtual interfaces.",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(rate(container_network_receive_bytes_total{job=\"cadvisor\", host=~\"$host\", name=~\"$container\", name!=\"\", image!=\"\", interface!~\"lo|veth.*|br.*|docker.*\"}[$__rate_interval])) by (name, host)",
+              "legendFormat": "{{host}}: {{name}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "axisBorderShow": false,
+                "axisLabel": "",
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "scheme",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "unit": "Bps",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "calcs": ["mean", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          }
+        },
+        {
+          "id": 18,
+          "type": "timeseries",
+          "title": "Network Transmit",
+          "description": "Network bytes transmitted per second per container. Excludes loopback and virtual interfaces.",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "expr": "sum(rate(container_network_transmit_bytes_total{job=\"cadvisor\", host=~\"$host\", name=~\"$container\", name!=\"\", image!=\"\", interface!~\"lo|veth.*|br.*|docker.*\"}[$__rate_interval])) by (name, host)",
+              "legendFormat": "{{host}}: {{name}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "axisBorderShow": false,
+                "axisLabel": "",
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "scheme",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": { "group": "A", "mode": "none" },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "unit": "Bps",
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": { "calcs": ["mean", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+            "tooltip": { "mode": "multi", "sort": "desc" }
+          }
+        }
+      ]
+    }

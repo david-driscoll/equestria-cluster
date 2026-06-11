@@ -71,7 +71,7 @@ prometheus:
             targetLabel: instance
             action: replace
           # Fall back to node name for node-level metrics (only when pod is empty)
-          - sourceLabels: [pod, node]
+          - sourceLabels: [node]
             separator: ";"
             regex: ";(.+)"
             targetLabel: instance

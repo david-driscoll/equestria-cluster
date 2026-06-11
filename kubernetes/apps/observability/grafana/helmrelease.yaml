@@ -139,7 +139,7 @@ spec:
         - natel-discrete-panel
         - pr0ps-trackmap-panel
         - vonage-status-panel
-        - fifemon-graphql-datasource
+        - yesoreyeram-infinity-datasource
     alertmanager: &disabled
       enabled: false
     kubeEtcd: *disabled
