@@ -31,9 +31,9 @@ spec:
     name: home-operations
     namespace: flux-system
   components:
-    - ../components/failover/fast-node-eviction
-    - ../components/tailscale
-    - ../components/volsync
+    - ../kubernetes/components/failover/fast-node-eviction
+    - ../kubernetes/components/tailscale
+    - ../kubernetes/components/volsync
   postBuild:
     substitute:
       APP: *app
