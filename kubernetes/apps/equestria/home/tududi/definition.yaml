@@ -8,7 +8,7 @@ spec:
   category: Applications
   description: "Personal task management with CalDAV sync and OIDC SSO"
   url: &url https://${APP}.${ROOT_DOMAIN}
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tududi.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tududi-dark.png
   access_policy:
     groups:
       - family
