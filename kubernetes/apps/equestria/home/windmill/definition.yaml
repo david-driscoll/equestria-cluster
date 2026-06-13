@@ -21,7 +21,7 @@ spec:
         - url: "https://${APP}.${ROOT_DOMAIN}/user/login_callback/authentik"
         - url: "https://${APP}.${TAILSCALE_DOMAIN}/user/login_callback/authentik"
       propertyMappings:
-        - email-verified
+        - email
         - openid
         - profile
       includeClaimsInIdToken: true

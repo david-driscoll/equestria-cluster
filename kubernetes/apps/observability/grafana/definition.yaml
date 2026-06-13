@@ -20,7 +20,7 @@ spec:
       allowedRedirectUris:
       - url: "https://${APP}.${ROOT_DOMAIN}/login/generic_oauth"
       propertyMappings:
-        - email-verified
+        - email
         - openid
         - profile
       includeClaimsInIdToken: true

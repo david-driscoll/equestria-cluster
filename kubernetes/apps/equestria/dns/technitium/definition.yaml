@@ -19,7 +19,7 @@ spec:
       allowedRedirectUris:
       - url: "https://${APP}.${CLUSTER_DOMAIN}/sso/callback"
       propertyMappings:
-        - email-verified
+        - email
         - openid
         - profile
       includeClaimsInIdToken: true

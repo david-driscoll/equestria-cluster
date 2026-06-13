@@ -21,7 +21,7 @@ spec:
         - url: "https://${APP}.${ROOT_DOMAIN}/auth/callback"
         - url: "https://${APP}.${TAILSCALE_DOMAIN}/auth/callback"
       propertyMappings:
-        - email-verified
+        - email
         - openid
         - profile
       includeClaimsInIdToken: true
