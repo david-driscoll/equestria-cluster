@@ -29,7 +29,7 @@ spec:
         - url: app.immich:///oauth-callback
           matching_mode: strict
       propertyMappings:
-        - email
+        - email-verified
         - openid
         - profile
         - immich_role

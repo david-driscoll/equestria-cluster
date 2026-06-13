@@ -21,7 +21,7 @@ spec:
         - url: https://${APP}.${ROOT_DOMAIN}:443/i/oidc/
         - url: https://${APP}.${TAILSCALE_DOMAIN}:443/i/oidc/
       propertyMappings:
-        - email
+        - email-verified
         - openid
         - profile
   gatus:

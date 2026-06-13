@@ -20,7 +20,7 @@ spec:
       - url: https://${APP}.${ROOT_DOMAIN}/api/auth/oidc/callback
       - url: https://${APP}.${TAILSCALE_DOMAIN}/api/auth/oidc/callback
       propertyMappings:
-        - email
+        - email-verified
         - openid
         - profile
       subMode: user_email

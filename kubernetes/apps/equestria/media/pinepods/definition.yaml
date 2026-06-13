@@ -22,7 +22,7 @@ spec:
       propertyMappings:
         - openid
         - profile
-        - email
+        - email-verified
       includeClaimsInIdToken: true
       subMode: user_email
   gatus:

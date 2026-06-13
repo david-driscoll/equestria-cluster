@@ -19,7 +19,7 @@ spec:
         - url: https://${APP}.${ROOT_DOMAIN}/api/oidc/callback/authentik
         - url: https://${APP}.${TAILSCALE_DOMAIN}/api/oidc/callback/authentik
       propertyMappings:
-        - email
+        - email-verified
         - openid
         - profile
       includeClaimsInIdToken: true
