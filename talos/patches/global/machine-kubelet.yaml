@@ -1,7 +1,6 @@
 machine:
   kubelet:
     extraConfig:
-      maxPods: 220
       serializeImagePulls: false
       imageGCHighThresholdPercent: 80
       imageGCLowThresholdPercent: 60
