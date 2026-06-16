@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
 spec:
-  targetNamespace: warpgate-operator-system
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
