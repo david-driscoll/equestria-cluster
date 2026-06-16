@@ -1,0 +1,35 @@
+external_host: "warpgate.${ROOT_DOMAIN}"
+database_url: "sqlite:/data/db"
+http:
+  enable: true
+  listen: "0.0.0.0:8888"
+  trust_x_forwarded_headers: true
+mysql:
+  enable: false
+ssh:
+  enable: false
+recordings:
+  enable: false
+sso_providers:
+  - name: authentik
+    label: "${CLUSTER_TITLE}"
+    provider:
+      type: custom
+      client_id: "{{ .oidc_client_id }}"
+      client_secret: "{{ .oidc_client_secret }}"
+      issuer_url: "{{ .oidc_issuer_url }}"
+      scopes:
+        - openid
+        - profile
+        - email
+    auto_create_users: true
+    role_mappings:
+      - claim: groups
+        value: admins
+        role: admin
+      - claim: groups
+        value: family
+        role: family
+      - claim: groups
+        value: friends
+        role: friends

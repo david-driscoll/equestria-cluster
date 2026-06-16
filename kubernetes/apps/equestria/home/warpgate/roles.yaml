@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/warpgate.warpgate.warp.tech/warpgateconnection_v1alpha1.json
+apiVersion: warpgate.warpgate.warp.tech/v1alpha1
+kind: WarpgateConnection
+metadata:
+  name: warpgate
+spec:
+  host: "http://warpgate.network.svc.cluster.local:8888"
+  authSecretRef:
+    name: warpgate-api-token
+    key: token
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/warpgate.warpgate.warp.tech/warpgaterole_v1alpha1.json
+apiVersion: warpgate.warpgate.warp.tech/v1alpha1
+kind: WarpgateRole
+metadata:
+  name: admin
+spec:
+  connectionRef: warpgate
+  name: admin
+---
+apiVersion: warpgate.warpgate.warp.tech/v1alpha1
+kind: WarpgateRole
+metadata:
+  name: family
+spec:
+  connectionRef: warpgate
+  name: family
+---
+apiVersion: warpgate.warpgate.warp.tech/v1alpha1
+kind: WarpgateRole
+metadata:
+  name: friends
+spec:
+  connectionRef: warpgate
+  name: friends

@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: "Warpgate"
+  category: "Applications"
+  description: "Smart bastion host for SSH, HTTPS, and database access"
+  url: &url https://warpgate.${ROOT_DOMAIN}
+  icon: https://raw.githubusercontent.com/warp-tech/warpgate/refs/heads/master/warpgate-web/src/assets/logo.svg
+  access_policy:
+    groups:
+      - admins
+  authentik:
+    oauth2:
+      clientType: confidential
+      allowedRedirectUris:
+        - url: "https://warpgate.${ROOT_DOMAIN}/@warpgate/api/sso/return"
+        - url: "https://warpgate.${TAILSCALE_DOMAIN}/@warpgate/api/sso/return"
+      propertyMappings:
+        - email
+        - openid
+        - profile
+        - groups
+      includeClaimsInIdToken: true
+      subMode: user_email
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
