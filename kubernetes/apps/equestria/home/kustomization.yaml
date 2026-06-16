@@ -19,5 +19,5 @@ resources:
   - ./tududi/ks.yaml
   # - ./outline/ks.yaml
   # - ./collabora/ks.yaml
-  - ./warpgate-operator/ks.yaml
-  - ./warpgate/ks.yaml
+  # - ./warpgate-operator/ks.yaml
+  # - ./warpgate/ks.yaml

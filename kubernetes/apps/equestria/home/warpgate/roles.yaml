@@ -5,7 +5,7 @@ kind: WarpgateConnection
 metadata:
   name: warpgate
 spec:
-  host: "http://warpgate.network.svc.cluster.local:8888"
+  host: "http://warpgate.equestria.svc.cluster.local:8888"
   authSecretRef:
     name: warpgate-api-token
     key: token
