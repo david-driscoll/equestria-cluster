@@ -7,4 +7,3 @@ resources:
   - ./externalsecret.yaml
   - ./definition.yaml
   - ./macvlan-nad.yaml
-  - ./init-job.yaml
