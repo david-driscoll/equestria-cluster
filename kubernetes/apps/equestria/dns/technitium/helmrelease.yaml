@@ -54,8 +54,6 @@ spec:
               DNS_SERVER_SSO_ALLOW_SIGNUP: "true"
               DNS_SERVER_SSO_ALLOW_SIGNUP_ONLY_FOR_MAPPED_USERS: "true"
               DNS_SERVER_SSO_GROUP_MAP: "admins:Administrators"
-              # Bind the DNS service to the ipvlan interface IP so cluster peers can reach it
-              DNS_SERVER_LOCAL_ENDPOINTS: "${TECHNITIUM_VIP}:53443"
             envFrom:
               - secretRef:
                   name: ${APP}-env

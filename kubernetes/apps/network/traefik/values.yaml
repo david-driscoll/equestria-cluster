@@ -129,7 +129,7 @@ providers:
     experimentalChannel: true
     statusAddress:
       ip: "${INTERNAL_IP}"
-logs:
+log:
   access:
     enabled: true
   general:
