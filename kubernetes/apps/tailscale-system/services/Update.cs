@@ -1,7 +1,7 @@
 #!/usr/bin/dotnet run
 #:package YamlDotNet@16.3.0
 #:package Spectre.Console@0.50.0
-#:package System.Net.Http.Json@9.*
+#:package System.Net.Http.Json@10.*
 #:package Duende.IdentityModel@7.1.0
 
 #:property PublishAot=false
