@@ -1,9 +1,9 @@
 #!/usr/bin/dotnet run
-#:package System.Collections.Immutable@10.0.0-preview.5.25277.114
+#:package System.Collections.Immutable@10.0.9
 #:package Spectre.Console@0.50.0
 #:package Spectre.Console.Json@0.50.0
 #:package Dumpify@0.6.6
-#:package System.Net.Http.Json@10.0.1
+#:package System.Net.Http.Json@10.0.9
 #:package Refit@9.0.2
 #:package NodaTime@*
 
