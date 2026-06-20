@@ -13,7 +13,7 @@
 #:package ZiggyCreatures.FusionCache.Serialization.SystemTextJson@2.5.0
 #:package TMDbLib@3.0.0
 #:package System.Reactive@7.0.0-preview.1
-#:package System.Linq.Async@7.0.0
+#:package System.Linq.Async@7.0.1
 #:property JsonSerializerIsReflectionEnabledByDefault=true
 
 using System.Collections.Concurrent;
