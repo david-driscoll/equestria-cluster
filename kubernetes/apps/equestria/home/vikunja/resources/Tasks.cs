@@ -4,7 +4,7 @@
 #:package Spectre.Console.Json@0.50.0
 #:package Dumpify@0.6.6
 #:package System.Net.Http.Json@10.0.9
-#:package Refit@9.0.2
+#:package Refit@11.2.0
 #:package NodaTime@*
 
 using System.Text.Json;
