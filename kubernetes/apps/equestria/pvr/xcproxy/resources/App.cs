@@ -5,7 +5,7 @@
 #:package Spectre.Console.Json@0.50.0
 #:package Dumpify@0.6.6
 #:package Lunet.Extensions.Logging.SpectreConsole@1.2.0
-#:package System.Text.Json@8.0.6
+#:package System.Text.Json@10.0.9
 #:package System.Text.RegularExpressions@4.3.1
 #:package Xtream.Client@1.0.7
 #:package ZiggyCreatures.FusionCache@2.5.0
