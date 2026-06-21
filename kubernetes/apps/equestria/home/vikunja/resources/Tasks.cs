@@ -1,7 +1,5 @@
 #!/usr/bin/dotnet run
 #:package System.Collections.Immutable@10.0.9
-#:package Spectre.Console@0.57.0
-#:package Spectre.Console.Json@0.57.0
 #:package Dumpify@0.7.0
 #:package System.Net.Http.Json@10.0.9
 #:package Refit@11.2.0
