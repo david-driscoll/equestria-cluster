@@ -3,7 +3,7 @@
 #:sdk Microsoft.NET.Sdk.Web
 #:package Spectre.Console@0.50.0
 #:package Spectre.Console.Json@0.50.0
-#:package Dumpify@0.6.6
+#:package Dumpify@0.7.0
 #:package Lunet.Extensions.Logging.SpectreConsole@1.2.0
 #:package System.Text.Json@10.0.9
 #:package System.Text.RegularExpressions@4.3.1
