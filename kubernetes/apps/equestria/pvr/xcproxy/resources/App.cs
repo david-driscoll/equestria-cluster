@@ -1,8 +1,8 @@
 #!/Users/david/.local/share/mise/installs/1password-cli/2.30.3/bin/op run --no-masking -- dotnet run
 // #:package YamlDotNet@16.3.0
 #:sdk Microsoft.NET.Sdk.Web
-#:package Spectre.Console@0.50.0
-#:package Spectre.Console.Json@0.50.0
+#:package Spectre.Console@0.57.0
+#:package Spectre.Console.Json@0.57.0
 #:package Dumpify@0.7.0
 #:package Lunet.Extensions.Logging.SpectreConsole@1.2.0
 #:package System.Text.Json@10.0.9
