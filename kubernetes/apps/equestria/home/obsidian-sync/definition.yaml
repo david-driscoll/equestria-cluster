@@ -6,7 +6,7 @@ metadata:
 spec:
   name: Obsidian Sync
   icon: https://obsidian.md/favicon.ico
-  url: &url https://obsidian-sync.${ROOT_DOMAIN}
+  url: &url https://obsidian-sync.${ROOT_DOMAIN}/_utils
   description: Self-hosted Obsidian LiveSync server using CouchDB
   category: Applications
   access_policy:
