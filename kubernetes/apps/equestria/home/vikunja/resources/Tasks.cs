@@ -2,7 +2,7 @@
 #:package System.Collections.Immutable@10.0.9
 #:package Dumpify@0.7.0
 #:package System.Net.Http.Json@10.0.9
-#:package Refit@11.2.0
+#:package Refit@12.0.0
 #:package NodaTime@*
 
 using System.Text.Json;
