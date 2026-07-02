@@ -39,7 +39,7 @@ spec:
           emby:
             image:
               repository: emby/embyserver
-              tag: 4.10.0.16@sha256:4c74be9745e758da2d786c5901ced1f2dec29e57653084b3218a2eacf85fc728
+              tag: 4.10.0.17@sha256:7644ec68f6adf94bea17033aa081ef982971cb4bb32b0ca81923070e900a0078
             env:
               EMBY_CACHE_DIR: /cache
               EMBY_CONFIG_DIR: /config/config
