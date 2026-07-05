@@ -3,27 +3,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app postgres
-  namespace: &namespace database
-  labels:
-    app.kubernetes.io/name: *app
-    driscoll.dev/name: *app
+  name: &app descheduler
+  namespace: &namespace kube-system
 spec:
-  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  path: ./kubernetes/apps/database/postgres/app
-  dependsOn:
-    - name: postgres-operator
-      namespace: cloudnative-pg
-    - name: external-secrets
-      namespace: kube-system
+  path: ./kubernetes/apps/kube-system/descheduler
   prune: true
-  wait: true
+  wait: false
   force: false
-  suspend: false
   interval: 1h
   retryInterval: 2m
   timeout: 10m
@@ -31,8 +21,8 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  targetNamespace: *namespace
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      POSTGRES_STORAGE: "40Gi"
