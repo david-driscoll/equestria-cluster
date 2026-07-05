@@ -2,22 +2,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: pulumi
 components:
   - ../../components/alerts
   - ../../components/common
-  - ../../components/repos/app-template
 resources:
-  - ./secrets/ks.yaml
-  - ./pulumi-operator/ks.yaml
-  - ./lock-canceller/ks.yaml
-  - ./npm-cache-prune/ks.yaml
-  - ./kubeproxies/ks.yaml
-  - ./unifi-network/ks.yaml
-  - ./backups/ks.yaml
-  - ./authentik/ks.yaml
-  - ./vault/ks.yaml
-  - ./applications/ks.yaml
   - ./home-operations/ks.yaml
-  - ./gulf-of-mexico/ks.yaml
-  - ./ocracoke/ks.yaml
