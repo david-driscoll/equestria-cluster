@@ -59,18 +59,18 @@ spec:
             evict:
               enabled:
                 - DefaultEvictor
-            deschedule:
+            balance:
               enabled:
                 - RemoveDuplicates
                 - RemovePodsViolatingTopologySpreadConstraint
-            balance:
-              enabled:
                 - LowNodeUtilization
           pluginConfig:
             - name: DefaultEvictor
               args:
                 evictSystemCriticalPods: false
                 evictLocalStoragePods: false
+            - name: RemoveDuplicates
+            - name: RemovePodsViolatingTopologySpreadConstraint
             - name: LowNodeUtilization
               args:
                 thresholds:
