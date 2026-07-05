@@ -90,8 +90,8 @@ david-driscoll/stargate-command-cluster:
       taildrive/
   - source: talos/talenv.yaml
     dest: talos/talenv.yaml
-  - source: talos/patches/global/machine-kubelet.yaml
-    dest: talos/patches/global/machine-kubelet.yaml
+  # - source: talos/patches/global/machine-kubelet.yaml
+  #   dest: talos/patches/global/machine-kubelet.yaml
   - source: talos/patches/global/machine-files.yaml
     dest: talos/patches/global/machine-files.yaml
   - source: talos/patches/global/machine-time.yaml
