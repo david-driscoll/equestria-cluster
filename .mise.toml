@@ -62,7 +62,7 @@ run = [
 [tasks.flate]
 description = 'Run flate'
 run = [
-  'flate test all --path ./kubernetes/flux/ --allow-missing-secrets --source-retry-attempts 10 --log-level debug',
+  'flate test all --path ./kubernetes/flux/ --allow-missing-secrets --source-retry-attempts 10',
 ]
 [[hooks.enter]]
 script = "dotnet tool restore"
