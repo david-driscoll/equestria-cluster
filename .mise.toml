@@ -45,7 +45,7 @@ flux2 = "2.9.0"
 age = "1.3.1"
 cilium-cli = "0.19.5"
 cloudflared = "2026.6.1"
-cue = "0.16.1"
+cue = "0.17.0"
 gh = "2.96.0"
 "aqua:brumhard/krewfile" = "0.7.0"
 "github:home-operations/flate" = "v0.4.10"
@@ -57,5 +57,11 @@ dotnet = { version = "10.0.203" }
 description = 'Update all apps that have an update script'
 run = [
   'dotnet run .mise/tasks/do-update.cs',
-  'flate test all --path ./kubernetes/flux/ --allow-missing-secrets --source-retry-attempts 10',
+  'mise task flate',
+]
+
+[tasks.flate]
+description = 'Run flate'
+run = [
+  'flate test all --allow-missing-secrets --source-retry-attempts 10',
 ]
