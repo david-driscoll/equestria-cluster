@@ -86,11 +86,11 @@ spec:
               readiness: *probes
             resources:
               requests:
-                gpu.intel.com/i915: 2
-                cpu: 2
+                gpu.intel.com/i915: 1
+                cpu: 1
                 memory: 2Gi
               limits:
-                gpu.intel.com/i915: 2
+                gpu.intel.com/i915: 1
                 # amd.com/gpu: 1
                 memory: 6Gi
                 # cpu: 8
