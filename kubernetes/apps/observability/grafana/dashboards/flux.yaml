@@ -3222,7 +3222,7 @@ spec:
       "liveNow": false,
       "panels": [
         {
-          "datasource": "${DS_LOKI}",
+          "datasource": "$${DS_LOKI}",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3294,7 +3294,7 @@ spec:
           },
           "targets": [
             {
-              "datasource": "${DS_LOKI}",
+              "datasource": "$${DS_LOKI}",
               "expr": "sum(count_over_time({namespace=~\"$namespace\", stream=~\"$stream\", app =~\"$controller\"} | json | __error__!=\"JSONParserErr\" | level=~\"$level\" |= \"$query\" [$__interval]))",
               "instant": false,
               "legendFormat": "Log count",
@@ -3305,7 +3305,7 @@ spec:
           "type": "timeseries"
         },
         {
-          "datasource": "${DS_LOKI}",
+          "datasource": "$${DS_LOKI}",
           "description": "Logs from services running in Kubernetes",
           "gridPos": {
             "h": 25,
@@ -3326,7 +3326,7 @@ spec:
           },
           "targets": [
             {
-              "datasource": "${DS_LOKI}",
+              "datasource": "$${DS_LOKI}",
               "expr": "{namespace=~\"$namespace\", stream=~\"$stream\", app =~\"$controller\"} | json | __error__!=\"JSONParserErr\" | level=~\"$level\" |= \"$query\"",
               "refId": "A"
             }
@@ -3407,7 +3407,7 @@ spec:
                 "$__all"
               ]
             },
-            "datasource": "${DS_LOKI}",
+            "datasource": "$${DS_LOKI}",
             "definition": "label_values(app)",
             "hide": 0,
             "includeAll": true,
@@ -3432,7 +3432,7 @@ spec:
                 "flux-system"
               ]
             },
-            "datasource": "${DS_LOKI}",
+            "datasource": "$${DS_LOKI}",
             "definition": "label_values(namespace)",
             "hide": 0,
             "includeAll": true,
@@ -3453,7 +3453,7 @@ spec:
               "text": "All",
               "value": "$__all"
             },
-            "datasource": "${DS_LOKI}",
+            "datasource": "$${DS_LOKI}",
             "definition": "label_values(stream)",
             "hide": 0,
             "includeAll": true,
