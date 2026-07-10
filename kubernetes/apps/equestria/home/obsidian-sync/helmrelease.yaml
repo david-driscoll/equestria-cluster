@@ -138,7 +138,7 @@ spec:
                 extensionRef:
                   group: traefik.io
                   kind: Middleware
-                  name: local-user
+                  name: local-api
               - type: ExtensionRef
                 extensionRef:
                   group: traefik.io
