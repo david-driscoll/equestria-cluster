@@ -22,7 +22,7 @@ spec:
           *app :
             image:
               repository: ghcr.io/warp-tech/warpgate
-              tag: latest@sha256:a12b1abb9de0714ef068fbf875ed1ad749f3a4c16fdd0e62b373aad4cdc07309
+              tag: latest@sha256:81da2c942dbf00ffbe09519743264213b50c574ab03907fba5fb4876eed7ec68
             args:
               - run
               - --config
