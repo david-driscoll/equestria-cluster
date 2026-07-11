@@ -2,7 +2,6 @@ module.exports = {
   n8n: {
     ready: [
       async function ({ app }, config) {
-        const Layer = require("router/lib/layer");
         const { dirname, resolve } = require("path");
         const { randomBytes } = require("crypto");
         const { hash } = require("bcryptjs");
@@ -23,6 +22,13 @@ module.exports = {
 
         const { stack } = app.router;
         const idx = stack.findIndex((l) => l?.name === "cookieParser");
+
+        // Derive the Layer class from an existing router-stack entry (every
+        // entry is a Layer instance). This is version-independent and avoids
+        // requiring the internal "router/lib/layer" module path, which is not
+        // resolvable from /hooks and was removed in the router version bundled
+        // with newer n8n images (>= 2.30.x).
+        const Layer = (stack[idx] ?? stack[0]).constructor;
 
         const layer = new Layer(
           "/",
