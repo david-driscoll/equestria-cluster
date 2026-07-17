@@ -16,11 +16,6 @@ spec:
     - apiVersion: v1
       kind: Node
       expr: status.conditions.exists(c, c.type == "Ready" && c.status == "True")
-    - apiVersion: longhorn.io/v1beta2
-      kind: Volume
-      namespace: longhorn-system
-      description: Wait for degraded Longhorn volumes to finish rebuilding before draining the next node, so its replica isn't the last healthy copy
-      expr: status.robustness != "degraded"
 
   # maintenance:
   #   windows:
