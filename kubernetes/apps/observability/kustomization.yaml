@@ -20,7 +20,6 @@ resources:
   - ./blackbox-exporter/ks.yaml
   - ./priority-class/ks.yaml
   - ./silences/ks.yaml
-  - ./nut-exporter/ks.yaml
   - ./speedtest-exporter/ks.yaml
   - ./unpoller/ks.yaml
   - ./tempo/ks.yaml
