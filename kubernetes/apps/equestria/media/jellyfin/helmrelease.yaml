@@ -39,7 +39,7 @@ spec:
           jellyfin:
             image:
               repository: jellyfin/jellyfin
-              tag: 10.11.11@sha256:aefb67e6a7ff1debdd154a78a7bbb780fd0c873d8639210a7f6a2016ad2b35db
+              tag: 12.0-rc3
             env:
               JELLYFIN_CACHE_DIR: /cache
               JELLYFIN_CONFIG_DIR: /config/config
