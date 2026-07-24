@@ -169,5 +169,19 @@ spec:
         server: ${SPIKE_IP}
         path: /mnt/stash/data/jellyfin
 
+      subtitles:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/data/jellyfin/subtitles
+        globalMounts:
+          - path: /config/data/subtitles
+
+      trickplay:
+        type: nfs
+        server: ${SPIKE_IP}
+        path: /mnt/stash/data/jellyfin/trickplay
+        globalMounts:
+          - path: /config/data/trickplay
+
       media:
         existingClaim: truenas-media
