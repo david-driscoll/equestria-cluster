@@ -165,6 +165,21 @@
       enabled: false,
     },
     {
+      // bootstrap/helmfile.yaml mirrors chart versions that are otherwise
+      // owned by the flux manager (kubernetes/apps/**/helmrelease.yaml).
+      // Renovate treats same-named deps found by different managers as one
+      // logical update and tries to combine both files' edits into a single
+      // branch. For high-churn grouped deps (CoreDNS/Flux Operator/Spegel
+      // groups, cert-manager) that branch falls behind main faster than it
+      // can be rebased and Renovate fails with "Error updating branch:
+      // update failure" instead of opening a PR. Force helmfile-manager
+      // updates onto their own branch namespace so they never share a
+      // branch with the flux-managed update for the same chart.
+      description: "Keep bootstrap helmfile chart bumps off the flux-managed branch",
+      matchManagers: ["helmfile"],
+      additionalBranchPrefix: "helmfile-",
+    },
+    {
       // Talos/Kubernetes upgrade manifests carry a plain `version: vX.Y.Z`
       // field (TalosUpgrade/KubernetesUpgrade) extracted via the custom regex
       // manager. A digest does not belong in that field, so suppress the
