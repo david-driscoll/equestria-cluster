@@ -25,7 +25,7 @@ patches:
         value: 0
       - op: replace
         path: /spec/values/githubConfigUrl
-        value: https://github.com/david-driscoll/crew
+        value: https://github.com/david-driscoll
       - op: replace
         path: /spec/values/githubConfigSecret
         value: david-driscoll-github-app
