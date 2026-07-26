@@ -5,9 +5,6 @@ resources:
   - ../base
   - ./secret.yaml
 patches:
-  - path: ./patch.yaml
-    target:
-      kind: HelmRelease
   - target:
       kind: HelmRelease
     patch: |-
@@ -26,3 +23,9 @@ patches:
       - op: replace
         path: /spec/values/minRunners
         value: 0
+      - op: replace
+        path: /spec/values/githubConfigUrl
+        value: https://github.com/david-driscoll/crew
+      - op: replace
+        path: /spec/values/githubConfigSecret
+        value: david-driscoll-github-app
