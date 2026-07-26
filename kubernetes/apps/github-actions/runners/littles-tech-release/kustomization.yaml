@@ -4,15 +4,18 @@ kind: Kustomization
 resources:
   - ../base
 patches:
-  - path: ./patch.yaml
-    target:
-      kind: HelmRelease
   - target:
       kind: HelmRelease
     patch: |-
       - op: replace
         path: /metadata/name
         value: littles-tech-release-runners
+      - op: replace
+        path: /spec/values/githubConfigUrl
+        value: https://github.com/littlestechnology
+      - op: replace
+        path: /spec/values/githubConfigSecret
+        value: littles-tech-github-app
       - op: replace
         path: /spec/values/fullnameOverride
         value: littles-tech-release-runners
