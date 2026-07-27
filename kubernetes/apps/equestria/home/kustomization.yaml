@@ -7,7 +7,6 @@ resources:
   - ./n8n/ks.yaml
   - ./dynacat/ks.yaml
   - ./obsidian-sync/ks.yaml
-  - ./vikunja/ks.yaml
   - ./super-productivity/ks.yaml
   - ./windmill/ks.yaml
   - ./rustdesk/ks.yaml

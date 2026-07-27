@@ -92,12 +92,6 @@ cluster:
     superuser: true
     passwordSecret:
       name: immich-postgres-password
-  - name: vikunja
-    ensure: present
-    login: true
-    superuser: false
-    passwordSecret:
-      name: vikunja-postgres-password
   - name: windmill
     ensure: present
     login: true
