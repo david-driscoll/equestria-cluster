@@ -6,3 +6,4 @@ resources:
   - ./david-driscoll/ks.yaml
   - ./littles-tech/ks.yaml
   - ./littles-tech-release/ks.yaml
+  - ./vault/ks.yaml

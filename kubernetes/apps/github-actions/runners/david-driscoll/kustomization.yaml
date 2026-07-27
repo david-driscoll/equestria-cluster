@@ -23,9 +23,14 @@ patches:
       - op: replace
         path: /spec/values/minRunners
         value: 0
+      # Repo-scoped, NOT account-scoped. `david-driscoll` is a User account, not
+      # an org, so a bare account URL makes ARC register against
+      # /orgs/david-driscoll/... which 404s and crash-loops the listener.
+      # Personal accounts only support repo-level runners — one scale set per
+      # repo. See ./vault for the sibling that serves the crew issue tracker.
       - op: replace
         path: /spec/values/githubConfigUrl
-        value: https://github.com/david-driscoll
+        value: https://github.com/david-driscoll/crew
       - op: replace
         path: /spec/values/githubConfigSecret
         value: david-driscoll-github-app
