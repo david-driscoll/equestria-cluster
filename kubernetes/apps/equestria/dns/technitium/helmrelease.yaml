@@ -119,9 +119,7 @@ spec:
           effect: NoSchedule
 
     service:
-      # LAN DNS traffic arrives directly on the ipvlan interface (see nad);
-      # tailnet DNS traffic arrives via the dedicated tailscale proxy service
-      # (see tailscale-service.yaml). Only admin/cluster ports need a Service.
+      # LAN DNS traffic arrives directly on the ipvlan interface (see nad).
       admin:
         controller: *app
         ports:
