@@ -67,12 +67,16 @@ spec:
               - secretRef:
                   name: ${APP}-env
             probes:
+              # exec probes on purpose: kubelet-dialed tcpSocket probes source
+              # from the node's LAN IP and the pod replies via the ipvlan net1
+              # interface (asymmetric) — they always time out, the pod never
+              # goes Ready, and every Service loses its endpoints.
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
-                  tcpSocket:
-                    port: &adminPort 5380
+                  exec:
+                    command: ["bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/5380"]
                   initialDelaySeconds: 15
                   periodSeconds: 30
                   timeoutSeconds: 5
@@ -82,8 +86,8 @@ spec:
                 enabled: true
                 custom: true
                 spec:
-                  tcpSocket:
-                    port: *adminPort
+                  exec:
+                    command: ["bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/5380"]
                   initialDelaySeconds: 10
                   periodSeconds: 10
                   failureThreshold: 30
@@ -124,7 +128,7 @@ spec:
         controller: *app
         ports:
           admin:
-            port: *adminPort
+            port: 5380
             protocol: TCP
           cluster-https:
             port: 53443
