@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./cadvisor.yaml
   - ./flux.yaml
+  - ./gpu.yaml
   - ./kubernetes.yaml
   - ./media.yaml
   - ./network.yaml
