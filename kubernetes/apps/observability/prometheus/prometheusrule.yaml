@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: amd-gpu-rules
+spec:
+  groups:
+    - name: amd-gpu.rules
+      rules:
+        # Counterpart to IntelGpuMetricsAbsent (see
+        # observability/intel-gpu-exporter/prometheusrule.yaml). Lives here
+        # rather than in its own app directory because the AMD half of
+        # vault#110 is a node-exporter collector flag, not a workload — see
+        # `--collector.drm` in this directory's values.yaml.
+        #
+        # Absence, not threshold: no baseline exists for these integrated
+        # parts, and the failure mode worth catching is the silent one. If
+        # amdgpu stops publishing gpu_busy_percent — a kernel bump changing
+        # the sysfs layout, or the flag being lost when the chart's
+        # extraArgs default list is next overwritten — node-exporter keeps
+        # scraping green and simply stops emitting node_drm_*.
+        - alert: AmdGpuMetricsAbsent
+          annotations:
+            summary: AMD GPU DRM metrics have disappeared from this cluster.
+            description: >-
+              node_drm_gpu_busy_percent is empty. Expected on hard-hat (0x15bf)
+              and shining-armor (0x164e). Check that --collector.drm is still
+              in prometheus-node-exporter.extraArgs and that
+              /sys/class/drm/card0/device/gpu_busy_percent still exists on
+              those nodes.
+          expr: absent(node_drm_gpu_busy_percent)
+          for: 30m
+          labels:
+            severity: warning

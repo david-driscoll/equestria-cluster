@@ -134,6 +134,25 @@ prometheus:
               storage: 20Gi
 prometheus-node-exporter:
   fullnameOverride: node-exporter
+  # NOTE: Helm replaces lists rather than merging them, so the two
+  # --collector.filesystem.* entries below MUST be repeated verbatim from
+  # kube-prometheus-stack's own values.yaml. Dropping them would un-exclude
+  # every container mount point and blow up filesystem-metric cardinality.
+  # Keep them in sync when bumping the chart.
+  extraArgs:
+    - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/containerd/.+|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+    - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|erofs)$
+    # AMD GPU metrics from /sys/class/drm/card*/device (node_drm_*). Disabled
+    # upstream by default. amdgpu is the ONLY driver that publishes utilisation
+    # through DRM sysfs — i915 does not, and is covered separately by
+    # observability/intel-gpu-exporter (vault#110).
+    #
+    # Verified 2026-08-01 on both AMD nodes that the sysfs attributes the
+    # collector reads are actually populated on these integrated parts:
+    #   hard-hat       0x15bf (RDNA3 Phoenix) gpu_busy_percent, mem_info_vram_*,
+    #   shining-armor  0x164e (RDNA2 Raphael) mem_info_gtt_*, mem_info_vis_vram_*
+    # so this flag is not a silent no-op. Cardinality cost is ~8 series x 2 cards.
+    - --collector.drm
   prometheus:
     monitor:
       enabled: true
