@@ -14,11 +14,23 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
+  # D5: previously absent. The LAPI keeps all of its state in the shared CNPG
+  # cluster and its Helm values Secret is rendered by external-secrets, so both
+  # have to be up before this can succeed.
+  dependsOn:
+    - name: postgres
+      namespace: database
+    - name: external-secrets
+      namespace: kube-system
   path: ./kubernetes/apps/network/crowdsec
-  components:
-    - ../../../components/postgres
+  # D4: the ../../../components/postgres component is `resources: []` -- it only
+  # re-stamps the two labels commonMetadata already applies. Dropped rather than
+  # left in place implying the Database CR comes from here; it is declared in
+  # kubernetes/apps/database/postgres/app/users.yaml.
   prune: true
-  wait: false
+  # D5: wait: true so crowdsec-ui can dependsOn this and get a real readiness
+  # signal instead of "the HelmRelease object exists".
+  wait: true
   force: false
   interval: 1h
   retryInterval: 2m

@@ -39,7 +39,8 @@ This is a GitOps/infrastructure repo, not an application codebase. "Dependencies
 | External-DNS | — | Automatic DNS record management (Cloudflare) | `kubernetes/apps/network/external-dns/` |
 | bjw-s app-template | — | Generic Helm chart used by almost all workloads | `kubernetes/components/repos/app-template/` |
 | Renovate | — | Automated dependency updates (Helm charts, container images) | `.github/renovate.json5` |
-| CrowdSec | — | Security/IDS integration with Traefik | `kubernetes/apps/network/crowdsec/` |
+| CrowdSec | 0.24.0 (chart) | IDS behind Traefik. Detection runs; the bouncer middleware exists but ships with `enabled: false` — see `docs/crowdsec-enforcement-rollout.md` | `kubernetes/apps/network/crowdsec/` |
+| CrowdSec Web UI | — | Local console for CrowdSec alerts and decisions. Authentik OIDC, admins only, internal + Tailscale | `kubernetes/apps/network/crowdsec-ui/` |
 | Spegel | 0.7.0 | P2P image registry mirror | `bootstrap/helmfile.yaml` |
 
 ### 3) Development Toolchain

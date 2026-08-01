@@ -10,7 +10,7 @@ All applications deployed in the cluster, organized by namespace. Covers both th
 |-----------|---------|------|-----------------|
 | **equestria** | User-facing applications (7 groups) | Home, Media, PVR, Downloads, Games, IDP, Shared | postgres, valkey, volsync, network |
 | **database** | Data storage layer | PostgreSQL (CNPG), Valkey, Neo4j | longhorn-system, cloudnative-pg |
-| **network** | Networking & ingress | Traefik, external-dns, k8s-gateway, CrowdSec | cert-manager |
+| **network** | Networking & ingress | Traefik, external-dns, k8s-gateway, CrowdSec, crowdsec-ui | cert-manager, postgres, external-secrets |
 | **kube-system** | Kubernetes infrastructure | cilium, coredns, 1password, external-secrets, reloader, reflector | — |
 | **observability** | Monitoring & logging | Prometheus, Grafana, Loki, Alloy, Alertmanager, Blackbox | — |
 | **flux-system** | GitOps controllers | Flux Operator, Flux Instance, Weave GitOps | — |
@@ -199,7 +199,8 @@ Persistent storage on Longhorn. Single instance (not HA).
 | k8s-gateway | In-cluster DNS for `${INTERNAL_DOMAIN}` |
 | certificates | TLS cert resources |
 | cloudflare-tunnel | Inbound external traffic via Cloudflare (no open ports) |
-| crowdsec | IDS/IPS integration with Traefik |
+| crowdsec | IDS behind Traefik (LAPI + agent). Detection live; bouncer middleware present but `enabled: false` |
+| crowdsec-ui | CrowdSec console (Authentik OIDC, admins only, internal + Tailscale) |
 | librespeed | Internet speed test |
 | openspeedtest | Alternative speed test |
 | whoami | Ingress debug service |
