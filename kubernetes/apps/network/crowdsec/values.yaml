@@ -2,8 +2,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/refs/heads/main/charts/crowdsec/values.schema.json
 #
 # NOTE ON TEMPLATING. This file is rendered twice:
-#   * Flux postBuild substitutes ${...} (cluster-secrets / shared-secrets).
-#     `$${...}` escapes a literal `${...}` through to the container.
+#   * Flux postBuild substitutes dollar-brace variables from cluster-secrets and
+#     shared-secrets. Doubling the dollar sign escapes one through to the
+#     container instead (see REGISTRATION_TOKEN below).
 #   * external-secrets renders {{ ... }} against the keys of the
 #     `crowdsec-values` ExternalSecret. Key names are the raw 1Password field
 #     names -- see the comment block in externalsecret.yaml.
@@ -157,13 +158,10 @@ lapi:
   deployAnnotations:
     reloader.stakater.com/auto: "true"
 agent:
-  # D6 (vault#111 Q4): the `namespace: '*', podName: postgres-*` acquisition is
-  # removed. Parsing every Postgres pod's logs cluster-wide is noise in front of
-  # a database that is not internet-facing.
-  acquisition:
-    - namespace: network
-      podName: traefik-*
-      program: traefik
+  # `agent.acquisition` lives inline in helmrelease.yaml, not here -- see the
+  # comment there. D6 (vault#111 Q4): the `namespace: '*', podName: postgres-*`
+  # entry is gone. Parsing every Postgres pod's logs cluster-wide is noise in
+  # front of a database that is not internet-facing.
   env:
     - name: TZ
       value: ${TIMEZONE}

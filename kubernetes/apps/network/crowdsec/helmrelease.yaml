@@ -48,3 +48,15 @@ spec:
     - kind: Secret
       name: ${APP}-values
       valuesKey: values.yaml
+  # Inline rather than in the values Secret on purpose. It contains no secrets,
+  # and the chart hard-fails template rendering when neither `acquisition` nor
+  # `additionalAcquisition` is set (agent-daemonSet.yaml). Keeping it here means
+  # `flate test` -- which cannot resolve valuesFrom Secrets -- can still render
+  # this release. spec.values deep-merges over valuesFrom, so the rest of
+  # `agent:` still comes from the Secret.
+  values:
+    agent:
+      acquisition:
+        - namespace: network
+          podName: traefik-*
+          program: traefik
