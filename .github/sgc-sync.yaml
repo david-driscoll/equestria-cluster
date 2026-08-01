@@ -105,6 +105,11 @@ david-driscoll/stargate-command-cluster:
     dest: .github/renovate.json5
   - source: .github/workflows/flux-local.yaml
     dest: .github/workflows/flux-local.yaml
+  # Must travel WITH flux-local.yaml. That workflow's eso-values-lint job runs
+  # this module by path, so syncing the workflow alone would break SGC's CI.
+  - source: scripts/eso-values-lint/
+    dest: scripts/eso-values-lint/
+    deleteOrphaned: true
   - source: .mise.toml
     dest: .mise.toml
   - source: versions.env
