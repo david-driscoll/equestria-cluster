@@ -55,7 +55,7 @@ CGNAT range are already listed.
 |---|---|---|
 | P1 | 1Password item `Crowdsec ApiKey` (vault `Eris`) has field `apikey_bouncer` | `kubectl get secret crowdsec-secret -n network -o json \| jq '.data \| keys'` — done, present |
 | P2 | The same item has field `credential` holding a **currently valid** console enrollment key | Sign in to `app.crowdsec.net` → Security Engines → enrollment keys. See §Enrollment below |
-| P3 | The same item has field `webui_password` (a generated password, ≥ 24 chars) | needed by `crowdsec-ui`; absent today |
+| P3 | A **separate** item `Crowdsec UI` (vault `Eris`) has field `password` (a generated password, ≥ 24 chars) | needed by `crowdsec-ui`; provisioned 2026-08-01. Deliberately *not* a field on `Crowdsec ApiKey` — `crowdsec-ui`'s ExternalSecret extracts this item itself and prefixes its keys to `webui_*`, so the template key stays `webui_password` |
 | P4 | Authentik OIDC app for `crowdsec-ui` provisioned, `crowdsec-ui-oidc-credentials` present in the `cluster` store | runs automatically once `definition.yaml` lands and the Pulumi authentik stack runs |
 
 Checking a secret's shape without reading its value:
