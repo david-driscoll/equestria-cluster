@@ -35,7 +35,7 @@
 | Cluster API exposure | A01: Broken Access Control | `talos/talconfig.yaml` | API server behind VIP `10.10.206.201`; cert SANs include internal domains | `apiserver.equestria.driscoll.tech` DNS entry exists — verify firewall rules |
 | GitHub deploy key | A07: Auth Failures | `github-deploy.key` | Read-only SSH deploy key for Flux | Key rotation cadence [ASK USER] |
 | Pod security | A01: Broken Access Control | `helmrelease.yaml` files | `securityContext` set on most pods; `runAsNonRoot`, `readOnlyRootFilesystem`, `drop ALL` caps are common | Some pods (e.g., n8n) run as root for permission fixes; `runAsNonRoot: false` seen |
-| Network policies | A01: Broken Access Control | CrowdSec, Cilium | Cilium enforces network policies; CrowdSec provides IDS | [ASK USER] Are default-deny NetworkPolicies in place? |
+| Network policies | A01: Broken Access Control | CrowdSec, Cilium | Cilium enforces network policies; CrowdSec provides IDS. CrowdSec *remediation* is not on yet — the Traefik bouncer ships with `enabled: false`, see `docs/crowdsec-enforcement-rollout.md` | [ASK USER] Are default-deny NetworkPolicies in place? |
 | Cloudflare tunnel | External access | `kubernetes/apps/network/cloudflare-tunnel/` | No open inbound ports; traffic via Cloudflare | Cloudflare as trust boundary; any Cloudflare outage = external services down |
 
 ### 4) Performance and Scaling Concerns

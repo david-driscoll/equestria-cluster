@@ -95,7 +95,7 @@ For full app-level detail, see [`KUBERNETES_APPS.md`](./KUBERNETES_APPS.md).
 | `equestria` | User-facing apps (home, media, pvr, downloads, games, idp) | n8n, immich, Plex, Radarr, Authentik |
 | `observability` | Monitoring, logging, alerting | Prometheus, Grafana, Loki, Alertmanager, Alloy |
 | `kube-system` | Cluster infrastructure | Cilium, CoreDNS, 1password-connect, external-secrets, reloader |
-| `network` | Ingress, DNS, tunnels | Traefik, cloudflare-tunnel, external-dns, k8s-gateway, CrowdSec |
+| `network` | Ingress, DNS, tunnels, edge security | Traefik, cloudflare-tunnel, external-dns, k8s-gateway, CrowdSec, crowdsec-ui |
 | `pulumi` | Infrastructure automation | Pulumi operator + stacks (Authentik, Cloudflare, Unifi) |
 | `tailscale-system` | Tailnet integration | Tailscale operator, golink, generated ExternalName services |
 | `database` | Data stores | PostgreSQL (CNPG), Valkey, Neo4j |
