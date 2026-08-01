@@ -5,15 +5,7 @@ import "package://github.com/jdx/hk/releases/download/v1.54.0/hk@1.54.0#/Builtin
 // Mirrors the design already landed in david-driscoll/home-operations, adapted
 // from that repo's TypeScript linter set to this repo's YAML / Talos / shell
 // shape. See vault#81.
-//
-// WHY THIS FILE LIVES AT THE REPO ROOT
-//
-// hk resolves exactly one project config, and a root `hk.pkl` takes precedence
-// over `.config/hk.pkl` with NO warning of any kind -- the loser is silently
-// inert. `hk init` and the `hk-setup` skill both emit a root `hk.pkl` by
-// default, so anything parked in `.config/` stays permanently shadowable by a
-// stray root file. Living at the winning path is the whole point.
-//
+
 // DELIBERATE SAFETY POSTURE -- do not "fix" this
 //
 //   * `fix = false` on pre-commit / pre-push. hk NEVER mutates the working
