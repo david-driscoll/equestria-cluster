@@ -1,5 +1,12 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/refs/heads/main/charts/crowdsec/values.schema.json
+#
+# NOTE ON TEMPLATING. This file is rendered twice:
+#   * Flux postBuild substitutes ${...} (cluster-secrets / shared-secrets).
+#     `$${...}` escapes a literal `${...}` through to the container.
+#   * external-secrets renders {{ ... }} against the keys of the
+#     `crowdsec-values` ExternalSecret. Key names are the raw 1Password field
+#     names -- see the comment block in externalsecret.yaml.
 container_runtime: containerd
 config:
   config.yaml.local: |
@@ -24,6 +31,60 @@ config:
             - "100.64.0.0/10"
             - "172.16.0.0/12"
 
+  # Hard prerequisite of any enforcement stage, not "cheap insurance". If the
+  # cloudflared -> Traefik -> CrowdSec forwarded-header chain is ever wrong,
+  # every external request looks like it comes from one pod IP; banning that IP
+  # bans the entire internet at once. This makes an internal address
+  # unbannable by construction. Mounted in agent pods only.
+  postoverflows:
+    s01-whitelist:
+      driscoll-internal-networks.yaml: |
+        name: driscoll/internal-networks
+        description: "Never ban cluster, LAN or tailnet addresses"
+        whitelist:
+          reason: "internal network"
+          cidr:
+            - "${CLUSTER_NETWORK}"
+            - "${SERVICE_NETWORK}"
+            - "127.0.0.1/32"
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"
+            - "192.168.0.0/16"
+            - "100.64.0.0/10"
+
+  # Pinned rather than inherited so an image bump cannot silently change ban
+  # duration. Byte-equivalent to the crowdsec 1.7.x default (4h). Keep 4h for
+  # at least the first month of enforcement: a false positive self-heals
+  # overnight at 4h and does not at 168h. Never use permanent bans here.
+  # Mounted in the LAPI pod only.
+  profiles.yaml: |
+    name: default_ip_remediation
+    filters:
+      - Alert.Remediation == true && Alert.GetScope() == "Ip"
+    decisions:
+      - type: ban
+        duration: 4h
+    on_success: break
+    ---
+    name: default_range_remediation
+    filters:
+      - Alert.Remediation == true && Alert.GetScope() == "Range"
+    decisions:
+      - type: ban
+        duration: 4h
+    on_success: break
+
+  # Option C (vault#111 Q1): console enrollment on, CAPI signal sharing on --
+  # attacker IPs and scenario names leave the estate in exchange for the
+  # community blocklist. Manual decisions are deliberately NOT shared: those
+  # are David's own bans and are nobody else's signal.
+  # Mounted in the LAPI pod only.
+  console.yaml: |
+    share_manual_decisions: false
+    share_custom: true
+    share_tainted: true
+    share_context: true
+
 deployAnnotations:
   reloader.stakater.com/auto: "true"
 lapi:
@@ -31,16 +92,64 @@ lapi:
   env:
     - name: TZ
       value: ${TIMEZONE}
-    - name: ENROLL_KEY
-      value: '{{ .apikey_credential }}'
+    # Registers the bouncer named `traefik` with this key on first start. The
+    # SAME value is mounted into Traefik at /etc/secrets/crowdsec/apikey_bouncer
+    # by the crowdsec-secret OnePasswordItem, and read there by
+    # middleware/crowdsec.yaml's crowdsecLapiKeyFile. One 1Password field, one
+    # name, three consumers.
+    #
+    # ROTATION CAVEAT: the image only registers a bouncer whose name is not
+    # already present (`register_bouncer` in docker-start-custom.sh). Changing
+    # the 1Password value alone will NOT update it -- run
+    # `cscli bouncers delete traefik` first, then restart the LAPI.
     - name: BOUNCER_KEY_traefik
       value: "{{ .apikey_bouncer }}"
+    # The crowdsec-ui watcher machine is NOT registered from here: the chart
+    # replaces the upstream entrypoint with files/docker-start-custom.sh, which
+    # has no AGENT_USERNAME/AGENT_PASSWORD passthrough. crowdsec-ui registers
+    # itself against the auto_registration endpoint configured above instead.
+    # ---- BEGIN console enrollment (Option C) ----------------------------
+    # DELETE THESE THREE ENTRIES TO FALL BACK TO OPTION B (community blocklist,
+    # no SaaS console). That is the entire rollback and it needs no secret.
+    #
+    # WHY THIS MATTERS: the LAPI entrypoint runs under `set -e` and calls
+    # `cscli console enroll "$ENROLL_KEY"` unguarded
+    # (build/docker/docker-start-custom.sh:265-277). `cscli console enroll`
+    # returns a non-zero exit on a rejected or expired key, so a DEAD KEY
+    # CRASH-LOOPS THE LAPI -- it does not merely log. An already-enrolled
+    # instance returns success, so restarts after a good first enrollment are
+    # safe. The `credential` field has been unused since 2026-01; verify it in
+    # app.crowdsec.net before merging, or delete these three entries.
+    - name: ENROLL_KEY
+      value: '{{ .credential }}'
     - name: ENROLL_INSTANCE_NAME
       value: '${CLUSTER_CNAME}'
     - name: ENROLL_TAGS
       value: 'k8s ${CLUSTER_CNAME}'
-  dashboard:
-    enabled: true
+    # ---- END console enrollment ------------------------------------------
+  # D2: `lapi.dashboard` removed -- it is not a key in the chart schema in
+  # 0.21.1 or 0.24.0. The bundled Metabase dashboard is gone; crowdsec-ui
+  # replaces it.
+  #
+  # The cluster has TWO default StorageClasses (longhorn and openebs-hostpath),
+  # so an unqualified PVC binds nondeterministically. Pin both explicitly.
+  persistentVolume:
+    data:
+      enabled: true
+      storageClassName: longhorn
+      size: 1Gi
+    config:
+      enabled: true
+      storageClassName: longhorn
+      size: 100Mi
+  # Chart default is 500m CPU request/limit, which is a lot for a process that
+  # mostly waits on postgres.
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
   metrics:
     enabled: true
     serviceMonitor:
@@ -48,29 +157,35 @@ lapi:
   deployAnnotations:
     reloader.stakater.com/auto: "true"
 agent:
+  # D6 (vault#111 Q4): the `namespace: '*', podName: postgres-*` acquisition is
+  # removed. Parsing every Postgres pod's logs cluster-wide is noise in front of
+  # a database that is not internet-facing.
   acquisition:
     - namespace: network
       podName: traefik-*
       program: traefik
-    - namespace: '*'
-      podName: postgres-*
-      program: pgsql
   env:
     - name: TZ
       value: ${TIMEZONE}
+    # D7: crowdsecurity/nextcloud dropped (no Nextcloud in the estate).
+    # D6: crowdsecurity/pgsql dropped with the acquisition above.
     - name: COLLECTIONS
       value: >-
-        crowdsecurity/nextcloud
         crowdsecurity/home-assistant
         crowdsecurity/linux
         crowdsecurity/traefik
         crowdsecurity/base-http-scenarios
         crowdsecurity/http-cve
-        crowdsecurity/pgsql
     - name: PARSERS
       value: >-
         crowdsecurity/cri-logs
         crowdsecurity/docker-logs
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
   deployAnnotations:
     reloader.stakater.com/auto: "true"
   metrics:
