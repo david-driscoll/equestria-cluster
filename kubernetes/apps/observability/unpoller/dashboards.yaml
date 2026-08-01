@@ -79,4 +79,3 @@ spec:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "Prometheus"
   folder: UniFi
-

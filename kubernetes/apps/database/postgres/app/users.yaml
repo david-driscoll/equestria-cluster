@@ -1422,5 +1422,3 @@ spec:
         - regexp:
             source: "[\\W]"
             target: _
-
-

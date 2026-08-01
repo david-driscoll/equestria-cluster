@@ -23,4 +23,3 @@ spec:
       method: GET
       conditions:
         - "[STATUS] == 200"
-

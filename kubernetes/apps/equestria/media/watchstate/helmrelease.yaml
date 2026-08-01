@@ -102,4 +102,3 @@ spec:
     persistence:
       config:
         existingClaim: ${APP}
-
