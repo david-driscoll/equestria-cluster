@@ -138,4 +138,3 @@ spec:
           gethomepage.dev/widget.type: lazylibrarian
           gethomepage.dev/namespace: "{{ .Release.Namespace }}" # The kubernetes namespace the app resides in
           gethomepage.dev/app: "${APP}"
-

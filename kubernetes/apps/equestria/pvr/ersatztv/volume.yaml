@@ -12,7 +12,7 @@ spec:
   storageClassName: truenas-iscsi-stash
   volumeMode: Filesystem
   csi:
-    driver: 
+    driver:
     readOnly: false
     volumeHandle: ersatztv
     volumeAttributes:

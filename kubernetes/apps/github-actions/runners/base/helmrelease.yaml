@@ -66,4 +66,3 @@ spec:
                 mountPath: /home/runner/_work
         volumes:
           - name: work
-
