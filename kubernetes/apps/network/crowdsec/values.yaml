@@ -1,23 +1,38 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/refs/heads/main/charts/crowdsec/values.schema.json
 #
-# NOTE ON TEMPLATING. This file is rendered twice:
-#   * Flux postBuild substitutes dollar-brace variables from cluster-secrets and
-#     shared-secrets. Doubling the dollar sign escapes one through to the
-#     container instead (see REGISTRATION_TOKEN below).
-#   * external-secrets renders {{ ... }} against the keys of the
-#     `crowdsec-values` ExternalSecret. Key names are the raw 1Password field
-#     names -- see the comment block in externalsecret.yaml.
+# This file is plain Helm values. Nothing runs it through a Go template: the
+# HelmRelease reads it out of the ConfigMap kustomize generates from it, and
+# every secret CrowdSec needs arrives as a pod environment variable from the
+# `crowdsec-secrets` Secret instead. A two-brace action written anywhere here
+# is inert -- it would reach Helm as literal text. That was NOT true until
+# 2026-08; see externalsecret.yaml for what changed and why.
+#
+# ONE substitution is still live, and it applies to comments exactly as much
+# as to values, because configMapGenerator slurps this file whole and Flux
+# postBuild envsubst then runs over the built output: a dollar sign followed
+# by a braced name is expanded from cluster-secrets / shared-secrets ANYWHERE
+# in the file, and an undefined name expands to nothing, silently. Double the
+# dollar sign to pass a literal one through to the container -- that is what
+# the CROWDSEC_DB_* and REGISTRATION_TOKEN references below are doing, since
+# CrowdSec expands those itself, from the pod environment, when it loads its
+# config. `scripts/eso-values-lint` enforces this in CI.
 container_runtime: containerd
 config:
+  # The five database values are NOT written in here. CrowdSec runs
+  # csstring.StrictExpand over the merged config.yaml + config.yaml.local text
+  # before it parses either (pkg/csconfig/config.go), so a braced name here is
+  # resolved from the LAPI pod's own environment at startup -- exactly the
+  # mechanism the chart already depends on for REGISTRATION_TOKEN below. The
+  # matching env vars are declared under `lapi.env`, sourced with secretKeyRef.
   config.yaml.local: |
     db_config:
       type:     postgresql
-      user:     {{ .postgres_username }}
-      password: {{ .postgres_password }}
-      db_name:  {{ .postgres_database }}
-      host:     {{ .postgres_hostname }}
-      port:     {{ .postgres_port }}
+      user:     $${CROWDSEC_DB_USER}
+      password: $${CROWDSEC_DB_PASSWORD}
+      db_name:  $${CROWDSEC_DB_NAME}
+      host:     $${CROWDSEC_DB_HOST}
+      port:     $${CROWDSEC_DB_PORT}
     api:
       server:
         auto_registration: # Activate if not using TLS for authentication
@@ -93,6 +108,38 @@ lapi:
   env:
     - name: TZ
       value: ${TIMEZONE}
+    # ---- database ---------------------------------------------------------
+    # Consumed by name from `config.config.yaml.local` above. Keys come from
+    # the `crowdsec-secrets` Secret, which external-secrets fills from the
+    # CNPG-managed `crowdsec-postgres` Secret in the database namespace; the
+    # `postgres_` prefix is applied by the rewrite in externalsecret.yaml.
+    # These values never appear in a ConfigMap, a Helm values blob or a Helm
+    # release revision -- they go 1Password/CNPG -> Secret -> secretKeyRef.
+    - name: CROWDSEC_DB_USER
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: postgres_username
+    - name: CROWDSEC_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: postgres_password
+    - name: CROWDSEC_DB_NAME
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: postgres_database
+    - name: CROWDSEC_DB_HOST
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: postgres_hostname
+    - name: CROWDSEC_DB_PORT
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: postgres_port
     # Registers the bouncer named `traefik` with this key on first start. The
     # SAME value is mounted into Traefik at /etc/secrets/crowdsec/apikey_bouncer
     # by the crowdsec-secret OnePasswordItem, and read there by
@@ -104,7 +151,10 @@ lapi:
     # the 1Password value alone will NOT update it -- run
     # `cscli bouncers delete traefik` first, then restart the LAPI.
     - name: BOUNCER_KEY_traefik
-      value: "{{ .apikey_bouncer }}"
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: apikey_bouncer
     # The crowdsec-ui watcher machine is NOT registered from here: the chart
     # replaces the upstream entrypoint with files/docker-start-custom.sh, which
     # has no AGENT_USERNAME/AGENT_PASSWORD passthrough. crowdsec-ui registers
@@ -122,7 +172,10 @@ lapi:
     # safe. The `credential` field has been unused since 2026-01; verify it in
     # app.crowdsec.net before merging, or delete these three entries.
     - name: ENROLL_KEY
-      value: '{{ .credential }}'
+      valueFrom:
+        secretKeyRef:
+          name: ${APP}-secrets
+          key: credential
     - name: ENROLL_INSTANCE_NAME
       value: '${CLUSTER_CNAME}'
     - name: ENROLL_TAGS
