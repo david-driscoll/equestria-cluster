@@ -46,6 +46,14 @@ spec:
       # alert history) is the size driver.
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_ACCESSMODES: ReadWriteOnce
+      # Sizes the long-lived ReplicationSource restic cache; 2Gi is what every
+      # other volsync-backed app on this cluster runs with. Kept pinned rather
+      # than left to the default because both movers read this one variable and
+      # their defaults differ -- 2Gi in the ReplicationSource but 8Gi in the
+      # ReplicationDestination -- so if components/volsync-restore is ever added
+      # back here for a disaster-recovery restore, it inherits 2Gi instead of
+      # provisioning an 8Gi 2-replica longhorn-cache volume.
+      VOLSYNC_CACHE_CAPACITY: 2Gi
       # The image runs as the `node` user (1000:1000); the restic mover has to
       # match or it cannot read what it is backing up.
       VOLSYNC_PUID: "1000"

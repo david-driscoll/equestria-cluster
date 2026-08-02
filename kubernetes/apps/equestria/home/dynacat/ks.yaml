@@ -33,12 +33,31 @@ spec:
   components:
     - ../kubernetes/components/failover/fast-node-eviction
     - ../kubernetes/components/tailscale
+    # NOTE: these paths resolve inside the home-operations repo, not this one --
+    # sourceRef above is GitRepository/home-operations. If this app ever needs a
+    # bootstrap or disaster-recovery restore, add
+    # `../kubernetes/components/volsync-restore` here, wait for
+    # `kubectl -n equestria get replicationdestination dynacat-dst` to report a
+    # lastSyncTime, then REMOVE it again. Leaving it in permanently is what
+    # caused the 2026-07 Longhorn incident (vault#120): the restore-once trigger
+    # had already fired, the nightly volsync-system/restore-cleanup CronJob
+    # reaped the RD at 03:30, and Flux recreated it on the next reconcile --
+    # re-running a full restic restore and re-provisioning a 5Gi
+    # longhorn-snapshot + 8Gi longhorn-cache PVC pair, every single day.
     - ../kubernetes/components/volsync
   postBuild:
     substitute:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 5Gi
+      # Both movers read this one variable, but the defaults are asymmetric:
+      # 2Gi in the ReplicationSource and 8Gi in the ReplicationDestination. The
+      # ReplicationSource has run fine on 2Gi for 83 days against this exact
+      # restic repository (which is tiny -- a full restore completes in 4s), so
+      # pinning 2Gi changes nothing today and stops a future volsync-restore
+      # from silently provisioning an 8Gi longhorn-cache volume to restore a 5Gi
+      # source. Same pin as crowdsec-ui (#2987) and tsiam (sgc#1739).
+      VOLSYNC_CACHE_CAPACITY: 2Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
     substituteFrom:
