@@ -38,40 +38,6 @@ spec:
     - ../../../components/failover/fast-node-eviction
     - ../../../components/tailscale
     - ../../../components/volsync
-    # BOOTSTRAP ONLY -- REMOVE ONCE THE RESTORE HAS COMPLETED.
-    #
-    # components/volsync always stamps the app PVC with a dataSourceRef to a
-    # ReplicationDestination named ${APP}-dst, but the ReplicationDestination
-    # itself lives here, in components/volsync-restore. Without it the PVC is
-    # claimed by the VolSync volume populator, Longhorn stands down
-    # ("assuming an external populator will provision the volume"), and the
-    # populator waits forever for an object nothing creates -- so the PVC never
-    # binds and the pod never schedules. That is exactly what happened on the
-    # initial crowdsec-ui deploy, and to tsiam on stargate-command-cluster
-    # (sgc#1739); technitium in this namespace is Bound only because its own
-    # -dst existed when its PVC was created and was later reaped by the
-    # nightly volsync-system/restore-cleanup CronJob.
-    #
-    # crowdsec-ui has no backup to restore: the restic repository at
-    # /repository/crowdsec-ui does not exist yet. That is fine and is the
-    # intended bootstrap path. VolSync 0.16.0's restic mover runs
-    # `ensure_initialized` (creating the repo) and then do_restore finds
-    # nothing, logs "No eligible snapshots found / No data will be restored",
-    # and exits 0. The result is an empty volume, a bound PVC, and an
-    # initialized repository for the ReplicationSource to back up into at 14:00.
-    #
-    # The PVC itself is deliberately NOT touched: dataSourceRef is immutable,
-    # and the populator watches ReplicationDestinations and re-enqueues unbound
-    # PVCs, so simply creating crowdsec-ui-dst is sufficient.
-    #
-    # Lifecycle from here (see components/volsync-restore/AGENTS.md):
-    #   1. RD restores (no-op), sets status.lastManualSync=restore-once, PVC binds.
-    #   2. The nightly volsync-restore-cleanup CronJob (03:30) deletes the
-    #      completed RD, cascading away the -dst-dest/-dst-cache PVCs.
-    #   3. This component MUST then be removed from this list, or Flux recreates
-    #      the RD every reconcile and fights the cleanup job -- the permanent
-    #      -dst-dest/-dst-cache pair is what caused the 2026-07 Longhorn incident.
-    - ../../../components/volsync-restore
   postBuild:
     substitute:
       APP: *app
@@ -80,14 +46,13 @@ spec:
       # alert history) is the size driver.
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_ACCESSMODES: ReadWriteOnce
-      # Both movers read this one variable, but the defaults differ: 2Gi in the
-      # ReplicationSource and 8Gi in the ReplicationDestination. Left unset, the
-      # bootstrap restore below would provision an 8Gi 2-replica longhorn-cache
-      # volume to restore zero bytes. 2Gi rather than a smaller number because
-      # this same value also sizes the long-lived ReplicationSource cache, and
-      # 2Gi is what every other volsync-backed app on this cluster runs with;
-      # this pin only removes the 8Gi over-provision, it does not shrink the
-      # source cache below the estate norm.
+      # Sizes the long-lived ReplicationSource restic cache; 2Gi is what every
+      # other volsync-backed app on this cluster runs with. Kept pinned rather
+      # than left to the default because both movers read this one variable and
+      # their defaults differ -- 2Gi in the ReplicationSource but 8Gi in the
+      # ReplicationDestination -- so if components/volsync-restore is ever added
+      # back here for a disaster-recovery restore, it inherits 2Gi instead of
+      # provisioning an 8Gi 2-replica longhorn-cache volume.
       VOLSYNC_CACHE_CAPACITY: 2Gi
       # The image runs as the `node` user (1000:1000); the restic mover has to
       # match or it cannot read what it is backing up.
