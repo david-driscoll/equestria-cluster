@@ -54,7 +54,7 @@ CGNAT range are already listed.
 | # | Prerequisite | How to check |
 |---|---|---|
 | P1 | 1Password item `Crowdsec ApiKey` (vault `Eris`) has field `apikey_bouncer` | `kubectl get secret crowdsec-secret -n network -o json \| jq '.data \| keys'` — done, present |
-| P2 | The same item has field `credential` holding a **currently valid** console enrollment key | Sign in to `app.crowdsec.net` → Security Engines → enrollment keys. See §Enrollment below |
+| P2 | ~~The same item has field `credential` holding a **currently valid** console enrollment key~~ **DROPPED 2026-08-02** — console enrolment is off (Option B) after the stale `credential` key crash-looped the LAPI. Not a prerequisite for any stage | n/a. See §Enrollment and §Re-enabling below if you ever want the console back |
 | P3 | A **separate** item `Crowdsec UI` (vault `Eris`) has field `password` (a generated password, ≥ 24 chars) | needed by `crowdsec-ui`; provisioned 2026-08-01. Deliberately *not* a field on `Crowdsec ApiKey` — `crowdsec-ui`'s ExternalSecret extracts this item itself and prefixes its keys to `webui_*`, so the template key stays `webui_password` |
 | P4 | Authentik OIDC app for `crowdsec-ui` provisioned, `crowdsec-ui-oidc-credentials` present in the `cluster` store | runs automatically once `definition.yaml` lands and the Pulumi authentik stack runs |
 
@@ -70,23 +70,76 @@ useful negative test only — it proves nothing about validity.
 
 ### Enrollment (`ENROLL_KEY`) is a crash-loop risk, not a log line
 
-The LAPI entrypoint (`build/docker/docker-start-custom.sh` in the crowdsec
-image) runs under `set -e` and calls:
+**This fired on 2026-08-02. Console enrolment is now OFF (Option B).** P2 above
+is therefore not a prerequisite for anything — leave it unchecked.
+
+The entrypoint is the *chart's* `files/docker-start-custom.sh`, not the image's:
+the chart embeds it via `.Files.Get` into `crowdsec-docker-start-script-configmap`
+and mounts it at `/docker_start.sh`. It runs under `set -e` (line 9) and calls,
+at line 277 of chart 0.24.0:
 
 ```bash
-cscli console enroll "${enroll_args[@]}" "$ENROLL_KEY"
+cscli console enroll $enroll_args "$ENROLL_KEY"
 ```
 
 unguarded. `cscli console enroll` returns non-zero on a rejected or expired key,
 so **a dead key crash-loops the LAPI**. An *already enrolled* instance returns
-success with a warning, so restarts after a good first enrollment are safe.
+success, so restarts after a good first enrollment are safe.
 
-If the LAPI comes up `CrashLoopBackOff` with `could not enroll instance` in its
-logs, the fix is to delete the three `ENROLL_*` entries from
-`kubernetes/apps/network/crowdsec/values.yaml` — that falls back to Option B
-(community blocklist, no SaaS console), needs no key, and loses only the hosted
-dashboard, which `crowdsec-ui` replaces anyway. **Enrollment is optional garnish
-and must never gate the security engine.**
+Two details that make it worse than "no console":
+
+* **Bouncer registration is downstream.** Enrolment is line 277; the
+  `BOUNCER_KEY_*` loop is line 310. A dead enrolment key means the `traefik`
+  bouncer is never registered either, so Stage 2's proof below cannot pass.
+* **Flux uninstalls the release.** The HelmRelease has `timeout: 10m`; when the
+  LAPI never goes Ready the install fails and install remediation *uninstalls*
+  CrowdSec entirely, then retries. The symptom cycles rather than sitting still.
+
+There is no chart value for this and no fixed chart to upgrade to (0.24.0 is the
+newest published, and the call is still unguarded on the chart's main branch).
+`helmrelease.yaml` therefore carries a `postRenderers` patch that rewrites that
+one line to append `|| echo CROWDSEC_CONSOLE_ENROLL_FAILED_NONFATAL`. Grep the
+LAPI log for that string to see it catch. It fails open: if a chart bump changes
+the line, the `sed` no-ops and behaviour returns to the unguarded default.
+
+**Enrollment is optional garnish and must never gate the security engine.**
+
+### Re-enabling console enrolment
+
+Only worth doing for the hosted console UI and CAPI signal-sharing; `crowdsec-ui`
+already replaces the dashboard, and the community blocklist works without any of
+this.
+
+1. Sign in to `app.crowdsec.net` → **Security Engines → Enroll**, and copy the
+   enrollment key.
+2. Put it on the 1Password item **`Crowdsec ApiKey`** (vault `Eris`), field
+   **`credential`**. Nothing else needs rewiring — `externalsecret.yaml` still
+   copies that field into the `crowdsec-secrets` Secret verbatim, and was left
+   untouched when enrolment was switched off.
+3. Paste this block back into `lapi.env` in
+   `kubernetes/apps/network/crowdsec/values.yaml`, where the
+   `---- console enrolment: OFF ----` comment is:
+
+   ```yaml
+   - name: ENROLL_KEY
+     valueFrom:
+       secretKeyRef:
+         name: ${APP}-secrets
+         key: credential
+   - name: ENROLL_INSTANCE_NAME
+     value: '${CLUSTER_CNAME}'
+   - name: ENROLL_TAGS
+     value: 'k8s ${CLUSTER_CNAME}'
+   ```
+
+The block lives here rather than commented out in `values.yaml` because a
+dollar-brace sequence in a *comment* in that file is not inert — Flux `postBuild`
+envsubst expands comments too, which is the trap that broke #2977 and #2980, and
+`scripts/eso-values-lint` fails CI for it. In this Markdown file it is inert.
+
+Verify after re-enabling: `cscli console status` in the LAPI pod, and confirm the
+log has no `CROWDSEC_CONSOLE_ENROLL_FAILED_NONFATAL` line (which would mean the
+new key was rejected too — the guard caught it and the LAPI stayed up).
 
 ---
 

@@ -71,3 +71,59 @@ spec:
         - namespace: network
           podName: traefik-*
           program: traefik
+  # ---- console-enrolment guard -------------------------------------------
+  # Makes `cscli console enroll` unable to kill the LAPI.
+  #
+  # WHY A POSTRENDERER AND NOT A CHART VALUE: there is no chart value for this,
+  # verified rather than assumed against chart 0.24.0 itself. The entrypoint is
+  # embedded with `.Files.Get "files/docker-start-custom.sh"` into a fixed
+  # ConfigMap name (templates/docker-start-configmap.yaml), the `command` below
+  # is a hardcoded string in templates/lapi-deployment.yaml with no value hook,
+  # and neither values.yaml nor values.schema.json exposes any enrol-related
+  # toggle. 0.24.0 is also the newest published chart, and the call is still
+  # unguarded on the chart's main branch, so there is no upgrade to wait for.
+  # The only remaining lever is the command line, hence this.
+  #
+  # WHAT IT DOES: rewrites the one `cscli console enroll` line of the entrypoint
+  # to append `|| echo ...` before running it, so a rejected key logs and the
+  # script continues to bouncer registration instead of aborting under `set -e`.
+  # The rewrite is a copy to /tmp; the ConfigMap mount stays read-only.
+  #
+  # FAILS OPEN: if a future chart changes that line so the pattern stops
+  # matching, sed passes the script through untouched and behaviour is exactly
+  # what it is today -- the guard can stop protecting, it cannot itself break
+  # startup. Grep for CROWDSEC_CONSOLE_ENROLL_FAILED_NONFATAL in the LAPI log to
+  # see the guard actually catch something.
+  #
+  # COUPLING TO WATCH: the `cp`/`ln` half of this command is copied verbatim
+  # from templates/lapi-deployment.yaml (emitted only when
+  # lapi.persistentVolume.config.enabled is true, which it is). The chart is
+  # pinned by digest above, so a bump is a deliberate act -- re-diff this
+  # command against the chart's own when you take one.
+  #
+  # Deliberately no dollar signs anywhere in the command: this file is subject
+  # to Flux postBuild envsubst, and a bare or braced name would be eaten.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: crowdsec-lapi
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: crowdsec-lapi
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: crowdsec-lapi
+                        command:
+                          - sh
+                          - -c
+                          - >-
+                            cp -nR /staging/etc/crowdsec/* /etc/crowdsec_data/
+                            && ln -s /etc/crowdsec_data /etc/crowdsec
+                            && sed 's#^\( *\)cscli console enroll \(.*\)#\1cscli console enroll \2 || echo CROWDSEC_CONSOLE_ENROLL_FAILED_NONFATAL#' /docker_start.sh > /tmp/docker_start.sh
+                            && bash /tmp/docker_start.sh
