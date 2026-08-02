@@ -16,5 +16,12 @@ resources:
   # - ./karakeep/ks.yaml
   - ./meilisearch/ks.yaml
   - ./tududi/ks.yaml
+  # Left commented until the four ghcr.io/david-driscoll/itsaplan-* images
+  # exist -- upstream publishes none, every service is a `build:` from the
+  # checkout. Uncommenting before then gives four ImagePullBackOff pods and a
+  # Kustomization that never reaches Ready (`wait: true`). See
+  # ./itsaplan/AGENTS.md for the build repo, the rebuild trigger, and the rest
+  # of the first-deploy checklist.
+  # - ./itsaplan/ks.yaml
   # - ./outline/ks.yaml
   # - ./collabora/ks.yaml

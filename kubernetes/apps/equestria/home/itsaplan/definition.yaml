@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: "It's a Plan"
+  category: Applications
+  description: "Self-hosted project management and issue tracking"
+  url: &url https://${APP}.${ROOT_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kanban.svg
+  access_policy:
+    groups:
+      - family
+  # No `authentik:` block on purpose. itsaplan authenticates with better-auth
+  # (email/password, passkeys, magic links, Google) and has no generic OIDC
+  # client, so there is nothing for an Authentik provider to bind to. A forward-
+  # auth proxy in front of it would double-prompt rather than sign users in.
+  # Access control is the internal-only Gateway plus the app's own registration
+  # mode, which defaults to `open` and MUST be set to `closed` or `invite` in
+  # god mode immediately after the first account is created.
+  gatus:
+    - group: "Applications"
+      url: *url
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
+    - group: "Applications"
+      url: https://${APP}-api.${ROOT_DOMAIN}/
+      method: GET
+      conditions:
+        - "[STATUS] == 200"
+        - "[BODY].status == ok"

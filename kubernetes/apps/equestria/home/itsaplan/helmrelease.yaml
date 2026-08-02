@@ -1,0 +1,484 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+#
+# itsaplan -- self-hosted project management / issue tracking (AGPL-3.0).
+# Migrated from the upstream docker-compose.yml at croffasia/itsaplan v0.5.0.
+#
+# IMAGES: upstream publishes none. Every service in the compose file is a
+# `build:` from the checkout, and `ghcr.io` appears nowhere in that repository.
+# The four `ghcr.io/david-driscoll/itsaplan-*` images referenced below are built
+# by the estate. See AGENTS.md in this directory for the build contract, the
+# rebuild trigger, and what must exist before this HelmRelease can reconcile.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app itsaplan
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 3
+  interval: 15m
+  driftDetection:
+    mode: enabled
+  # Longer than the estate default: the api applies drizzle migrations before it
+  # listens, and `wait: true` on the Kustomization holds the whole app until
+  # that pod is Ready.
+  timeout: 15m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: true
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    fullnameOverride: *app
+
+    controllers:
+      # ── api ────────────────────────────────────────────────────────────────
+      # Applies database migrations on startup, then serves the API. Also hosts
+      # the MinIO object store as a native sidecar, because MinIO has no network
+      # exposure of its own: the api streams attachment bytes through itself, so
+      # MinIO is reachable only over the pod loopback and there is no Service,
+      # no route, and no console for it anywhere.
+      api:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        # The MinIO PVC is ReadWriteOnce, so two api pods can never overlap.
+        strategy: Recreate
+        initContainers:
+          # `restartPolicy: Always` makes this a native sidecar (KEP-753): it is
+          # started before the regular containers, kept running for the life of
+          # the pod, and torn down after them. The next init container does not
+          # start until this one's startupProbe passes, which is what gives
+          # minio-init the "MinIO is listening" guarantee that upstream gets
+          # from `depends_on: service_healthy`. A plain init container could not
+          # do this -- it would have to exit first.
+          minio:
+            restartPolicy: Always
+            image:
+              repository: docker.io/minio/minio
+              tag: RELEASE.2025-09-07T16-13-09Z@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+              pullPolicy: IfNotPresent
+            args: ["server", "/data"]
+            env:
+              TZ: "${TIMEZONE}"
+              # No console, no browser UI, nothing to expose. Upstream keeps the
+              # console on :9001 inside the compose network; dropping it removes
+              # the port instead of merely not publishing it.
+              MINIO_BROWSER: "off"
+              MINIO_ROOT_USER:
+                secretKeyRef:
+                  name: ${APP}-env
+                  key: S3_ACCESS_KEY_ID
+              MINIO_ROOT_PASSWORD:
+                secretKeyRef:
+                  name: ${APP}-env
+                  key: S3_SECRET_ACCESS_KEY
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /minio/health/live
+                    port: &minio-port 9000
+                  periodSeconds: 3
+                  timeoutSeconds: 3
+                  failureThreshold: 30
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /minio/health/live
+                    port: *minio-port
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+          # One-shot equivalent of upstream's minio-init service. Ordered after
+          # the sidecar by `dependsOn`, so it runs against a MinIO that is
+          # already answering its health check.
+          minio-init:
+            dependsOn: minio
+            image:
+              repository: docker.io/minio/mc
+              tag: RELEASE.2025-08-13T08-35-41Z@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727
+              pullPolicy: IfNotPresent
+            command: ["/bin/sh", "-c"]
+            args:
+              # `mc alias set` rather than MC_HOST_local: the credentials are
+              # `openssl rand -base64 32` output, which contains +/= and cannot
+              # be embedded in a URL userinfo without escaping. --config-dir
+              # points at the tmp emptyDir because the container has no writable
+              # home.
+              - |
+                set -eu
+                mc --config-dir /tmp/.mc alias set local \
+                  "http://127.0.0.1:9000" "$S3_ACCESS_KEY_ID" "$S3_SECRET_ACCESS_KEY"
+                mc --config-dir /tmp/.mc mb --ignore-existing "local/$S3_BUCKET"
+                echo "bucket ready: $S3_BUCKET"
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            env:
+              S3_BUCKET: &bucket planner-attachments
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+        containers:
+          api:
+            image:
+              repository: ghcr.io/david-driscoll/itsaplan-api
+              tag: v0.5.0
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: ${APP}-env
+            env:
+              TZ: "${TIMEZONE}"
+              NODE_ENV: production
+              API_PORT: &api-port 3000
+              # Two public origins, each entered once. API_URL is the api origin
+              # (better-auth handler, email links, and the origin baked into the
+              # web bundle at image build time). APP_URL is the web origin (CORS
+              # trusted origins, passkey RP, email links).
+              API_URL: "https://${APP}-api.${ROOT_DOMAIN}"
+              APP_URL: "https://${APP}.${ROOT_DOMAIN}"
+              # COOKIE_DOMAIN is intentionally unset: better-auth derives the
+              # parent domain from APP_URL, which is correct for a single-label
+              # subdomain under ${ROOT_DOMAIN}. It only needs overriding for
+              # multi-label TLDs or deeper subdomains.
+              #
+              # MinIO over the pod loopback -- same pod, no Service, no route.
+              S3_ENDPOINT: "http://127.0.0.1:9000"
+              S3_BUCKET: *bucket
+              S3_REGION: us-east-1
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
+            probes:
+              # The container runs `bun packages/db/src/migrate.ts` and only
+              # then `bun apps/api/src/index.ts`, so nothing is listening while
+              # migrations apply. Upstream allows 90s (compose start_period);
+              # this allows 300s (60 x 5s) before the kubelet gives up, and the
+              # liveness probe is gated behind it so it cannot kill the process
+              # mid-migration. tandoor crash-looped on exactly this mistake.
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *api-port
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 60
+              liveness: &api-probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *api-port
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 4
+              readiness: *api-probe
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+      # ── worker ─────────────────────────────────────────────────────────────
+      # Webhook delivery, notification delivery, agent schedules and agent runs.
+      # Shares the database with the api; no ports, no probes to hang one on.
+      worker:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          worker:
+            image:
+              repository: ghcr.io/david-driscoll/itsaplan-worker
+              tag: v0.5.0
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: ${APP}-internal-env
+            env:
+              TZ: "${TIMEZONE}"
+              NODE_ENV: production
+              SERVICE_URL_API: &api-svc "http://${APP}-api.${NAMESPACE}.svc.cluster.local:3000"
+              # Anonymous telemetry off (TELEMETRY.md); either variable set to
+              # anything but 0 disables it.
+              TELEMETRY_DISABLED: "1"
+              DO_NOT_TRACK: "1"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+      # ── bot ────────────────────────────────────────────────────────────────
+      # Telegram long polling. The bot token lives in the database and is edited
+      # in god mode, so it is not an environment variable here.
+      #
+      # EXACTLY ONE REPLICA, STRUCTURALLY. Telegram hands each getUpdates call
+      # to a single caller, so a second instance steals updates from the first
+      # and messages disappear at random. `replicas: 1` alone does not achieve
+      # this -- a RollingUpdate deliberately runs the new pod alongside the old
+      # one, so every rollout would briefly run two bots. `strategy: Recreate`
+      # is what makes it structural: the old pod is fully terminated before the
+      # new one is created. Do not change this to RollingUpdate, and do not
+      # scale this controller.
+      bot:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        strategy: Recreate
+        containers:
+          bot:
+            image:
+              repository: ghcr.io/david-driscoll/itsaplan-bot
+              tag: v0.5.0
+              pullPolicy: IfNotPresent
+            env:
+              TZ: "${TIMEZONE}"
+              NODE_ENV: production
+              SERVICE_URL_API: *api-svc
+              # The bot has no database access; it reads its token and writes
+              # account links through the api's internal routes, so the internal
+              # token is the only secret it gets.
+              WORKER_INTERNAL_TOKEN:
+                secretKeyRef:
+                  name: ${APP}-internal-env
+                  key: WORKER_INTERNAL_TOKEN
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+      # ── web ────────────────────────────────────────────────────────────────
+      # Next.js standalone build. NEXT_PUBLIC_API_URL is inlined into the
+      # browser bundle at IMAGE BUILD TIME, so this image is bound to the api
+      # origin it was built against: changing API_URL above means rebuilding and
+      # re-tagging the web image, not just editing this file. See AGENTS.md.
+      web:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        strategy: RollingUpdate
+        containers:
+          web:
+            image:
+              repository: ghcr.io/david-driscoll/itsaplan-web
+              tag: v0.5.0
+              pullPolicy: IfNotPresent
+            env:
+              TZ: "${TIMEZONE}"
+              NODE_ENV: production
+              PORT: &web-port 3001
+              HOSTNAME: "0.0.0.0"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+            probes:
+              # /login renders without a session and without reaching the api,
+              # so it stays green even while the api is applying migrations.
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /login
+                    port: *web-port
+                  periodSeconds: 5
+                  timeoutSeconds: 5
+                  failureThreshold: 24
+              liveness: &web-probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /login
+                    port: *web-port
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 4
+              readiness: *web-probe
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+
+    persistence:
+      # MinIO data. advancedMounts scopes the volume to the api controller only,
+      # so the worker/bot/web pods never reference this ReadWriteOnce claim and
+      # stay freely schedulable. Claim is created by components/volsync.
+      data:
+        existingClaim: ${APP}
+        advancedMounts:
+          api:
+            minio:
+              - path: /data
+      # mc needs somewhere to write its config; the container itself is
+      # read-only.
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          api:
+            minio-init:
+              - path: /tmp
+      # Next.js `output: standalone` does not ship .next/cache, so the server
+      # creates it at runtime -- under a directory the image owns as root, in a
+      # pod that runs as uid 1000. Without a writable volume here the first ISR
+      # write fails with EACCES. Ephemeral on purpose: it is a render cache.
+      web-cache:
+        type: emptyDir
+        advancedMounts:
+          web:
+            web:
+              - path: /app/apps/web/.next/cache
+
+    service:
+      api:
+        controller: api
+        type: ClusterIP
+        ports:
+          http:
+            port: *api-port
+      web:
+        controller: web
+        type: ClusterIP
+        ports:
+          http:
+            port: *web-port
+      # Deliberately no MinIO Service. Upstream keeps both the S3 API (:9000)
+      # and the console (:9001) off the network entirely and the api streams
+      # attachment bytes through itself; putting MinIO in the api pod preserves
+      # that exactly.
+
+    route:
+      # Both origins are on the *internal* Gateway only. Reasons, rather than a
+      # default:
+      #   - itsaplan's registration mode defaults to `open`
+      #     (packages/auth/src/instance.ts) and is only closable afterwards from
+      #     god mode, so an internet-reachable instance accepts self-signup
+      #     until someone logs in and turns it off.
+      #   - It holds project data plus AI-provider credentials encrypted with
+      #     APP_ENCRYPTION_KEY.
+      #   - Nothing about it needs inbound reachability. The Telegram bot uses
+      #     long polling (outbound getUpdates), and webhook delivery is outbound
+      #     from the worker. Neither wants a public origin.
+      #   - Passkeys/WebAuthn and secure cookies need HTTPS and a stable RP id,
+      #     which the internal Gateway already provides with real certificates.
+      # The cost is that notification email links resolve only on the LAN or
+      # over Tailscale, which is the intended audience.
+      web:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: web
+                port: *web-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  name: local-user
+      api:
+        parentRefs:
+          - name: internal
+            namespace: network
+            kind: Gateway
+        hostnames:
+          - "${APP}-api.${ROOT_DOMAIN}"
+        kind: HTTPRoute
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: api
+                port: *api-port
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: traefik.io
+                  kind: Middleware
+                  # local-api, not local-user: the same ipAllowList without the
+                  # error-pages middleware, which would replace the api's JSON
+                  # error bodies with HTML and break the browser client's error
+                  # handling.
+                  name: local-api

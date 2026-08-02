@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app itsaplan
+  namespace: &namespace equestria
+  labels:
+    app.kubernetes.io/name: *app
+    driscoll.dev/name: *app
+spec:
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+      driscoll.dev/name: *app
+  path: ./kubernetes/apps/equestria/home/itsaplan
+  prune: true
+  force: false
+  wait: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 15m
+  dependsOn:
+    - name: volsync
+      namespace: volsync-system
+    - name: external-secrets
+      namespace: kube-system
+    - name: postgres
+      namespace: database
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  components:
+    - ../../../../components/failover/fast-node-eviction
+    - ../../../../components/postgres
+    - ../../../../components/tailscale
+    # FIRST DEPLOY ONLY -- uncomment `volsync-restore` for the very first
+    # reconcile of this app, then remove it again once
+    # `kubectl -n equestria get replicationdestination itsaplan-dst` reports a
+    # lastSyncTime. components/volsync/pvc.yaml pins
+    # `dataSourceRef -> ReplicationDestination/itsaplan-dst`, which nothing
+    # creates unless this component is present; without it the VolSync volume
+    # populator claims the brand-new PVC, Longhorn stands down, and the PVC
+    # stays Pending forever with no error (equestria-cluster#2987,
+    # stargate-command-cluster#1739). With no snapshots in the repository the
+    # restore is a successful no-op that initializes it and binds an empty
+    # volume. Leaving it in permanently is the other half of the trap: the
+    # restore-once trigger has already fired, the nightly
+    # volsync-system/restore-cleanup CronJob reaps the ReplicationDestination
+    # at 03:30, and Flux recreates it on the next reconcile -- a full restic
+    # restore plus a fresh longhorn-snapshot/longhorn-cache PVC pair, daily
+    # (the 2026-07 Longhorn incident, vault#120).
+    # - ../../../../components/volsync-restore
+    - ../../../../components/volsync
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
+      # MinIO object store for issue attachments. Attachment metadata lives in
+      # postgres; only the bytes are here.
+      VOLSYNC_CAPACITY: 20Gi
+      VOLSYNC_ACCESSMODES: ReadWriteOnce
+      # Pinned rather than inherited: the two movers read this one variable but
+      # their defaults are asymmetric (ReplicationSource 2Gi,
+      # ReplicationDestination 8Gi), so an unpinned first-deploy
+      # volsync-restore silently provisions an 8Gi longhorn-cache volume to
+      # restore an empty repository. Same pin as dynacat (#2989), crowdsec-ui
+      # (#2987) and tsiam (sgc#1739).
+      VOLSYNC_CACHE_CAPACITY: 2Gi
+      # Must match the MinIO container's runAsUser/runAsGroup below, or the
+      # restic mover writes files MinIO cannot read back.
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"
