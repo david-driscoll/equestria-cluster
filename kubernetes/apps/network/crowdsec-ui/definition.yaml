@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: CrowdSec Console
-  category: ${CLUSTER_TITLE}
+  category: Applications
   description: Alerts, decisions and metrics for the CrowdSec LAPI.
   url: https://${APP}.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/crowdsec.svg
@@ -35,7 +35,7 @@ spec:
     # rather than "did the OIDC redirect happen". The route still sits behind
     # the internal-network middleware, so this only works from the LAN, tailnet
     # or the cluster -- the same as every other internal check here.
-    - group: ${CLUSTER_TITLE}
+    - group: Applications
       url: https://${APP}.${CLUSTER_DOMAIN}/api/health
       method: GET
       conditions:
