@@ -42,7 +42,14 @@ spec:
       data:
         accessMode: ReadWriteOnce
         size: 4Gi
-        storageClass: longhorn-local
+        # Was `longhorn-local` (strict-local, 1 replica) until 2026-08-04. That
+        # class gives the PV a hard nodeAffinity to a single node, so any drain
+        # of that node left valkey unschedulable ("3 node(s) didn't match
+        # PersistentVolume's node affinity") and took immich, romm, dispatcharr,
+        # searxng, outline, pinepods and n8n down with it. `longhorn` is
+        # replicated (3 replicas, dataLocality best-effort), so the pod can move.
+        # The volume is pure cache/broker state and was recreated empty.
+        storageClass: longhorn
     service:
       *app :
         controller: *app
