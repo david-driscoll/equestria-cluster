@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app openbao
+  namespace: &namespace kube-system
+  labels:
+    app.kubernetes.io/name: *app
+    driscoll.dev/name: *app
+spec:
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+      driscoll.dev/name: *app
+  path: ./kubernetes/apps/kube-system/openbao
+  # Storage is the shared CNPG cluster, so postgres has to be up first.
+  # external-secrets is NOT a dependency: OpenBao's own server config comes from
+  # secret.sops.yaml, never from a SecretStore. Booting the secret store from a
+  # secret store is the loop this whole migration exists to remove.
+  dependsOn:
+    - name: postgres
+      namespace: database
+  # SUSPENDED UNTIL BOOTSTRAP IS COMPLETE. Unsuspend only after all three hold:
+  #   1. `bao-transit` is running on alpha-site and its transit key exists
+  #      (migration Phase 2) — without it these pods cannot unseal.
+  #   2. `task update` has been run, so the `openbao` role exists in
+  #      kubernetes/apps/database/postgres/app/resources/values.yaml and its
+  #      password in passwords.sops.yaml. The components entry below is what
+  #      makes components/postgres/Update.cs discover this app.
+  #   3. secret.sops.yaml exists here (see kustomization.yaml).
+  # Reconciling before then leaves a StatefulSet crash-looping against a
+  # database that does not exist.
+  suspend: true
+  prune: true
+  wait: true
+  force: false
+  interval: 1h
+  retryInterval: 2m
+  timeout: 15m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  components:
+    - ../../../components/postgres
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace

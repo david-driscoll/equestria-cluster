@@ -1,0 +1,83 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app openbao
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+      strategy: rollback
+  uninstall:
+    keepHistory: false
+  # server.ha.config — the full HCL, including the Postgres connection URL and
+  # the transit-seal token — is supplied here from secret.sops.yaml, NOT from
+  # the plaintext values below.
+  #
+  # Why not external-secrets, which is this repo's usual way to render values?
+  # Because OpenBao would then need a working SecretStore in order to start, and
+  # after the 1Password cutover the only SecretStore is OpenBao itself. SOPS is
+  # the one source that is guaranteed available before OpenBao is.
+  #
+  # Why the whole config rather than just the two secret fields? OpenBao's HCL
+  # does not do general ${ENV} interpolation, and the exact env-var names its
+  # postgresql backend and transit seal honour could not be confirmed from the
+  # docs available here. Injecting the secrets via
+  # server.extraSecretEnvironmentVars and keeping the config in plaintext git
+  # would be strictly better for reviewability — check `helm show values` and
+  # the OpenBao config docs, and switch to it if those env vars exist.
+  #
+  # resources/config.hcl is the reviewable copy of what this renders. Keep the
+  # two in sync; it is documentation, not an input.
+  valuesFrom:
+    - kind: Secret
+      name: openbao-values
+      valuesKey: values.yaml
+  values:
+    global:
+      enabled: true
+    # The agent injector and the CSI provider are alternative ways to get
+    # secrets into pods. This estate uses external-secrets for that, so both
+    # stay off — they would only add another moving part with its own webhook.
+    injector:
+      enabled: false
+    csi:
+      enabled: false
+    ui:
+      enabled: true
+    server:
+      ha:
+        enabled: true
+        replicas: 3
+        # Storage is Postgres, not the integrated Raft backend. Leader election
+        # happens through the openbao_ha_locks table instead of Raft consensus,
+        # so there is no quorum to maintain here.
+        raft:
+          enabled: false
+        disruptionBudget:
+          maxUnavailable: 1
+      # No PVCs: all state lives in the CNPG cluster.
+      dataStorage:
+        enabled: false
+      auditStorage:
+        enabled: false
+      # Ingress is an HTTPRoute on the internal gateway (httproute.yaml), the
+      # same as every other internal service here.
+      ingress:
+        enabled: false
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 512Mi

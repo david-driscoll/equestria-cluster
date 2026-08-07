@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./ocirepository.yaml
+  - ./helmrelease.yaml
+  - ./httproute.yaml
+  - ./definition.yaml
+  # - ./secret.sops.yaml
+  #
+  # Deliberately not listed yet — the file does not exist. It carries the
+  # `openbao-values` Secret whose values.yaml holds server.ha.config (Postgres
+  # connection URL + transit-seal token); see resources/config.hcl for the
+  # reviewable copy and helmrelease.yaml for why it is SOPS rather than
+  # external-secrets.
+  #
+  # Creating it needs the age key, a provisioned `openbao` Postgres role, and a
+  # transit token from alpha-site — migration Phases 2 and 3. Uncomment it and
+  # unsuspend ks.yaml in the same commit; the HelmRelease cannot render without
+  # it. Mirror the contents into vault/bootstrap/openbao/ per that repo's
+  # INVENTORY.md.
