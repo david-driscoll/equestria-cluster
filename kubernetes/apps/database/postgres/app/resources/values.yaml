@@ -73,6 +73,12 @@ cluster:
     superuser: true
     passwordSecret:
       name: postgres-user-password
+  - name: crowdsec
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: crowdsec-postgres-password
   - name: grafana
     ensure: present
     login: true
