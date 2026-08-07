@@ -61,7 +61,7 @@ spec:
   # creates the StatefulSet, which will initialise the `openbao` database and
   # take the transit seal live. Reverting after that point is no longer just a
   # `git revert` — the database will have been written to.
-  suspend: true
+  suspend: false
   prune: true
   wait: true
   force: false
