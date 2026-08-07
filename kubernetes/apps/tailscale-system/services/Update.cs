@@ -71,10 +71,19 @@ var extraPorts = new Dictionary<string, Dictionary<ServiceKind, PortDef[]>>
   {
     [ServiceKind.Proxmox] = [new("nut", 3493, false, null)],
   },
-  // as hosts a primary adguard host on 4000
+  // as hosts a primary adguard host on 4000, and bao-transit — the estate's
+  // seal root — on 8200. OpenBao in kube-system dials 8200 through this egress
+  // service to auto-unseal; pods have no route to tailnet IPs directly, so
+  // without this port declared the cluster can never unseal. No probe: the
+  // probe helper always builds an https:// URL and bao-transit runs
+  // tls_disable, so a probe here would report a false failure. Its health is
+  // already covered by the Gatus check in the bao-transit stack definition.
   ["as"] = new()
   {
-    [ServiceKind.Dockge] = [new("adguard", 4000, false, null)]
+    [ServiceKind.Dockge] = [
+      new("adguard", 4000, false, null),
+      new("bao", 8200, false, null),
+    ]
   },
   // luna hosts the Home Assistant voice pipeline: llama.cpp (gemma-4-E2B) on
   // 8080 and wyoming whisper/piper STT/TTS on 10300/10200. HA runs on this
