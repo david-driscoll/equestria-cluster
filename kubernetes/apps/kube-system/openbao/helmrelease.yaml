@@ -20,29 +20,6 @@ spec:
       strategy: rollback
   uninstall:
     keepHistory: false
-  # server.ha.config — the full HCL, including the Postgres connection URL and
-  # the transit-seal token — is supplied here from secret.sops.yaml, NOT from
-  # the plaintext values below.
-  #
-  # Why not external-secrets, which is this repo's usual way to render values?
-  # Because OpenBao would then need a working SecretStore in order to start, and
-  # after the 1Password cutover the only SecretStore is OpenBao itself. SOPS is
-  # the one source that is guaranteed available before OpenBao is.
-  #
-  # Why the whole config rather than just the two secret fields? OpenBao's HCL
-  # does not do general ${ENV} interpolation, and the exact env-var names its
-  # postgresql backend and transit seal honour could not be confirmed from the
-  # docs available here. Injecting the secrets via
-  # server.extraSecretEnvironmentVars and keeping the config in plaintext git
-  # would be strictly better for reviewability — check `helm show values` and
-  # the OpenBao config docs, and switch to it if those env vars exist.
-  #
-  # resources/config.hcl is the reviewable copy of what this renders. Keep the
-  # two in sync; it is documentation, not an input.
-  valuesFrom:
-    - kind: Secret
-      name: openbao-values
-      valuesKey: values.yaml
   values:
     global:
       enabled: true
@@ -66,6 +43,63 @@ spec:
           enabled: false
         disruptionBudget:
           maxUnavailable: 1
+        # The two secret-bearing values — the Postgres password inside
+        # connection_url, and the transit token — are injected as environment
+        # variables below rather than written here, so this config stays
+        # reviewable in git. Both are documented as env-overridable and both
+        # were confirmed against the OpenBao source, not just the docs:
+        #   BAO_PG_CONNECTION_URL       physical/postgresql/postgresql.go:282
+        #   VAULT_TRANSIT_SEAL_TOKEN    go-kms-wrapping transit_client.go:31
+        # In every case the environment variable takes precedence over the
+        # config file, so omitting the field here is the intended usage.
+        config: |
+          ui = true
+
+          listener "tcp" {
+            address     = "0.0.0.0:8200"
+            // TLS terminates at the internal gateway and this listener is only
+            // reachable in-cluster, matching the other kube-system services.
+            tls_disable = true
+          }
+
+          storage "postgresql" {
+            // connection_url comes from BAO_PG_CONNECTION_URL.
+            table      = "openbao_kv_store"
+            ha_enabled = "true"
+            ha_table   = "openbao_ha_locks"
+          }
+
+          seal "transit" {
+            // token comes from VAULT_TRANSIT_SEAL_TOKEN.
+            //
+            // The address is not secret — it is the alpha-site Tailscale IP
+            // already carried in shared-secrets — so Flux postBuild substitutes
+            // it here instead of it costing another secret key.
+            //
+            // Careful: leaving the address unset would NOT be harmless. The
+            // wrapper falls back to api.DefaultConfig(), which reads BAO_ADDR /
+            // VAULT_ADDR — pointing the seal at this pod's own listener and
+            // deadlocking the unseal. It must be set explicitly.
+            address    = "http://${ALPHA_SITE_TAILSCALE_IP}:8200"
+            key_name   = "openbao-equestria-unseal"
+            mount_path = "transit/"
+            disable_renewal = "false"
+          }
+
+          // Lets OpenBao label its own pods active/standby so the chart's
+          // -active and -standby Services route correctly.
+          service_registration "kubernetes" {}
+      # Sourced from secret.sops.yaml, NOT from external-secrets. OpenBao would
+      # otherwise need a working SecretStore in order to start, and after the
+      # 1Password cutover the only SecretStore is OpenBao itself. SOPS is the
+      # one source guaranteed available before OpenBao is.
+      extraSecretEnvironmentVars:
+        - envName: BAO_PG_CONNECTION_URL
+          secretName: openbao-seal
+          secretKey: pg-connection-url
+        - envName: VAULT_TRANSIT_SEAL_TOKEN
+          secretName: openbao-seal
+          secretKey: transit-token
       # No PVCs: all state lives in the CNPG cluster.
       dataStorage:
         enabled: false

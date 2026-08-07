@@ -9,14 +9,23 @@ resources:
   - ./definition.yaml
   # - ./secret.sops.yaml
   #
-  # Deliberately not listed yet — the file does not exist. It carries the
-  # `openbao-values` Secret whose values.yaml holds server.ha.config (Postgres
-  # connection URL + transit-seal token); see resources/config.hcl for the
-  # reviewable copy and helmrelease.yaml for why it is SOPS rather than
-  # external-secrets.
+  # Deliberately not listed yet — the file does not exist. It carries a Secret
+  # named `openbao-seal` with exactly two keys:
   #
-  # Creating it needs the age key, a provisioned `openbao` Postgres role, and a
-  # transit token from alpha-site — migration Phases 2 and 3. Uncomment it and
-  # unsuspend ks.yaml in the same commit; the HelmRelease cannot render without
-  # it. Mirror the contents into vault/bootstrap/openbao/ per that repo's
-  # INVENTORY.md.
+  #   pg-connection-url  postgres://openbao:<password>@postgres-rw.database.svc.cluster.local:5432/openbao
+  #                      → BAO_PG_CONNECTION_URL. Password is the one `task
+  #                        update` writes into
+  #                        kubernetes/apps/database/postgres/app/passwords.sops.yaml
+  #                        for the `openbao` role.
+  #
+  #   transit-token      The OpenBao token for bao-transit on alpha-site
+  #                      → VAULT_TRANSIT_SEAL_TOKEN. Should be an orphan
+  #                        periodic token with only update on
+  #                        transit/encrypt/openbao-equestria-unseal and
+  #                        transit/decrypt/openbao-equestria-unseal.
+  #
+  # Everything else about the server config is plaintext in helmrelease.yaml.
+  #
+  # Uncomment this and drop `suspend: true` from ks.yaml in the same commit —
+  # the pods cannot unseal without it. Mirror both values into
+  # vault/bootstrap/openbao/ per that repo's INVENTORY.md.
