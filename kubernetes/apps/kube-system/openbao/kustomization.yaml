@@ -7,25 +7,24 @@ resources:
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./definition.yaml
-  # - ./secret.sops.yaml
+  - ./externalsecret.yaml
+  - ./secret.sops.yaml
   #
-  # Deliberately not listed yet — the file does not exist. It carries a Secret
-  # named `openbao-seal` with exactly two keys:
+  # The two secret-bearing values arrive by different routes, and the split is
+  # deliberate:
   #
-  #   pg-connection-url  postgres://openbao:<password>@postgres-rw.database.svc.cluster.local:5432/openbao
-  #                      → BAO_PG_CONNECTION_URL. Password is the one `task
-  #                        update` writes into
-  #                        kubernetes/apps/database/postgres/app/passwords.sops.yaml
-  #                        for the `openbao` role.
+  #   externalsecret.yaml  pg-connection-url → BAO_PG_CONNECTION_URL, read from
+  #                        the generated `openbao-postgres` secret via
+  #                        ClusterSecretStore/database. Not copied, so it
+  #                        rotates with the role.
   #
-  #   transit-token      The OpenBao token for bao-transit on alpha-site
-  #                      → VAULT_TRANSIT_SEAL_TOKEN. Should be an orphan
-  #                        periodic token with only update on
+  #   secret.sops.yaml     transit-token → VAULT_TRANSIT_SEAL_TOKEN. An orphan
+  #                        periodic token carrying only update on
   #                        transit/encrypt/openbao-equestria-unseal and
-  #                        transit/decrypt/openbao-equestria-unseal.
+  #                        transit/decrypt/openbao-equestria-unseal. Minted
+  #                        against bao-transit; nothing here can regenerate it,
+  #                        so it is mirrored at
+  #                        vault/bootstrap/openbao/transit-token.sops.yaml per
+  #                        that repo's INVENTORY.md.
   #
   # Everything else about the server config is plaintext in helmrelease.yaml.
-  #
-  # Uncomment this and drop `suspend: true` from ks.yaml in the same commit —
-  # the pods cannot unseal without it. Mirror both values into
-  # vault/bootstrap/openbao/ per that repo's INVENTORY.md.

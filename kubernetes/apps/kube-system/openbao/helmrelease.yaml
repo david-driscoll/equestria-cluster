@@ -72,15 +72,29 @@ spec:
           seal "transit" {
             // token comes from VAULT_TRANSIT_SEAL_TOKEN.
             //
-            // The address is not secret — it is the alpha-site Tailscale IP
-            // already carried in shared-secrets — so Flux postBuild substitutes
-            // it here instead of it costing another secret key.
+            // The address is not secret, and it is deliberately a MagicDNS name
+            // rather than a tailnet IP. Pods here have no route to the tailnet —
+            // both 100.111.10.9:8200 and 100.111.10.200:8200 were probed from a
+            // pod in this namespace and neither is reachable. Tailnet hosts are
+            // reached only through the tailscale-operator egress Services in
+            // tailscale-system, and the operator's nameserver resolves the
+            // MagicDNS name to that egress proxy's ClusterIP: from a pod,
+            // dockge-as.opossum-yo.ts.net and
+            // dockge-as.tailscale-system.svc.cluster.local both answer
+            // 10.196.81.163. The egress proxy forwards only the ports declared
+            // in the Service's spec.ports, so 8200 is declared for dockge-as in
+            // apps/tailscale-system/services/Update.cs.
+            //
+            // This previously read "http://${ALPHA_SITE_TAILSCALE_IP}:8200",
+            // which was wrong twice: that variable is the alpha-site Proxmox
+            // host, while bao-transit runs in the dockge-as LXC — and a raw
+            // tailnet IP could not have worked from a pod regardless.
             //
             // Careful: leaving the address unset would NOT be harmless. The
             // wrapper falls back to api.DefaultConfig(), which reads BAO_ADDR /
             // VAULT_ADDR — pointing the seal at this pod's own listener and
             // deadlocking the unseal. It must be set explicitly.
-            address    = "http://${ALPHA_SITE_TAILSCALE_IP}:8200"
+            address    = "http://dockge-as.${TAILSCALE_DOMAIN}:8200"
             key_name   = "openbao-equestria-unseal"
             mount_path = "transit/"
             disable_renewal = "false"
@@ -89,13 +103,20 @@ spec:
           // Lets OpenBao label its own pods active/standby so the chart's
           // -active and -standby Services route correctly.
           service_registration "kubernetes" {}
-      # Sourced from secret.sops.yaml, NOT from external-secrets. OpenBao would
-      # otherwise need a working SecretStore in order to start, and after the
-      # 1Password cutover the only SecretStore is OpenBao itself. SOPS is the
-      # one source guaranteed available before OpenBao is.
+      # Two different sources, on purpose.
+      #
+      # The connection URL comes from externalsecret.yaml, which reads the
+      # generated `openbao-postgres` secret through ClusterSecretStore/database
+      # — a `kubernetes` provider, not 1Password and not OpenBao, so this is not
+      # the bootstrap cycle. One source of truth for that password means it
+      # rotates without a second edit.
+      #
+      # The transit token comes from secret.sops.yaml because nothing in the
+      # cluster can produce it: it is minted against bao-transit on alpha-site.
+      # SOPS is the one source guaranteed available before OpenBao is.
       extraSecretEnvironmentVars:
         - envName: BAO_PG_CONNECTION_URL
-          secretName: openbao-seal
+          secretName: openbao-storage
           secretKey: pg-connection-url
         - envName: VAULT_TRANSIT_SEAL_TOKEN
           secretName: openbao-seal

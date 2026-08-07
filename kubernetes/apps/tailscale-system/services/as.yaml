@@ -22,6 +22,9 @@ spec:
     - name: adguard
       port: 4000
       targetPort: 4000
+    - name: bao
+      port: 8200
+      targetPort: 8200
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
