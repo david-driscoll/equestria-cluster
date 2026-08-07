@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app openbao
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+      strategy: rollback
+  uninstall:
+    keepHistory: false
+  values:
+    global:
+      enabled: true
+    # The agent injector and the CSI provider are alternative ways to get
+    # secrets into pods. This estate uses external-secrets for that, so both
+    # stay off — they would only add another moving part with its own webhook.
+    injector:
+      enabled: false
+    csi:
+      enabled: false
+    ui:
+      enabled: true
+    server:
+      ha:
+        enabled: true
+        replicas: 3
+        # Storage is Postgres, not the integrated Raft backend. Leader election
+        # happens through the openbao_ha_locks table instead of Raft consensus,
+        # so there is no quorum to maintain here.
+        raft:
+          enabled: false
+        disruptionBudget:
+          maxUnavailable: 1
+        # The two secret-bearing values — the Postgres password inside
+        # connection_url, and the transit token — are injected as environment
+        # variables below rather than written here, so this config stays
+        # reviewable in git. Both are documented as env-overridable and both
+        # were confirmed against the OpenBao source, not just the docs:
+        #   BAO_PG_CONNECTION_URL       physical/postgresql/postgresql.go:282
+        #   VAULT_TRANSIT_SEAL_TOKEN    go-kms-wrapping transit_client.go:31
+        # In every case the environment variable takes precedence over the
+        # config file, so omitting the field here is the intended usage.
+        config: |
+          ui = true
+
+          listener "tcp" {
+            address     = "0.0.0.0:8200"
+            // TLS terminates at the internal gateway and this listener is only
+            // reachable in-cluster, matching the other kube-system services.
+            tls_disable = true
+          }
+
+          storage "postgresql" {
+            // connection_url comes from BAO_PG_CONNECTION_URL.
+            table      = "openbao_kv_store"
+            ha_enabled = "true"
+            ha_table   = "openbao_ha_locks"
+          }
+
+          seal "transit" {
+            // token comes from VAULT_TRANSIT_SEAL_TOKEN.
+            //
+            // The address is not secret — it is the alpha-site Tailscale IP
+            // already carried in shared-secrets — so Flux postBuild substitutes
+            // it here instead of it costing another secret key.
+            //
+            // Careful: leaving the address unset would NOT be harmless. The
+            // wrapper falls back to api.DefaultConfig(), which reads BAO_ADDR /
+            // VAULT_ADDR — pointing the seal at this pod's own listener and
+            // deadlocking the unseal. It must be set explicitly.
+            address    = "http://${ALPHA_SITE_TAILSCALE_IP}:8200"
+            key_name   = "openbao-equestria-unseal"
+            mount_path = "transit/"
+            disable_renewal = "false"
+          }
+
+          // Lets OpenBao label its own pods active/standby so the chart's
+          // -active and -standby Services route correctly.
+          service_registration "kubernetes" {}
+      # Sourced from secret.sops.yaml, NOT from external-secrets. OpenBao would
+      # otherwise need a working SecretStore in order to start, and after the
+      # 1Password cutover the only SecretStore is OpenBao itself. SOPS is the
+      # one source guaranteed available before OpenBao is.
+      extraSecretEnvironmentVars:
+        - envName: BAO_PG_CONNECTION_URL
+          secretName: openbao-seal
+          secretKey: pg-connection-url
+        - envName: VAULT_TRANSIT_SEAL_TOKEN
+          secretName: openbao-seal
+          secretKey: transit-token
+      # No PVCs: all state lives in the CNPG cluster.
+      dataStorage:
+        enabled: false
+      auditStorage:
+        enabled: false
+      # Ingress is an HTTPRoute on the internal gateway (httproute.yaml), the
+      # same as every other internal service here.
+      ingress:
+        enabled: false
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 512Mi

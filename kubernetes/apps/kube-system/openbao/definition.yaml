@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: OpenBao
+  category: ${CLUSTER_TITLE}
+  description: Secrets management — source of truth for the estate
+  url: https://bao.${CLUSTER_DOMAIN}
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vault.svg
+  gatus:
+    # Probe the health endpoint rather than the UI root, which redirects.
+    # standbyok=true so a standby answering the probe reports 200 instead of
+    # 429 — without it this alerts every time the route lands on a non-leader.
+    # A sealed node still returns 503 and an uninitialised one 501, so the
+    # cases worth being paged for continue to fail.
+    - url: "https://bao.${CLUSTER_DOMAIN}/v1/sys/health?standbyok=true"
+      method: GET
+      interval: 1m
+      conditions:
+        - "[STATUS] == 200"
