@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/podmonitor_v1.json
+# A PodMonitor rather than a Service + ServiceMonitor: the postgres/tailscale
+# components apply commonLabels that kustomize also injects into Service
+# selectors, which would not match the Helm-created coder pods.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: ${APP}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coder
+      app.kubernetes.io/instance: coder
+  podMetricsEndpoints:
+    # CODER_PROMETHEUS_ADDRESS defaults to 0.0.0.0:2112; the chart does not
+    # declare it as a named container port.
+    - targetPort: 2112
+      interval: 1m
+      path: /metrics
