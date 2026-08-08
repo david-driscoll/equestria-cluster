@@ -33,6 +33,17 @@ spec:
     ui:
       enabled: true
     server:
+      # The whole config below is delivered as a ConfigMap, and OpenBao reads it
+      # once at process start. A config-only change therefore leaves the
+      # StatefulSet's pod template untouched, so nothing rolls and the running
+      # servers keep serving the OLD config indefinitely — Flux reports success
+      # the entire time. That bit us on the OIDC bootstrap: the generate-root
+      # listener toggle sat in the mounted file for 15h while every request
+      # still 403'd. Reloader (estate-wide convention) watches the mounted
+      # ConfigMap and rolls the StatefulSet when it changes.
+      statefulSet:
+        annotations:
+          reloader.stakater.com/auto: "true"
       ha:
         enabled: true
         replicas: 3
