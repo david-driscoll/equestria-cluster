@@ -6,7 +6,7 @@ metadata:
   name: ${APP}
 spec:
   name: OpenBao
-  category: ${CLUSTER_TITLE}
+  category: Applications
   description: Secrets management — source of truth for the estate
   url: https://bao.${CLUSTER_DOMAIN}
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vault.svg
