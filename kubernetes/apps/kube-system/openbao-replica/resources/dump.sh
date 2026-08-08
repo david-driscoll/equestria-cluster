@@ -19,7 +19,7 @@
 #   GATUS_URL, GATUS_CONNECT_TO, GATUS_TOKEN   heartbeat reporting
 #
 # NOTE for editors: this file is delivered through a Flux-substituted
-# ConfigMap. Keep every shell variable lowercase or $unbraced — a ${UPPERCASE}
+# ConfigMap. Keep every shell variable lowercase or $unbraced — a $${UPPERCASE}
 # that collides with a cluster substitution variable would be rewritten at
 # deploy time.
 set -Eeuo pipefail

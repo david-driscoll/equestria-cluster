@@ -24,7 +24,7 @@
 # CANARY_PATH, GATUS_URL/CONNECT_TO/TOKEN.
 #
 # NOTE for editors: delivered through a Flux-substituted ConfigMap — keep
-# shell expansions $unbraced so no ${UPPERCASE} can collide with a cluster
+# shell expansions $unbraced so no $${UPPERCASE} can collide with a cluster
 # substitution variable.
 set -Eeuo pipefail
 
