@@ -85,22 +85,6 @@ spec:
             // TLS terminates at the internal gateway and this listener is only
             // reachable in-cluster, matching the other kube-system services.
             tls_disable = true
-
-            // ██ TEMPORARY BOOTSTRAP TOGGLE — REVERT AFTER THE OIDC BOOTSTRAP ██
-            //
-            // OpenBao >= 2.5.3 disables the unauthenticated sys/generate-root/*
-            // endpoints by default — they 403 even from localhost inside the
-            // pod, so the recovery shares alone cannot mint a root token (see
-            // vault:docs/openbao-migration/STATUS.md, "Facts established the
-            // hard way"). The OIDC setup run
-            // (vault:bootstrap/openbao/equestria-init.sh oidc) regenerates a
-            // root token from those shares and needs this toggle live to do it.
-            //
-            // REVERT THIS LINE in a follow-up commit as soon as the OIDC
-            // bootstrap completes — do not leave generate-root reachable
-            // unauthenticated. The pods must roll for the revert to take
-            // effect, same as for this commit.
-            disable_unauthed_generate_root_endpoints = false
           }
 
           storage "postgresql" {
