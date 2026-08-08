@@ -86,31 +86,24 @@ spec:
             // reachable in-cluster, matching the other kube-system services.
             tls_disable = true
 
-            // ██ TEMPORARY BOOTSTRAP TOGGLE — REVERT AS SOON AS THE WINDOW CLOSES ██
+            // Do NOT add disable_unauthed_generate_root_endpoints here again.
             //
-            // OpenBao >= 2.5.3 disables the unauthenticated sys/generate-root/*
-            // endpoints by default — they 403 even from localhost inside the
-            // pod, so the recovery shares alone cannot mint a root token (see
-            // vault:docs/openbao-migration/STATUS.md, "Facts established the
-            // hard way").
+            // It was opened twice (#3067, #3078) because minting a root token
+            // from the recovery shares had no other route: `bao operator
+            // generate-root` speaks only sys/generate-root-token/*, which needs
+            // a token holding capabilities there, and no policy had any. The
+            // deprecated unauthenticated sys/generate-root/* was the only way
+            // in, and exposing it meant two pod rolls and a public
+            // root-generation endpoint in between.
             //
-            // Second time this has been opened. It is needed for work that only
-            // an `admin` token can do, and nothing automated holds that policy:
-            //   - vault#155: re-write the `pulumi` policy so it can reach
-            //     sys/mounts/auth/oidc, without which the OIDC AuthBackend
-            //     update 403s and the admin/family roles never get created
-            //   - vault:bootstrap/openbao/restore-test.sh init: mint the
-            //     restore-test policy/AppRole for the Phase 5 monthly restore
-            //     test, which currently ships PROVISION-ME placeholders
+            // That is fixed. vault:bootstrap/openbao/break-glass-approle.sops.yaml
+            // holds an AppRole whose ONLY capability is opening an attempt on
+            // the authenticated endpoint — verified to grant `deny` on secret
+            // reads and on policy writes. Completing an attempt still requires
+            // 3 of the 5 recovery shares, so the AppRole alone mints nothing.
             //
-            // Both are done in ONE window on purpose — each open/close cycle
-            // costs two pod rolls and leaves generate-root reachable
-            // unauthenticated in between.
-            //
-            // REVERT THIS LINE in a follow-up commit the moment both complete.
-            // The pods must roll for the revert to take effect, same as for
-            // this commit (reloader + RollingUpdate now make that automatic).
-            disable_unauthed_generate_root_endpoints = false
+            // Break-glass procedure is now in vault:bootstrap/RUNBOOK.md and
+            // needs no cluster change at all.
           }
 
           storage "postgresql" {
