@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: coder-v2
+spec:
+  interval: 1h
+  url: https://helm.coder.com/v2
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app coder
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: coder
+      version: 2.36.0
+      sourceRef:
+        kind: HelmRepository
+        name: coder-v2
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    coder:
+      annotations:
+        reloader.stakater.com/auto: "true"
+      # TLS is terminated by Traefik on the internal Gateway, so the pod serves
+      # plain HTTP. Do not set coder.tls.* or any CODER_TLS_* / CODER_HTTP_ADDRESS
+      # here — the chart owns those.
+      service:
+        type: ClusterIP
+      resources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          memory: 2Gi
+      # Equivalent of the failover/fast-node-eviction component, which only
+      # applies to app-template charts.
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      env:
+        - name: CODER_ACCESS_URL
+          value: https://code.${ROOT_DOMAIN}
+        - name: CODER_WILDCARD_ACCESS_URL
+          value: "*.code.${ROOT_DOMAIN}"
+        - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
+          value: "false"
+        - name: CODER_PG_CONNECTION_URL
+          valueFrom:
+            secretKeyRef:
+              name: coder-pguser-secret
+              key: uri
+        - name: CODER_OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: coder-oidc-secret
+              key: issuer
+        - name: CODER_OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: coder-oidc-secret
+              key: client_id
+        - name: CODER_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: coder-oidc-secret
+              key: client_secret
+        - name: CODER_OIDC_SCOPES
+          value: openid,profile,email,offline_access
+        - name: CODER_OIDC_SIGN_IN_TEXT
+          value: Sign in with Authentik
+        - name: CODER_OIDC_ICON_URL
+          value: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/authentik.svg
+        # Authentik is the only identity source; there are no local passwords.
+        - name: CODER_DISABLE_PASSWORD_AUTH
+          value: "true"
+        - name: CODER_PROXY_TRUSTED_HEADERS
+          value: X-Forwarded-For
+        - name: CODER_PROMETHEUS_ENABLE
+          value: "true"
+        - name: CODER_PROMETHEUS_COLLECT_AGENT_STATS
+          value: "true"

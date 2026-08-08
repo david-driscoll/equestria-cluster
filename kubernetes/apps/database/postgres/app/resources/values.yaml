@@ -91,6 +91,12 @@ cluster:
     superuser: false
     passwordSecret:
       name: openbao-postgres-password
+  - name: coder
+    ensure: present
+    login: true
+    superuser: false
+    passwordSecret:
+      name: coder-postgres-password
   - name: tandoor
     ensure: present
     login: true
