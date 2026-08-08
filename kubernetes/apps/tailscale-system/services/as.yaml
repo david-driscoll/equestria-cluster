@@ -25,6 +25,9 @@ spec:
     - name: bao
       port: 8200
       targetPort: 8200
+    - name: bao-dumps
+      port: 2023
+      targetPort: 2023
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Probe

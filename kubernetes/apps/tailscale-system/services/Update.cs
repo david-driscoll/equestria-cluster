@@ -78,11 +78,19 @@ var extraPorts = new Dictionary<string, Dictionary<ServiceKind, PortDef[]>>
   // probe helper always builds an https:// URL and bao-transit runs
   // tls_disable, so a probe here would report a false failure. Its health is
   // already covered by the Gatus check in the bao-transit stack definition.
+  //
+  // 2023 is the bao-standby dump receiver (rclone serve sftp) — the
+  // openbao-replica cronjobs in kube-system ship the nightly age-encrypted
+  // pg_dump through it and the monthly restore test pulls the dump back.
+  // No probe, same reasoning as 8200 (plain TCP, not https); liveness is the
+  // Gatus tcp check in the bao-standby stack definition plus the heartbeat
+  // the jobs themselves report.
   ["as"] = new()
   {
     [ServiceKind.Dockge] = [
       new("adguard", 4000, false, null),
       new("bao", 8200, false, null),
+      new("bao-dumps", 2023, false, null),
     ]
   },
   // luna hosts the Home Assistant voice pipeline: llama.cpp (gemma-4-E2B) on
