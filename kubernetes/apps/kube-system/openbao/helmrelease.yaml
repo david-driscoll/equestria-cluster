@@ -33,14 +33,37 @@ spec:
     ui:
       enabled: true
     server:
-      # The whole config below is delivered as a ConfigMap, and OpenBao reads it
-      # once at process start. A config-only change therefore leaves the
-      # StatefulSet's pod template untouched, so nothing rolls and the running
-      # servers keep serving the OLD config indefinitely — Flux reports success
-      # the entire time. That bit us on the OIDC bootstrap: the generate-root
-      # listener toggle sat in the mounted file for 15h while every request
-      # still 403'd. Reloader (estate-wide convention) watches the mounted
-      # ConfigMap and rolls the StatefulSet when it changes.
+      # Make config changes actually reach the running servers.
+      #
+      # The config below is delivered as a ConfigMap and OpenBao reads it once,
+      # at process start. Two separate things conspired to make a merged config
+      # change do nothing at all (observed 2026-08-08: the generate-root toggle
+      # from #3067 sat in the pod's config file for 15h while the API kept
+      # returning 403, with Flux reporting UpgradeSucceeded throughout):
+      #
+      #   1. A config-only change does not touch the pod template, so nothing
+      #      marks the pods as out of date.
+      #   2. The chart defaults to updateStrategyType OnDelete, under which the
+      #      StatefulSet controller never replaces pods on its own — not even
+      #      when the template DOES change. (`kubectl rollout restart` also
+      #      refuses outright on an OnDelete StatefulSet.)
+      #
+      # So both halves are needed. RollingUpdate lets the controller act, and
+      # reloader is what tells it there is something to act on.
+      #
+      # OnDelete is the right default for upstream Vault because Shamir-sealed
+      # servers need a human to unseal each restarted pod. That reasoning does
+      # not apply here: this cluster auto-unseals via the transit seal against
+      # bao-transit, so a restarted pod comes back unsealed on its own. With 3
+      # HA replicas and one-at-a-time ordered replacement, rolling is safe.
+      updateStrategyType: RollingUpdate
+      # reloader.stakater.com/auto is the estate-wide convention (238 other
+      # uses). It covers the mounted `openbao-config` ConfigMap AND the two
+      # Secrets this StatefulSet reads env vars from (`openbao-storage`,
+      # `openbao-seal`) — so a rotated transit token or Postgres URL rolls the
+      # pods too, which the chart's own `server.configAnnotation` checksum
+      # (config only) would not. Do not enable both: each would trigger its own
+      # roll on a config change.
       statefulSet:
         annotations:
           reloader.stakater.com/auto: "true"
