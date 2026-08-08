@@ -41,6 +41,20 @@ spec:
       # listener toggle sat in the mounted file for 15h while every request
       # still 403'd. Reloader (estate-wide convention) watches the mounted
       # ConfigMap and rolls the StatefulSet when it changes.
+      #
+      # RollingUpdate is the other half, and without it the annotation above is
+      # inert: the chart defaults to updateStrategyType OnDelete, under which
+      # the StatefulSet controller never replaces a pod on its own — not even
+      # when the pod template changes, which is exactly what reloader patches.
+      # (`kubectl rollout restart` also refuses outright on an OnDelete
+      # StatefulSet, so that workaround was never going to work either.)
+      #
+      # OnDelete is the right default for upstream Vault, where a Shamir-sealed
+      # server needs a human to unseal every restarted pod. That reasoning does
+      # not apply here: this cluster auto-unseals through the transit seal
+      # against bao-transit, so a restarted pod comes back unsealed on its own.
+      # With 3 HA replicas replaced one at a time, rolling is safe.
+      updateStrategyType: RollingUpdate
       statefulSet:
         annotations:
           reloader.stakater.com/auto: "true"
