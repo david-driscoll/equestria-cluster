@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://homelab-schemas-epg.pages.dev/external-secrets.io/clustersecretstore_v1.json
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: openbao
+spec:
+  provider:
+    vault:
+      # openbao-active, not openbao: the chart labels the leader pod and this
+      # Service selects only it. The general `openbao` Service also routes to
+      # standbys, which answer reads with a 307 redirect to the leader — extra
+      # hops for no benefit, and a source of confusing intermittent failures.
+      server: http://openbao-active.kube-system.svc.cluster.local:8200
+      # The kv-v2 mount holding real secrets. `docs/` and `meta/` are separate
+      # mounts and would each need their own store if anything ever consumes
+      # them from in-cluster (nothing does today — see PLAN.md §A).
+      path: secrets
+      version: v2
+      auth:
+        # Kubernetes auth rather than a stored token or AppRole: ESO presents
+        # its own ServiceAccount token and OpenBao validates it against the
+        # cluster's API. Nothing to rotate and nothing to leak, and it is why
+        # OpenBao lives in kube-system alongside ESO.
+        kubernetes:
+          mountPath: kubernetes
+          # Bound in OpenBao to this exact ServiceAccount + namespace, and
+          # carries the `eso-equestria` policy: read on secrets/shared/* and
+          # secrets/clusters/equestria/*. See vault:bootstrap/openbao/equestria-init.sh.
+          role: eso-equestria
+          serviceAccountRef:
+            name: external-secrets
+            namespace: kube-system
