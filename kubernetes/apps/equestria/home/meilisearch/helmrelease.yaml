@@ -46,11 +46,18 @@ spec:
       MEILI_NO_ANALYTICS: "true"
       # One-way on-startup DB migration 1.47.0 -> 1.51.0. See vault#102.
       MEILI_UPGRADE_DB: "true"
-      # Left at the chart default rather than "production": production mode
-      # requires a >=16 byte MEILI_MASTER_KEY, and meilisearch-env currently
-      # resolves MEILI_MASTER_KEY to an empty string, so production would
-      # refuse to boot. Tracked separately — see vault#102.
-      MEILI_ENV: "development"
+      # Production now that meilisearch-env resolves a real MEILI_MASTER_KEY
+      # (42 bytes, from secrets/shared/meilisearch-secret-key in OpenBao).
+      # It was pinned to "development" only because that key rendered empty and
+      # production refuses to boot without >=16 bytes.
+      #
+      # This is the change that makes Meilisearch ENFORCE auth. Until now it has
+      # been answering /keys with no credentials at all, because the pod has
+      # been running since before the key existed — the StatefulSet carries no
+      # reloader annotation, so the Secret gaining a value never restarted it.
+      # Editing this map changes the chart's checksum/config annotation, which
+      # rolls the pod and picks up the key and this setting together.
+      MEILI_ENV: "production"
 
     persistence:
       enabled: true
