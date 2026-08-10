@@ -13,10 +13,15 @@ recovery:
   provider: s3
   s3:
     region: "{{ .minio_region }}"
-    # ${BACKBLAZE_DB_BUCKET} is "equestria-db" in cluster-secrets, so this renders
-    # to exactly what the 1Password extract produced. The endpoint above has
-    # been TrueNAS Minio for a while; only the bucket NAME still came from the
-    # Backblaze item, which is the mismatch vault#119 warned about.
+    # The bucket name below comes from cluster-secrets, where it is
+    # "equestria-db" — so this renders exactly what the 1Password extract
+    # produced. The endpoint above has been TrueNAS Minio for a while; only the
+    # bucket NAME still came from the Backblaze item, which is the mismatch
+    # vault#119 warned about.
+    #
+    # The variable is named in words rather than written out, because Flux
+    # postBuild envsubst expands substitutions inside COMMENTS too: spelling it
+    # normally here would bake the live value into the ConfigMap.
     bucket: "${BACKBLAZE_DB_BUCKET}-restore"
     path: "/"
     accessKey: "{{ .minio_username }}"
