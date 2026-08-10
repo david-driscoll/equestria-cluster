@@ -9,7 +9,7 @@
 # the metric names stay pinned to the exporter versions actually deployed.
 # The Intel one is adapted from the exporter's own grafana-operator export
 # (assets/dashboard/dashboards.yaml, v0.7.1): datasource swapped to the
-# estate's ${DS_PROMETHEUS} input, a `cluster` variable added so it renders
+# estate's $${DS_PROMETHEUS} input, a `cluster` variable added so it renders
 # equestria and sgc together through Thanos, and the aggregations changed to
 # keep `node` so selecting multiple nodes stops averaging five different GPUs
 # into a single line.
@@ -23,7 +23,7 @@
 # runs in strict mode and aborts the whole observability/grafana Kustomization
 # on any `${...}` it cannot resolve. The doubled `$$` collapses to a single
 # `$` during substitution, so grafana-operator still receives the
-# `${DS_PROMETHEUS}` it maps via the `datasources:` inputName below.
+# `$${DS_PROMETHEUS}` it maps via the `datasources:` inputName below.
 # Grafana's own template variables ($cluster, $node, $__all) use the bare-`$`
 # form, which Flux does not touch, so they are deliberately left unescaped.
 apiVersion: grafana.integreatly.org/v1beta1
