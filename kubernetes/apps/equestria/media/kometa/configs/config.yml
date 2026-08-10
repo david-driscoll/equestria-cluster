@@ -90,9 +90,9 @@ tmdb:
   language: en
   cache_expiration: 60
 
-# omdb:
-#   apikey: <<OMDB_APIKEY>>
-#   cache_expiration: 60
+omdb:
+  apikey: <<OMDB_APIKEY>>
+  cache_expiration: 60
 
 mdblist:
   apikey: <<MDBLIST_APIKEY>>
