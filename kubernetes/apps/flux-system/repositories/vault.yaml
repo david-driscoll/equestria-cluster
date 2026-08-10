@@ -20,7 +20,7 @@ metadata:
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: onepassword-connect
+    name: openbao
   refreshPolicy: Periodic
   refreshInterval: 1m
   target:
@@ -38,7 +38,8 @@ spec:
         known_hosts: "{{ .known_hosts }}"
   dataFrom:
     - extract:
-        key: "GitHub david-driscoll/vault Deploy Key"
+        # was: GitHub david-driscoll/vault Deploy Key
+        key: shared/github-david-driscoll-vault-deploy-key
       rewrite:
         - regexp:
             source: "[\\W]"
