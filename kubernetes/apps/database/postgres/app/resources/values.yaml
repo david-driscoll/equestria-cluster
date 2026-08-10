@@ -13,7 +13,11 @@ recovery:
   provider: s3
   s3:
     region: "{{ .minio_region }}"
-    bucket: "{{ .backblaze_bucket }}-restore"
+    # ${BACKBLAZE_DB_BUCKET} is "equestria-db" in cluster-secrets, so this renders
+    # to exactly what the 1Password extract produced. The endpoint above has
+    # been TrueNAS Minio for a while; only the bucket NAME still came from the
+    # Backblaze item, which is the mismatch vault#119 warned about.
+    bucket: "${BACKBLAZE_DB_BUCKET}-restore"
     path: "/"
     accessKey: "{{ .minio_username }}"
     secretKey: "{{ .minio_password }}"
