@@ -78,7 +78,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -172,7 +172,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "rate(process_cpu_seconds_total{$filter_key=\"$filter_value\"}[$__rate_interval])",
@@ -187,7 +187,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -237,7 +237,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "coderd_api_active_users_duration_hour{$filter_key=\"$filter_value\"}",
@@ -252,7 +252,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -302,7 +302,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "sum(coderd_agents_up{$filter_key=\"$filter_value\"})",
@@ -317,7 +317,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -368,7 +368,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "avg(coderd_agents_connection_latencies_seconds{$filter_key=\"$filter_value\"})",
@@ -383,7 +383,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -485,7 +485,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "coderd_provisionerd_jobs_current{$filter_key=\"$filter_value\"}",
@@ -496,7 +496,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "coderd_provisionerd_num_daemons{$filter_key=\"$filter_value\"}",
@@ -512,7 +512,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -620,7 +620,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "histogram_quantile(0.95, sum by(le) (rate(coderd_db_query_latencies_seconds_bucket{$filter_key=\"$filter_value\"}[$__rate_interval])))",
@@ -632,7 +632,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "sum(rate(coderd_db_query_latencies_seconds_count{$filter_key=\"$filter_value\"}[$__rate_interval]))",
@@ -648,7 +648,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -758,7 +758,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "go_memstats_alloc_bytes{$filter_key=\"$filter_value\"}",
@@ -769,7 +769,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "exemplar": false,
@@ -786,7 +786,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "$${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -912,7 +912,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "sum(rate(coderd_api_requests_processed_total{$filter_key=\"$filter_value\"}[$__rate_interval]))",
@@ -924,7 +924,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "sum(rate(coderd_api_requests_processed_total{code=\"500\"}[$__rate_interval]))",
@@ -936,7 +936,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS_PROMETHEUS}"
+                "uid": "$${DS_PROMETHEUS}"
               },
               "editorMode": "builder",
               "expr": "histogram_quantile(0.95, sum by(le) (rate(coderd_api_request_latencies_seconds_bucket[$__rate_interval])))",
