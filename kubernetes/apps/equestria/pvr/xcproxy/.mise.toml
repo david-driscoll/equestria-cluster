@@ -1,13 +1,13 @@
 [env]
-XC_USER="op://Eris/XCProxy/username" # you create this and enter in Xtreme Code
-XC_PASS="op://Eris/XCProxy/password" # you create this and enter in Xtreme Code
+XC_USER="ref+openbao://secrets/shared/xcproxy#/username" # you create this and enter in Xtreme Code
+XC_PASS="ref+openbao://secrets/shared/xcproxy#/password" # you create this and enter in Xtreme Code
 
 # --- Your IPTV provider M3U playlist URLs ---
-MOVIE_M3U_URL="op://Eris/XCProxy/vod_movies"
-SERIES_M3U_URL="op://Eris/XCProxy/vod_tv"
+MOVIE_M3U_URL="ref+openbao://secrets/shared/xcproxy#/vod_movies"
+SERIES_M3U_URL="ref+openbao://secrets/shared/xcproxy#/vod_tv"
 
 # --- TMDb (for posters/plots) ---
-TMDB_API_KEY="op://Eris/TMDB API Key/password"
+TMDB_API_KEY="ref+openbao://secrets/shared/tmdb-api-key#/password"
 POSTER_PREFERENCE="tmdb" # tmdb | m3u (Only an option if your m3u has images)
 TMDB_ON_LIST="false" # reduces timeouts & load
 XC_ENRICH_DETAILS="1" # 1 is details on, 0 is details off
