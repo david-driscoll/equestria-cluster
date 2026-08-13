@@ -74,7 +74,7 @@ spec:
         ports:
           ntp-port:
             port: &ntp-port 123
-            protocol: TCP
+            protocol: UDP
           other:
             port: 31880
             protocol: TCP
