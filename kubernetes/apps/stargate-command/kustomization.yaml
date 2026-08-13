@@ -14,5 +14,5 @@ resources:
   - ./chrony/ks.yaml
   - ./matter/ks.yaml
   - ./mosquitto/ks.yaml
-  - ./shared
+  - ./secrets/ks.yaml
   - ./home-assistant/ks.yaml
