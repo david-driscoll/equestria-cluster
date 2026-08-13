@@ -29,3 +29,4 @@ resources:
   - ./multus/ks.yaml
   - ./openbao/ks.yaml
   - ./openbao-replica/ks.yaml
+  - ./vsc-retention/ks.yaml
