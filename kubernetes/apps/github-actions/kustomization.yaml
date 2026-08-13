@@ -11,7 +11,4 @@ components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
-  - ./1password
-  - ./controller/ks.yaml
-  - ./repositories/ks.yaml
-  - ./runners
+  - ./home-operations.github-actions.yaml

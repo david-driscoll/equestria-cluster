@@ -3,24 +3,29 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app gha-arc-controller
+  name: &app github-actions
   namespace: &namespace github-actions
+  labels:
+    app.kubernetes.io/name: *app
+    driscoll.dev/name: *app
 spec:
   targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  path: ./kubernetes/apps/github-actions/controller
-  dependsOn:
-    - name: gha-repositories
-      namespace: github-actions
+  path: ./kubernetes/apps/github-actions
   prune: true
+  wait: false
+  force: false
+  interval: 1h
+  retryInterval: 2m
+  timeout: 20m
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: home-operations
     namespace: flux-system
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
