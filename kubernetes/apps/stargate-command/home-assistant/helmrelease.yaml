@@ -30,9 +30,6 @@ spec:
     recreate: true
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: mosquitto
-      namespace: sgc
   values:
     fullnameOverride: *app
     controllers:
