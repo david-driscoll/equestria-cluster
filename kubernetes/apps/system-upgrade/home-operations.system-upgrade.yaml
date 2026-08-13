@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app system-upgrade
+  name: &app system-upgrade-ref
   namespace: &namespace system-upgrade
   labels:
     app.kubernetes.io/name: *app
@@ -25,7 +25,3 @@ spec:
     kind: GitRepository
     name: home-operations
     namespace: flux-system
-  postBuild:
-    substitute:
-      APP: *app
-      NAMESPACE: *namespace
