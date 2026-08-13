@@ -3,17 +3,30 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app coder
+  # Deliberately NOT named "coder": the coder namespace's only app is itself
+  # named "coder" (kubernetes/apps/coder/coder/ks.yaml), so reusing that name
+  # here collides two distinct Kustomization definitions under one identity —
+  # this redirect stub, and the app-level one it fetches. Flux then flip-flops
+  # between their two different rendered resource sets on every reconcile,
+  # each one's garbage collection deleting what the other just created (seen
+  # live: ExternalSecrets/HelmRelease/HTTPRoute created, then immediately
+  # pruned, in a ~7s loop). cert-manager hit the identical case and solved it
+  # by renaming the *inner* app Kustomization (cert-manager-controller); that
+  # approach isn't safe here because coder's ${APP} substitution feeds a live
+  # OpenBao secret path (clusters/equestria/apps/${APP}/oidc) and HTTPRoute
+  # backend refs — renaming the app would break secret resolution. Renaming
+  # this redirect instead touches nothing the running app depends on.
+  name: coder-ns
   namespace: &namespace coder
   labels:
-    app.kubernetes.io/name: *app
-    driscoll.dev/name: *app
+    app.kubernetes.io/name: coder
+    driscoll.dev/name: coder
 spec:
   targetNamespace: *namespace
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
-      driscoll.dev/name: *app
+      app.kubernetes.io/name: coder
+      driscoll.dev/name: coder
   path: ./kubernetes/apps/coder
   prune: true
   wait: false
@@ -27,5 +40,5 @@ spec:
     namespace: flux-system
   postBuild:
     substitute:
-      APP: *app
+      APP: coder
       NAMESPACE: *namespace
