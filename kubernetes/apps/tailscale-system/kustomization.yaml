@@ -13,3 +13,4 @@ resources:
   - ./resources/ks.yaml
   - ./golink/ks.yaml
   - ./idp/ks.yaml
+  - ./iam/ks.yaml
