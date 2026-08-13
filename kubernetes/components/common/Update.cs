@@ -7,6 +7,7 @@
 #:package Lunet.Extensions.Logging.SpectreConsole@1.2.0
 #:package ProcessX@1.5.6
 #:property JsonSerializerIsReflectionEnabledByDefault=true
+#:property PublishAot=false
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.IO.Compression;
@@ -43,13 +44,13 @@ try
 
   var result = await localCluster.CustomObjects.GetClusterCustomObjectAsync<TailscaleDns>("tailscale.com", "v1alpha1", "dnsconfigs", "tailscale-nameserver");
 
-  var clusterConfig = await ReadStream("kubernetes/components/common/cluster-secrets.sops.yaml").OfType<YamlMappingNode>().SingleAsync();
+  var clusterConfig = await ReadStream("kubernetes/flux/meta/cluster-secrets.sops.yaml").OfType<YamlMappingNode>().SingleAsync();
   var clusterCname = clusterConfig.Query("/stringData/TAILSCALE_NAMESERVER_IP").OfType<YamlScalarNode>().Single();
 
   if (clusterCname.Value != result.Status.Nameserver.Ip)
   {
     clusterCname.Value = result.Status.Nameserver.Ip;
-    await WriteFile("kubernetes/components/common/cluster-secrets.sops.yaml", serializer.Serialize(clusterConfig));
+    await WriteFile("kubernetes/flux/meta/cluster-secrets.sops.yaml", serializer.Serialize(clusterConfig));
     AnsiConsole.WriteLine("Updated TAILSCALE_NAMESERVER_IP to {0}", result.Status.Nameserver.Ip);
   }
 }
