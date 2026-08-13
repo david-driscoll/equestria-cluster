@@ -17,6 +17,3 @@ resources:
   - ./secrets/ks.yaml
   - ./traefik-crds/ks.yaml
   - ./traefik/ks.yaml
-  - ./whoami/ks.yaml
-  - ./openspeedtest/ks.yaml
-  - ./librespeed/ks.yaml

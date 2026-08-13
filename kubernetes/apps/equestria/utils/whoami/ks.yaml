@@ -1,10 +1,10 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app openspeedtest
-  namespace: &namespace network
+  name: &app traefik-whoami
+  namespace: &namespace equestria
   labels:
     app.kubernetes.io/name: *app
     driscoll.dev/name: *app
@@ -14,9 +14,12 @@ spec:
     labels:
       app.kubernetes.io/name: *app
       driscoll.dev/name: *app
-  path: ./kubernetes/apps/network/openspeedtest
+  dependsOn:
+    - name: certificates
+      namespace: network
+  path: ./kubernetes/apps/equestria/utils/whoami
   prune: true
-  wait: false
+  wait: true
   force: false
   interval: 1h
   retryInterval: 2m
@@ -25,6 +28,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  components: []
   postBuild:
     substitute:
       APP: *app
