@@ -38,6 +38,7 @@ spec:
   components:
     - ../../../components/failover/fast-node-eviction
     - ../../../components/volsync
+    - ../../../components/volsync-restore
     - ../../../components/tailscale
   postBuild:
     substitute:
