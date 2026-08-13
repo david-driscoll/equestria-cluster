@@ -16,6 +16,8 @@ spec:
       driscoll.dev/name: *app
   path: ./kubernetes/apps/cloudnative-pg
   prune: true
+  # See home-operations:docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   wait: false
   force: false
   interval: 1h
