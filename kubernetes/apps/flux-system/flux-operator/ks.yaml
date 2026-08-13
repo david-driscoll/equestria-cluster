@@ -17,6 +17,8 @@ spec:
       namespace: *namespace
   path: ./kubernetes/apps/flux-system/flux-operator
   prune: true
+  # See flux-instance/ks.yaml.
+  deletionPolicy: Orphan
   wait: false
   force: false
   interval: 1h

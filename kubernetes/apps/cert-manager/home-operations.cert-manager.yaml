@@ -16,6 +16,11 @@ spec:
       driscoll.dev/name: *app
   path: ./kubernetes/apps/cert-manager
   prune: true
+  # Unlike the granular per-app targets elsewhere (see
+  # home-operations:docs/cluster-consolidation/27-migration-churn-failure-modes.md),
+  # this one protects the whole cert-manager namespace redirect -- TLS
+  # issuance underpins ingress across the entire estate.
+  deletionPolicy: Orphan
   wait: false
   force: false
   interval: 1h
