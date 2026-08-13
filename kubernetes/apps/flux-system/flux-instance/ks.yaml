@@ -16,6 +16,10 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/flux-system/flux-instance
   prune: true
+  # See home-operations:docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  # This is Flux itself -- never let a Kustomization ownership change
+  # cascade-delete the thing that reconciles everything else.
+  deletionPolicy: Orphan
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
