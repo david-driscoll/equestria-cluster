@@ -59,9 +59,9 @@ function apply_sops_secrets() {
 
     local -r secrets=(
         # "${ROOT_DIR}/bootstrap/github-deploy-key.sops.yaml"
-        "${ROOT_DIR}/kubernetes/components/common/cluster-secrets.sops.yaml"
-        "${ROOT_DIR}/kubernetes/components/common/shared-secrets.sops.yaml"
-        "${ROOT_DIR}/kubernetes/components/common/sops-age.sops.yaml"
+        "${ROOT_DIR}/kubernetes/flux/meta/cluster-secrets.sops.yaml"
+        "${ROOT_DIR}/kubernetes/flux/meta/shared-secrets.sops.yaml"
+        "${ROOT_DIR}/kubernetes/flux/meta/sops-age.sops.yaml"
         "${ROOT_DIR}/kubernetes/apps/kube-system/1password/secret.sops.yaml"
     )
 
@@ -147,7 +147,7 @@ function main() {
     # wait_for_nodes
     apply_namespaces
     apply_sops_secrets
-    apply_crds
+    # apply_crds
     # apply_helm_releases
 
     log info "Congrats! The cluster is bootstrapped and Flux is syncing the Git repository"
