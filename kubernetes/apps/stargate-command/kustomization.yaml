@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: stargate-command
+metadata:
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+components:
+  - ../../components/alerts
+  - ../../components/common
+  - ../../components/repos/app-template
+resources:
+  - ./chrony/ks.yaml
+  - ./matter/ks.yaml
+  - ./mosquitto/ks.yaml
+  - ./shared
