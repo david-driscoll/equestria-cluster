@@ -7,4 +7,4 @@ components:
   - ../../components/alerts
   - ../../components/common
 resources:
-  - ./coder/ks.yaml
+  - ./home-operations.coder.yaml
