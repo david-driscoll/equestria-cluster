@@ -19,6 +19,9 @@ spec:
   components:
     - ../../../components/postgres
   prune: true
+  # Protects against deletion when piece 21's observability redirect
+  # migration lands -- see home-operations:docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   wait: true
   interval: 1h
   retryInterval: 2m
