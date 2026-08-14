@@ -30,7 +30,6 @@ spec:
   components:
     - ../../../components/failover/fast-node-eviction
     - ../../../components/volsync
-    - ../../../components/volsync-restore
   postBuild:
     substitute:
       APP: *app
