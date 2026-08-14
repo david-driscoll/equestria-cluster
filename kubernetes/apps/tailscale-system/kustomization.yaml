@@ -8,9 +8,4 @@ components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
-  - ./operator/ks.yaml
-  - ./services/ks.yaml
-  - ./resources/ks.yaml
-  - ./golink/ks.yaml
-  - ./idp/ks.yaml
-  - ./iam/ks.yaml
+  - ./home-operations.tailscale-system.yaml
