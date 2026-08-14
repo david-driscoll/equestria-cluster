@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+#
+# The last namespace redirect of piece 21 Phase A/B, and the only one that
+# points Flux at the definition of Flux itself. See
+# home-operations:docs/cluster-consolidation/21-repo-consolidation-flux-repoint.md.
+#
+# This does NOT flip the root. GitRepository/flux-system still resolves to
+# equestria-cluster and cluster-apps still applies this file. All that moves is
+# where the flux-instance / flux-operator / repositories Kustomizations read
+# their content from. The root flip is Phase C, and it happens on the `url`
+# line in home-operations:kubernetes/apps/flux-system/flux-instance/helm/values.yaml.
+#
+# Why this is safe despite being self-referential: cluster-apps prunes the old
+# flux-instance / flux-operator / repositories Kustomization objects when this
+# commit lands, and all three carry `deletionPolicy: Orphan` on the live
+# objects today (verified). So the FluxInstance CR, the flux-operator
+# HelmRelease and GitRepository/{home-operations,vault} are left running
+# untouched while ownership transfers, exactly as it worked for the other 16
+# namespaces. Without that Orphan, pruning `repositories` would delete
+# GitRepository/home-operations -- the source THIS file depends on -- and take
+# every other redirect down with it.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app flux-system-ref
+  namespace: &namespace flux-system
+  labels:
+    app.kubernetes.io/name: *app
+    driscoll.dev/name: *app
+spec:
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+      driscoll.dev/name: *app
+  path: ./kubernetes/apps/flux-system
+  prune: true
+  # See home-operations:docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  # Also the one that matters at the Phase C cleanup: when cluster-apps stops
+  # reading equestria-cluster, this object is pruned, and Orphan is what stops
+  # that prune from cascading into Flux's own Kustomizations.
+  deletionPolicy: Orphan
+  wait: false
+  force: false
+  interval: 1h
+  retryInterval: 2m
+  timeout: 20m
+  sourceRef:
+    kind: GitRepository
+    name: home-operations
+    namespace: flux-system
