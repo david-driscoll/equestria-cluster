@@ -15,7 +15,7 @@ instance:
   sync:
     name: flux-system
     kind: GitRepository
-    url: "https://github.com/david-driscoll/equestria-cluster.git"
+    url: "https://github.com/david-driscoll/home-operations.git"
     ref: "refs/heads/main"
     path: kubernetes/flux/cluster
   kustomize:
