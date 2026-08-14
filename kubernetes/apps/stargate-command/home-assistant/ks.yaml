@@ -15,6 +15,11 @@ spec:
       driscoll.dev/name: *app
   path: ./kubernetes/apps/stargate-command/home-assistant
   prune: true
+  # Blanket protection for the piece 21 migration sweep: a Kustomization
+  # ownership change must never cascade-delete live resources. Removed
+  # again on the home-operations side once each namespace has landed.
+  # See docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   wait: true
   force: false
   interval: 1h
