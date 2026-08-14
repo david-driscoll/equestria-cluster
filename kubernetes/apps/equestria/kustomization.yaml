@@ -8,13 +8,4 @@ components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
-  - ./shared
-  - ./idp
-  # - ./books
-  - ./downloads
-  - ./games
-  - ./home
-  - ./media
-  - ./pvr
-  - ./dns
-  - ./utils
+  - ./home-operations.equestria.yaml
