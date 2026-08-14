@@ -13,6 +13,11 @@ spec:
       driscoll.dev/name: *app
   path: ./kubernetes/apps/tailscale-system/services
   prune: true
+  # Blanket protection for the piece 21 migration sweep: a Kustomization
+  # ownership change must never cascade-delete live resources. Removed
+  # again on the home-operations side once each namespace has landed.
+  # See docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   wait: false
   force: false
   interval: 1h

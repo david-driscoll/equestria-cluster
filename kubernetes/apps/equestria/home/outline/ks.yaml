@@ -17,6 +17,11 @@ spec:
   dependsOn: []
   path: ./kubernetes/apps/equestria/home/outline
   prune: true
+  # Blanket protection for the piece 21 migration sweep: a Kustomization
+  # ownership change must never cascade-delete live resources. Removed
+  # again on the home-operations side once each namespace has landed.
+  # See docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   force: false
   wait: true
   interval: 1h

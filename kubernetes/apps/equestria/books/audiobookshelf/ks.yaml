@@ -21,6 +21,11 @@ spec:
       namespace: tailscale-system
   path: ./kubernetes/apps/equestria/books/audiobookshelf
   prune: true
+  # Blanket protection for the piece 21 migration sweep: a Kustomization
+  # ownership change must never cascade-delete live resources. Removed
+  # again on the home-operations side once each namespace has landed.
+  # See docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   wait: true
   interval: 1h
   retryInterval: 2m
