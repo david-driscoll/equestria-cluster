@@ -18,6 +18,12 @@ spec:
       namespace: volsync-system
   path: ./kubernetes/apps/tailscale-system/idp
   prune: true
+  # Protects these from cascade-deletion when piece 21's redirect for
+  # this namespace lands. tailscale-system carries the operator and the
+  # egress Services OpenBao's unseal path runs through, so a prune here
+  # is far more expensive than most. See
+  # home-operations:docs/cluster-consolidation/27-migration-churn-failure-modes.md.
+  deletionPolicy: Orphan
   wait: true
   force: false
   interval: 1h
