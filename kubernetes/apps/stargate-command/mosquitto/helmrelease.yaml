@@ -87,7 +87,11 @@ spec:
         statefulset:
           volumeClaimTemplates:
           - name: data
-            storageClass: longhorn
+            # Tier-1 (piece 12 Group B). No VolSync on this app, so the
+            # 2026-08-19 migration cloned data-mosquitto-0/1 onto the new
+            # class imperatively and recreated the StatefulSet (this template
+            # field is immutable on a live STS).
+            storageClass: longhorn-critical
             accessMode: ReadWriteOnce
             size: 4Gi
             globalMounts:
