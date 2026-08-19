@@ -49,5 +49,10 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 40Gi
+      # Tier-1 (piece 12 Group B): must survive low-power mode, so the PVC
+      # lives on the critical tier -- 3 replicas, one per control plane.
+      # Migrated from the component's `longhorn` default 2026-08-19 via the
+      # piece-13 choreography (final sync -> RD restore -> PVC recreate).
+      VOLSYNC_STORAGECLASS: longhorn-critical
       TAILSCALE_SERVICE: home-assistant-app
       TAILSCALE_HOST: home

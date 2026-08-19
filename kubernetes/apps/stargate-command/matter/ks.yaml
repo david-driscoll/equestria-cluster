@@ -41,3 +41,7 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 4Gi
+      # Tier-1 (piece 12 Group B): the Matter/Thread bridge must survive
+      # low-power mode. Migrated 2026-08-19, same choreography as
+      # home-assistant.
+      VOLSYNC_STORAGECLASS: longhorn-critical
