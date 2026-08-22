@@ -1,0 +1,106 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/refs/tags/v1.19.3/install/kubernetes/cilium/values.schema.json
+# Ref: https://docs.cilium.io/en/stable/operations/upgrade/#version-specific-notes
+# Required for safe upgrades from pre-1.19 versions to minimize datapath disruption
+upgradeCompatibility: "1.18"
+autoDirectNodeRoutes: true
+bpf:
+  masquerade: true
+  # Ref: https://github.com/siderolabs/talos/issues/10002
+  hostLegacyRouting: true
+cni:
+  # Required for pairing with Multus CNI
+  exclusive: false
+cgroup:
+  automount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+# NOTE: devices might need to be set if you have more than one active NIC on your hosts
+# devices: eno+ eth+
+endpointRoutes:
+  enabled: true
+envoy:
+  enabled: false
+dashboards:
+  enabled: true
+hubble:
+  enabled: true
+  relay:
+    enabled: false
+  metrics:
+    enabled:
+      - dns
+      - drop
+      - flow
+      - icmp
+      - iperf3
+      - l7
+      - tcp
+      - udp
+    dashboards:
+      enabled: true
+    enableOpenMetrics: true
+    serviceMonitor:
+      enabled: true
+  ui:
+    enabled: false
+    ingress:
+      enabled: true
+      ingressClassName: internal
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "${INTERNAL_DOMAIN}"
+        external-dns.alpha.kubernetes.io/hostname: hubble.${CLUSTER_DOMAIN}
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      hosts:
+        - hubble.${CLUSTER_DOMAIN}
+ipam:
+  mode: kubernetes
+ipv4NativeRoutingCIDR: "${CLUSTER_NETWORK}"
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 7445
+kubeProxyReplacement: true
+kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+l2announcements:
+  enabled: true
+loadBalancer:
+  algorithm: maglev
+  mode: dsr
+localRedirectPolicy: true
+operator:
+  dashboards:
+    enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  replicas: 1
+  rollOutPods: true
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
+rollOutCiliumPods: true
+routingMode: native
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - PERFMON
+      - BPF
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+socketLB:
+  hostNamespaceOnly: true
