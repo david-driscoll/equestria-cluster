@@ -1,0 +1,160 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app etcd-tasks
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  values:
+    controllers:
+      backup:
+        type: cronjob
+        cronjob:
+          schedule: "12 4 * * *"
+          parallelism: 1
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+
+        initContainers:
+          talosctl:
+            image:
+              repository: ghcr.io/siderolabs/talosctl
+              tag: v1.13.9@sha256:46174be488e0250fc9e8f1b15a1d260fd971f82fbaf66237d10609f5a41c084f
+            args:
+              - --talosconfig
+              - /var/run/secrets/talos.dev/config
+              - -n
+              - "$(CP_NODE_IP)"
+              - -e
+              - "$(CP_NODE_IP)"
+              - etcd
+              - snapshot
+              - /data/etcd.snapshot
+            env:
+              - name: CP_NODE_IP
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.hostIP
+
+        containers:
+          restic:
+            image:
+              repository: ghcr.io/ahinko/restic
+              tag: 0.18.1@sha256:fa719796676a241c783aa789c0053c92dc92e5d5818722cefb03c5ce163fb904
+            workingDir: /data
+            args:
+              - backup
+              - --host
+              - kubernetes # set a consistent hostname to avoid restic rescans
+              - . # use workingDir to get relative paths in backup
+            envFrom:
+              - secretRef:
+                  name: talos-etcd-restic-keys
+            env:
+              - name: RESTIC_REPOSITORY
+                value: /repository/etcd
+
+        pod:
+          hostNetwork: true
+          hostPID: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+      defrag:
+        type: cronjob
+        cronjob:
+          schedule: "3 9 * * *" # daily at 09:03
+          parallelism: 1
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+
+        containers:
+          defrag:
+            image:
+              repository: ghcr.io/ahrtr/etcd-defrag
+              tag: v0.42.0@sha256:22521435b870c41f0faca42197e0b4caf37822370ebd7ec84df492d21488ede9
+            args:
+              - --endpoints=https://127.0.0.1:2379
+              - --cluster
+              - --cacert=/certs/ca.crt
+              - --cert=/certs/server.crt
+              - --key=/certs/server.key
+              # Defrag when DB quota usage > 50% OR free space > 100MB
+              - --defrag-rule=dbQuotaUsage > 0.5 || dbSizeFree > 100*1024*1024
+              # Move leader during defrag (safe for single-node)
+              - --move-leader
+              # Wait 30s between defrags
+              - --wait-between-defrags=30s
+              # Match the quota-backend-bytes set in Talos config
+              - --etcd-storage-quota-bytes=8589934592
+              # Auto-disalarm space quota alarms
+              - --auto-disalarm
+              - --disalarm-threshold=0.8
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              privileged: true
+              runAsUser: 0
+
+        pod:
+          hostNetwork: true
+          hostPID: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+      prune:
+        type: cronjob
+        cronjob:
+          schedule: "32 5 1 * *"
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+
+        containers:
+          restic:
+            image:
+              repository: ghcr.io/ahinko/restic
+              tag: 0.18.1@sha256:fa719796676a241c783aa789c0053c92dc92e5d5818722cefb03c5ce163fb904
+            args:
+              - forget
+              - --keep-last=7 # change me - set retention policy
+              - --keep-weekly=4 # see: https://restic.readthedocs.io/en/latest/060_forget.html
+              - --prune
+            envFrom:
+              - secretRef:
+                  name: talos-etcd-restic-keys
+            env:
+              - name: RESTIC_REPOSITORY
+                value: /repository/etcd
+    defaultPodOptions:
+      automountServiceAccountToken: true
+    persistence:
+      serviceaccount:
+        type: secret
+        name: etcd-talos
+        advancedMounts:
+          backup:
+            talosctl:
+              - path: /var/run/secrets/talos.dev
+                readOnly: true
+      certs:
+        type: hostPath
+        hostPath: /system/secrets/etcd
+        advancedMounts:
+          defrag:
+            defrag:
+              - path: /certs
+                readOnly: true
+      backupdata:
+        type: emptyDir
+        globalMounts:
+          - path: /data
+      repository:
+        type: nfs
+        server: "10.10.10.10"
+        path: "/mnt/stash/backup/${CLUSTER_CNAME}/volsync"
