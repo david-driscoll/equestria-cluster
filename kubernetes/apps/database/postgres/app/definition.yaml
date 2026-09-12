@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/david-driscoll/stargate-command-cluster/refs/heads/main/schemas/definition.schema.json
+apiVersion: driscoll.dev/v1
+kind: ApplicationDefinition
+metadata:
+  name: ${APP}
+spec:
+  name: Postgres
+  category: ${CLUSTER_TITLE}
+  description: Postgres monitoring
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/postgres.svg
+  gatus:
+    - url: "tcp://postgres.${CLUSTER_DOMAIN}:5432"
+      interval: 30s
+      conditions:
+        - "[CONNECTED] == true"
