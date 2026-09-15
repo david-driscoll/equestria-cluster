@@ -1,0 +1,135 @@
+---
+fullnameOverride: coredns
+image:
+  repository: mirror.gcr.io/coredns/coredns
+k8sAppLabelOverride: kube-dns
+serviceAccount:
+  create: true
+service:
+  name: kube-dns
+  clusterIP: "${CLUSTER_IP}"
+replicaCount: 2
+servers:
+  - zones:
+      - zone: .
+        scheme: dns://
+        use_tcp: true
+    port: 53
+    plugins:
+      - name: errors
+      - name: health
+        configBlock: |-
+          lameduck 5s
+      - name: ready
+      - name: log
+        configBlock: |-
+          class error
+      - name: prometheus
+        parameters: 0.0.0.0:9153
+      - name: kubernetes
+        parameters: cluster.local in-addr.arpa ip6.arpa
+        configBlock: |-
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+      - name: forward
+        parameters: . /etc/resolv.conf
+      - name: cache
+        parameters: 30
+      - name: loop
+      - name: reload
+      - name: loadbalance
+  # Technitium cluster node names: rewrite <node>.dns.driscoll.tech to the
+  # node's tailnet name (dns-<node>) and resolve it via the tailscale operator
+  # nameserver, which maps it to the in-cluster egress service ClusterIP. This
+  # is what lets the in-cluster technitium secondary reach its cluster peers
+  # (heartbeat/config sync) without hardcoded addresses.
+  - zones:
+      - zone: dns.driscoll.tech
+        scheme: dns://
+        use_tcp: false
+    port: 53
+    plugins:
+      - name: errors
+      - name: cache
+        parameters: 30
+      - name: rewrite
+        parameters: name regex ([a-z0-9-]+)\.dns\.driscoll\.tech dns-{1}.${TAILSCALE_DOMAIN} answer auto
+      - name: forward
+        parameters: . "${TAILSCALE_NAMESERVER_IP}"
+  # Dockge hosts by their canonical names: dockge-*.driscoll.tech resolves to
+  # tailnet IPs on the estate's split-horizon DNS, which cluster nodes cannot
+  # route. Same trick as the dns.driscoll.tech block above — exact-name zones,
+  # rewritten to the tailnet name and resolved via the tailscale operator
+  # nameserver to the in-cluster egress service ClusterIP
+  # (tailscale-system/services/*.yaml, which carry the matching ports).
+  # This is what lets Home Assistant use dockge-luna.driscoll.tech for the
+  # voice pipeline (llm 8080 / stt 10300 / tts 10200) and
+  # dockge-celestia.driscoll.tech for llama-agent (8081); the other two hosts
+  # get their standard 443/22 egress under the same names.
+  #
+  # Deliberately exact names rather than a driscoll.tech catch-all: the apex
+  # also carries this cluster's own *.<cluster>.driscoll.tech ingresses, other
+  # clusters' VIPs (e.g. alertmanager.driscoll.tech), and the ACME lookups
+  # cert-manager depends on. CoreDNS's rewrite has no NXDOMAIN fallthrough, so
+  # a catch-all would hard-fail every name that has no tailnet counterpart.
+  - zones:
+      - zone: dockge-celestia.driscoll.tech
+        scheme: dns://
+        use_tcp: false
+      - zone: dockge-luna.driscoll.tech
+        scheme: dns://
+        use_tcp: false
+      - zone: dockge-as.driscoll.tech
+        scheme: dns://
+        use_tcp: false
+      - zone: dockge-skystar.driscoll.tech
+        scheme: dns://
+        use_tcp: false
+    port: 53
+    plugins:
+      - name: errors
+      - name: cache
+        parameters: 30
+      - name: rewrite
+        parameters: name regex (dockge-[a-z0-9-]+)\.driscoll\.tech {1}.${TAILSCALE_DOMAIN} answer auto
+      - name: forward
+        parameters: . "${TAILSCALE_NAMESERVER_IP}"
+  # Tailscale DNS stub zone for ts.net domains
+  - zones:
+      - zone: ts.net
+        scheme: dns://
+        use_tcp: false
+    port: 53
+    plugins:
+      - name: errors
+      - name: health
+        configBlock: |-
+          lameduck 5s
+      - name: ready
+      - name: log
+        configBlock: |-
+          class all
+      - name: prometheus
+        parameters: 0.0.0.0:9153
+      - name: forward
+        parameters: . "${TAILSCALE_NAMESERVER_IP}"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: "kubernetes.io/hostname"
+    whenUnsatisfiable: "DoNotSchedule"
+    labelSelector:
+      matchLabels:
+        k8s-app: kube-dns
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule

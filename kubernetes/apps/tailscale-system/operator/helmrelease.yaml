@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app tailscale-operator
+spec:
+  chart:
+    spec:
+      chart: tailscale-operator
+      version: 1.102.3
+      sourceRef:
+        kind: HelmRepository
+        name: tailscale
+        namespace: flux-system
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: false
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: onepassword-connect
+      namespace: kube-system
+    - name: external-secrets
+      namespace: kube-system
+  valuesFrom:
+    - kind: Secret
+      name: tailscale-oauth
+      targetPath: oauth.clientId
+      valuesKey: username
+    - kind: Secret
+      name: tailscale-oauth
+      targetPath: oauth.clientSecret
+      valuesKey: credential
+  values:
+    fullnameOverride: *app
+    installCRDs: true
+    operatorConfig:
+      logging: debug
+      defaultTags:
+        - "tag:operator"
+      image:
+        repository: ghcr.io/tailscale/k8s-operator
+        tag: v1.102.3@sha256:d86a8be7ad9d38714968f5d4e010ba8dad30c8f672736ef94eda9b250febeb12
+        pullPolicy: IfNotPresent
+      hostname: "${CLUSTER_CNAME}-operator"
+      defaultProxyClass: default
+      podAnnotations:
+        reloader.stakater.com/auto: "true"
+    proxyConfig:
+      image:
+        repository: tailscale/tailscale
+        tag: v1.102.3@sha256:8c42c4574ab066384fcb72f69e086a2ff1dd3652eb6f56856cee34bcf0d2f680
+      defaultTags: "tag:apps"
+      podAnnotations:
+        reloader.stakater.com/auto: "true"
+      firewallMode: auto
+    apiServerProxyConfig:
+      allowImpersonation: true
+      mode: "true" # "true", "false", "noauth"
