@@ -70,7 +70,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
-              tag: 2026.8.1@sha256:e1f54eb0306d7ded8b3cdee70c21178413cd175aa3e526452af0e086a39ecc51
+              tag: 2026.9.4@sha256:cd5ffc0a3bc873b35f20189ef22ee7ee9e8875fe666928dfee263cd464cc053d
               pullPolicy: IfNotPresent
             env:
               HASS_HTTP_TRUSTED_PROXY_1: "${CLUSTER_NETWORK}"
