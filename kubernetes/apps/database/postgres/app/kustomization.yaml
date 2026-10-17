@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./externalsecret.yaml
+  - ./helmrelease.yaml
+  - ./user-template.yaml
+  - ./ingress.yaml
+  - ./definition.yaml
+  - ./passwords.sops.yaml
+  - ./users.yaml
+  - ./role-broad-access.yaml
+configMapGenerator:
+- name: ${APP}-values
+  files:
+  - values.yaml=./resources/values.yaml
+  options:
+    disableNameSuffixHash: true
