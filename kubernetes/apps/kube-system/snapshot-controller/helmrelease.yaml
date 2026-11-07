@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: snapshot-controller
+spec:
+  interval: 1h
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 5.2.0
+    digest: sha256:4e398ea7535735d3da18029dcad3bf488ac556525005453bb634657ad517b1ad
+  url: oci://ghcr.io/piraeusdatastore/helm-charts/snapshot-controller
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: snapshot-controller
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: snapshot-controller
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: false
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    # Chart v5 enables webhook by default; disable to avoid TLS setup
+    webhook:
+      enabled: false
+    # Ensure CRDs are installed as part of the chart
+    installCRDs: true
+    controller:
+      replicaCount: 2
+      serviceMonitor:
+        create: true
+    # Chart v5 expects volumeSnapshotClasses at the top-level
+    volumeSnapshotClasses:
+      - name: longhorn-snapclass
+        annotations:
+          snapshot.storage.kubernetes.io/is-default-class: "true"
+        driver: driver.longhorn.io
+        # Must be Delete. VolSync's restic mover snapshots the source PVC, backs
+        # it up, then deletes the VolumeSnapshot. Under Retain the
+        # VolumeSnapshotContent -- and the Longhorn snapshot behind it -- was
+        # never reclaimed, so every VolSync-protected volume grew one permanent
+        # Longhorn snapshot per day until it hit snapshotMaxCount and deadlocked.
+        # See vault#123.
+        deletionPolicy: Delete
+        parameters:
+          # needed for successful VolumeSnapshots
+          # see: https://github.com/longhorn/longhorn/issues/2534#issuecomment-1010508714
+          type: snap
