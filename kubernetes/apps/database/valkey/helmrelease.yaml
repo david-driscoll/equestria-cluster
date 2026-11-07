@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ${APP}
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  # the config can take a while to restore
+  maxHistory: 3
+  interval: 1h
+  timeout: 10m
+  install:
+    createNamespace: true
+    replace: true
+    remediation:
+      retries: 7
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 7
+      strategy: rollback
+  rollback:
+    force: false
+    cleanupOnFail: true
+    recreate: true
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      *app :
+        containers:
+          *app :
+            image:
+              repository: ghcr.io/valkey-io/valkey
+              tag: 9.1-trixie@sha256:3acc0687f2a2e1091fae6450d7842dd658c941338cf0a873ddd9e14b9e4ea4dd
+            env:
+              VALKEY_PORT: &port 6379
+    persistence:
+      data:
+        accessMode: ReadWriteOnce
+        size: 4Gi
+        # Was `longhorn-local` (strict-local, 1 replica) until 2026-08-04. That
+        # class gives the PV a hard nodeAffinity to a single node, so any drain
+        # of that node leaves valkey unschedulable ("didn't match PersistentVolume's
+        # node affinity") and takes authentik's Redis backend down with it. It also
+        # wedges the drain itself: Longhorn cannot rebuild a strict-local replica
+        # elsewhere, so it holds the volume attached and the per-node
+        # instance-manager PDB stays at 0 allowed disruptions. Both happened on
+        # equestria during the Talos v1.13.8 rollout; SGC had the same exposure.
+        # `longhorn` is replicated (3 replicas, dataLocality best-effort), so the
+        # pod can move. Cache/broker state only; volume recreated empty.
+        storageClass: longhorn
+    service:
+      *app :
+        controller: *app
+        ports:
+          *app :
+            port: *port
