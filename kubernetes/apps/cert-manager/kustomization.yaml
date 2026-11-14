@@ -7,4 +7,4 @@ components:
   - ../../components/alerts
   - ../../components/common
 resources:
-  - ./home-operations.cert-manager.yaml
+  - ./cert-manager.pulumi.yaml
