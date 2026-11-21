@@ -5,7 +5,7 @@
 #:package Microsoft.Extensions.Logging@10.*
 #:package Dumpify@0.7.0
 #:package Lunet.Extensions.Logging.SpectreConsole@1.2.0
-#:package ProcessX@1.5.6
+#:package ProcessX@2.0.0
 #:property JsonSerializerIsReflectionEnabledByDefault=true
 #:property PublishAot=false
 using System.Collections.Immutable;
