@@ -8,4 +8,5 @@ components:
   - ../../components/common
   - ../../components/repos/app-template
 resources:
-  - ./home-operations.system-upgrade.yaml
+  - ./tuppr/ks.yaml
+  - ./upgrades/ks.yaml
